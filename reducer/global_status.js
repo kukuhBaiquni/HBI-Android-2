@@ -3,7 +3,7 @@ let initialState = {
   error: false
 };
 
-export default function global_status(state = initialState, action) {
+export default function globalStatus(state = initialState, action) {
   switch (action.type) {
 
     case 'GET_ALL_PRODUCTS':

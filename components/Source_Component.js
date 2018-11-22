@@ -20,7 +20,7 @@ export default class SourceComponent extends Component {
     var state = this.state.count;
     state++
     this.setState({count: state})
-    if (this.state.count === 6) {
+    if (this.state.count === 3) {
       this.setState({changeScreen: true})
       clearInterval(this.timer)
     }

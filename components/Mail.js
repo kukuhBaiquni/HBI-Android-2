@@ -6,7 +6,7 @@ import { NavigationEvents } from 'react-navigation';
 
 export default class Mail extends Component {
   test() {
-    console.log('ggwp');
+    console.log('ggwp - mail');
   }
 
   render() {

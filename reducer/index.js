@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import data from './data';
-import global_status from './global_status';
+import listProducts from './List_Products';
+import globalStatus from './Global_Status';
 
 const rootReducer = combineReducers({
-  data, global_status
+  listProducts, globalStatus
 })
 
 export default rootReducer

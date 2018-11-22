@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Spinner } from 'native-base';
-import { getAllProducts } from '../actions/Saga';
 import { SERVER_URL } from '../config';
 import { idrFormat } from '../config';
 import * as Animatable from 'react-native-animatable';
 
-export default class Ikan extends Component {
+export default class ProductsTab extends Component {
 
   render() {
     let { products, navigation } = this.props;
@@ -17,8 +16,8 @@ export default class Ikan extends Component {
             <Animatable.View
               style={styles.container}
               animation='fadeInUpBig'
-              delay={2000}
               iterationCount={1}
+              delay={500}
               direction='alternate'
               >
               {

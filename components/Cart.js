@@ -3,7 +3,6 @@ import { View, Text, Button } from 'react-native';
 
 export default class Cart extends Component {
   render() {
-    console.log(this.props.navigation.state);
     return(
       <View style={{justifyContent: 'center'}}>
         <Text>Cart Page</Text>

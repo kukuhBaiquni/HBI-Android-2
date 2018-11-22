@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import { createMaterialTopTabNavigator, createStackNavigator} from 'react-navigation';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import MainPage from './Main_Page';
 import ShopPage from './Shop_Page';
 import Example from './Static_Example';
 import ProductDetails from './Product_Details';
 import Mail from './Mail';
 import Cart from './Cart';
+import SearchAutocomplete from './Search_Autocomplete';
 import { connect } from 'react-redux';
 
 export const RootStack = createStackNavigator({
@@ -20,12 +20,13 @@ export const RootStack = createStackNavigator({
   ProductDetails: {
     screen: ProductDetails,
     navigationOptions: ({navigation}) => ({
-      title: `${navigation.state.params.productname}`,
-      headerTintColor: '#7c0c10',
-      headerStyle: {
-        backgroundColor: 'white',
-        borderBottomColor: 'black'
-      }
+      header: null
+      // title: `${navigation.state.params.productname}`,
+      // headerTintColor: '#7c0c10',
+      // headerStyle: {
+      //   backgroundColor: 'white',
+      //   borderBottomColor: 'black'
+      // }
     })
   },
   Cart: {
@@ -37,6 +38,12 @@ export const RootStack = createStackNavigator({
         backgroundColor: 'white',
         borderBottomColor: 'black'
       }
+    })
+  },
+  SearchAutocomplete: {
+    screen: SearchAutocomplete,
+    navigationOptions: ({navigation}) => ({
+      header: null
     })
   }
 })
