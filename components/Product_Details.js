@@ -8,7 +8,8 @@ import { showMessage } from 'react-native-flash-message';
 import FlashMessage from 'react-native-flash-message';
 import { UIActivityIndicator } from 'react-native-indicators';
 import Swipable from './Swipable';
-import ReactNativeParallaxHeader from 'react-native-parallax-header';
+import RNParallax from './Parallax_Header';
+import CartIcon from './Cart_Icon';
 
 export default class ProductDetails extends Component {
   constructor(props) {
@@ -43,20 +44,24 @@ export default class ProductDetails extends Component {
     })
   }
 
+  addToCart() {
+    showMessage({
+      message: 'Sukses',
+      description: 'Produk berhasil ditambahkan ke keranjang',
+      type: 'success'
+    })
+  }
+
   render() {
     const { navigation } = this.props;
-    const Animation = this.state.scrollY.interpolate({
-      inputRange: [0, 145],
-      outputRange: [50, 0],
-      extrapolate: 'clamp'
-    });
     return(
       <View style={{flex: 1}}>
-        <ReactNativeParallaxHeader
+        <RNParallax
           headerMinHeight={55}
           headerMaxHeight={200}
           extraScrollHeight={20}
           navbarColor='white'
+          scrollEventThrottle={5}
           title={navigation.state.params.productname}
           backgroundColor='#e2e2e2'
           titleStyle={styles.productName}
@@ -65,27 +70,21 @@ export default class ProductDetails extends Component {
           renderNavBar={() => (
             <View style={styles.fixedNavbar}>
               <View style={{position: 'absolute', left: 0, marginLeft: 10}}>
-                <Icon onPress={() => navigation.navigate('ShopPage')} name='arrow-back' color='#7c0c10' />
+                <Icon onPress={() => navigation.navigate('Shopping')} name='arrow-back' color='#7c0c10' />
+              </View>
+              <View style={{position: 'absolute', right: 20}}>
+                <CartIcon navigation={navigation} bcolor='#7c0c10'/>
               </View>
             </View>
           )}
           renderBackButton={() => (
-            <Icon onPress={() => navigation.navigate('ShopPage')} name='arrow-back' color='#7c0c10' />
+            <Icon onPress={() => navigation.navigate('Shopping')} name='arrow-back' color='white' />
+          )}
+          renderCartIcon={() => (
+            <CartIcon navigation={navigation} />
           )}
           renderContent={() => (
-            <ScrollView
-              style={{backgroundColor: '#e2e2e2'}}
-              onScroll={
-                Animated.event(
-                  [{ nativeEvent: {
-                      contentOffset: {
-                        y: this.state.scrollY
-                      }
-                    }
-                  }]
-                )
-              }
-              >
+            <ScrollView style={{backgroundColor: '#e2e2e2'}}>
               <View style={{backgroundColor: 'white', height: 50}}></View>
               <View style={styles.viewContainer}>
                 <Text style={styles.subtitle}>Deskripsi Produk</Text>
@@ -144,34 +143,22 @@ export default class ProductDetails extends Component {
                 </TouchableNativeFeedback>
               }
               <Swipable navigation={ navigation } />
-              <View style={{height: 60}}></View>
+              <View style={{height: 50}} />
             </ScrollView>
           )}
         />
-        <View>
-          <TouchableOpacity onPress={() => navigation.navigate('Cart')} style={[styles.fixedCart, {backgroundColor: '#7c0c10', right: 0}]}>
-            <View
-              style={styles.badge}
-              animation={this.state.changeAnimation ? 'zoomOut' : 'zoomIn'}
-              delay={1000}
-              duration={700}
-              >
-              <Text style={{textAlign: 'center', fontSize: 10, fontWeight: 'bold', color: 'white'}}>2</Text>
-            </View>
-            <Icon name='shopping-cart' size={20} color='white'/>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={(r) => this.testing('b')} style={[styles.fixedCartLeft, {backgroundColor: '#7c0c10', left: 0}]}>
-            {
-              this.state.loading
-              ? <UIActivityIndicator color='white' size={20} />
-              :
-              <View>
-                <Icon name='add-shopping-cart' size={20} color='white'/>
-                <Text style={{color: 'white', textAlign: 'center'}}>Add to Cart</Text>
+        <TouchableNativeFeedback>
+          <View style={styles.footerWrapper}>
+            <TouchableOpacity  style={{backgroundColor: 'white', width: '20%', height: 50, justifyContent: 'center'}} onPress={() => this.addToCart()}>
+              <Icon name='add-shopping-cart' size={28} color='#7c0c10'/>
+            </TouchableOpacity>
+            <TouchableNativeFeedback>
+              <View style={{alignItems: 'center', justifyContent: 'center', width: '80%'}}>
+                <Text style={{color: 'white', textAlign: 'center', fontSize: 16, fontWeight: 'bold'}}>Beli Sekarang</Text>
               </View>
-            }
-          </TouchableOpacity>
-        </View>
+            </TouchableNativeFeedback>
+          </View>
+        </TouchableNativeFeedback>
         <FlashMessage
           position='top'
           duration={2000}
@@ -182,6 +169,17 @@ export default class ProductDetails extends Component {
     )
   }
 }
+// <TouchableOpacity onPress={(r) => this.testing('b')} style={[styles.fixedCartLeft, {backgroundColor: '#7c0c10', left: 0}]}>
+//   {
+//     this.state.loading
+//     ? <UIActivityIndicator color='white' size={20} />
+//     :
+//     <View>
+//       <Icon name='add-shopping-cart' size={20} color='white'/>
+//       <Text style={{color: 'white', textAlign: 'center'}}>Add to Cart</Text>
+//     </View>
+//   }
+// </TouchableOpacity>
 
 const window = Dimensions.get('window');
 
@@ -228,16 +226,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row'
   },
-  fixedCart: {
-    height: 45,
-    width: 45,
-    borderRadius: 25,
-    marginTop: -53,
-    justifyContent: 'center',
-    position: 'absolute',
-    marginRight: 10,
-    zIndex: 5,
-  },
   fixedCartLeft: {
     height: 45,
     width: 80,
@@ -248,21 +236,20 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     zIndex: 5,
   },
-  badge: {
-    position: 'absolute',
-    height: 20,
-    width: 20,
-    backgroundColor: 'orange',
-    borderRadius: 10,
-    right: -5,
-    top: -5,
-    zIndex: 1,
-    justifyContent: 'center',
-  },
   fixedNavbar: {
     backgroundColor: 'transparent',
     justifyContent: 'center',
     alignItems: 'center',
     height: 55
+  },
+  footerWrapper: {
+    backgroundColor: '#7c0c10',
+    height: 50, width: '100%',
+    right: 0,
+    position: 'absolute',
+    bottom: 0,
+    flexDirection: 'row',
+    borderTopColor: '#7c0c10',
+    borderTopWidth: 1
   }
 });

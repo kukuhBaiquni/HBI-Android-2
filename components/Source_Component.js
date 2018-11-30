@@ -3,6 +3,7 @@ import RouterTabs from './Router';
 import { Provider } from 'react-redux';
 import { store } from '../store';
 import SplashScreen from './Splash_Screen';
+import { RootStack } from './Router';
 
 export default class SourceComponent extends Component {
   constructor(props) {
@@ -32,7 +33,7 @@ export default class SourceComponent extends Component {
         {
           this.state.changeScreen
           ?
-          <RouterTabs />
+          <RootStack />
           :
           <SplashScreen />
         }

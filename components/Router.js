@@ -2,51 +2,13 @@ import React, { Component } from 'react';
 import { createMaterialTopTabNavigator, createStackNavigator} from 'react-navigation';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
+import SearchAutocomplete from './Search_Autocomplete';
+import { connect } from 'react-redux';
 import ShopPage from './Shop_Page';
 import Example from './Static_Example';
 import ProductDetails from './Product_Details';
 import Mail from './Mail';
 import Cart from './Cart';
-import SearchAutocomplete from './Search_Autocomplete';
-import { connect } from 'react-redux';
-
-export const RootStack = createStackNavigator({
-  ShopPage: {
-    screen: ShopPage,
-    navigationOptions: {
-      header: null,
-    }
-  },
-  ProductDetails: {
-    screen: ProductDetails,
-    navigationOptions: ({navigation}) => ({
-      header: null
-      // title: `${navigation.state.params.productname}`,
-      // headerTintColor: '#7c0c10',
-      // headerStyle: {
-      //   backgroundColor: 'white',
-      //   borderBottomColor: 'black'
-      // }
-    })
-  },
-  Cart: {
-    screen: Cart,
-    navigationOptions: ({navigation}) => ({
-      title: 'Cart Page',
-      headerTintColor: '#7c0c10',
-      headerStyle: {
-        backgroundColor: 'white',
-        borderBottomColor: 'black'
-      }
-    })
-  },
-  SearchAutocomplete: {
-    screen: SearchAutocomplete,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    })
-  }
-})
 
 const Tabs = createMaterialTopTabNavigator({
   About: {
@@ -63,7 +25,7 @@ TulisResep: {
 }
 },
 Shopping: {
-  screen: RootStack,
+  screen: ShopPage,
   navigationOptions: {
     tabBarIcon: ({tintColor}) => <Icon name='store-mall-directory' size={24} color={tintColor} />
 }
@@ -113,6 +75,46 @@ Profile: {
   }
 });
 
+export const RootStack = createStackNavigator({
+  MainTabs: {
+    screen: Tabs,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  ProductDetails: {
+    screen: ProductDetails,
+    navigationOptions: ({navigation}) => ({
+      header: null
+      // title: `${navigation.state.params.productname}`,
+      // headerTintColor: '#7c0c10',
+      // headerStyle: {
+      //   backgroundColor: 'white',
+      //   borderBottomColor: 'black'
+      // }
+    })
+  },
+  Cart: {
+    screen: Cart,
+    navigationOptions: ({navigation}) => ({
+      title: 'Cart Page',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      }
+    })
+  },
+  SearchAutocomplete: {
+    screen: SearchAutocomplete,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  }
+})
+
+
+
 const styles = StyleSheet.create({
   badge: {
     backgroundColor: 'orange',
@@ -145,6 +147,6 @@ function mapDispatchToProps(dispatch) {
   return dispatch
 }
 
-export default connect(
+connect(
   mapDispatchToProps
 )(RouterTabs)

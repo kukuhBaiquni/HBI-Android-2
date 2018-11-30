@@ -6,6 +6,7 @@ import ProductsTab from './Products_Tab';
 import { connect } from 'react-redux';
 import { getAllProducts } from '../actions/Get_All_Products';
 import { NavigationEvents } from 'react-navigation';
+import CartIcon from './Cart_Icon';
 
 class ShopPage extends Component {
   componentDidMount() {
@@ -27,10 +28,8 @@ class ShopPage extends Component {
           <Right>
             <Button transparent>
               <View>
-                <TouchableOpacity style={styles.badge}>
-                  <Text style={styles.text}>3</Text>
-                </TouchableOpacity>
-                <Icon onPress={() => navigation.navigate('Cart')} name='shopping-cart' size={27} color='white'/>
+                {/* add navigation props */}
+                <CartIcon navigation={navigation}/>
               </View>
             </Button>
           </Right>
