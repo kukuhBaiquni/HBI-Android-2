@@ -22,16 +22,16 @@ export default class ProductDetails extends Component {
       picked: 'None',
       selected: null,
       options: [{label: 'None', value: 'None'}, {label: 'Cut', value: 'Cut'}, {label: 'Slice', value: 'Slice'}, {label: 'Grind', value: 'Grind'}],
-      index: 0
+      index: 0,
+      showModalContent: false
     }
   }
 
-  componentDidMount() {
-    console.log(this.props.navigation.state.params);
-  }
+  // componentDidMount() {
+  //   console.log(this.props.navigation.state.params);
+  // }
 
   onValueChange(val) {
-    console.log(val);
     let target = 0
     if (val === 'Cut') {
       target = 1
@@ -42,7 +42,6 @@ export default class ProductDetails extends Component {
     }else{
       target = 0
     }
-    console.log(target);
     this.setState({picked: val, index: target})
   }
 
@@ -177,172 +176,178 @@ export default class ProductDetails extends Component {
           isVisible={this.state.showModal}
           style={{alignItems: 'center'}}
           onBackdropPress={() => this.setState({showModal: false})}
+          onBackButtonPress={() => this.setState({showModal: false})}
+          onModalShow={() => this.setState({showModalContent: true})}
+          onModalHide={() => this.setState({showModalContent: false})}
           hideModalContentWhileAnimating={true}
           >
-          <View style={{ backgroundColor: 'white', width: 300, height: 400, borderRadius: 4}}>
-            <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
-              <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Produk berhasil ditambahkan</Text>
-              <TouchableOpacity style={{position: 'absolute', right: 10, top: 15}}>
-                <Icon name='clear' color='#e2e2e2' size={22} onPress={() => this.setState({showModal: false})}/>
-              </TouchableOpacity>
-            </View>
-            <ScrollView>
-              <View style={{flexDirection: 'row'}}>
-                <View style={{elevation: 1, width: 120, height: 120, marginTop: 10, marginLeft: 20}}>
-                  <Image
-                    resizeMode='contain'
-                    style={{width: 120, height: 120, borderColor: '#e2e2e2', borderWidth: 1}}
-                    source={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
-                    />
-                </View>
-                <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
-                  <Text style={{fontSize: 16, width: 140, textAlign: 'left', color: '#919191'}}>{navigation.state.params.productname}</Text>
-                  <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(navigation.state.params.enduserprice)}</Text>
-                  {/*Increment Button*/}
-                  <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
-                    <TouchableNativeFeedback>
-                      <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                        <Text style={{color: 'white', fontSize: 22}}>-</Text>
-                      </View>
-                    </TouchableNativeFeedback>
-                    <View style={{width: 40, height: 30, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3}}>
-                      <Text>1</Text>
-                    </View>
-                    <TouchableNativeFeedback>
-                      <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                        <Text style={{color: 'white', fontSize: 18}}>+</Text>
-                      </View>
-                    </TouchableNativeFeedback>
-                  </View>
-                </View>
+            <View style={{ backgroundColor: 'white', width: 300, height: 400, borderRadius: 4}}>
+              <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
+                <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Produk berhasil ditambahkan</Text>
+                <TouchableOpacity style={{position: 'absolute', right: 10, top: 15}}>
+                  <Icon name='clear' color='#e2e2e2' size={22} onPress={() => this.setState({showModal: false})}/>
+                </TouchableOpacity>
               </View>
-              <View style={{alignItems: 'center', marginTop: 10}}>
-                <View style={{height: 195, width: 260, borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3, padding: 5}}>
-                  <View style={{flexDirection: 'row'}}>
-                    <Text style={{color: '#919191', marginRight: 5}}>Pilihan Proses</Text>
-                    <View style={{position: 'absolute', right: 0, top: 0}}>
-                      <Icon name='help' color='#7c0c10' size={19}/>
+              {
+                this.state.showModalContent &&
+              <ScrollView>
+                <View style={{flexDirection: 'row'}}>
+                  <View style={{elevation: 1, width: 120, height: 120, marginTop: 10, marginLeft: 20}}>
+                    <Image
+                      resizeMode='contain'
+                      style={{width: 120, height: 120, borderColor: '#e2e2e2', borderWidth: 1}}
+                      source={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
+                      />
+                  </View>
+                  <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
+                    <Text style={{fontSize: 16, width: 140, textAlign: 'left', color: '#919191'}}>{navigation.state.params.productname}</Text>
+                    <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(navigation.state.params.enduserprice)}</Text>
+                    {/*Increment Button*/}
+                    <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
+                      <TouchableNativeFeedback>
+                        <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
+                          <Text style={{color: 'white', fontSize: 22}}>-</Text>
+                        </View>
+                      </TouchableNativeFeedback>
+                      <View style={{width: 40, height: 30, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3}}>
+                        <Text>1</Text>
+                      </View>
+                      <TouchableNativeFeedback>
+                        <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
+                          <Text style={{color: 'white', fontSize: 18}}>+</Text>
+                        </View>
+                      </TouchableNativeFeedback>
                     </View>
                   </View>
-                    <View style={{height: 50, width: 165, marginTop: 10, marginBottom: 45}}>
-                      <RadioForm
-                        formHorizontal={false}
-                        animation={true}
-                        >
-                        {
-                          this.state.options.map((x, i) =>
-                          <RadioButton labelHorizontal={true} key={i} >
-                            <RadioButtonInput
-                              obj={x}
-                              index={i}
-                              onPress={(x) => this.onValueChange(x)}
-                              borderWidth={1}
-                              buttonInnerColor={'#7c0c10'}
-                              buttonOuterColor={this.state.index === i ? '#7c0c10' : '#919191'}
-                              isSelected={this.state.index === i}
-                              buttonSize={10}
-                              buttonOuterSize={20}
-                              buttonWrapStyle={{marginLeft: 10}}
-                                />
-                            <RadioButtonLabel
-                              obj={x}
-                              index={i}
-                              labelHorizontal={true}
-                              onPress={(x) => this.onValueChange(x)}
-                              labelStyle={this.state.index === i ? {fontSize: 12, color: '#7c0c10', marginTop: -2, fontWeight: 'bold'} : {fontSize: 12, color: '#919191', marginTop: -2}}
-                            />
-                            </RadioButton>
-                          )
-                        }
-                      </RadioForm>
-                    </View>
-                    {
-                      this.state.picked === 'None' &&
-                      <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Anda tidak memilih proses apapun untuk pemesanan produk ini</Text>
-                    }
-                    {
-                      this.state.picked === 'Cut' &&
-                      <View>
-                        {
-                          navigation.state.params.process.cut.length > 0
-                          ?
-                          <View style={{marginTop: 10}}>
-                            <Text>Pilih Ukuran</Text>
-                            <Picker
-                              note
-                              mode='dropdown'
-                              style={{ width: 80, height: 20, marginTop: 5 }}
-                              selectedValue={this.state.selected}
-                              onValueChange={(x) => this.setState({selected: x})}
-                              >
-                              {
-                                navigation.state.params.process.cut.map((x, i) => {
-                                  return <Picker.Item key={i} label={x + 'cm'} value={x + 'cm'} style={{color: 'red'}} />
-                                })
-                              }
-                            </Picker>
-                          </View>
-                          :
-                          <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                        }
-                      </View>
-                    }
-                    {
-                      this.state.picked === 'Slice' &&
-                      <View>
-                        {
-                          navigation.state.params.process.slice.length > 0
-                          ?
-                          <View style={{marginTop: 10}}>
-                            <Text>Pilih Ukuran</Text>
-                            <Picker
-                              note
-                              mode='dropdown'
-                              style={{ width: 80, height: 20, marginTop: 5 }}
-                              selectedValue={this.state.selected}
-                              onValueChange={(x) => this.setState({selected: x})}
-                              >
-                              {
-                                navigation.state.params.process.slice.map((x, i) => {
-                                  return <Picker.Item key={i} label={x + 'cm'} value={x + 'cm'} style={{color: 'red'}} />
-                                })
-                              }
-                            </Picker>
-                          </View>
-                          :
-                          <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                        }
-                      </View>
-                    }
-                    {
-                      this.state.picked === 'Grind' &&
-                      <View>
-                        {
-                          navigation.state.params.process.grind === null
-                          ?
-                          <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                          :
-                          <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses <Text style={{color: '#7c0c10'}}>"Grind"</Text> tersedia</Text>
-                        }
-                      </View>
-                    }
                 </View>
-              </View>
-              <View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
-                <TouchableNativeFeedback>
-                  <View style={{height: 45, width: 260, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                    <Text style={{color: 'white'}}>Lanjut ke pembayaran</Text>
+                <View style={{alignItems: 'center', marginTop: 10}}>
+                  <View style={{height: 195, width: 260, borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3, padding: 5}}>
+                    <View style={{flexDirection: 'row'}}>
+                      <Text style={{color: '#919191', marginRight: 5}}>Pilihan Proses</Text>
+                      <View style={{position: 'absolute', right: 0, top: 0}}>
+                        <Icon name='help' color='#7c0c10' size={19}/>
+                      </View>
+                    </View>
+                      <View style={{height: 50, width: 165, marginTop: 10, marginBottom: 45}}>
+                        <RadioForm
+                          formHorizontal={false}
+                          animation={true}
+                          >
+                          {
+                            this.state.options.map((x, i) =>
+                            <RadioButton labelHorizontal={true} key={i} >
+                              <RadioButtonInput
+                                obj={x}
+                                index={i}
+                                onPress={(x) => this.onValueChange(x)}
+                                borderWidth={1}
+                                buttonInnerColor={'#7c0c10'}
+                                buttonOuterColor={this.state.index === i ? '#7c0c10' : '#919191'}
+                                isSelected={this.state.index === i}
+                                buttonSize={10}
+                                buttonOuterSize={20}
+                                buttonWrapStyle={{marginLeft: 10}}
+                                  />
+                              <RadioButtonLabel
+                                obj={x}
+                                index={i}
+                                labelHorizontal={true}
+                                onPress={(x) => this.onValueChange(x)}
+                                labelStyle={this.state.index === i ? {fontSize: 12, color: '#7c0c10', marginTop: -2, fontWeight: 'bold'} : {fontSize: 12, color: '#919191', marginTop: -2}}
+                              />
+                              </RadioButton>
+                            )
+                          }
+                        </RadioForm>
+                      </View>
+                      {
+                        this.state.picked === 'None' &&
+                        <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Anda tidak memilih proses apapun untuk pemesanan produk ini</Text>
+                      }
+                      {
+                        this.state.picked === 'Cut' &&
+                        <View>
+                          {
+                            navigation.state.params.process.cut.length > 0
+                            ?
+                            <View style={{marginTop: 10}}>
+                              <Text>Pilih Ukuran</Text>
+                              <Picker
+                                note
+                                mode='dropdown'
+                                style={{ width: 80, height: 20, marginTop: 5 }}
+                                selectedValue={this.state.selected}
+                                onValueChange={(x) => this.setState({selected: x})}
+                                >
+                                {
+                                  navigation.state.params.process.cut.map((x, i) => {
+                                    return <Picker.Item key={i} label={x + 'cm'} value={x + 'cm'} style={{color: 'red'}} />
+                                  })
+                                }
+                              </Picker>
+                            </View>
+                            :
+                            <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
+                          }
+                        </View>
+                      }
+                      {
+                        this.state.picked === 'Slice' &&
+                        <View>
+                          {
+                            navigation.state.params.process.slice.length > 0
+                            ?
+                            <View style={{marginTop: 10}}>
+                              <Text>Pilih Ukuran</Text>
+                              <Picker
+                                note
+                                mode='dropdown'
+                                style={{ width: 80, height: 20, marginTop: 5 }}
+                                selectedValue={this.state.selected}
+                                onValueChange={(x) => this.setState({selected: x})}
+                                >
+                                {
+                                  navigation.state.params.process.slice.map((x, i) => {
+                                    return <Picker.Item key={i} label={x + 'cm'} value={x + 'cm'} style={{color: 'red'}} />
+                                  })
+                                }
+                              </Picker>
+                            </View>
+                            :
+                            <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
+                          }
+                        </View>
+                      }
+                      {
+                        this.state.picked === 'Grind' &&
+                        <View>
+                          {
+                            navigation.state.params.process.grind === null
+                            ?
+                            <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
+                            :
+                            <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses <Text style={{color: '#7c0c10'}}>"Grind"</Text> tersedia</Text>
+                          }
+                        </View>
+                      }
                   </View>
-                </TouchableNativeFeedback>
-              </View>
-              <View style={{alignItems: 'center', marginBottom: 20}}>
-                <TouchableNativeFeedback>
-                  <View style={{height: 45, width: 260, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderRadius: 3, borderWidth: 1, borderColor: '#7c0c10'}}>
-                    <Text style={{color: '#7c0c10'}}>Lihat keranjang</Text>
-                  </View>
-                </TouchableNativeFeedback>
-              </View>
-            </ScrollView>
+                </View>
+                <View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
+                  <TouchableNativeFeedback>
+                    <View style={{height: 45, width: 260, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
+                      <Text style={{color: 'white'}}>Lanjut ke pembayaran</Text>
+                    </View>
+                  </TouchableNativeFeedback>
+                </View>
+                <View style={{alignItems: 'center', marginBottom: 20}}>
+                  <TouchableNativeFeedback>
+                    <View style={{height: 45, width: 260, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderRadius: 3, borderWidth: 1, borderColor: '#7c0c10'}}>
+                      <Text style={{color: '#7c0c10'}}>Lihat keranjang</Text>
+                    </View>
+                  </TouchableNativeFeedback>
+                </View>
+              </ScrollView>
+            }
           </View>
         </Modal>
       </View>
