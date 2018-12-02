@@ -3,50 +3,50 @@ import { createMaterialTopTabNavigator, createStackNavigator} from 'react-naviga
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
 import SearchAutocomplete from './Search_Autocomplete';
-import { connect } from 'react-redux';
 import ShopPage from './Shop_Page';
 import Example from './Static_Example';
 import ProductDetails from './Product_Details';
 import Mail from './Mail';
 import Cart from './Cart';
+import Login from './Login';
 
 const Tabs = createMaterialTopTabNavigator({
   About: {
     screen: Example,
     navigationOptions: {
       tabBarIcon: ({tintColor}) => <Icon name='home' size={24} color={tintColor} />
+    }
+  },
+  TulisResep: {
+    screen: Example,
+    navigationOptions: {
+      tabBarLabel: 'Timeline',
+      tabBarIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+    }
+  },
+  Shopping: {
+    screen: ShopPage,
+    navigationOptions: {
+      tabBarIcon: ({tintColor}) => <Icon name='store-mall-directory' size={24} color={tintColor} />
+    }
+  },
+  Mail: {
+    screen: Mail,
+    navigationOptions: {
+      tabBarIcon: ({tintColor}) => <View>
+      <TouchableOpacity style={styles.badge}>
+        <Text style={styles.text}>6</Text>
+      </TouchableOpacity>
+      <Icon name='mail' size={24} color={tintColor} />
+    </View>
+    }
+  },
+  Profile: {
+    screen: Example,
+    navigationOptions: {
+      tabBarIcon: ({tintColor}) => <Icon name='account-box' size={24} color={tintColor} />
+    }
   }
-},
-TulisResep: {
-  screen: Example,
-  navigationOptions: {
-    tabBarLabel: 'Timeline',
-    tabBarIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
-}
-},
-Shopping: {
-  screen: ShopPage,
-  navigationOptions: {
-    tabBarIcon: ({tintColor}) => <Icon name='store-mall-directory' size={24} color={tintColor} />
-}
-},
-Mail: {
-  screen: Mail,
-  navigationOptions: {
-    tabBarIcon: ({tintColor}) => <View>
-    <TouchableOpacity style={styles.badge}>
-      <Text style={styles.text}>6</Text>
-    </TouchableOpacity>
-    <Icon name='mail' size={24} color={tintColor} />
-  </View>
-}
-},
-Profile: {
-  screen: Example,
-  navigationOptions: {
-    tabBarIcon: ({tintColor}) => <Icon name='account-box' size={24} color={tintColor} />
-}
-}
 },{
   lazy: true,
   initialRouteName: 'Shopping',
@@ -75,7 +75,7 @@ Profile: {
   }
 });
 
-export const RootStack = createStackNavigator({
+const RootStack = createStackNavigator({
   MainTabs: {
     screen: Tabs,
     navigationOptions: ({navigation}) => ({
@@ -110,6 +110,18 @@ export const RootStack = createStackNavigator({
     navigationOptions: ({navigation}) => ({
       header: null
     })
+  },
+  Login: {
+    screen: Login,
+    path: 'account_verification/:hash',
+    navigationOptions: ({navigation}) => ({
+      title: 'Login',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      }
+    })
   }
 })
 
@@ -135,18 +147,10 @@ const styles = StyleSheet.create({
   }
 });
 
-class RouterTabs extends Component {
+export default class RouterTabs extends Component {
   render() {
     return(
-      <Tabs />
+      <RootStack uriPrefix={'http://halalbeef.co.id/'}/>
     )
   }
 }
-
-function mapDispatchToProps(dispatch) {
-  return dispatch
-}
-
-connect(
-  mapDispatchToProps
-)(RouterTabs)

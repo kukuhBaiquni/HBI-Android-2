@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Dimensions, Animated, Picker } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Dimensions, Animated, Picker, Linking } from 'react-native';
 import { Right, Button, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
 import { SERVER_URL } from '../config';
@@ -10,6 +10,8 @@ import RNParallax from './Parallax_Header';
 import CartIcon from './Cart_Icon';
 import Modal from "react-native-modal";
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
+import FlashMessage from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 
 export default class ProductDetails extends Component {
   constructor(props) {
@@ -19,11 +21,12 @@ export default class ProductDetails extends Component {
       loading: false,
       showModal: false,
       scrollY : new Animated.Value(0),
-      picked: 'None',
-      selected: null,
+      picked: 'None', // data
+      selected: null, //data
       options: [{label: 'None', value: 'None'}, {label: 'Cut', value: 'Cut'}, {label: 'Slice', value: 'Slice'}, {label: 'Grind', value: 'Grind'}],
       index: 0,
-      showModalContent: false
+      showModalContent: false,
+      itemCount: 1 // data
     }
   }
 
@@ -45,6 +48,33 @@ export default class ProductDetails extends Component {
     this.setState({picked: val, index: target})
   }
 
+  changeCount(x) {
+    let count = this.state.itemCount
+    if (x === 'inc') {
+      count ++
+      this.setState({itemCount: count})
+    }else{
+      if (count > 1) {
+        count --
+        this.setState({itemCount: count})
+      }
+    }
+  }
+
+  showInfo() {
+    showMessage({
+      message: 'Info',
+      description: 'Anda dapat memilih proses untuk pemesanan setiap produk.',
+      type: 'default',
+      backgroundColor: "#7c0c10"
+    })
+  }
+
+  goToCartHideModal() {
+    this.setState({showModal: false})
+    this.props.navigation.navigate('Cart')
+  }
+
   showProcess() {
     this.setState({showProcess: true})
   }
@@ -62,6 +92,16 @@ export default class ProductDetails extends Component {
   addToCart() {
     this.setState({
       showModal: true
+    })
+  }
+
+  testUrl(x) {
+    Linking.canOpenURL(x).then(supported => {
+      if (supported) {
+        Linking.openURL(x)
+      }else{
+        console.log('Error');
+      }
     })
   }
 
@@ -147,7 +187,7 @@ export default class ProductDetails extends Component {
                     <View style={{flex: 1, flexDirection: 'row'}}>
                       <Text style={{paddingLeft: 25, paddingBottom: 25}}>Grinding</Text>
                       {
-                        navigation.state.params.process.grind === null || navigation.state.params.process.grind
+                        navigation.state.params.process.grind === null
                         ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -23}} name="cancel" />
                         : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -23}} name="check-circle" />
                       }
@@ -204,15 +244,15 @@ export default class ProductDetails extends Component {
                     <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(navigation.state.params.enduserprice)}</Text>
                     {/*Increment Button*/}
                     <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
-                      <TouchableNativeFeedback>
+                      <TouchableNativeFeedback onPress={(x) => this.changeCount('dec')}>
                         <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
                           <Text style={{color: 'white', fontSize: 22}}>-</Text>
                         </View>
                       </TouchableNativeFeedback>
                       <View style={{width: 40, height: 30, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3}}>
-                        <Text>1</Text>
+                        <Text>{this.state.itemCount}</Text>
                       </View>
-                      <TouchableNativeFeedback>
+                      <TouchableNativeFeedback onPress={(x) => this.changeCount('inc')}>
                         <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
                           <Text style={{color: 'white', fontSize: 18}}>+</Text>
                         </View>
@@ -224,8 +264,9 @@ export default class ProductDetails extends Component {
                   <View style={{height: 195, width: 260, borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3, padding: 5}}>
                     <View style={{flexDirection: 'row'}}>
                       <Text style={{color: '#919191', marginRight: 5}}>Pilihan Proses</Text>
-                      <View style={{position: 'absolute', right: 0, top: 0}}>
-                        <Icon name='help' color='#7c0c10' size={19}/>
+                      <View style={{position: 'absolute', right: 0, top: 0, flexDirection: 'row'}}>
+                        <Icon onPress={() => this.showInfo()} name='info' color='#7c0c10' size={19}/>
+                        <Text style={{color: '#7c0c10', marginLeft:2, fontSize: 13}}>Info</Text>
                       </View>
                     </View>
                       <View style={{height: 50, width: 165, marginTop: 10, marginBottom: 45}}>
@@ -247,7 +288,7 @@ export default class ProductDetails extends Component {
                                 buttonSize={10}
                                 buttonOuterSize={20}
                                 buttonWrapStyle={{marginLeft: 10}}
-                                  />
+                                />
                               <RadioButtonLabel
                                 obj={x}
                                 index={i}
@@ -333,21 +374,27 @@ export default class ProductDetails extends Component {
                   </View>
                 </View>
                 <View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
-                  <TouchableNativeFeedback>
+                  <TouchableOpacity onPress={(x) => this.testUrl('mailto:hobiafk@gmail.com')}>
                     <View style={{height: 45, width: 260, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
                       <Text style={{color: 'white'}}>Lanjut ke pembayaran</Text>
                     </View>
-                  </TouchableNativeFeedback>
+                  </TouchableOpacity>
                 </View>
                 <View style={{alignItems: 'center', marginBottom: 20}}>
-                  <TouchableNativeFeedback>
+                  <TouchableOpacity onPress={() => this.goToCartHideModal()}>
                     <View style={{height: 45, width: 260, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderRadius: 3, borderWidth: 1, borderColor: '#7c0c10'}}>
                       <Text style={{color: '#7c0c10'}}>Lihat keranjang</Text>
                     </View>
-                  </TouchableNativeFeedback>
+                  </TouchableOpacity>
                 </View>
               </ScrollView>
             }
+            <FlashMessage
+              position='top'
+              autoHide={false}
+              floating={true}
+              icon={{icon: 'info', position: 'left'}}
+              />
           </View>
         </Modal>
       </View>

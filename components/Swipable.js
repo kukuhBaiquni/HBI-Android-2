@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, Image, TouchableNativeFeedback } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
 import { connect } from 'react-redux';
 import { SERVER_URL } from '../config';
@@ -39,7 +39,7 @@ class Swipable extends Component {
           >
           {
             this.state.renderItems.map((x, i) =>
-            <TouchableNativeFeedback key={i} onPress={() => navigation.replace('ProductDetails', x)}>
+            <TouchableOpacity key={i} onPress={() => navigation.replace('ProductDetails', x)}>
               <View style={styles.slide}>
                 <Text direction='alternate' animation='zoomIn' iterationCount={1} style={{color: 'white', fontSize: 18, fontWeight: 'bold', position: 'absolute', zIndex: 3, bottom: 45}}>{x.productname}</Text>
                 <Image
@@ -50,7 +50,7 @@ class Swipable extends Component {
                  iterationCount={1}
                 />
               </View>
-            </TouchableNativeFeedback>
+            </TouchableOpacity>
             )
           }
         </Swiper>
