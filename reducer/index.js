@@ -1,10 +1,11 @@
 import { combineReducers } from 'redux';
 import listProducts from './List_Products';
 import globalStatus from './Global_Status';
-import activeUser from './Active_User';
+import token from './Token';
+import userData from './User_Data';
 
 const rootReducer = combineReducers({
-  listProducts, globalStatus, activeUser
+  listProducts, globalStatus, token, userData
 })
 
 export default rootReducer

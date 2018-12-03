@@ -12,6 +12,7 @@ import Profile from './tabs/Profile';
 import ProfilePrevention from './stack/Profile_Prevention';
 import Login from './stack/Login';
 import Register from './stack/Register';
+import Blank from './stack/Blank';
 
 const Tabs = createMaterialTopTabNavigator({
   About: {
@@ -139,6 +140,12 @@ const RootStack = createStackNavigator({
   },
   ProfilePrevention: {
     screen: ProfilePrevention,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  Blank: {
+    screen: Blank,
     navigationOptions: ({navigation}) => ({
       header: null
     })

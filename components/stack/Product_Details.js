@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Picker } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Picker, AsyncStorage } from 'react-native';
+import { connect } from 'react-redux';
 import { Right, Button, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
 import { SERVER_URL } from '../../config';
@@ -12,8 +13,9 @@ import Modal from "react-native-modal";
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
+import { NavigationEvents } from 'react-navigation';
 
-export default class ProductDetails extends Component {
+class ProductDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -61,13 +63,20 @@ export default class ProductDetails extends Component {
   }
 
   addToCart(v) {
-    console.log(this.props.activeUser);
     this.setState({showModal: false})
-    showMessage({
-      message: 'Sukses',
-      description: 'Produk berhasil ditambahkan ke keranjang.',
-      type: 'success',
-    })
+    if (this.state.isLoggedIn) {
+      showMessage({
+        message: 'Sukses',
+        description: 'Produk berhasil ditambahkan ke keranjang.',
+        type: 'success',
+      })
+    }else{
+      showMessage({
+        message: 'Gagal',
+        description: 'Anda harus login terlebih dahulu untuk berbelanja.',
+        type: 'danger',
+      })
+    }
   }
 
   goToCartHideModal() {
@@ -89,10 +98,24 @@ export default class ProductDetails extends Component {
     })
   }
 
+  checkToken = async () => {
+    try {
+      const val = await AsyncStorage.getItem('access_token');
+      if (val !== null) {
+        console.log(val);
+      }
+    } catch (error) {
+      console.log('Error Cok');
+    }
+  }
+
   render() {
     const { navigation } = this.props;
     return(
       <View style={{flex: 1}}>
+        <NavigationEvents
+          onDidFocus={() => this.checkToken()}
+          />
         <RNParallax
           headerMinHeight={55}
           headerMaxHeight={200}
@@ -153,27 +176,27 @@ export default class ProductDetails extends Component {
                       </Right>
                     </View>
                     <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{paddingLeft: 25, paddingBottom: 25}}>Cutting</Text>
+                      <Text style={{paddingLeft: 25, paddingBottom: 15}}>Cutting</Text>
                       {
                         navigation.state.params.process.cut.length === 0
-                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -23}} name="cancel" />
-                        : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -23}} name="check-circle" />
+                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -15}} name="cancel" />
+                      : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -15}} name="check-circle" />
                       }
                     </View>
                     <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{paddingLeft: 25, paddingBottom: 25}}>Slicing</Text>
+                      <Text style={{paddingLeft: 25, paddingBottom: 15}}>Slicing</Text>
                       {
                         navigation.state.params.process.slice.length === 0
-                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -23}} name="cancel" />
-                        : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -23}} name="check-circle" />
+                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -15}} name="cancel" />
+                      : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -15}} name="check-circle" />
                       }
                     </View>
                     <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{paddingLeft: 25, paddingBottom: 25}}>Grinding</Text>
+                      <Text style={{paddingLeft: 25, paddingBottom: 15}}>Grinding</Text>
                       {
                         navigation.state.params.process.grind === null
-                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -23}} name="cancel" />
-                        : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -23}} name="check-circle" />
+                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -15}} name="cancel" />
+                      : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -15}} name="check-circle" />
                       }
                     </View>
                   </View>
@@ -376,23 +399,20 @@ export default class ProductDetails extends Component {
           floating={true}
           duration={3000}
           ref='suc'
-          icon={{icon: 'success', position: 'left'}}
+          icon={this.state.isLoggedIn ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
           />
       </View>
     )
   }
-}
-// <TouchableOpacity onPress={(r) => this.testing('b')} style={[styles.fixedCartLeft, {backgroundColor: '#7c0c10', left: 0}]}>
-//   {
-//     this.state.loading
-//     ? <UIActivityIndicator color='white' size={20} />
-//     :
-//     <View>
-//       <Icon name='add-shopping-cart' size={20} color='white'/>
-//       <Text style={{color: 'white', textAlign: 'center'}}>Add to Cart</Text>
-//     </View>
-//   }
-// </TouchableOpacity>
+};
+
+function mapDispatchToProps(dispatch) {
+  return dispatch
+};
+
+export default connect(
+  mapDispatchToProps
+)(ProductDetails);
 
 const styles = StyleSheet.create({
   productName: {

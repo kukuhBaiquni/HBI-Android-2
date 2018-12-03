@@ -1,17 +1,32 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground } from 'react-native';
+import { connect } from 'react-redux';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground, AsyncStorage } from 'react-native';
 import { Container, Header, Content, Input, Item } from 'native-base';
 import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
+import { submitFormLogin } from '../../actions/Login_Attempt';
 
-export default class Login extends Component {
+class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      secure: true
+      secure: true,
+      emailHandler: '',
+      passwordHandler: ''
     }
   }
+
+  submitForm() {
+    let email = this.state.emailHandler;
+    let password = this.state.passwordHandler;
+    let data = {
+      email, password
+    };
+    this.props.dispatch(submitFormLogin(data));
+    this.props.navigation.replace('Blank');
+  }
+
   render() {
     const { navigation } = this.props;
     return(
@@ -33,6 +48,7 @@ export default class Login extends Component {
                   underlineColorAndroid='transparent'
                   keyboardType='email-address'
                   style={[styles.defaultInput]}
+                  onChangeText={(x) => this.setState({emailHandler: x})}
                   />
               </Item>
             </Animatable.View>
@@ -51,6 +67,7 @@ export default class Login extends Component {
                   placeholderTextColor='#919191'
                   secureTextEntry={this.state.secure}
                   style={[styles.defaultInput]}
+                  onChangeText={(x) => this.setState({passwordHandler: x})}
                   />
                 <TouchableOpacity style={{position: 'absolute', right: 5}}>
                   {
@@ -70,7 +87,7 @@ export default class Login extends Component {
               duration={500}
               iterationCount={1}
               >
-              <TouchableOpacity style={[styles.button, { backgroundColor: '#7c0c10' }]}>
+              <TouchableOpacity style={[styles.button, { backgroundColor: '#7c0c10' }]} onPress={() => this.submitForm()}>
                 <Text style={{color: 'white', fontWeight: 'bold'}}>Masuk</Text>
               </TouchableOpacity>
             </Animatable.View>
@@ -134,6 +151,14 @@ export default class Login extends Component {
     )
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return dispatch
+};
+
+export default connect(
+  mapDispatchToProps
+)(Login);
 
 const styles = StyleSheet.create({
   defaultInput: {
