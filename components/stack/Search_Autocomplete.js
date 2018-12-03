@@ -3,7 +3,6 @@ import { View, Text, TouchableOpacity, StyleSheet, Image, ScrollView } from 'rea
 import { Icon } from 'react-native-elements';
 import SearchBar from 'react-native-searchbar';
 import { connect } from 'react-redux';
-import { SERVER_URL } from '../config';
 
 class SearchAutocomplete extends Component {
   constructor(props) {
@@ -67,10 +66,6 @@ class SearchAutocomplete extends Component {
   }
 }
 
-// <Image
-//   style={styles.image}
-//   source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
-//   />
 const styles = StyleSheet.create({
   looperContainer: {
     backgroundColor: 'white',

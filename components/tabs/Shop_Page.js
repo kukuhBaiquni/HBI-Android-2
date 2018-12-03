@@ -2,11 +2,11 @@ import React, { Component } from 'react';
 import { StatusBar, StyleSheet, TextInput, View, TouchableOpacity, ScrollView, TouchableNativeFeedback } from 'react-native';
 import { Container, Header, Item, Text, Right, Button, Content, Tab, Tabs, ScrollableTab } from 'native-base';
 import { Icon } from 'react-native-elements';
-import ProductsTab from './Products_Tab';
+import ProductsTab from '../Products_Tab';
 import { connect } from 'react-redux';
-import { getAllProducts } from '../actions/Get_All_Products';
+import { getAllProducts } from '../../actions/Get_All_Products';
 import { NavigationEvents } from 'react-navigation';
-import CartIcon from './Cart_Icon';
+import CartIcon from '../Cart_Icon';
 
 class ShopPage extends Component {
   componentDidMount() {

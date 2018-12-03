@@ -2,13 +2,16 @@ import React, { Component } from 'react';
 import { createMaterialTopTabNavigator, createStackNavigator} from 'react-navigation';
 import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import SearchAutocomplete from './Search_Autocomplete';
-import ShopPage from './Shop_Page';
+import SearchAutocomplete from './stack/Search_Autocomplete';
 import Example from './Static_Example';
-import ProductDetails from './Product_Details';
-import Mail from './Mail';
-import Cart from './Cart';
-import Login from './Login';
+import ShopPage from './tabs/Shop_Page';
+import ProductDetails from './stack/Product_Details';
+import Mail from './tabs/Mail';
+import Cart from './stack/Cart';
+import Profile from './tabs/Profile';
+import ProfilePrevention from './stack/Profile_Prevention';
+import Login from './stack/Login';
+import Register from './stack/Register';
 
 const Tabs = createMaterialTopTabNavigator({
   About: {
@@ -42,7 +45,7 @@ const Tabs = createMaterialTopTabNavigator({
     }
   },
   Profile: {
-    screen: Example,
+    screen: Profile,
     navigationOptions: {
       tabBarIcon: ({tintColor}) => <Icon name='account-box' size={24} color={tintColor} />
     }
@@ -121,6 +124,23 @@ const RootStack = createStackNavigator({
         backgroundColor: 'white',
         borderBottomColor: 'black'
       }
+    })
+  },
+  Register: {
+    screen: Register,
+    navigationOptions: ({navigation}) => ({
+      title: 'Register',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      }
+    })
+  },
+  ProfilePrevention: {
+    screen: ProfilePrevention,
+    navigationOptions: ({navigation}) => ({
+      header: null
     })
   }
 })

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Dimensions, Animated, Picker, Linking } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Picker } from 'react-native';
 import { Right, Button, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
-import { SERVER_URL } from '../config';
-import { idrFormat } from '../config';
+import { SERVER_URL } from '../../config';
+import { idrFormat } from '../../config';
 import { UIActivityIndicator } from 'react-native-indicators';
-import Swipable from './Swipable';
-import RNParallax from './Parallax_Header';
-import CartIcon from './Cart_Icon';
+import Swipable from '../Swipable';
+import RNParallax from '../Parallax_Header';
+import CartIcon from '../Cart_Icon';
 import Modal from "react-native-modal";
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import FlashMessage from 'react-native-flash-message';
@@ -18,9 +18,8 @@ export default class ProductDetails extends Component {
     super(props)
     this.state = {
       showProcess: false,
-      loading: false,
       showModal: false,
-      scrollY : new Animated.Value(0),
+      isLoggedIn: false,
       picked: 'None', // data
       selected: null, //data
       options: [{label: 'None', value: 'None'}, {label: 'Cut', value: 'Cut'}, {label: 'Slice', value: 'Slice'}, {label: 'Grind', value: 'Grind'}],
@@ -61,12 +60,13 @@ export default class ProductDetails extends Component {
     }
   }
 
-  showInfo() {
+  addToCart(v) {
+    console.log(this.props.activeUser);
+    this.setState({showModal: false})
     showMessage({
-      message: 'Info',
-      description: 'Anda dapat memilih proses untuk pemesanan setiap produk.',
-      type: 'default',
-      backgroundColor: "#7c0c10"
+      message: 'Sukses',
+      description: 'Produk berhasil ditambahkan ke keranjang.',
+      type: 'success',
     })
   }
 
@@ -83,25 +83,9 @@ export default class ProductDetails extends Component {
     this.setState({showProcess: false})
   }
 
-  testing(e) {
-    this.setState(function(prevState) {
-      return {loading: !prevState.loading}
-    })
-  }
-  // Show modal on Success
-  addToCart() {
+  showModal() {
     this.setState({
       showModal: true
-    })
-  }
-
-  testUrl(x) {
-    Linking.canOpenURL(x).then(supported => {
-      if (supported) {
-        Linking.openURL(x)
-      }else{
-        console.log('Error');
-      }
     })
   }
 
@@ -202,7 +186,7 @@ export default class ProductDetails extends Component {
         />
         <TouchableNativeFeedback>
           <View style={styles.footerWrapper}>
-            <TouchableOpacity  style={{backgroundColor: 'white', width: '20%', height: 50, justifyContent: 'center'}} onPress={() => this.addToCart()}>
+            <TouchableOpacity  style={{backgroundColor: 'white', width: '20%', height: 50, justifyContent: 'center'}} onPress={() => this.showModal()}>
               <Icon name='add-shopping-cart' size={28} color='#7c0c10'/>
             </TouchableOpacity>
             <TouchableNativeFeedback>
@@ -221,11 +205,11 @@ export default class ProductDetails extends Component {
           onModalHide={() => this.setState({showModalContent: false})}
           hideModalContentWhileAnimating={true}
           >
-            <View style={{ backgroundColor: 'white', width: 300, height: 400, borderRadius: 4}}>
+            <View style={{ backgroundColor: 'white', width: 300, height: 395, borderRadius: 4}}>
               <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
-                <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Produk berhasil ditambahkan</Text>
+                <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Pilihan Anda</Text>
                 <TouchableOpacity style={{position: 'absolute', right: 10, top: 15}}>
-                  <Icon name='clear' color='#e2e2e2' size={22} onPress={() => this.setState({showModal: false})}/>
+                  <Icon name='clear' color='#919191' size={22} onPress={() => this.setState({showModal: false})}/>
                 </TouchableOpacity>
               </View>
               {
@@ -262,13 +246,7 @@ export default class ProductDetails extends Component {
                 </View>
                 <View style={{alignItems: 'center', marginTop: 10}}>
                   <View style={{height: 195, width: 260, borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3, padding: 5}}>
-                    <View style={{flexDirection: 'row'}}>
-                      <Text style={{color: '#919191', marginRight: 5}}>Pilihan Proses</Text>
-                      <View style={{position: 'absolute', right: 0, top: 0, flexDirection: 'row'}}>
-                        <Icon onPress={() => this.showInfo()} name='info' color='#7c0c10' size={19}/>
-                        <Text style={{color: '#7c0c10', marginLeft:2, fontSize: 13}}>Info</Text>
-                      </View>
-                    </View>
+                    <Text style={{color: '#919191', marginRight: 5}}>Pilihan Proses</Text>
                       <View style={{height: 50, width: 165, marginTop: 10, marginBottom: 45}}>
                         <RadioForm
                           formHorizontal={false}
@@ -303,7 +281,7 @@ export default class ProductDetails extends Component {
                       </View>
                       {
                         this.state.picked === 'None' &&
-                        <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Anda tidak memilih proses apapun untuk pemesanan produk ini</Text>
+                        <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Anda dapat memilih proses untuk pemesanan setiap produk.</Text>
                       }
                       {
                         this.state.picked === 'Cut' &&
@@ -320,6 +298,7 @@ export default class ProductDetails extends Component {
                                 selectedValue={this.state.selected}
                                 onValueChange={(x) => this.setState({selected: x})}
                                 >
+                                <Picker.Item label='-' value='0' style={{color: 'red'}} />
                                 {
                                   navigation.state.params.process.cut.map((x, i) => {
                                     return <Picker.Item key={i} label={x + 'cm'} value={x + 'cm'} style={{color: 'red'}} />
@@ -347,9 +326,10 @@ export default class ProductDetails extends Component {
                                 selectedValue={this.state.selected}
                                 onValueChange={(x) => this.setState({selected: x})}
                                 >
+                                <Picker.Item label='-' value='0' style={{color: 'red'}} />
                                 {
                                   navigation.state.params.process.slice.map((x, i) => {
-                                    return <Picker.Item key={i} label={x + 'cm'} value={x + 'cm'} style={{color: 'red'}} />
+                                    return <Picker.Item key={i} label={x + 'mm'} value={x + 'mm'} style={{color: 'red'}} />
                                   })
                                 }
                               </Picker>
@@ -374,9 +354,9 @@ export default class ProductDetails extends Component {
                   </View>
                 </View>
                 <View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
-                  <TouchableOpacity onPress={(x) => this.testUrl('mailto:hobiafk@gmail.com')}>
+                  <TouchableOpacity onPress={(x) => this.addToCart(navigation.state.params)}>
                     <View style={{height: 45, width: 260, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                      <Text style={{color: 'white'}}>Lanjut ke pembayaran</Text>
+                      <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
@@ -389,14 +369,15 @@ export default class ProductDetails extends Component {
                 </View>
               </ScrollView>
             }
-            <FlashMessage
-              position='top'
-              autoHide={false}
-              floating={true}
-              icon={{icon: 'info', position: 'left'}}
-              />
           </View>
         </Modal>
+        <FlashMessage
+          position='top'
+          floating={true}
+          duration={3000}
+          ref='suc'
+          icon={{icon: 'success', position: 'left'}}
+          />
       </View>
     )
   }
@@ -412,13 +393,6 @@ export default class ProductDetails extends Component {
 //     </View>
 //   }
 // </TouchableOpacity>
-
-const window = Dimensions.get('window');
-
-const AVATAR_SIZE = 120;
-const ROW_HEIGHT = 60;
-const PARALLAX_HEADER_HEIGHT = 350;
-const STICKY_HEADER_HEIGHT = 70;
 
 const styles = StyleSheet.create({
   productName: {
