@@ -103,6 +103,8 @@ class ProductDetails extends Component {
       const val = await AsyncStorage.getItem('access_token');
       if (val !== null) {
         console.log(val);
+      }else{
+        console.log('lol');
       }
     } catch (error) {
       console.log('Error Cok');

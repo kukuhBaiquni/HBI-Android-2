@@ -6,6 +6,7 @@ import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
 import { submitFormLogin } from '../../actions/Login_Attempt';
+import validator from 'validator';
 
 class Login extends Component {
   constructor(props) {
@@ -13,7 +14,8 @@ class Login extends Component {
     this.state = {
       secure: true,
       emailHandler: '',
-      passwordHandler: ''
+      passwordHandler: '',
+      isFormEmpty: false
     }
   }
 
@@ -23,8 +25,12 @@ class Login extends Component {
     let data = {
       email, password
     };
-    this.props.dispatch(submitFormLogin(data));
-    this.props.navigation.replace('Blank');
+    if (email.length > 0 && password.length > 0) {
+      this.props.dispatch(submitFormLogin(data));
+      this.props.navigation.replace('Blank');
+    }else{
+      this.setState({isFormEmpty: true})
+    }
   }
 
   render() {
@@ -33,6 +39,7 @@ class Login extends Component {
       <ScrollView>
         <View style={{alignItems: 'center', marginTop: 70}}>
           <View style={{width: 260, alignItems: 'center', marginTop: 10}}>
+            {this.state.isFormEmpty && <Text style={{fontSize: 12, color: 'red', marginLeft: -105, paddingBottom: 5}}>*Form tidak boleh kosong</Text>}
             <Animatable.View
               style={{width: 260, alignItems: 'center'}}
               animation='fadeInDown'
