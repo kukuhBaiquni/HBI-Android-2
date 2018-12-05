@@ -22,6 +22,7 @@ class ProductDetails extends Component {
       showProcess: false,
       showModal: false,
       isLoggedIn: false,
+      token: '',
       picked: 'None', // data
       selected: null, //data
       options: [{label: 'None', value: 'None'}, {label: 'Cut', value: 'Cut'}, {label: 'Slice', value: 'Slice'}, {label: 'Grind', value: 'Grind'}],
@@ -70,6 +71,13 @@ class ProductDetails extends Component {
         description: 'Produk berhasil ditambahkan ke keranjang.',
         type: 'success',
       })
+      const item = {
+        token: this.state.token,
+        id: this.props.navigation.state.params.id,
+        qty: this.state.itemCount,
+        selected_process: this.state.picked + ' ' + this.state.selected
+      }
+      console.log(item);
     }else{
       showMessage({
         message: 'Gagal',
@@ -102,12 +110,12 @@ class ProductDetails extends Component {
     try {
       const val = await AsyncStorage.getItem('access_token');
       if (val !== null) {
-        console.log(val);
+        this.setState({isLoggedIn: true, token: JSON.parse(val)})
       }else{
-        console.log('lol');
+        this.setState({isLoggedIn: false})
       }
     } catch (error) {
-      console.log('Error Cok');
+      this.setState({isLoggedIn: false})
     }
   }
 
@@ -229,6 +237,7 @@ class ProductDetails extends Component {
           onModalShow={() => this.setState({showModalContent: true})}
           onModalHide={() => this.setState({showModalContent: false})}
           hideModalContentWhileAnimating={true}
+          useNativeDriver
           >
             <View style={{ backgroundColor: 'white', width: 300, height: 395, borderRadius: 4}}>
               <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
@@ -250,7 +259,7 @@ class ProductDetails extends Component {
                   </View>
                   <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
                     <Text style={{fontSize: 16, width: 140, textAlign: 'left', color: '#919191'}}>{navigation.state.params.productname}</Text>
-                    <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(navigation.state.params.enduserprice)}</Text>
+                    <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(navigation.state.params.enduserprice * this.state.itemCount)}</Text>
                     {/*Increment Button*/}
                     <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
                       <TouchableNativeFeedback onPress={(x) => this.changeCount('dec')}>

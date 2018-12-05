@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground } from 'react-native';
 import { Container, Header, Content, Input, Item } from 'native-base';
 import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
 import validator from 'validator';
+import { submitFormRegister } from '../../actions/Register';
 
-export default class Register extends Component {
+class Register extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -74,14 +76,17 @@ export default class Register extends Component {
     if (isNameValid && isEmailValid && isPasswordValid && isPasswordMatch) {
       if (nameHandler.length !== 0 && emailHandler.length !== 0 && passwordHandler.length !== 0 && passwordHandler2.length !== 0) {
         this.setState({isFormValid: true})
-        console.log('form valid');
+        const data = {
+          name: nameHandler,
+          email: emailHandler,
+          password: passwordHandler
+        }
+        this.props.dispatch(submitFormRegister(data))
       }else{
         this.setState({isFormValid: false})
-        console.log('invalid form');
       }
     }else{
       this.setState({isFormValid: false})
-      console.log('invalid form');
     }
   }
 
@@ -156,8 +161,8 @@ export default class Register extends Component {
                 <TouchableOpacity style={{position: 'absolute', right: 5}}>
                   {
                     this.state.secure
-                    ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={22}/>
-                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={22}/>
+                    ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={24}/>
+                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={24}/>
                   }
                 </TouchableOpacity>
               </Item>
@@ -185,8 +190,8 @@ export default class Register extends Component {
                 <TouchableOpacity style={{position: 'absolute', right: 5}}>
                   {
                     this.state.secure2
-                    ? <Icon onPress={() => this.setState({secure2: false})} name='visibility' color='#919191' size={22}/>
-                  : <Icon onPress={() => this.setState({secure2: true})} name='visibility-off' color='#919191' size={22}/>
+                    ? <Icon onPress={() => this.setState({secure2: false})} name='visibility' color='#919191' size={24}/>
+                  : <Icon onPress={() => this.setState({secure2: true})} name='visibility-off' color='#919191' size={24}/>
                   }
                 </TouchableOpacity>
               </Item>
@@ -264,6 +269,14 @@ export default class Register extends Component {
     )
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return dispatch
+};
+
+export default connect(
+  mapDispatchToProps
+)(Register);
 
 const styles = StyleSheet.create({
   defaultInput: {

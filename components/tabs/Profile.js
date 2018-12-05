@@ -12,14 +12,24 @@ class Profile extends Component {
       if (val !== null) {
         this.props.dispatch(fetchUser(val))
       }else{
-        this.props.navigation.goBack()
-        this.props.navigation.navigate('ProfilePrevention')
+        console.log('a');
+        // this.props.navigation.goBack()
+        // this.props.navigation.navigate('ProfilePrevention')
       }
     } catch (error) {
+      console.log('b');
       this.props.navigation.goBack()
       this.props.navigation.navigate('ProfilePrevention')
     }
   }
+
+  // beforeRender() {
+  //   let token = AsyncStorage.getItem('access_token');
+  //   if (!token) {
+  //     this.props.navigation.goBack()
+  //     this.props.navigation.navigate('ProfilePrevention')
+  //   }
+  // }
 
   render() {
     const { userData } = this.props;
@@ -29,6 +39,35 @@ class Profile extends Component {
           onDidFocus={() => this.beforeRender()}
           />
         <Text>{userData.name}</Text>
+          <Text>Profile</Text>
+            <Text>Profile</Text>
+              <Text>Profile</Text>
+                <Text>Profile</Text>
+                  <Text>Profile</Text>
+                    <Text>Profile</Text>
+                      <Text>Profile</Text>
+                        <Text>Profile</Text>
+                          <Text>Profile</Text>
+                            <Text>Profile</Text>
+                              <Text>Profile</Text>
+                                <Text>Profile</Text>
+                                  <Text>Profile</Text>
+                                    <Text>Profile</Text>
+                                      <Text>Profile</Text>
+                                        <Text>Profile</Text>
+                                          <Text>Profile</Text>
+                                            <Text>Profile</Text>
+                                              <Text>Profile</Text>
+                                                <Text>Profile</Text>
+                                                  <Text>Profile</Text>
+                                                    <Text>Profile</Text>
+                                                      <Text>Profile</Text>
+                                                        <Text>Profile</Text>
+                                                          <Text>Profile</Text>
+                                                            <Text>Profile</Text>
+                                                              <Text>Profile</Text>
+                                                                <Text>Profile</Text>
+        <Text>Profile</Text>
       </View>
     )
   }

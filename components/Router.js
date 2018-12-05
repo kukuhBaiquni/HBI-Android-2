@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { createMaterialTopTabNavigator, createStackNavigator} from 'react-navigation';
-import { TouchableOpacity, Text, View, StyleSheet } from 'react-native';
+import { TouchableOpacity, Text, View, StyleSheet, AsyncStorage } from 'react-native';
 import { Icon } from 'react-native-elements';
 import SearchAutocomplete from './stack/Search_Autocomplete';
 import Example from './Static_Example';
@@ -12,7 +12,6 @@ import Profile from './tabs/Profile';
 import ProfilePrevention from './stack/Profile_Prevention';
 import Login from './stack/Login';
 import Register from './stack/Register';
-import Blank from './stack/Blank';
 
 const Tabs = createMaterialTopTabNavigator({
   About: {
@@ -48,7 +47,21 @@ const Tabs = createMaterialTopTabNavigator({
   Profile: {
     screen: Profile,
     navigationOptions: {
-      tabBarIcon: ({tintColor}) => <Icon name='account-box' size={24} color={tintColor} />
+      tabBarIcon: ({tintColor}) => <Icon name='account-box' size={24} color={tintColor} />,
+    tabBarOnPress: async (x) => {
+      {
+        try {
+          const val = await AsyncStorage.getItem('access_token');
+          if (val !== null) {
+            x.navigation.navigate('Profile')
+          }else{
+            x.navigation.navigate('ProfilePrevention')
+          }
+        } catch (error) {
+          x.navigation.navigate('ProfilePrevention')
+        }
+      }
+    }
     }
   }
 },{
@@ -143,16 +156,8 @@ const RootStack = createStackNavigator({
     navigationOptions: ({navigation}) => ({
       header: null
     })
-  },
-  Blank: {
-    screen: Blank,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    })
   }
 })
-
-
 
 const styles = StyleSheet.create({
   badge: {

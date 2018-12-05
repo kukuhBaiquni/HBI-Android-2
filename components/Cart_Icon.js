@@ -1,16 +1,46 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity, View, Text, StyleSheet } from 'react-native';
-import { connect } from 'react-redux';
+import * as Animatable from 'react-native-animatable';
 
 class CartIcon extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      itemCount: 0
+    }
+  }
+
+  componentDidMount = async () => {
+    try {
+      var item = await AsyncStorage.getItem('cart');
+      var itemCount = JSON.parse(item).length
+      if (itemCount === 0) {
+        this.setState({itemCount: 0})
+      }else{
+        this.setState({itemCount})
+      }
+    } catch(error) {
+      this.setState({itemCount: 0})
+    }
+  }
+
   render() {
     const { navigation, bcolor } = this.props;
     return(
       <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-        <View style={styles.badge}>
-          <Text style={{textAlign: 'center', fontSize: 10, fontWeight: 'bold', color: 'white'}}>2</Text>
-        </View>
+        {
+          this.state.itemCount > 0 &&
+          <Animatable.View style={styles.badge}
+            animation='rubberBand'
+            useNativeDriver
+            duration={500}
+            iterationCount={1}
+            >
+            <Text style={{textAlign: 'center', fontSize: 10, fontWeight: 'bold', color: 'white'}}>{this.state.itemCount}</Text>
+          </Animatable.View>
+        }
         <Icon name='shopping-cart' size={24} color={ bcolor ? bcolor : 'white'}/>
       </TouchableOpacity>
     )

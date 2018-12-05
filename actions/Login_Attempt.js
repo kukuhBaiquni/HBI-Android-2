@@ -2,26 +2,28 @@ import { put, call, takeEvery } from 'redux-saga/effects';
 import request from 'superagent';
 import { SERVER_URL } from '../config';
 
-// TYPE : POST LOGIN ATTEMPT => TRIGGER (EXPORTED)
 export const submitFormLogin = (data) => {
   return { type: 'SUBMIT_FORM_LOGIN', data };
 };
 
 const loginAttemptSuccess = (data) => {
-  return { type: 'LOGIN_ATTEMPT_SUCCESS', data}; // To Reducer Active_User.js
+  return { type: 'LOGIN_ATTEMPT_SUCCESS', data };
 };
 
-// GLOBAL STATUS
-const requestDone = () => {
-  return { type: 'REQUEST_DONE' }; // To Reducer Global_Status.js
+const loginError = (message) => {
+  return { type: 'LOGIN_ERROR', message }
 };
 
-const requestFailed = () => {
-  return { type: 'REQUEST_FAILED' }; // To Reducer Global_Status.js
+const loginSuccess = () => {
+  return { type: 'LOGIN_SUCCESS' }
 };
 
-// WATCHER & WORKER
-// ============================================================
+const InternalServerError = () => {
+  return { type: 'INTERNAL_SERVER_ERROR' }
+}
+
+// =================================
+
 export function* watcherLoginAttempt(data) {
   yield takeEvery('SUBMIT_FORM_LOGIN', workerLoginAttempt);
 };
@@ -38,11 +40,14 @@ function* workerLoginAttempt(data) {
       })
     })
     var raw = JSON.parse(response.xhr._response);
-    var data = raw
-    yield put(loginAttemptSuccess(data));
-    yield put(requestDone());
+    var data = raw;
+    if (data.token) {
+      yield put(loginAttemptSuccess(data));
+      yield put(loginSuccess())
+    }else{
+      yield put(loginError(data.failure));
+    }
   }catch (error) {
-    yield put(requestFailed());
+    yield put(InternalServerError());
   }
 };
-// ============================================================

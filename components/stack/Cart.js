@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, AsyncStorage } from 'react-native';
 
 export default class Cart extends Component {
+  componentDidMount() {
+    AsyncStorage.removeItem('access_token')
+  }
   render() {
     return(
       <View style={{justifyContent: 'center'}}>

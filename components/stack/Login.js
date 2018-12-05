@@ -6,16 +6,32 @@ import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
 import { submitFormLogin } from '../../actions/Login_Attempt';
+import Modal from "react-native-modal";
 import validator from 'validator';
+import { DotIndicator } from 'react-native-indicators';
+import { NavigationEvents } from 'react-navigation';
 
 class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
       secure: true,
+      showModal: true,
+      showModalContent: false,
       emailHandler: '',
       passwordHandler: '',
-      isFormEmpty: false
+      isFormEmpty: false,
+      loading: false,
+      isLoginError: false,
+      counter: 0
+    }
+  }
+
+  afterRender() {
+    if (this.props.navigation.state.params === undefined) {
+      console.log('a');
+    }else{
+      console.log('b');
     }
   }
 
@@ -26,18 +42,59 @@ class Login extends Component {
       email, password
     };
     if (email.length > 0 && password.length > 0) {
+      this.setState({loading: true, isFormEmpty: false})
       this.props.dispatch(submitFormLogin(data));
-      this.props.navigation.replace('Blank');
+      this.timer = setInterval(() => this.checkResponse(), 1000)
     }else{
       this.setState({isFormEmpty: true})
     }
   }
 
+  checkResponse() {
+    if (this.props.status.login.error) {
+      clearInterval(this.timer)
+      this.setState({loading: false, isLoginError: true})
+    }else{
+      clearInterval(this.timer)
+      const token = this.props.token;
+      this.storeToken(token)
+    }
+  }
+
+  storeToken = async (token) => {
+    try {
+      await AsyncStorage.setItem('access_token', JSON.stringify(token))
+      this.props.navigation.popToTop()
+    } catch (error) {
+      this.props.navigation.replace('Login')
+    }
+  }
+
   render() {
-    const { navigation } = this.props;
+    const { navigation, status } = this.props;
     return(
       <ScrollView>
+        <NavigationEvents
+          onDidFocus={() => this.afterRender()}
+          />
+        <Modal
+          isVisible={this.state.loading}
+          style={{alignItems: 'center'}}
+          onModalShow={() => this.setState({showModalContent: true})}
+          onModalHide={() => this.setState({showModalContent: false})}
+          hideModalContentWhileAnimating={true}
+          useNativeDriver
+          >
+          <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
+            <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
+            <DotIndicator
+              color='#7c0c10'
+              size={8}
+              />
+          </View>
+        </Modal>
         <View style={{alignItems: 'center', marginTop: 70}}>
+          {this.state.isLoginError && <Text style={{color: 'red'}}>{this.props.status.login.message}</Text>}
           <View style={{width: 260, alignItems: 'center', marginTop: 10}}>
             {this.state.isFormEmpty && <Text style={{fontSize: 12, color: 'red', marginLeft: -105, paddingBottom: 5}}>*Form tidak boleh kosong</Text>}
             <Animatable.View
@@ -79,8 +136,8 @@ class Login extends Component {
                 <TouchableOpacity style={{position: 'absolute', right: 5}}>
                   {
                     this.state.secure
-                    ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={18}/>
-                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={18}/>
+                    ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={24}/>
+                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={24}/>
                   }
                 </TouchableOpacity>
               </Item>
