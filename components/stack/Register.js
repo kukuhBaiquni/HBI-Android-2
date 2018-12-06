@@ -6,7 +6,10 @@ import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
 import validator from 'validator';
-import { submitFormRegister } from '../../actions/Register';
+import { submitFormRegister, forceResetRG } from '../../actions/Register';
+import Modal from "react-native-modal";
+import { DotIndicator } from 'react-native-indicators';
+import { NavigationActions, NavigationEvents } from 'react-navigation';
 
 class Register extends Component {
   constructor(props) {
@@ -14,6 +17,7 @@ class Register extends Component {
     this.state = {
       secure: true,
       secure2: true,
+      loading: false,
       nameHandler: '',
       emailHandler: '',
       passwordHandler: '',
@@ -22,25 +26,46 @@ class Register extends Component {
       isEmailValid: true,
       isPasswordValid: true,
       isPasswordMatch: true,
-      isFormValid: false
+      isFormValid: false,
+      isFormEmpty: false
     }
   }
 
   nameHandler(x) {
     this.setState({nameHandler: x})
+    if (x.length > 1) {
+      this.setState({isNameValid: true})
+    }else{
+      this.setState({isNameValid: false})
+    }
   }
   emailHandler(x) {
     this.setState({emailHandler: x})
+    if (validator.isEmail(x)) {
+      this.setState({isEmailValid: true})
+    }else{
+      this.setState({isEmailValid: false})
+    }
   }
   passwordHandler(x) {
     this.setState({passwordHandler: x})
+    if (x.length > 5) {
+      this.setState({isPasswordValid: true})
+    }else{
+      this.setState({isPasswordValid: false})
+    }
   }
   passwordHandler2(x) {
     this.setState({passwordHandler2: x})
+    if (this.state.passwordHandler === x) {
+      this.setState({isPasswordMatch: true})
+    }else{
+      this.setState({isPasswordMatch: false})
+    }
   }
   nameBlur() {
     const name = this.state.nameHandler;
-    if (name.length === 0) {
+    if (name.length < 2) {
       this.setState({isNameValid: false})
     }else{
       this.setState({isNameValid: true})
@@ -73,9 +98,9 @@ class Register extends Component {
   }
   submitForm() {
     const { isNameValid, isEmailValid, isPasswordValid, isPasswordMatch, nameHandler, emailHandler, passwordHandler, passwordHandler2 } = this.state;
-    if (isNameValid && isEmailValid && isPasswordValid && isPasswordMatch) {
-      if (nameHandler.length !== 0 && emailHandler.length !== 0 && passwordHandler.length !== 0 && passwordHandler2.length !== 0) {
-        this.setState({isFormValid: true})
+    if (nameHandler.length !== 0 && emailHandler.length !== 0 && passwordHandler.length !== 0 && passwordHandler2.length !== 0) {
+      if (isNameValid && isEmailValid && isPasswordValid && isPasswordMatch) {
+        this.setState({isFormValid: true, isFormEmpty: false, loading: true})
         const data = {
           name: nameHandler,
           email: emailHandler,
@@ -86,16 +111,49 @@ class Register extends Component {
         this.setState({isFormValid: false})
       }
     }else{
-      this.setState({isFormValid: false})
+      this.setState({isFormValid: false, isFormEmpty: true})
+      this.props.navigation.reset([NavigationActions.navigate({ routeName: 'DeepLinkHandler' })], 0)
+    }
+  }
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.status.register.error) {
+      if (this.state.loading) {
+        this.setState({loading: false})
+      }
+    }else{
+      if (this.props.status.register.success) {
+        this.props.navigation.reset([NavigationActions.navigate({ routeName: 'DeepLinkHandler' })], 0)
+      }
     }
   }
 
   render() {
-    const { isNameValid, isEmailValid, isPasswordValid, isPasswordMatch } = this.state;
+    const { isNameValid, isEmailValid, isPasswordValid, isPasswordMatch, isFormEmpty } = this.state;
     const { navigation } = this.props;
     return(
       <ScrollView>
+        <NavigationEvents
+          onDidFocus={() => this.props.dispatch(forceResetRG())}
+          />
+        <Modal
+          isVisible={this.state.loading}
+          style={{alignItems: 'center'}}
+          onModalShow={() => this.setState({showModalContent: true})}
+          onModalHide={() => this.setState({showModalContent: false})}
+          hideModalContentWhileAnimating={true}
+          useNativeDriver
+          >
+          <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
+            <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
+            <DotIndicator
+              color='#7c0c10'
+              size={8}
+              />
+          </View>
+        </Modal>
         <View style={{alignItems: 'center', marginTop: 50}}>
+          {isFormEmpty && <Text style={{fontSize: 12, color: 'red', marginLeft: -105}}>*Form tidak boleh kosong</Text>}
+          {this.props.status.register.error && <Text style={{fontSize: 12, color: 'red'}}>{this.props.status.register.message}</Text>}
           <View style={{width: 260, alignItems: 'center', marginTop: 10}}>
             <Animatable.View
               style={{width: 260, alignItems: 'center'}}
@@ -116,7 +174,7 @@ class Register extends Component {
                   />
               </Item>
             </Animatable.View>
-            {!isNameValid && <Text style={{fontSize: 12, color: 'red', marginLeft: -105, paddingBottom: 5}}>*Nama tidak boleh kosong</Text>}
+            {!isNameValid && <Text style={{fontSize: 12, color: 'red', marginLeft: -105, paddingBottom: 5}}>*Nama minimal 2 karakter</Text>}
             <View style={{height: 3}}></View>
             <Animatable.View
               style={{width: 260, alignItems: 'center'}}
@@ -196,7 +254,7 @@ class Register extends Component {
                 </TouchableOpacity>
               </Item>
             </Animatable.View>
-            {!isPasswordMatch && <Text style={{fontSize: 12, color: 'red', marginLeft: -120, paddingBottom: 5}}>*Password tidak sesuai</Text>}
+            {!isPasswordMatch && <Text style={{fontSize: 12, color: 'red', marginLeft: -120, paddingBottom: 5}}>*Password belum sesuai</Text>}
             <Animatable.View
               style={{width: 260, alignItems: 'center'}}
               animation='fadeInRight'

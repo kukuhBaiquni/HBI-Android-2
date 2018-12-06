@@ -6,6 +6,10 @@ export const submitFormLogin = (data) => {
   return { type: 'SUBMIT_FORM_LOGIN', data };
 };
 
+export const forceResetLG = () => {
+  return { type: 'RESET_LOGIN_STATE' };
+};
+
 const loginAttemptSuccess = (data) => {
   return { type: 'LOGIN_ATTEMPT_SUCCESS', data };
 };
@@ -20,7 +24,7 @@ const loginSuccess = () => {
 
 const InternalServerError = () => {
   return { type: 'INTERNAL_SERVER_ERROR' }
-}
+};
 
 // =================================
 

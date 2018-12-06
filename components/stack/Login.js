@@ -6,10 +6,13 @@ import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
 import { submitFormLogin } from '../../actions/Login_Attempt';
+import { forceResetAV } from '../../actions/Account_Verification';
 import Modal from "react-native-modal";
 import validator from 'validator';
 import { DotIndicator } from 'react-native-indicators';
-import { NavigationEvents } from 'react-navigation';
+import { NavigationEvents, NavigationActions } from 'react-navigation';
+import FlashMessage from 'react-native-flash-message';
+import { showMessage } from 'react-native-flash-message';
 
 class Login extends Component {
   constructor(props) {
@@ -17,21 +20,25 @@ class Login extends Component {
     this.state = {
       secure: true,
       showModal: true,
+      visibility: 0,
       showModalContent: false,
       emailHandler: '',
       passwordHandler: '',
       isFormEmpty: false,
       loading: false,
-      isLoginError: false,
-      counter: 0
+      isLoginError: false
     }
   }
 
-  afterRender() {
-    if (this.props.navigation.state.params === undefined) {
-      console.log('a');
-    }else{
-      console.log('b');
+  showFlashMessage() {
+    if (this.props.status.account_verification.success) {
+      showMessage({
+        message: 'Sukses',
+        description: this.props.status.account_verification.message,
+        type: 'default',
+        backgroundColor: '#a8ffb5',
+        color: '#00630e'
+      })
     }
   }
 
@@ -44,29 +51,40 @@ class Login extends Component {
     if (email.length > 0 && password.length > 0) {
       this.setState({loading: true, isFormEmpty: false})
       this.props.dispatch(submitFormLogin(data));
-      this.timer = setInterval(() => this.checkResponse(), 1000)
     }else{
       this.setState({isFormEmpty: true})
     }
   }
 
-  checkResponse() {
+  componentDidUpdate(prevProps, prevState) {
     if (this.props.status.login.error) {
-      clearInterval(this.timer)
-      this.setState({loading: false, isLoginError: true})
+      if (this.state.loading) {
+        this.setState({loading: false, isLoginError: true})
+      }
     }else{
-      clearInterval(this.timer)
-      const token = this.props.token;
-      this.storeToken(token)
+      if (prevProps.token !== this.props.token) {
+        const token = this.props.token;
+        this.storeToken(token)
+      }
     }
   }
 
   storeToken = async (token) => {
     try {
       await AsyncStorage.setItem('access_token', JSON.stringify(token))
-      this.props.navigation.popToTop()
+      this.props.dispatch(forceResetAV())
+      this.props.navigation.reset([NavigationActions.navigate({ routeName: 'MainTabs' })], 0)
     } catch (error) {
-      this.props.navigation.replace('Login')
+      Alert.alert(
+        'Kesalahan',
+        'Permintaan anda tidak dapat di proses.',
+      [
+        {text: 'OK'}
+      ],
+      { cancelable: false }
+      )
+      this.props.dispatch(forceReset())
+      this.props.navigation.reset([NavigationActions.navigate({ routeName: 'MainTabs' })], 0)
     }
   }
 
@@ -75,13 +93,11 @@ class Login extends Component {
     return(
       <ScrollView>
         <NavigationEvents
-          onDidFocus={() => this.afterRender()}
+          onDidFocus={() => this.showFlashMessage()}
           />
         <Modal
           isVisible={this.state.loading}
           style={{alignItems: 'center'}}
-          onModalShow={() => this.setState({showModalContent: true})}
-          onModalHide={() => this.setState({showModalContent: false})}
           hideModalContentWhileAnimating={true}
           useNativeDriver
           >
@@ -93,8 +109,8 @@ class Login extends Component {
               />
           </View>
         </Modal>
-        <View style={{alignItems: 'center', marginTop: 70}}>
-          {this.state.isLoginError && <Text style={{color: 'red'}}>{this.props.status.login.message}</Text>}
+        <View style={{alignItems: 'center', marginTop: 100}}>
+          {this.state.isLoginError && <Text style={{color: 'red', width: 280, textAlign: 'center', fontSize: 12}}>{this.props.status.login.message}</Text>}
           <View style={{width: 260, alignItems: 'center', marginTop: 10}}>
             {this.state.isFormEmpty && <Text style={{fontSize: 12, color: 'red', marginLeft: -105, paddingBottom: 5}}>*Form tidak boleh kosong</Text>}
             <Animatable.View
@@ -211,6 +227,13 @@ class Login extends Component {
           </Animatable.View>
           </View>
         </View>
+        <FlashMessage
+          position='top'
+          autoHide={false}
+          floating={true}
+          ref='log'
+          icon={{icon: 'success', position: 'left'}}
+          />
       </ScrollView>
     )
   }

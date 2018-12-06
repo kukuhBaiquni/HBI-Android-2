@@ -12,6 +12,9 @@ import Profile from './tabs/Profile';
 import ProfilePrevention from './stack/Profile_Prevention';
 import Login from './stack/Login';
 import Register from './stack/Register';
+import DeepLinkHandler from './stack/Deep_Link_Handler';
+import AfterDeeplink from './stack/After_Deeplink';
+import { SERVER_URL } from '../config';
 
 const Tabs = createMaterialTopTabNavigator({
   About: {
@@ -130,7 +133,6 @@ const RootStack = createStackNavigator({
   },
   Login: {
     screen: Login,
-    path: 'account_verification/:hash',
     navigationOptions: ({navigation}) => ({
       title: 'Login',
       headerTintColor: '#7c0c10',
@@ -153,6 +155,19 @@ const RootStack = createStackNavigator({
   },
   ProfilePrevention: {
     screen: ProfilePrevention,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  DeepLinkHandler: {
+    screen: DeepLinkHandler,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  AfterDeeplink: {
+    screen: AfterDeeplink,
+    path: 'account_verification/android/:hash',
     navigationOptions: ({navigation}) => ({
       header: null
     })
@@ -182,7 +197,7 @@ const styles = StyleSheet.create({
 export default class RouterTabs extends Component {
   render() {
     return(
-      <RootStack uriPrefix={'http://halalbeef.co.id/'}/>
+      <RootStack uriPrefix={ SERVER_URL }/>
     )
   }
 }

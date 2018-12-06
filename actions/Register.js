@@ -3,42 +3,49 @@ import request from 'superagent';
 import { SERVER_URL } from '../config';
 
 export const submitFormRegister = (data) => {
-  return { type: 'SUBMIT_FORM_REGISTER', data}
+  return { type: 'SUBMIT_FORM_REGISTER', data};
 };
 
-const registerSuccess = (data) => {
-  return { type: 'REGISER_SUCCESS', data}
+export const forceResetRG = () => {
+  return { type: 'RESET_REGISTER_STATE' };
 };
 
-// GLOBAL STATUS
-const requestDone = () => {
-  return { type: 'REQUEST_DONE' }; // To Reducer Global_Status.js
+const registerSuccess = (message) => {
+  return { type: 'REGISTER_SUCCESS', message};
 };
 
-const requestFailed = () => {
-  return { type: 'REQUEST_FAILED' }; // To Reducer Global_Status.js
+const registerFailed = (message) => {
+  return { type: 'REGISTER_FAILED', message};
 };
 
 export function* watcherRegister(data) {
   yield takeEvery('SUBMIT_FORM_REGISTER', workerRegister);
 };
 
-function* workerRegister(data) {
+const InternalServerError = () => {
+  return { type: 'INTERNAL_SERVER_ERROR' }
+};
+
+function* workerRegister(form) {
   try {
     var response = yield call(() => {
       return request
       .post(`${SERVER_URL}register`)
-      .send({name: data.data.name})
-      .send({email: data.data.email})
-      .send({password: data.data.password})
+      .send({name: form.data.name})
+      .send({email: form.data.email})
+      .send({password: form.data.password})
       .then((res) => {
         return res
       })
     })
     var raw = JSON.parse(response.xhr._response);
-    console.log(raw);
-    yield put(requestDone());
+    var message = raw;
+    if (message.success) {
+      yield put(registerSuccess(message));
+    }else{
+      yield put(registerFailed(message));
+    };
   }catch (error) {
-    yield put(requestFailed());
+    yield put(InternalServerError());
   }
 };

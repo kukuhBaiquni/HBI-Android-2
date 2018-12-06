@@ -5,7 +5,7 @@ import { Right, Button, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
 import { SERVER_URL } from '../../config';
 import { idrFormat } from '../../config';
-import { UIActivityIndicator } from 'react-native-indicators';
+import { BarIndicator } from 'react-native-indicators';
 import Swipable from '../Swipable';
 import RNParallax from '../Parallax_Header';
 import CartIcon from '../Cart_Icon';
@@ -14,6 +14,7 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationEvents } from 'react-navigation';
+import { countItem } from '../../actions/Counting_Items';
 
 class ProductDetails extends Component {
   constructor(props) {
@@ -22,6 +23,7 @@ class ProductDetails extends Component {
       showProcess: false,
       showModal: false,
       isLoggedIn: false,
+      loading: false,
       token: '',
       picked: 'None', // data
       selected: null, //data
@@ -31,10 +33,6 @@ class ProductDetails extends Component {
       itemCount: 1 // data
     }
   }
-
-  // componentDidMount() {
-  //   console.log(this.props.navigation.state.params);
-  // }
 
   onValueChange(val) {
     let target = 0
@@ -54,13 +52,18 @@ class ProductDetails extends Component {
     let count = this.state.itemCount
     if (x === 'inc') {
       count ++
-      this.setState({itemCount: count})
+      this.setState({itemCount: count, loading: true})
     }else{
       if (count > 1) {
         count --
-        this.setState({itemCount: count})
+        this.setState({itemCount: count, loading: true})
       }
     }
+    var data = {
+      id: this.props.navigation.state.params.id,
+      qty: count
+    }
+    this.props.dispatch(countItem(data))
   }
 
   addToCart(v) {
@@ -116,6 +119,12 @@ class ProductDetails extends Component {
       }
     } catch (error) {
       this.setState({isLoggedIn: false})
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.resultCounting !== this.props.resultCounting) {
+      this.setState({loading: false})
     }
   }
 
@@ -259,7 +268,15 @@ class ProductDetails extends Component {
                   </View>
                   <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
                     <Text style={{fontSize: 16, width: 140, textAlign: 'left', color: '#919191'}}>{navigation.state.params.productname}</Text>
-                    <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(navigation.state.params.enduserprice * this.state.itemCount)}</Text>
+                    {
+                      this.state.loading
+                      ?
+                      <View style={{height: 24, width: 80, paddingTop: 7, alignItems: 'center'}}>
+                        <BarIndicator count={5} size={15} color='#919191' />
+                      </View>
+                      :
+                      <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(this.state.itemCount === 1 ? navigation.state.params.enduserprice : this.props.resultCounting)}</Text>
+                    }
                     {/*Increment Button*/}
                     <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
                       <TouchableNativeFeedback onPress={(x) => this.changeCount('dec')}>
