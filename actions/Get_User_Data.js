@@ -23,11 +23,12 @@ export function* watcherFecthUserData(token) {
 };
 
 function* workerFetchUserData(data) {
+  console.log(data);
   try {
     var response = yield call(() => {
       return request
       .post(`${SERVER_URL}profile/get_user`)
-      .send({token: JSON.parse(data.token)})
+      .send({token: data.token})
       .then((res) => {
         return res;
       })

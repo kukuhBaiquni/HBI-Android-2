@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground, AsyncStorage, Alert } from 'react-native';
 import { Container, Header, Content, Input, Item } from 'native-base';
 import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
@@ -10,6 +10,7 @@ import { submitFormRegister, forceResetRG } from '../../actions/Register';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { NavigationActions, NavigationEvents } from 'react-navigation';
+import { facebookRegister } from '../../actions/Facebook_Register';
 
 class Register extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class Register extends Component {
       secure: true,
       secure2: true,
       loading: false,
+      externalData: false,
       nameHandler: '',
       emailHandler: '',
       passwordHandler: '',
@@ -100,30 +102,85 @@ class Register extends Component {
     const { isNameValid, isEmailValid, isPasswordValid, isPasswordMatch, nameHandler, emailHandler, passwordHandler, passwordHandler2 } = this.state;
     if (nameHandler.length !== 0 && emailHandler.length !== 0 && passwordHandler.length !== 0 && passwordHandler2.length !== 0) {
       if (isNameValid && isEmailValid && isPasswordValid && isPasswordMatch) {
-        this.setState({isFormValid: true, isFormEmpty: false, loading: true})
         const data = {
           name: nameHandler,
           email: emailHandler,
           password: passwordHandler
         }
-        this.props.dispatch(submitFormRegister(data))
+        if(this.state.externalData) {
+          this.setState({isFormValid: true, isFormEmpty: false, loading: true})
+          this.props.dispatch(facebookRegister(data))
+        }else{
+          this.setState({isFormValid: true, isFormEmpty: false, loading: true})
+          this.props.dispatch(submitFormRegister(data))
+        }
       }else{
         this.setState({isFormValid: false})
       }
     }else{
       this.setState({isFormValid: false, isFormEmpty: true})
-      this.props.navigation.reset([NavigationActions.navigate({ routeName: 'DeepLinkHandler' })], 0)
     }
   }
   componentDidUpdate(prevProps, prevState) {
+    if (prevProps.status.isEmailFree !== this.props.status.isEmailFree) {
+      const remove = async () => {
+        try {
+          await AsyncStorage.removeItem('facebook_data')
+        }catch(error) {
+
+        }
+      }
+      remove()
+    }
     if (this.props.status.register.error) {
       if (this.state.loading) {
         this.setState({loading: false})
       }
     }else{
       if (this.props.status.register.success) {
-        this.props.navigation.reset([NavigationActions.navigate({ routeName: 'DeepLinkHandler' })], 0)
+        if (this.state.externalData) {
+          const token = this.props.token;
+          this.storeToken(token)
+        }else{
+          this.props.navigation.reset([NavigationActions.navigate({ routeName: 'DeepLinkHandler' })], 0)
+        }
       }
+    }
+  }
+
+  storeToken = async (token) => {
+    try {
+      await AsyncStorage.setItem('access_token', JSON.stringify(token))
+      this.props.navigation.popToTop()
+    } catch (error) {
+      Alert.alert(
+        'Kesalahan',
+        'Permintaan anda tidak dapat di proses',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
+      this.props.navigation.popToTop()
+    }
+  };
+
+  checkAsync = async () => {
+    try {
+      const raw = await AsyncStorage.getItem('facebook_data');
+      if (raw !== null) {
+        const data = JSON.parse(raw);
+        this.setState({externalData: true, nameHandler: data.name, emailHandler: data.email})
+      }
+    }catch(error) {
+      Alert.alert(
+        'Kesalahan',
+        'Permintaan anda tidak dapat diproses',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
     }
   }
 
@@ -133,6 +190,7 @@ class Register extends Component {
     return(
       <ScrollView>
         <NavigationEvents
+          onWillFocus={() => this.checkAsync()}
           onDidFocus={() => this.props.dispatch(forceResetRG())}
           />
         <Modal
@@ -170,6 +228,7 @@ class Register extends Component {
                   underlineColorAndroid='transparent'
                   onChangeText={(x) => this.nameHandler(x)}
                   onBlur={() => this.nameBlur()}
+                  defaultValue={this.state.nameHandler}
                   style={styles.defaultInput}
                   />
               </Item>
@@ -192,7 +251,9 @@ class Register extends Component {
                   keyboardType='email-address'
                   onChangeText={(x) => this.emailHandler(x)}
                   onBlur={() => this.emailBlur()}
-                  style={[styles.defaultInput]}
+                  editable={!this.state.externalData}
+                  defaultValue={this.state.emailHandler}
+                  style={[styles.defaultInput, this.state.externalData ? {color: '#919191'} : {color: 'black'}]}
                   />
               </Item>
             </Animatable.View>
@@ -258,7 +319,7 @@ class Register extends Component {
             <Animatable.View
               style={{width: 260, alignItems: 'center'}}
               animation='fadeInRight'
-              delay={400}
+              delay={350}
               useNativeDriver
               duration={500}
               iterationCount={1}
@@ -269,8 +330,8 @@ class Register extends Component {
             </Animatable.View>
             <Animatable.View
               style={{width: 260, alignItems: 'center'}}
-              animation='fadeIn'
-              delay={500}
+              animation='zoomIn'
+              delay={350}
               useNativeDriver
               duration={500}
               iterationCount={1}
@@ -280,7 +341,7 @@ class Register extends Component {
             <Animatable.View
               style={{width: 260, alignItems: 'center'}}
               animation='fadeInLeft'
-              delay={600}
+              delay={350}
               useNativeDriver
               duration={500}
               iterationCount={1}
@@ -297,7 +358,7 @@ class Register extends Component {
           <Animatable.View
             style={{width: 260, alignItems: 'center'}}
             animation='fadeInRight'
-            delay={600}
+            delay={350}
             useNativeDriver
             duration={500}
             iterationCount={1}
@@ -314,7 +375,7 @@ class Register extends Component {
           <Animatable.View
             style={{width: 260, alignItems: 'center'}}
             animation='flipInX'
-            delay={700}
+            delay={400}
             useNativeDriver
             duration={500}
             iterationCount={1}

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground, AsyncStorage } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground, AsyncStorage, Alert } from 'react-native';
 import { Container, Header, Content, Input, Item } from 'native-base';
 import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
@@ -13,6 +13,9 @@ import { DotIndicator } from 'react-native-indicators';
 import { NavigationEvents, NavigationActions } from 'react-navigation';
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
+import FBSDK, { LoginManager } from 'react-native-fbsdk';
+import { LoginButton, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import { checkEmail, forceResetCE } from '../../actions/Check_Email';
 
 class Login extends Component {
   constructor(props) {
@@ -26,9 +29,83 @@ class Login extends Component {
       passwordHandler: '',
       isFormEmpty: false,
       loading: false,
-      isLoginError: false
+      isLoginError: false,
+      facebookData: {}
     }
   }
+
+  facebookLogin() {
+    LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
+      if (!result.isCancelled) {
+        AccessToken.getCurrentAccessToken()
+        .then((data) => {
+          const {accessToken} = data;
+          const responseInfoCallback = (error, result) => {
+            if (error) {
+              Alert.alert(
+                'Kesalahan',
+                'Permintaan anda tidak dapat di proses',
+                [
+                  {text: 'OK'}
+                ],
+                { cancelable: false }
+              )
+            } else {
+              const data = {
+                name: result.name,
+                email: result.email,
+                photo: result.picture.data.url
+              }
+              AsyncStorage.setItem('facebook_data', JSON.stringify(data))
+            }
+          }
+          const infoRequest = new GraphRequest(
+            '/me',
+            {
+              accessToken: accessToken,
+              parameters: {
+                fields: {
+                  string: 'email,name,picture'
+                }
+              }
+            },
+            responseInfoCallback
+          );
+          new GraphRequestManager().addRequest(infoRequest).start()
+        })
+      }
+    })
+    .then(() => this.emailCheck()),
+    function(error) {
+      Alert.alert(
+        'Kesalahan',
+        'Permintaan anda tidak dapat di proses',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+  emailCheck() {
+    setTimeout( async () => {
+      const data = await AsyncStorage.getItem('facebook_data')
+      if (data !== null) {
+        const raw = JSON.parse(data);
+        const email = raw.email;
+        this.props.dispatch(checkEmail(email));
+      }else{
+        Alert.alert(
+          'Login gagal',
+          'Login dibatalkan oleh pengguna',
+          [
+            {text: 'OK'}
+          ],
+          { cancelable: false }
+        );
+      }
+    }, 500)
+  };
 
   showFlashMessage() {
     if (this.props.status.account_verification.success) {
@@ -57,6 +134,16 @@ class Login extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (this.props.status.isEmailFree) {
+      Alert.alert(
+        'Login gagal',
+        'Akun tidak terdaftar, daftar sekarang?',
+        [
+          {text: 'OK', onPress: () => this.clearAndGO()}
+        ],
+        { cancelable: false }
+      );
+    }
     if (this.props.status.login.error) {
       if (this.state.loading) {
         this.setState({loading: false, isLoginError: true})
@@ -67,7 +154,12 @@ class Login extends Component {
         this.storeToken(token)
       }
     }
-  }
+  };
+
+  clearAndGO() {
+    this.props.navigation.replace('Register');
+    this.props.dispatch(forceResetCE());
+  };
 
   storeToken = async (token) => {
     try {
@@ -77,15 +169,34 @@ class Login extends Component {
     } catch (error) {
       Alert.alert(
         'Kesalahan',
-        'Permintaan anda tidak dapat di proses.',
-      [
-        {text: 'OK'}
-      ],
-      { cancelable: false }
-      )
-      this.props.dispatch(forceReset())
+        'Permintaan anda tidak dapat di proses',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
+      this.props.dispatch(forceResetAV())
       this.props.navigation.reset([NavigationActions.navigate({ routeName: 'MainTabs' })], 0)
     }
+  };
+
+  cleanStorage = async () => {
+    try {
+      await AsyncStorage.removeItem('facebook_data');
+    }catch (error) {
+      Alert.alert(
+        'Kesalahan',
+        'Permintaan anda tidak dapat di proses',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
+  fbLogout() {
+    LoginManager.logOut()
   }
 
   render() {
@@ -93,6 +204,7 @@ class Login extends Component {
     return(
       <ScrollView>
         <NavigationEvents
+          onWillFocus={() => this.cleanStorage()}
           onDidFocus={() => this.showFlashMessage()}
           />
         <Modal
@@ -189,7 +301,7 @@ class Login extends Component {
               duration={500}
               iterationCount={1}
               >
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => console.log('fb')}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => this.facebookLogin()}>
               <SocialIcon
                 type='facebook'
                 raised={false}
@@ -206,7 +318,7 @@ class Login extends Component {
             duration={500}
             iterationCount={1}
             >
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]} onPress={() => console.log('google')}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]} onPress={() => this.fbLogout()}>
               <SocialIcon
                 type='google'
                 raised={false}

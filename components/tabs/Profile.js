@@ -10,7 +10,9 @@ class Profile extends Component {
     try {
       const val = await AsyncStorage.getItem('access_token');
       if (val !== null) {
-        this.props.dispatch(fetchUser(val))
+        const raw = JSON.parse(val)
+        console.log(raw);
+        this.props.dispatch(fetchUser(raw))
       }else{
         console.log('a');
         // this.props.navigation.goBack()
@@ -34,39 +36,12 @@ class Profile extends Component {
   render() {
     const { userData } = this.props;
     return(
-      <View>
+      <View style={{justifyContent: 'center', alignItems: 'center', flex:1}}>
         <NavigationEvents
           onDidFocus={() => this.beforeRender()}
           />
-        <Text>{userData.name}</Text>
-          <Text>Profile</Text>
-            <Text>Profile</Text>
-              <Text>Profile</Text>
-                <Text>Profile</Text>
-                  <Text>Profile</Text>
-                    <Text>Profile</Text>
-                      <Text>Profile</Text>
-                        <Text>Profile</Text>
-                          <Text>Profile</Text>
-                            <Text>Profile</Text>
-                              <Text>Profile</Text>
-                                <Text>Profile</Text>
-                                  <Text>Profile</Text>
-                                    <Text>Profile</Text>
-                                      <Text>Profile</Text>
-                                        <Text>Profile</Text>
-                                          <Text>Profile</Text>
-                                            <Text>Profile</Text>
-                                              <Text>Profile</Text>
-                                                <Text>Profile</Text>
-                                                  <Text>Profile</Text>
-                                                    <Text>Profile</Text>
-                                                      <Text>Profile</Text>
-                                                        <Text>Profile</Text>
-                                                          <Text>Profile</Text>
-                                                            <Text>Profile</Text>
-                                                              <Text>Profile</Text>
-                                                                <Text>Profile</Text>
+        <Text style={{fontSize: 25}}>Selamat datang {userData.name}</Text>
+
         <Text>Profile</Text>
       </View>
     )

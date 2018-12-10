@@ -13,6 +13,7 @@ let initialState = {
     error: false,
     message: '',
   },
+  isEmailFree: false,
   InternalServerError: false
 };
 
@@ -82,6 +83,16 @@ export default function status(state = initialState, action) {
         ...state.account_verification, success: false, error: false, message: ''
       }
     });
+
+    case 'EMAIL_FREE':
+    return Object.assign({}, state, {
+      isEmailFree: true
+    });
+
+    case 'RESET_CHECK_EMAIL_STATE':
+    return Object.assign({}, state, {
+      isEmailFree: false
+    })
 
     case 'INTERNAL_SERVER_ERROR':
     return Object.assign({}, state, {
