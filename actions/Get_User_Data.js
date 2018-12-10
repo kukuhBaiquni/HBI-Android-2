@@ -23,7 +23,6 @@ export function* watcherFecthUserData(token) {
 };
 
 function* workerFetchUserData(data) {
-  console.log(data);
   try {
     var response = yield call(() => {
       return request

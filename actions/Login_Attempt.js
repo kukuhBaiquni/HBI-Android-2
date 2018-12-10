@@ -6,6 +6,10 @@ export const submitFormLogin = (data) => {
   return { type: 'SUBMIT_FORM_LOGIN', data };
 };
 
+export const resetToken = () => {
+  return { type: 'RESET_TOKEN' };
+};
+
 export const forceResetLG = () => {
   return { type: 'RESET_LOGIN_STATE' };
 };

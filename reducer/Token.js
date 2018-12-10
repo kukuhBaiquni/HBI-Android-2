@@ -6,6 +6,9 @@ export default function token(state = initialState, action) {
     case 'LOGIN_ATTEMPT_SUCCESS':
     return action.data;
 
+    case 'RESET_TOKEN':
+    return '';
+
     default:
     return state;
   }

@@ -1,8 +1,20 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage} from 'react-native';
 import { Icon } from 'react-native-elements';
+import { forceResetCE } from '../../actions/Check_Email';
+import { connect } from 'react-redux';
 
-export default class ProfilePrevention extends Component {
+class ProfilePrevention extends Component {
+
+  componentDidMount = async() => {
+    this.props.dispatch(forceResetCE());
+    try {
+      await AsyncStorage.removeItem('facebook_data');
+    }catch(error) {
+
+    }
+  }
+
   render() {
     const { navigation } = this.props;
     return(
@@ -25,6 +37,14 @@ export default class ProfilePrevention extends Component {
     )
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return dispatch
+};
+
+export default connect(
+  mapDispatchToProps
+)(ProfilePrevention);
 
 const styles = StyleSheet.create({
   button: {

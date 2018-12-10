@@ -18,6 +18,10 @@ const registerFailed = (message) => {
   return { type: 'REGISTER_FAILED', message};
 };
 
+export const registerFailedPrototype = () => {
+  return { type: 'REGISTER_FAILED_PROTOTYPE' }
+}
+
 export function* watcherRegister(data) {
   yield takeEvery('SUBMIT_FORM_REGISTER', workerRegister);
 };

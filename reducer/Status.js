@@ -63,6 +63,13 @@ export default function status(state = initialState, action) {
       }
     });
 
+    case 'REGISTER_FAILED_PROTOTYPE':
+    return Object.assign({}, state, {
+      register: {
+        ...state.register, success: false, error: true, message: 'Email sudah digunakan'
+      }
+    })
+
     case 'ACCOUNT_VERIFICATION_SUCCESS':
     return Object.assign({}, state, {
       account_verification: {

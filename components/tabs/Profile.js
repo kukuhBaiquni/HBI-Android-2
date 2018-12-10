@@ -11,7 +11,6 @@ class Profile extends Component {
       const val = await AsyncStorage.getItem('access_token');
       if (val !== null) {
         const raw = JSON.parse(val)
-        console.log(raw);
         this.props.dispatch(fetchUser(raw))
       }else{
         console.log('a');

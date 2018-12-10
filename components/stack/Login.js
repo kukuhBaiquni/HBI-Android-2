@@ -14,8 +14,8 @@ import { NavigationEvents, NavigationActions } from 'react-navigation';
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
 import FBSDK, { LoginManager } from 'react-native-fbsdk';
-import { LoginButton, AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
-import { checkEmail, forceResetCE } from '../../actions/Check_Email';
+import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import { checkEmail } from '../../actions/Check_Email';
 
 class Login extends Component {
   constructor(props) {
@@ -24,7 +24,6 @@ class Login extends Component {
       secure: true,
       showModal: true,
       visibility: 0,
-      showModalContent: false,
       emailHandler: '',
       passwordHandler: '',
       isFormEmpty: false,
@@ -139,7 +138,7 @@ class Login extends Component {
         'Login gagal',
         'Akun tidak terdaftar, daftar sekarang?',
         [
-          {text: 'OK', onPress: () => this.clearAndGO()}
+          {text: 'OK', onPress: () => this.props.navigation.replace('Register')}
         ],
         { cancelable: false }
       );
@@ -154,11 +153,6 @@ class Login extends Component {
         this.storeToken(token)
       }
     }
-  };
-
-  clearAndGO() {
-    this.props.navigation.replace('Register');
-    this.props.dispatch(forceResetCE());
   };
 
   storeToken = async (token) => {

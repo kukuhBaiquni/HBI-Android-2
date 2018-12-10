@@ -6,11 +6,15 @@ import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
 import validator from 'validator';
-import { submitFormRegister, forceResetRG } from '../../actions/Register';
+import { submitFormRegister, forceResetRG, registerFailedPrototype } from '../../actions/Register';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { NavigationActions, NavigationEvents } from 'react-navigation';
 import { facebookRegister } from '../../actions/Facebook_Register';
+import FBSDK, { LoginManager } from 'react-native-fbsdk';
+import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+import { checkEmail } from '../../actions/Check_Email';
+import { resetToken } from '../../actions/Login_Attempt';
 
 class Register extends Component {
   constructor(props) {
@@ -122,7 +126,7 @@ class Register extends Component {
     }
   }
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.status.isEmailFree !== this.props.status.isEmailFree) {
+    if (!this.props.status.isEmailFree) {
       const remove = async () => {
         try {
           await AsyncStorage.removeItem('facebook_data')
@@ -131,6 +135,13 @@ class Register extends Component {
         }
       }
       remove()
+      if (!this.props.status.register.error && this.props.token.length !== 0) {
+        this.props.dispatch(registerFailedPrototype())
+      }
+    }else{
+      if (!this.state.externalData) {
+        this.checkAsync()
+      }
     }
     if (this.props.status.register.error) {
       if (this.state.loading) {
@@ -166,6 +177,7 @@ class Register extends Component {
   };
 
   checkAsync = async () => {
+    this.props.dispatch(resetToken());
     try {
       const raw = await AsyncStorage.getItem('facebook_data');
       if (raw !== null) {
@@ -184,6 +196,79 @@ class Register extends Component {
     }
   }
 
+  onRegister() {
+    LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
+      if (!result.isCancelled) {
+        AccessToken.getCurrentAccessToken()
+        .then((data) => {
+          const {accessToken} = data;
+          const responseInfoCallback = (error, result) => {
+            if (error) {
+              Alert.alert(
+                'Kesalahan',
+                'Permintaan anda tidak dapat di proses',
+                [
+                  {text: 'OK'}
+                ],
+                { cancelable: false }
+              )
+            } else {
+              const data = {
+                name: result.name,
+                email: result.email,
+                photo: result.picture.data.url
+              }
+              AsyncStorage.setItem('facebook_data', JSON.stringify(data))
+            }
+          }
+          const infoRequest = new GraphRequest(
+            '/me',
+            {
+              accessToken: accessToken,
+              parameters: {
+                fields: {
+                  string: 'email,name,picture'
+                }
+              }
+            },
+            responseInfoCallback
+          );
+          new GraphRequestManager().addRequest(infoRequest).start()
+        })
+      }
+    })
+    .then(() => this.emailCheck()),
+    function(error) {
+      Alert.alert(
+        'Kesalahan',
+        'Permintaan anda tidak dapat di proses',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+  emailCheck() {
+    setTimeout( async () => {
+      const data = await AsyncStorage.getItem('facebook_data')
+      if (data !== null) {
+        const raw = JSON.parse(data);
+        const email = raw.email;
+        this.props.dispatch(checkEmail(email));
+      }else{
+        Alert.alert(
+          'Login gagal',
+          'Login dibatalkan oleh pengguna',
+          [
+            {text: 'OK'}
+          ],
+          { cancelable: false }
+        );
+      }
+    }, 500)
+  };
+
   render() {
     const { isNameValid, isEmailValid, isPasswordValid, isPasswordMatch, isFormEmpty } = this.state;
     const { navigation } = this.props;
@@ -196,9 +281,6 @@ class Register extends Component {
         <Modal
           isVisible={this.state.loading}
           style={{alignItems: 'center'}}
-          onModalShow={() => this.setState({showModalContent: true})}
-          onModalHide={() => this.setState({showModalContent: false})}
-          hideModalContentWhileAnimating={true}
           useNativeDriver
           >
           <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
@@ -346,7 +428,7 @@ class Register extends Component {
               duration={500}
               iterationCount={1}
               >
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => console.log('fb')}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => this.onRegister()}>
               <SocialIcon
                 type='facebook'
                 raised={false}
@@ -363,7 +445,7 @@ class Register extends Component {
             duration={500}
             iterationCount={1}
             >
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]} onPress={() => console.log('google')}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]}>
               <SocialIcon
                 type='google'
                 raised={false}
