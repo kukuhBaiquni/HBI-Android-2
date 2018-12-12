@@ -19,7 +19,7 @@ const loginAttemptSuccess = (data) => {
 };
 
 const loginError = (message) => {
-  return { type: 'LOGIN_ERROR', message }
+  return { type: 'LOGIN_FAILED', message }
 };
 
 const loginSuccess = () => {

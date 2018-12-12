@@ -7,6 +7,8 @@ import { watcherCountItem } from './Counting_Items';
 import { watcherAccountVerification } from './Account_Verification';
 import { watcherFacebookRegister } from './Facebook_Register';
 import { watcherCheckEmail } from './Check_Email';
+import { watcherAddtoCart } from './Add_To_Cart';
+import { watcherLoadCart } from './Load_Cart';
 
 export default function* rootSaga() {
   yield all([
@@ -17,6 +19,8 @@ export default function* rootSaga() {
     watcherCountItem(),
     watcherAccountVerification(),
     watcherFacebookRegister(),
-    watcherCheckEmail()
+    watcherCheckEmail(),
+    watcherAddtoCart(),
+    watcherLoadCart()
   ]);
 };

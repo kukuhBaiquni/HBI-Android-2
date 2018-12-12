@@ -15,6 +15,7 @@ import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationEvents } from 'react-navigation';
 import { countItem } from '../../actions/Counting_Items';
+import { addToCart, forceResetATC } from '../../actions/Add_To_Cart';
 
 class ProductDetails extends Component {
   constructor(props) {
@@ -69,18 +70,13 @@ class ProductDetails extends Component {
   addToCart(v) {
     this.setState({showModal: false})
     if (this.state.isLoggedIn) {
-      showMessage({
-        message: 'Sukses',
-        description: 'Produk berhasil ditambahkan ke keranjang.',
-        type: 'success',
-      })
       const item = {
         token: this.state.token,
         id: this.props.navigation.state.params.id,
         qty: this.state.itemCount,
         selected_process: this.state.picked + ' ' + this.state.selected
       }
-      console.log(item);
+      this.props.dispatch(addToCart(item))
     }else{
       showMessage({
         message: 'Gagal',
@@ -125,6 +121,24 @@ class ProductDetails extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.resultCounting !== this.props.resultCounting) {
       this.setState({loading: false})
+    }
+    if (this.props.status.addToCart.error !== this.props.status.addToCart.success) {
+      if (this.props.status.addToCart.error) {
+        showMessage({
+          message: 'Gagal',
+          description: 'Proses gagal, silahkan ulangi permintaan anda',
+          type: 'danger',
+        });
+        this.props.dispatch(forceResetATC())
+      }
+      if (this.props.status.addToCart.success) {
+        showMessage({
+          message: 'Sukses',
+          description: 'Produk berhasil ditambahkan ke keranjang.',
+          type: 'success',
+        });
+        this.props.dispatch(forceResetATC())
+      }
     }
   }
 

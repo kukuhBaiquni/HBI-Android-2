@@ -14,6 +14,14 @@ let initialState = {
     message: '',
   },
   isEmailFree: false,
+  addToCart: {
+    success: false,
+    error: false
+  },
+  loadCart: {
+    success: false,
+    error: false
+  },
   InternalServerError: false
 };
 
@@ -28,7 +36,7 @@ export default function status(state = initialState, action) {
       InternalServerError: false
     });
 
-    case 'LOGIN_ERROR':
+    case 'LOGIN_FAILED':
     return Object.assign({}, state, {
       login: {
         ...state.login, error: true, message: action.message
@@ -68,7 +76,7 @@ export default function status(state = initialState, action) {
       register: {
         ...state.register, success: false, error: true, message: 'Email sudah digunakan'
       }
-    })
+    });
 
     case 'ACCOUNT_VERIFICATION_SUCCESS':
     return Object.assign({}, state, {
@@ -99,6 +107,48 @@ export default function status(state = initialState, action) {
     case 'RESET_CHECK_EMAIL_STATE':
     return Object.assign({}, state, {
       isEmailFree: false
+    });
+
+    case 'ADD_TO_CART_SUCCESS':
+    return Object.assign({}, state, {
+      addToCart: {
+        ...state.addToCart, success: true, error: false
+      }
+    });
+
+    case 'ADD_TO_CART_FAILED':
+    return Object.assign({}, state, {
+      addToCart: {
+        ...state.addToCart, success: false, error: true
+      }
+    });
+
+    case 'RESET_ATC_STATE':
+    return Object.assign({}, state, {
+      addToCart: {
+        ...state.addToCart, success: false, error: false
+      }
+    });
+
+    case 'LOAD_CART_SUCCESS':
+    return Object.assign({}, state, {
+      loadCart: {
+        ...state.loadCart, success: true, error: false
+      }
+    });
+
+    case 'LOAD_CART_FAILED':
+    return Object.assign({}, state, {
+      loadCart: {
+        ...state.loadCart, success: false, error: true
+      }
+    });
+
+    case 'RESET_LOAD_CART_STATE':
+    return Object.assign({}, state, {
+      loadCart: {
+        ...state.loadCart, success: false, error: false
+      }
     })
 
     case 'INTERNAL_SERVER_ERROR':
