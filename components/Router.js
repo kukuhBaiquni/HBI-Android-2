@@ -117,12 +117,7 @@ const RootStack = createStackNavigator({
   Cart: {
     screen: Cart,
     navigationOptions: ({navigation}) => ({
-      title: 'Cart Page',
-      headerTintColor: '#7c0c10',
-      headerStyle: {
-        backgroundColor: 'white',
-        borderBottomColor: 'black'
-      }
+      header: null
     })
   },
   SearchAutocomplete: {

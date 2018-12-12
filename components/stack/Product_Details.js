@@ -165,9 +165,9 @@ class ProductDetails extends Component {
               <View style={{position: 'absolute', left: 0, marginLeft: 10}}>
                 <Icon onPress={() => navigation.navigate('Shopping')} name='arrow-back' color='#7c0c10' />
               </View>
-              <View style={{position: 'absolute', right: 20}}>
+              <TouchableOpacity style={{position: 'absolute', right: 20, borderRadius: 50, height: 30, width: 30, justifyContent: 'center'}}>
                 <CartIcon navigation={navigation} bcolor='#7c0c10'/>
-              </View>
+              </TouchableOpacity>
             </View>
           )}
           renderBackButton={() => (
@@ -418,17 +418,10 @@ class ProductDetails extends Component {
                       }
                   </View>
                 </View>
-                <View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
+                <View style={{alignItems: 'center', marginTop: 10, marginBottom:20}}>
                   <TouchableOpacity onPress={(x) => this.addToCart(navigation.state.params)}>
                     <View style={{height: 45, width: 260, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
                       <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
-                    </View>
-                  </TouchableOpacity>
-                </View>
-                <View style={{alignItems: 'center', marginBottom: 20}}>
-                  <TouchableOpacity onPress={() => this.goToCartHideModal()}>
-                    <View style={{height: 45, width: 260, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center', borderRadius: 3, borderWidth: 1, borderColor: '#7c0c10'}}>
-                      <Text style={{color: '#7c0c10'}}>Lihat keranjang</Text>
                     </View>
                   </TouchableOpacity>
                 </View>
