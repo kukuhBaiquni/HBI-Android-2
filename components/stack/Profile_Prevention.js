@@ -2,12 +2,14 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage} from 'react-native';
 import { Icon } from 'react-native-elements';
 import { forceResetCE } from '../../actions/Check_Email';
+import { forceResetRG } from '../../actions/Register';
 import { connect } from 'react-redux';
 
 class ProfilePrevention extends Component {
 
   componentDidMount = async() => {
     this.props.dispatch(forceResetCE());
+    this.props.dispatch(forceResetRG());
     try {
       await AsyncStorage.removeItem('facebook_data');
     }catch(error) {

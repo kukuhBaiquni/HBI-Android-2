@@ -16,6 +16,7 @@ import { showMessage } from 'react-native-flash-message';
 import FBSDK, { LoginManager } from 'react-native-fbsdk';
 import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import { checkEmail } from '../../actions/Check_Email';
+import GoogleSignIn from 'react-native-google-sign-in';
 
 class Login extends Component {
   constructor(props) {
@@ -29,7 +30,7 @@ class Login extends Component {
       isFormEmpty: false,
       loading: false,
       isLoginError: false,
-      facebookData: {}
+      oauthData: {}
     }
   }
 
@@ -52,8 +53,7 @@ class Login extends Component {
             } else {
               const data = {
                 name: result.name,
-                email: result.email,
-                photo: result.picture.data.url
+                email: result.email
               }
               AsyncStorage.setItem('facebook_data', JSON.stringify(data))
             }
@@ -91,6 +91,7 @@ class Login extends Component {
       const data = await AsyncStorage.getItem('facebook_data')
       if (data !== null) {
         const raw = JSON.parse(data);
+        this.setState({oauthData: raw});
         const email = raw.email;
         this.props.dispatch(checkEmail(email));
       }else{
@@ -133,12 +134,13 @@ class Login extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    let data = this.state.oauthData;
     if (this.props.status.isEmailFree) {
       Alert.alert(
         'Login gagal',
         'Akun tidak terdaftar, daftar sekarang?',
         [
-          {text: 'OK', onPress: () => this.props.navigation.replace('Register')}
+          {text: 'OK', onPress: () => this.props.navigation.replace('Register', data)}
         ],
         { cancelable: false }
       );
@@ -189,8 +191,29 @@ class Login extends Component {
     }
   }
 
-  fbLogout() {
-    LoginManager.logOut()
+  googleLogin = async () => {
+    try {
+      await GoogleSignIn.configure({
+        scopes: ['profile'],
+        clientID: '912178815288-2fia498v78qdsm487k9ngvrjcn46m343.apps.googleusercontent.com'
+      })
+      const user = await GoogleSignIn.signInPromise();
+      const raw = await {
+        name: user.name,
+        email: user.email
+      }
+      this.setState({oauthData: raw});
+      await this.props.dispatch(checkEmail(user.email))
+    } catch(error) {
+      Alert.alert(
+        'Login gagal',
+        'Login dibatalkan oleh pengguna',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   render() {
@@ -312,7 +335,7 @@ class Login extends Component {
             duration={500}
             iterationCount={1}
             >
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]} onPress={() => this.fbLogout()}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]} onPress={() => this.googleLogin()}>
               <SocialIcon
                 type='google'
                 raised={false}

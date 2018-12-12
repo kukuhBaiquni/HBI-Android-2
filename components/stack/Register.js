@@ -13,8 +13,9 @@ import { NavigationActions, NavigationEvents } from 'react-navigation';
 import { facebookRegister } from '../../actions/Facebook_Register';
 import FBSDK, { LoginManager } from 'react-native-fbsdk';
 import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
-import { checkEmail } from '../../actions/Check_Email';
+import { checkEmail, forceResetCE } from '../../actions/Check_Email';
 import { resetToken } from '../../actions/Login_Attempt';
+import GoogleSignIn from 'react-native-google-sign-in';
 
 class Register extends Component {
   constructor(props) {
@@ -33,7 +34,8 @@ class Register extends Component {
       isPasswordValid: true,
       isPasswordMatch: true,
       isFormValid: false,
-      isFormEmpty: false
+      isFormEmpty: false,
+      oauthData: {}
     }
   }
 
@@ -140,7 +142,12 @@ class Register extends Component {
       }
     }else{
       if (!this.state.externalData) {
-        this.checkAsync()
+        if (this.state.oauthData === {}) {
+          this.checkAsync()
+        }else{
+          let data = this.state.oauthData;
+          this.setState({externalData: true, nameHandler: data.name, emailHandler: data.email})
+        }
       }
     }
     if (this.props.status.register.error) {
@@ -177,7 +184,6 @@ class Register extends Component {
   };
 
   checkAsync = async () => {
-    this.props.dispatch(resetToken());
     try {
       const raw = await AsyncStorage.getItem('facebook_data');
       if (raw !== null) {
@@ -196,7 +202,15 @@ class Register extends Component {
     }
   }
 
-  onRegister() {
+  checkParams() {
+    var data = this.props.navigation.state.params;
+    this.props.dispatch(resetToken())
+    if (data !== undefined) {
+      this.setState({externalData: true, nameHandler: data.name, emailHandler: data.email})
+    }
+  }
+
+  facebookRegister() {
     LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
       if (!result.isCancelled) {
         AccessToken.getCurrentAccessToken()
@@ -215,8 +229,7 @@ class Register extends Component {
             } else {
               const data = {
                 name: result.name,
-                email: result.email,
-                photo: result.picture.data.url
+                email: result.email
               }
               AsyncStorage.setItem('facebook_data', JSON.stringify(data))
             }
@@ -269,13 +282,44 @@ class Register extends Component {
     }, 500)
   };
 
+  resetCEAndGoToLogin() {
+    this.props.dispatch(forceResetCE())
+    this.props.navigation.replace('Login')
+  }
+
+  googleRegister = async () => {
+    try {
+      await GoogleSignIn.configure({
+        scopes: ['profile'],
+        clientID: '912178815288-2fia498v78qdsm487k9ngvrjcn46m343.apps.googleusercontent.com'
+      })
+      const user = await GoogleSignIn.signInPromise();
+      const raw = await {
+        name: user.name,
+        email: user.email
+      }
+      this.setState({oauthData: raw});
+      await this.props.dispatch(checkEmail(user.email))
+    } catch(error) {
+      Alert.alert(
+        'Login gagal',
+        'Login dibatalkan oleh pengguna',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
   render() {
+    console.log('token ',this.props.token);
     const { isNameValid, isEmailValid, isPasswordValid, isPasswordMatch, isFormEmpty } = this.state;
     const { navigation } = this.props;
     return(
       <ScrollView>
         <NavigationEvents
-          onWillFocus={() => this.checkAsync()}
+          onWillFocus={() => this.checkParams()}
           onDidFocus={() => this.props.dispatch(forceResetRG())}
           />
         <Modal
@@ -428,7 +472,7 @@ class Register extends Component {
               duration={500}
               iterationCount={1}
               >
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => this.onRegister()}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => this.facebookRegister()}>
               <SocialIcon
                 type='facebook'
                 raised={false}
@@ -445,7 +489,7 @@ class Register extends Component {
             duration={500}
             iterationCount={1}
             >
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]} onPress={() => this.googleRegister()}>
               <SocialIcon
                 type='google'
                 raised={false}
@@ -462,7 +506,7 @@ class Register extends Component {
             duration={500}
             iterationCount={1}
             >
-            <Text style={{marginTop: 15, color: '#919191', marginBottom: 20}}>Sudah punya akun? <Text onPress={() => navigation.replace('Login')} style={{color: '#7c0c10'}}>Login disini</Text></Text>
+            <Text style={{marginTop: 15, color: '#919191', marginBottom: 20}}>Sudah punya akun? <Text onPress={() => this.resetCEAndGoToLogin()} style={{color: '#7c0c10'}}>Login disini</Text></Text>
           </Animatable.View>
           </View>
         </View>
