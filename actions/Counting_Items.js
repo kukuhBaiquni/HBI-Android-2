@@ -25,6 +25,7 @@ function* workerCountItem(form) {
       .post(`${SERVER_URL}android/counting-items`)
       .send({id: form.data.id})
       .send({qty: form.data.qty})
+      .send({token: form.data.token})
       .then((res) => {
         return res;
       })

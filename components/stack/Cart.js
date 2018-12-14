@@ -9,10 +9,41 @@ import { idrFormat } from '../../config';
 
 class Cart extends Component {
 
+  checkAsync = async () => {
+    try {
+      const token = await AsyncStorage.getItem('access_token')
+      if (token !== null) {
+        const raw = JSON.parse(token)
+        this.props.dispatch(loadCart(raw))
+      }else{
+        Alert.alert(
+          'Kesalahan',
+          'Anda harus login untuk melihat keranjang.',
+          [
+            {text: 'MENGERTI', onPress: () => this.props.navigation.goBack()},
+          ],
+          { cancelable: false }
+        );
+      }
+    }catch(error) {
+      Alert.alert(
+        'Kesalahan',
+        'Anda harus login untuk melihat keranjang.',
+        [
+          {text: 'MENGERTI', onPress: () => this.props.navigation.goBack()},
+        ],
+        { cancelable: false }
+      );
+    }
+  }
+
   render() {
     const { navigation } = this.props;
     return(
       <View style={{flex: 1}}>
+        <NavigationEvents
+          onWillFocus={() => this.checkAsync()}
+          />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
             <Icon name='arrow-back' color='white' />

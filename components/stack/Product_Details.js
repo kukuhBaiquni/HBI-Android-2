@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Picker, AsyncStorage } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, TouchableOpacity, Picker, AsyncStorage, Alert } from 'react-native';
 import { connect } from 'react-redux';
 import { Right, Button, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
@@ -61,6 +61,7 @@ class ProductDetails extends Component {
       }
     }
     var data = {
+      token: this.state.token,
       id: this.props.navigation.state.params.id,
       qty: count
     }
@@ -69,21 +70,13 @@ class ProductDetails extends Component {
 
   addToCart(v) {
     this.setState({showModal: false})
-    if (this.state.isLoggedIn) {
-      const item = {
-        token: this.state.token,
-        id: this.props.navigation.state.params.id,
-        qty: this.state.itemCount,
-        selected_process: this.state.picked + ' ' + this.state.selected
-      }
-      this.props.dispatch(addToCart(item))
-    }else{
-      showMessage({
-        message: 'Gagal',
-        description: 'Anda harus login terlebih dahulu untuk berbelanja.',
-        type: 'danger',
-      })
+    const item = {
+      token: this.state.token,
+      id: this.props.navigation.state.params.id,
+      qty: this.state.itemCount,
+      selected_process: this.state.picked + ' ' + this.state.selected
     }
+    this.props.dispatch(addToCart(item));
   }
 
   goToCartHideModal() {
@@ -100,9 +93,21 @@ class ProductDetails extends Component {
   }
 
   showModal() {
-    this.setState({
-      showModal: true
-    })
+    if (this.state.isLoggedIn) {
+      this.setState({
+        showModal: true
+      })
+    }else{
+      Alert.alert(
+        'Kesalahan',
+        'Anda harus login untuk berbelanja, login sekarang?',
+        [
+          {text: 'YA', onPress: () => this.props.navigation.navigate('Login')},
+          {text: 'TIDAK'}
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   checkToken = async () => {

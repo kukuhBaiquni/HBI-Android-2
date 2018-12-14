@@ -313,7 +313,6 @@ class Register extends Component {
   }
 
   render() {
-    console.log('token ',this.props.token);
     const { isNameValid, isEmailValid, isPasswordValid, isPasswordMatch, isFormEmpty } = this.state;
     const { navigation } = this.props;
     return(
