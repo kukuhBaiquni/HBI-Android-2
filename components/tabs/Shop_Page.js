@@ -9,14 +9,18 @@ import { NavigationEvents } from 'react-navigation';
 import CartIcon from '../Cart_Icon';
 
 class ShopPage extends Component {
-  componentDidMount() {
-    this.props.dispatch(getAllProducts())
-  }
+
+  getProducts() {
+    this.props.dispatch(getAllProducts());
+  };
 
   render() {
     let { listProducts, navigation } = this.props;
     return(
       <Container>
+        <NavigationEvents
+          onWillFocus = {() => this.getProducts()}
+          />
         <Header style={styles.headerColor}>
           <Item style={{borderBottomColor: '#7c0c10'}}>
             <TouchableNativeFeedback onPress={() => navigation.navigate('SearchAutocomplete')}>

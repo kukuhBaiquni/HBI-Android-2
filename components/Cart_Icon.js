@@ -1,18 +1,29 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
-import { TouchableOpacity, View, Text, StyleSheet, Alert } from 'react-native';
+import { TouchableOpacity, View, Text, StyleSheet, Alert, AsyncStorage } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { NavigationEvents } from 'react-navigation';
 import { loadCart } from '../actions/Load_Cart';
 
 class CartIcon extends Component {
+  constructor(props) {
+    super(props)
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if (nextProps.cart === this.props.cart) {
-      return false
-    }else{
-      return true
+    this.state = {
+      token: ''
+    }
+  }
+
+  checkAsync = async () => {
+    try {
+      const token = await AsyncStorage.getItem('access_token')
+      if (token !== null) {
+        const raw = JSON.parse(token)
+        this.setState({token: raw})
+        this.props.dispatch(loadCart(raw))
+      }
+    }catch(error) {
     }
   }
 
@@ -21,6 +32,9 @@ class CartIcon extends Component {
     const items = this.props.cart;
     return(
       <TouchableOpacity onPress={() => navigation.navigate('Cart', items)}>
+        <NavigationEvents
+          onWillFocus={() => this.checkAsync()}
+          />
         {
           this.props.cart.length > 0 &&
           <Animatable.View style={styles.badge}

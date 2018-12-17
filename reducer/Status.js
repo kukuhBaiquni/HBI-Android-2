@@ -22,6 +22,10 @@ let initialState = {
     success: false,
     error: false
   },
+  saveChanges: {
+    success: false,
+    error: false
+  },
   InternalServerError: false
 };
 
@@ -149,7 +153,28 @@ export default function status(state = initialState, action) {
       loadCart: {
         ...state.loadCart, success: false, error: false
       }
-    })
+    });
+
+    case 'SAVE_CHANGES_SUCCESS':
+    return Object.assign({}, state, {
+      saveChanges: {
+        ...state.saveChanges, success: true, error: false
+      }
+    });
+
+    case 'SAVE_CHANGES_FAILED':
+    return Object.assign({}, state, {
+      saveChanges: {
+        ...state.saveChanges, success: false, error: true
+      }
+    });
+
+    case 'RESET_SAVE_CHANGES_STATE':
+    return Object.assign({}, state, {
+      saveChanges: {
+        ...state.saveChanges, success: false, error: false
+      }
+    });
 
     case 'INTERNAL_SERVER_ERROR':
     return Object.assign({}, state, {

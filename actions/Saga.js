@@ -9,6 +9,7 @@ import { watcherFacebookRegister } from './Facebook_Register';
 import { watcherCheckEmail } from './Check_Email';
 import { watcherAddtoCart } from './Add_To_Cart';
 import { watcherLoadCart } from './Load_Cart';
+import { watcherSaveChanges } from './Save_Changes';
 
 export default function* rootSaga() {
   yield all([
@@ -21,6 +22,7 @@ export default function* rootSaga() {
     watcherFacebookRegister(),
     watcherCheckEmail(),
     watcherAddtoCart(),
-    watcherLoadCart()
+    watcherLoadCart(),
+    watcherSaveChanges()
   ]);
 };

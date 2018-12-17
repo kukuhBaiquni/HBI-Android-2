@@ -10,6 +10,10 @@ const countItemSuccess = (data) => {
   return { type: 'COUNT_ITEM_SUCCESS', data };
 };
 
+const countItemFailed = () => {
+  return { type: 'COUNT_ITEM_FAILED' };
+};
+
 const InternalServerError = () => {
   return { type: 'INTERNAL_SERVER_ERROR' }
 };
@@ -34,6 +38,8 @@ function* workerCountItem(form) {
     var data = raw;
     if (data.result) {
       yield put(countItemSuccess(data));
+    }else{
+      yield put(countItemFailed())
     }
   }catch (error) {
     yield put(InternalServerError());
