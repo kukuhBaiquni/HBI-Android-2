@@ -26,6 +26,9 @@ let initialState = {
     success: false,
     error: false
   },
+  checkPartial: {
+    error: false
+  },
   InternalServerError: false
 };
 
@@ -173,6 +176,20 @@ export default function status(state = initialState, action) {
     return Object.assign({}, state, {
       saveChanges: {
         ...state.saveChanges, success: false, error: false
+      }
+    });
+
+    case 'CART_CHECK_PARTIAL_FAILED':
+    return Object.assign({}, state, {
+      checkPartial: {
+        ...state.checkPartial, error: true
+      }
+    });
+
+    case 'RESET_CHECK_PARTIAL_STATE':
+    return Object.assign({}, state, {
+      checkPartial: {
+        ...state.checkPartial, error: false
       }
     });
 

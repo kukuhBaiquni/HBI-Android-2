@@ -27,7 +27,7 @@ class ProductDetails extends Component {
       loading: false,
       token: '',
       picked: 'None', // data
-      selected: null, //data
+      selected: '', //data
       options: [{label: 'None', value: 'None'}, {label: 'Cut', value: 'Cut'}, {label: 'Slice', value: 'Slice'}, {label: 'Grind', value: 'Grind'}],
       index: 0,
       showModalContent: false,

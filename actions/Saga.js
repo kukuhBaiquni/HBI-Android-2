@@ -10,6 +10,8 @@ import { watcherCheckEmail } from './Check_Email';
 import { watcherAddtoCart } from './Add_To_Cart';
 import { watcherLoadCart } from './Load_Cart';
 import { watcherSaveChanges } from './Save_Changes';
+import { watcherCartCheckPartial } from './Cart_Check_Partial';
+import { watcherCartCheckAll } from './Cart_Check_All';
 
 export default function* rootSaga() {
   yield all([
@@ -23,6 +25,8 @@ export default function* rootSaga() {
     watcherCheckEmail(),
     watcherAddtoCart(),
     watcherLoadCart(),
-    watcherSaveChanges()
+    watcherSaveChanges(),
+    watcherCartCheckPartial(),
+    watcherCartCheckAll()
   ]);
 };

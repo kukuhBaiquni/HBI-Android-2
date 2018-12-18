@@ -12,6 +12,8 @@ import { saveChanges, forceResetSC } from '../../actions/Save_Changes';
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationEvents } from 'react-navigation';
+import { cartCheckPartial } from '../../actions/Cart_Check_Partial';
+import { cartCheckAll } from '../../actions/Cart_Check_All';
 
 class Cart extends Component {
   constructor(props) {
@@ -24,7 +26,7 @@ class Cart extends Component {
       loading: false,
       options: [{label: 'None', value: 'None'}, {label: 'Cut', value: 'Cut'}, {label: 'Slice', value: 'Slice'}, {label: 'Grind', value: 'Grind'}],
       picked: 'None',
-      selected: null,
+      selected: '',
       index: 0,
       idProduct: 0,
       id_Product: '',
@@ -34,7 +36,9 @@ class Cart extends Component {
       qty: 0,
       productPhoto: '',
       productProcess: {},
-      selected_process: {}
+      selected_process: {},
+      number: 0,
+      checkControl: true
     }
   }
 
@@ -43,7 +47,7 @@ class Cart extends Component {
       const token = await AsyncStorage.getItem('access_token');
       if (token !== null) {
         const raw = JSON.parse(token);
-        this.setState({token: raw})
+        this.setState({token: raw, number: this.props.cart.length})
       }else{
         Alert.alert(
           'Kesalahan',
@@ -66,6 +70,35 @@ class Cart extends Component {
         { cancelable: false }
       );
     }
+  }
+
+  checkPartial(n, id) {
+    let mode = '';
+    if (this.props.cart[n].status) {
+      mode = 'uchecking'
+    }else{
+      mode = 'checking'
+    }
+    const data = {
+      token: this.state.token,
+      id,
+      mode
+    }
+    this.props.dispatch(cartCheckPartial(data))
+  }
+
+  checkAll() {
+    let mode = '';
+    if (this.state.checkControl) {
+      mode = 'unchecking'
+    }else{
+      mode = 'checking'
+    }
+    const data = {
+      token: this.state.token,
+      mode
+    }
+    this.props.dispatch(cartCheckAll(data))
   }
 
   onValueChange(val) {
@@ -158,6 +191,15 @@ class Cart extends Component {
           type: 'error'
         });
       }
+    }
+    if (prevProps.cart !== this.props.cart) {
+      let count = 0;
+      this.props.cart.forEach(x => {
+        if (x.status) {
+          count++
+        }
+      })
+      this.setState({number: count})
     }
   }
 
@@ -353,17 +395,31 @@ class Cart extends Component {
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Keranjang Belanja</Text>
         </View>
+        <View style={[styles.productHeader, {marginTop: 0}]}>
+          <CheckBox
+            containerStyle={{backgroundColor: 'transparent', position: 'absolute', borderWidth: 0}}
+            iconType='material'
+            checkedIcon='check-box'
+            uncheckedIcon='check-box-outline-blank'
+            checked={this.state.checkControl}
+            checkedColor='#7c0c10'
+            uncheckedColor='#a5a5a5'
+            onPress={() => this.checkAll()}
+            />
+          <Text style={styles.productName}>Pilih semua ({this.state.number}/{this.props.cart.length})</Text>
+        </View>
         <ScrollView style={{backgroundColor: '#d9d9d9'}}>
           {
             cart.map((x, i) =>
             <View key={i} style={styles.productWrapper}>
               <View style={styles.productHeader}>
                 <CheckBox
+                  onPress={(c, d) => this.checkPartial(i, x._id)}
                   containerStyle={{backgroundColor: 'transparent', position: 'absolute', borderWidth: 0}}
                   iconType='material'
                   checkedIcon='check-box'
                   uncheckedIcon='check-box-outline-blank'
-                  checked={true}
+                  checked={this.props.cart[i].status}
                   checkedColor='#7c0c10'
                   uncheckedColor='#a5a5a5'
                   />
@@ -405,6 +461,15 @@ class Cart extends Component {
             )
           }
         </ScrollView>
+        <View style={[styles.productHeader, {marginTop: 0, height: 60, paddingLeft: 20}]}>
+          <View>
+            <Text style={{fontSize: 14}}>Total Harga</Text>
+            <Text style={{color: '#7c0c10', fontSize: 20}}>{idrFormat(this.props.cartTotal)}</Text>
+          </View>
+          <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3}}>
+            <Text style={{color: 'white', fontSize: 16}}>Bayar</Text>
+          </TouchableOpacity>
+        </View>
         <FlashMessage
           position='top'
           floating={true}

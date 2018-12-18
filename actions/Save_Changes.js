@@ -18,6 +18,10 @@ const saveChangesWithDataSuccess = (data) => {
   return { type: 'SAVE_CHANGES_WITH_DATA_SUCCESS', data };
 };
 
+const cartTotal = (data) => {
+  return { type: 'CART_TOTAL', data };
+};
+
 export const forceResetSC = () => {
   return { type: 'RESET_SAVE_CHANGES_STATE' };
 };
@@ -47,8 +51,11 @@ function* workerSaveChanges(form) {
     var raw = JSON.parse(response.xhr._response);
     var data = raw;
     if (data.success) {
+      var total = 0;
+      data.data.forEach(x => total += x.subtotal)
       yield put(saveChangesSuccess());
       yield put(saveChangesWithDataSuccess(data.data))
+      yield put(cartTotal(total))
     }else{
       yield put(saveChangesFailed())
     }

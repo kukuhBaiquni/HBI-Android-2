@@ -22,6 +22,10 @@ const forceResetLC = () => {
   return { type: 'RESET_LOAD_CART_STATE' };
 };
 
+const cartTotal = (data) => {
+  return { type: 'CART_TOTAL', data };
+};
+
 const InternalServerError = () => {
   return { type: 'INTERNAL_SERVER_ERROR' }
 };
@@ -43,8 +47,11 @@ function* workerLoadCart(data) {
     var raw = JSON.parse(response.xhr._response);
     var data = raw;
     if (data.success) {
+      var total = 0;
+      data.data.forEach(x => total += x.subtotal)
       yield put(loadCartWithDataSuccess(data.data));
       yield put(loadCartSuccess())
+      yield put(cartTotal(total))
     }else{
       yield put(loadCartFailed());
     }
