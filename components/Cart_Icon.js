@@ -31,7 +31,7 @@ class CartIcon extends Component {
     const { navigation, bcolor } = this.props;
     const items = this.props.cart;
     return(
-      <TouchableOpacity onPress={() => navigation.navigate('Cart', items)}>
+      <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
         <NavigationEvents
           onWillFocus={() => this.checkAsync()}
           />

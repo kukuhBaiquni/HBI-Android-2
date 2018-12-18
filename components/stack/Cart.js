@@ -105,18 +105,18 @@ class Cart extends Component {
 
   showSpecificModal(x) {
     this.props.dispatch(forceResetSC())
-    const { navigation } = this.props;
-    const process = processParser(navigation.state.params[x].selected_process);
+    const { cart } = this.props;
+    const process = processParser(cart[x].selected_process);
     this.setState({
-      idProduct: navigation.state.params[x].id,
-      id_Product: navigation.state.params[x]._id,
+      idProduct: cart[x].id,
+      id_Product: cart[x]._id,
       showModal: true,
-      productName: navigation.state.params[x].product_name,
-      subtotal: navigation.state.params[x].subtotal,
-      productPrice: navigation.state.params[x].price,
-      productPhoto: navigation.state.params[x].photo,
-      qty: navigation.state.params[x].qty,
-      productProcess: navigation.state.params[x].process,
+      productName: cart[x].product_name,
+      subtotal: cart[x].subtotal,
+      productPrice: cart[x].price,
+      productPhoto: cart[x].photo,
+      qty: cart[x].qty,
+      productProcess: cart[x].process,
       selected_process: process,
       picked: process.process,
       selected: process.size,
@@ -162,7 +162,7 @@ class Cart extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
+    const { navigation, cart } = this.props;
     return(
       <View style={{flex: 1}}>
         <NavigationEvents
@@ -355,7 +355,7 @@ class Cart extends Component {
         </View>
         <ScrollView style={{backgroundColor: '#d9d9d9'}}>
           {
-            navigation.state.params.map((x, i) =>
+            cart.map((x, i) =>
             <View key={i} style={styles.productWrapper}>
               <View style={styles.productHeader}>
                 <CheckBox

@@ -14,6 +14,10 @@ const saveChangesFailed = () => {
   return { type: 'SAVE_CHANGES_FAILED' };
 };
 
+const saveChangesWithDataSuccess = (data) => {
+  return { type: 'SAVE_CHANGES_WITH_DATA_SUCCESS', data };
+};
+
 export const forceResetSC = () => {
   return { type: 'RESET_SAVE_CHANGES_STATE' };
 };
@@ -44,6 +48,7 @@ function* workerSaveChanges(form) {
     var data = raw;
     if (data.success) {
       yield put(saveChangesSuccess());
+      yield put(saveChangesWithDataSuccess(data.data))
     }else{
       yield put(saveChangesFailed())
     }

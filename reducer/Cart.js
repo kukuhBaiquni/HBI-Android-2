@@ -6,6 +6,9 @@ export default function cart(state = initialState, action) {
     case 'LOAD_CART_WITH_DATA_SUCCESS':
     return action.data;
 
+    case 'SAVE_CHANGES_WITH_DATA_SUCCESS':
+    return action.data
+
     default:
     return state;
   }
