@@ -14,6 +14,7 @@ import Login from './stack/Login';
 import Register from './stack/Register';
 import DeepLinkHandler from './stack/Deep_Link_Handler';
 import AfterDeeplink from './stack/After_Deeplink';
+import Payment from './stack/Payment';
 import { SERVER_URL } from '../config';
 
 const Tabs = createMaterialTopTabNavigator({
@@ -165,6 +166,17 @@ const RootStack = createStackNavigator({
     path: 'account_verification/android/:hash',
     navigationOptions: ({navigation}) => ({
       header: null
+    })
+  },
+  Payment: {
+    screen: Payment,
+    navigationOptions: ({navigation}) => ({
+      title: 'Pembayaran',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      }
     })
   }
 })

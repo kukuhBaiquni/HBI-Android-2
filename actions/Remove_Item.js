@@ -16,7 +16,7 @@ const removeItemWithDataSuccess = (data) => {
 
 const removeItemSuccess = () => {
   return { type: 'REMOVE_ITEM_SUCCESS' }
-}
+};
 
 const removeItemFailed = () => {
   return { type: 'REMOVE_ITEM_FAILED' };

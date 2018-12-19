@@ -535,7 +535,7 @@ class Cart extends Component {
             <Text style={{fontSize: 14}}>Total Harga</Text>
             <Text style={{color: '#7c0c10', fontSize: 20}}>{idrFormat(this.props.cartTotal)}</Text>
           </View>
-          <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3}}>
+          <TouchableOpacity onPress={() => this.props.navigation.navigate('Payment')} style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3}}>
             <Text style={{color: 'white', fontSize: 16}}>Bayar</Text>
           </TouchableOpacity>
         </View>
