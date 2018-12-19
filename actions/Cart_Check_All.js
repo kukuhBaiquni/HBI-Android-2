@@ -6,6 +6,10 @@ export const cartCheckAll = (data) => {
   return { type: 'CART_CHECK_ALL', data };
 };
 
+export const forceResetCA = () => {
+  return { type: 'RESET_CHECK_ALL_STATE' };
+};
+
 const cartCheckAllSuccess = (data) => {
   return { type: 'CART_CHECK_ALL_SUCCESS', data };
 };

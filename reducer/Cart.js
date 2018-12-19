@@ -15,6 +15,9 @@ export default function cart(state = initialState, action) {
     case 'CART_CHECK_ALL_SUCCESS':
     return action.data;
 
+    case 'REMOVE_ITEM_WITH_DATA_SUCCESS':
+    return action.data;
+
     default:
     return state;
   }

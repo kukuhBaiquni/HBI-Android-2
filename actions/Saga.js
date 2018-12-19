@@ -12,6 +12,7 @@ import { watcherLoadCart } from './Load_Cart';
 import { watcherSaveChanges } from './Save_Changes';
 import { watcherCartCheckPartial } from './Cart_Check_Partial';
 import { watcherCartCheckAll } from './Cart_Check_All';
+import { watcherRemoveItem } from './Remove_Item';
 
 export default function* rootSaga() {
   yield all([
@@ -27,6 +28,7 @@ export default function* rootSaga() {
     watcherLoadCart(),
     watcherSaveChanges(),
     watcherCartCheckPartial(),
-    watcherCartCheckAll()
+    watcherCartCheckAll(),
+    watcherRemoveItem()
   ]);
 };

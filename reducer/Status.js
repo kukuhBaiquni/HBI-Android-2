@@ -29,6 +29,13 @@ let initialState = {
   checkPartial: {
     error: false
   },
+  checkAll: {
+    error: false
+  },
+  removeItem: {
+    success: false,
+    error: false
+  },
   InternalServerError: false
 };
 
@@ -190,6 +197,41 @@ export default function status(state = initialState, action) {
     return Object.assign({}, state, {
       checkPartial: {
         ...state.checkPartial, error: false
+      }
+    });
+
+    case 'CART_CHECK_ALL_FAILED':
+    return Object.assign({}, state, {
+      checkAll: {
+        ...state.checkAll, error: true
+      }
+    });
+
+    case 'RESET_CHECK_ALL_STATE':
+    return Object.assign({}, state, {
+      checkAll: {
+        ...state.checkAll, error: false
+      }
+    });
+
+    case 'REMOVE_ITEM_SUCCESS':
+    return Object.assign({}, state, {
+      removeItem: {
+        ...state.removeItem, success: true, error: false
+      }
+    });
+
+    case 'REMOVE_ITEM_FAILED':
+    return Object.assign({}, state, {
+      removeItem: {
+        ...state.removeItem, success: false, error: true
+      }
+    });
+
+    case 'RESET_REMOVE_ITEM_STATE':
+    return Object.assign({}, state, {
+      removeItem: {
+        ...state.removeItem, success: false, error: false
       }
     });
 

@@ -12,8 +12,9 @@ import { saveChanges, forceResetSC } from '../../actions/Save_Changes';
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationEvents } from 'react-navigation';
-import { cartCheckPartial } from '../../actions/Cart_Check_Partial';
-import { cartCheckAll } from '../../actions/Cart_Check_All';
+import { cartCheckPartial, forceResetCP } from '../../actions/Cart_Check_Partial';
+import { cartCheckAll, forceResetCA } from '../../actions/Cart_Check_All';
+import { removeItem, forceResetRI } from '../../actions/Remove_Item';
 
 class Cart extends Component {
   constructor(props) {
@@ -170,6 +171,24 @@ class Cart extends Component {
     this.props.dispatch(saveChanges(data))
   }
 
+  removeSingleItem(n) {
+    this.props.dispatch(forceResetRI())
+    const { cart } = this.props;
+    const data = {
+      id: cart[n]._id,
+      token: this.state.token
+    }
+    Alert.alert(
+      'Hapus Produk',
+      'Apakah anda yakin ingin menghapus produk ini?',
+      [
+        {text: 'YA', onPress: () => this.props.dispatch(removeItem(data))},
+        {text: 'TIDAK'}
+      ],
+      { cancelable: false }
+    );
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.resultCounting !== this.props.resultCounting) {
       this.setState({loading: false, subtotal: this.props.resultCounting})
@@ -204,6 +223,51 @@ class Cart extends Component {
         this.setState({checkControl: true})
       }else{
         this.setState({checkControl: false})
+      }
+    }
+    if (prevProps.status.checkPartial.error !== this.props.status.checkPartial.error) {
+      if (this.props.status.checkPartial.error) {
+        Alert.alert(
+          'Kesalahan',
+          'Silahkan ulangi permintaan anda.',
+          [
+            {text: 'OK', onPress: () => this.props.dispatch(forceResetCP())},
+          ],
+          { cancelable: false }
+        );
+      }
+    }
+    if (prevProps.status.checkAll.error !== this.props.status.checkAll.error) {
+      if (this.props.status.checkAll.error) {
+        Alert.alert(
+          'Kesalahan',
+          'Silahkan ulangi permintaan anda.',
+          [
+            {text: 'OK', onPress: () => this.props.dispatch(forceResetCA())},
+          ],
+          { cancelable: false }
+        );
+      }
+    }
+    if (prevProps.status.removeItem.error !== this.props.status.removeItem.error) {
+      if (this.props.status.removeItem.error) {
+        Alert.alert(
+          'Kesalahan',
+          'Silahkan ulangi permintaan anda.',
+          [
+            {text: 'OK', onPress: () => this.props.dispatch(forceResetRI())},
+          ],
+          { cancelable: false }
+        );
+      }
+    }
+    if (prevProps.status.removeItem.success !== this.props.status.removeItem.success) {
+      if (this.props.status.removeItem.success) {
+        showMessage({
+          message: 'Sukses',
+          description: 'Produk berhasil dihapus',
+          type: 'success'
+        });
       }
     }
   }
@@ -429,7 +493,7 @@ class Cart extends Component {
                   uncheckedColor='#a5a5a5'
                   />
                 <Text style={styles.productName}>{x.product_name}</Text>
-                <TouchableOpacity style={{position: 'absolute', right: 15}}>
+                <TouchableOpacity style={{position: 'absolute', right: 15}} onPress={(x) => this.removeSingleItem(i)}>
                   <Icon name='delete' color='#9b9b9b' />
                 </TouchableOpacity>
               </View>
