@@ -200,6 +200,11 @@ class Cart extends Component {
         }
       })
       this.setState({number: count})
+      if (count === this.props.cart.length) {
+        this.setState({checkControl: true})
+      }else{
+        this.setState({checkControl: false})
+      }
     }
   }
 
