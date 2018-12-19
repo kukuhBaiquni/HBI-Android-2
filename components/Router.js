@@ -15,6 +15,7 @@ import Register from './stack/Register';
 import DeepLinkHandler from './stack/Deep_Link_Handler';
 import AfterDeeplink from './stack/After_Deeplink';
 import Payment from './stack/Payment';
+import EditAddress from './stack/Edit_Address';
 import { SERVER_URL } from '../config';
 
 const Tabs = createMaterialTopTabNavigator({
@@ -171,12 +172,13 @@ const RootStack = createStackNavigator({
   Payment: {
     screen: Payment,
     navigationOptions: ({navigation}) => ({
-      title: 'Pembayaran',
-      headerTintColor: '#7c0c10',
-      headerStyle: {
-        backgroundColor: 'white',
-        borderBottomColor: 'black'
-      }
+      header: null
+    })
+  },
+  EditAddress: {
+    screen: EditAddress,
+    navigationOptions: ({navigation}) => ({
+      header: null
     })
   }
 })
