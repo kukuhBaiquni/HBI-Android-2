@@ -6,6 +6,7 @@ import { NavigationEvents } from 'react-navigation';
 import { fetchUser } from '../../actions/Get_User_Data';
 import { SERVER_URL } from '../../config';
 import { idrFormat } from '../../config';
+import { forceResetRoot } from '../../actions/Load_Cities';
 
 class Payment extends Component {
   constructor(props) {
@@ -15,6 +16,7 @@ class Payment extends Component {
     }
   }
   beforeRender = async () => {
+    this.props.dispatch(forceResetRoot())
     try {
       const token = await AsyncStorage.getItem('access_token');
       if (token !== null) {
@@ -28,7 +30,6 @@ class Payment extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.userData !== this.props.userData) {
-      console.log(this.props.data);
       if (this.props.userData.address.street !== '') {
         this.setState({isAddressValid: true})
       }
@@ -37,6 +38,7 @@ class Payment extends Component {
 
   render() {
     const listData = this.props.cart.filter(x => x.status === true)
+    const params = this.props.userData;
     return(
       <View style={{flex: 1}}>
         <NavigationEvents
@@ -52,10 +54,12 @@ class Payment extends Component {
           <View style={{backgroundColor: 'white', padding: 20}}>
             <Text style={{fontSize: 15, fontWeight: 'bold', marginBottom: 10}}>Alamat Pengiriman</Text>
             {
+              this.props.navigation.state.params === undefined
+              ?
               this.state.isAddressValid
               ?
               <View>
-                <Text>{this.props.userData.address.street} Rt.{this.props.userData.address.rt}/Rw.{this.props.userData.address.rw}</Text>
+                <Text>{this.props.userData.address.street}</Text>
                 <Text>Kecamatan {this.props.userData.address.district}/Kelurahan {this.props.userData.address.village}</Text>
                 <Text>{this.props.userData.address.location} {this.props.userData.address.city}</Text>
                 <Text>Penerima <Text style={{fontWeight: 'bold'}}>{this.props.userData.name}</Text></Text>
@@ -63,8 +67,16 @@ class Payment extends Component {
               </View>
               :
               <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
+              :
+              <View>
+                <Text>{this.props.navigation.state.params.street}</Text>
+                <Text>Kecamatan {this.props.navigation.state.params.district}/Kelurahan {this.props.navigation.state.params.village}</Text>
+                <Text>{this.props.navigation.state.params.city}</Text>
+                <Text>Penerima <Text style={{fontWeight: 'bold'}}>{this.props.navigation.state.params.name}</Text></Text>
+                <Text>Nomor Telepon Penerima: {this.props.navigation.state.params.phone}</Text>
+              </View>
             }
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('EditAddress')} style={{marginTop: 20, height: 40, width: 70, backgroundColor: '#bcbcbc', borderRadius: 3, justifyContent: 'center', alignItems: 'center'}}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('EditAddress', params)} style={{marginTop: 20, height: 40, width: 70, backgroundColor: '#bcbcbc', borderRadius: 3, justifyContent: 'center', alignItems: 'center'}}>
               <Text style={{fontSize: 16, fontWeight: 'bold'}}>Edit</Text>
             </TouchableOpacity>
           </View>
