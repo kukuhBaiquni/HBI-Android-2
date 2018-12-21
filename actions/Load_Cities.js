@@ -10,6 +10,14 @@ export const forceResetRoot = () => {
   return { type: 'RESET_PARTIAL_TERRITORIAL' };
 };
 
+export const resetDistricts = () => {
+  return { type: 'RESET_DISTRICTS' };
+};
+
+export const resetVillages = () => {
+  return { type: 'RESET_VILLAGES' };
+};
+
 const loadCitiesSuccess = (data) => {
   return { type: 'LOAD_CITIES_SUCCESS', data };
 };

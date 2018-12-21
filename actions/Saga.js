@@ -17,6 +17,7 @@ import { watcherLoadCities } from './Load_Cities';
 import { watcherLoadDistricts } from './Load_Districts';
 import { watcherLoadVillages } from './Load_Villages';
 import { watcherSaveAddress } from './Save_Address';
+import { watcherConfirmTransaction } from './Confirm_Transaction';
 
 export default function* rootSaga() {
   yield all([
@@ -37,6 +38,7 @@ export default function* rootSaga() {
     watcherLoadCities(),
     watcherLoadDistricts(),
     watcherLoadVillages(),
-    watcherSaveAddress()
+    watcherSaveAddress(),
+    watcherConfirmTransaction()
   ]);
 };

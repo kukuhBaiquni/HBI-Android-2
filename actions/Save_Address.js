@@ -3,7 +3,11 @@ import request from 'superagent';
 import { SERVER_URL } from '../config';
 
 export const saveAddress = (data) => {
-  return { type: 'SAVE_ADDRESS' };
+  return { type: 'SAVE_ADDRESS', data };
+};
+
+export const forceResetSA = () => {
+  return { type: 'RESET_SAVE_ADDRESS_STATE' };
 };
 
 const saveAddressSuccess = () => {
@@ -26,9 +30,12 @@ function* workerSaveAddress(form) {
   try {
     var response = yield call(() => {
       return request
-      .post(`${SERVER_URL}android/counting-items`)
-      .send({id: form.data.id})
-      .send({qty: form.data.qty})
+      .post(`${SERVER_URL}android/save-address`)
+      .send({phone: form.data.phone})
+      .send({street: form.data.street})
+      .send({city: form.data.city})
+      .send({district: form.data.district})
+      .send({village: form.data.village})
       .send({token: form.data.token})
       .then((res) => {
         return res;
@@ -36,7 +43,7 @@ function* workerSaveAddress(form) {
     })
     var raw = JSON.parse(response.xhr._response);
     var data = raw;
-    if (data.result) {
+    if (data.success) {
       yield put(saveAddressSuccess());
     }else{
       yield put(saveAddressFailed())

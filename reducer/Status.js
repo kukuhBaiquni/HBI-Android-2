@@ -36,6 +36,10 @@ let initialState = {
     success: false,
     error: false
   },
+  saveAddress: {
+    success: false,
+    error: false
+  },
   InternalServerError: false
 };
 
@@ -232,6 +236,27 @@ export default function status(state = initialState, action) {
     return Object.assign({}, state, {
       removeItem: {
         ...state.removeItem, success: false, error: false
+      }
+    });
+
+    case 'SAVE_ADDRESS_SUCCESS':
+    return Object.assign({}, state, {
+      saveAddress: {
+        ...state.saveAddress, success: true, error: false
+      }
+    });
+
+    case 'SAVE_ADDRESS_FAILED':
+    return Object.assign({}, state, {
+      saveAddress: {
+        ...state.saveAddress, success: false, error: true
+      }
+    });
+
+    case 'RESET_SAVE_ADDRESS_STATE':
+    return Object.assign({}, state, {
+      saveAddress: {
+        ...state.saveAddress, success: false, error: false
       }
     });
 

@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { Form, Item, Input, Label, Picker } from 'native-base';
 import { NavigationEvents } from 'react-navigation';
-import { loadCities } from '../../actions/Load_Cities';
+import { loadCities, resetDistricts, resetVillages } from '../../actions/Load_Cities';
 import { loadDistricts } from '../../actions/Load_Districts';
 import { loadVillages } from '../../actions/Load_Villages';
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
@@ -27,23 +27,40 @@ class EditAddress extends Component {
       addressHandler: '',
       saveState: 'default',
       index: 0,
-      loading: false
+      loading: false,
+      token: ''
     }
   }
 
+  beforeRender() {
+    this.setState({
+      nameHandler: this.props.navigation.state.params.name,
+      token: this.props.navigation.state.params.token,
+      phoneHandler: '0' + this.props.navigation.state.params.phone,
+      addressHandler: this.props.navigation.state.params.address.street
+    })
+    this.props.dispatch(loadCities())
+  }
+
   citySelected(x, f) {
-    console.log(f);
-    this.props.dispatch(loadDistricts(x))
-    this.setState({selectedCity: x, cityName: this.props.territorial.cities[f].nama_kota, selectedDistrict: '-', selectedVillage: '-'})
+    if (f === 0) {
+      this.props.dispatch(resetDistricts());
+      this.props.dispatch(resetVillages());
+    }
+    this.props.dispatch(loadDistricts(x));
+    this.setState({selectedCity: x, cityName: this.props.territorial.cities[f].nama_kota, selectedDistrict: '', selectedVillage: ''})
   }
 
   districtSelected(x, f) {
+    if (f === 0) {
+      this.props.dispatch(resetVillages());
+    }
     this.props.dispatch(loadVillages(x))
-    this.setState({selectedDistrict: x, cityName: this.props.territorial.districts[f].nama_kecamatan, selectedVillage: '-'})
+    this.setState({selectedDistrict: x, districtName: this.props.territorial.districts[f].nama_kecamatan, selectedVillage: ''})
   }
 
   villageSelected(x, f) {
-    this.setState({selectedVillage: x, cityName: this.props.territorial.villages[f].nama_kelurahan})
+    this.setState({selectedVillage: x, villageName: this.props.territorial.villages[f].nama_kelurahan})
   }
 
   onValueChange(x) {
@@ -58,6 +75,7 @@ class EditAddress extends Component {
 
   onSave() {
     const data = {
+      token: this.state.token,
       name: this.state.nameHandler,
       phone: this.state.phoneHandler,
       street: this.state.addressHandler,
@@ -65,13 +83,13 @@ class EditAddress extends Component {
       district: this.state.districtName,
       village: this.state.villageName
     }
-    console.log(data);
     const { cityName, districtName, villageName, nameHandler, phoneHandler, addressHandler } = this.state;
     if (cityName !== '' && districtName !== '' && villageName !== '' && nameHandler !== '' && phoneHandler !== '' && addressHandler !== '') {
-      if (saveState === 'default') {
+      this.setState({loading: true})
+      if (this.state.saveState === 'default') {
         this.props.dispatch(saveAddress(data))
       }else{
-        this.props.navigation.replace('Payment', data)
+        this.props.navigation.navigate('Payment', data)
       }
     }else{
       Alert.alert(
@@ -107,9 +125,11 @@ class EditAddress extends Component {
         }
       })
       if (this.props.navigation.state.params.address.district !== '') {
-        const code = this.props.territorial.districts[indexer].kode_kecamatan;
-        this.props.dispatch(loadVillages(code));
-        this.setState({selectedDistrict: this.props.territorial.districts[indexer].kode_kecamatan, districtName: this.props.territorial.districts[indexer].nama_kecamatan})
+        if (this.state.selectedDistrict === '-') {
+          const code = this.props.territorial.districts[indexer].kode_kecamatan;
+          this.props.dispatch(loadVillages(code));
+          this.setState({selectedDistrict: this.props.territorial.districts[indexer].kode_kecamatan, districtName: this.props.territorial.districts[indexer].nama_kecamatan})
+        }
       }
     }
     if (prevProps.territorial.villages !== this.props.territorial.villages) {
@@ -120,7 +140,26 @@ class EditAddress extends Component {
         }
       })
       if (this.props.navigation.state.params.address.village !== '') {
-        this.setState({selectedVillage: this.props.territorial.villages[indexer].kode_kelurahan, villageName: this.props.territorial.villages[indexer].nama_kelurahan})
+        if (this.state.selectedVillage === '-') {
+          this.setState({selectedVillage: this.props.territorial.villages[indexer].kode_kelurahan, villageName: this.props.territorial.villages[indexer].nama_kelurahan});
+        }
+      }
+    }
+    if (prevProps.status.saveAddress.success !== this.props.status.saveAddress.success) {
+      if (this.props.status.saveAddress.success) {
+        this.props.navigation.navigate('Payment');
+      }
+    }
+    if (prevProps.status.saveAddress.error !== this.props.status.saveAddress.error) {
+      if (this.props.status.saveAddress.error) {
+        Alert.alert(
+          'Kesalahan',
+          'Server sibuk, silahkan ulangi permintaan anda.',
+          [
+            {text: 'OK', onPress: () => this.setState({loading: false})}
+          ],
+          { cancelable: false }
+        );
       }
     }
   }
@@ -134,7 +173,7 @@ class EditAddress extends Component {
     return(
       <View style={{flex: 1}}>
         <NavigationEvents
-          onWillFocus={() => this.props.dispatch(loadCities())}
+          onWillFocus={() => this.beforeRender()}
           />
           <Modal
             isVisible={this.state.loading}
@@ -164,7 +203,7 @@ class EditAddress extends Component {
                   <Label style={{color: '#a0a0a0'}}>Nama Penerima</Label>
                   <Input
                     onChangeText={(x) => this.setState({nameHandler: x})}
-                    defaultValue={navigation.state.params.name}
+                    value={this.state.nameHandler}
                     editable={this.state.saveState === 'default' ? false : true}
                     style={this.state.saveState === 'default' ? {color: '#a0a0a0'} : {color: 'black'}}
                     />
@@ -174,7 +213,7 @@ class EditAddress extends Component {
                   <Input
                     keyboardType='numeric'
                     onChangeText={(x) => this.setState({phoneHandler: x})}
-                    defaultValue={navigation.state.params.phone}
+                    value={this.state.phoneHandler}
                      />
                 </Item>
                 <Label style={{fontSize: 15, marginLeft: 15, marginTop: 10, color: '#a0a0a0'}}>Kota/Kabupaten</Label>
@@ -185,7 +224,6 @@ class EditAddress extends Component {
                     selectedValue={this.state.selectedCity}
                     onValueChange={(x, f) => this.citySelected(x, f)}
                   >
-                    <Picker.Item labelStyle={{color: '#bababa'}} label="Pilih Kota" value="-" />
                       {
                         this.props.territorial.cities.map((x, i) =>
                           <Picker.Item key={i} label={x.nama_kota} value={x.kode_kota} />
@@ -201,7 +239,6 @@ class EditAddress extends Component {
                     selectedValue={this.state.selectedDistrict}
                     onValueChange={(x, f) => this.districtSelected(x, f)}
                   >
-                    <Picker.Item labelStyle={{color: '#bababa'}} label="Pilih Kecamatan" value="-" />
                       {
                         this.props.territorial.districts.map((x, i) =>
                           <Picker.Item key={i} label={x.nama_kecamatan} value={x.kode_kecamatan} />
@@ -217,7 +254,6 @@ class EditAddress extends Component {
                     selectedValue={this.state.selectedVillage}
                     onValueChange={(x, f) => this.villageSelected(x, f)}
                   >
-                    <Picker.Item labelStyle={{color: '#bababa'}} label="Pilih Kelurahan" value="-" />
                       {
                         this.props.territorial.villages.map((x, i) =>
                           <Picker.Item key={i} label={x.nama_kelurahan} value={x.kode_kelurahan} />
@@ -228,6 +264,7 @@ class EditAddress extends Component {
                 <Item stackedLabel style={{width: 330}}>
                   <Label style={{color: '#a0a0a0'}}>Alamat Lengkap</Label>
                   <Input
+                    value={this.state.addressHandler}
                     onChangeText={(x) => this.setState({addressHandler: x})}
                      />
                 </Item>

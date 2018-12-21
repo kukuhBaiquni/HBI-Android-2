@@ -7,9 +7,10 @@ import resultCounting from './Result_Counting';
 import cart from './Cart';
 import cartTotal from './Cart_Total';
 import territorial from './Territorial';
+import transaction from './Transaction';
 
 const rootReducer = combineReducers({
-  listProducts, status, token, userData, resultCounting, cart, cartTotal, territorial
+  listProducts, status, token, userData, resultCounting, cart, cartTotal, territorial, transaction
 });
 
 export default rootReducer
