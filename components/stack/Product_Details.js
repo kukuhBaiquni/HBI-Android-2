@@ -147,6 +147,11 @@ class ProductDetails extends Component {
     }
   }
 
+  directPurchase() {
+    const item = this.props.navigation.state.params;
+    this.props.navigation.navigate('DirectPurchase', item)
+  }
+
   render() {
     const { navigation } = this.props;
     return(
@@ -250,7 +255,7 @@ class ProductDetails extends Component {
             <TouchableOpacity  style={{backgroundColor: 'white', width: '20%', height: 50, justifyContent: 'center'}} onPress={() => this.showModal()}>
               <Icon name='add-shopping-cart' size={28} color='#7c0c10'/>
             </TouchableOpacity>
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={() => this.directPurchase()}>
               <View style={{alignItems: 'center', justifyContent: 'center', width: '80%'}}>
                 <Text style={{color: 'white', textAlign: 'center', fontSize: 16, fontWeight: 'bold'}}>Beli Sekarang</Text>
               </View>

@@ -91,6 +91,11 @@ class Payment extends Component {
     }
   }
 
+  queueRouting() {
+    this.props.navigation.popToTop();
+    this.props.navigation.navigate('Profile');
+  }
+
   render() {
     const listData = this.props.cart.filter(x => x.status === true)
     let params = {}
@@ -132,18 +137,29 @@ class Payment extends Component {
               />
             </View>
             :
-            <View style={{backgroundColor: 'white', width: 300, height: 400, borderRadius: 3, alignItems: 'center', padding: 20}}>
-              <Text style={{color: '#9b9b9b'}}>Kode Transaksi</Text>
-              <Text style={{fontSize: 20, marginBottom: 10}}>{this.props.transaction.trx}</Text>
-              <Text style={{color: '#9b9b9b'}}>Jumlah Tagiahan Anda</Text>
-              <Text style={{marginBottom: 10, fontSize: 18}}>{idrFormat(this.props.transaction.total_price)}</Text>
-              <Text style={{color: '#9b9b9b', marginBottom: 5}}>Metode Pembayaran</Text>
-              <Text>Transfer ke rekening BCA</Text>
-              <Text style={{fontSize: 17, marginBottom: 10}}>2820260417</Text>
-              <Text style={{textAlign: 'center', color:'#848484'}}>Jumlah transfer pembayaran harus sesuai</Text>
-              <Text style={{textAlign: 'center', color:'#848484'}}>dengan jumlah tagihan (hingga 3 digit terakhir)</Text>
-              <Text style={{textAlign: 'center', color:'#848484', marginBottom: 10}}>Isi Nomor Transaksi pada kolom Detail Transfer</Text>
-              <Text>Lakukan pembayaran sebelum</Text>
+            <View style={{backgroundColor: '#cce8c2', borderRadius: 5, width: 300}}>
+              <View style={{borderBottomColor: '#98c189', borderBottomWidth: 1, height: 50, justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{fontSize: 18, color: '#228200'}}>Konfirmasi Sukses</Text>
+              </View>
+              <ScrollView style={{backgroundColor: '#f7fff4', padding: 20, height: 400}}>
+                <View style={{alignItems: 'center'}}>
+                  <Text style={{color: '#bababa', marginBottom: 2}}>Kode Transaksi</Text>
+                  <Text style={{fontSize: 20, marginBottom: 10}}>{this.props.transaction.trx}</Text>
+                  <Text style={{color: '#bababa'}}>Jumlah Tagiahan Anda</Text>
+                  <Text style={{marginBottom: 10, fontSize: 18}}>{idrFormat(this.props.transaction.total_price)}</Text>
+                  <Text style={{color: '#bababa', marginBottom: 5}}>Metode Pembayaran</Text>
+                  <Text>Transfer ke rekening BCA</Text>
+                  <Text style={{fontSize: 17, marginBottom: 10}}>2820260417</Text>
+                  <Text style={{textAlign: 'center', color:'#bababa'}}>Jumlah transfer pembayaran harus sesuai</Text>
+                  <Text style={{textAlign: 'center', color:'#bababa'}}>dengan jumlah tagihan (hingga 3 digit terakhir)</Text>
+                  <Text style={{textAlign: 'center', color:'#bababa', marginBottom: 10}}>Isi Nomor Transaksi pada kolom Detail Transfer</Text>
+                  <Text style={{color: '#bababa', marginBottom: 10}}>Lakukan pembayaran sebelum</Text>
+                  <Text style={{fontSize: 20, marginBottom: 20}}>22:10:32</Text>
+                </View>
+                <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
+                  <Text style={{color: '#228200'}}>Lihat Detail</Text>
+                </TouchableOpacity>
+              </ScrollView>
             </View>
           }
         </Modal>
@@ -270,6 +286,17 @@ const styles = StyleSheet.create({
     width: '100%',
     padding: 20,
     flexDirection: 'row'
+  },
+  button: {
+    marginBottom: 40,
+    width: 250,
+    height: 45,
+    backgroundColor: '#c4dbc0',
+    borderColor: '#228200',
+    borderRadius: 3,
+    borderWidth: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 })
 

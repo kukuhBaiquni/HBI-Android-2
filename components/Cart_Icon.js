@@ -15,7 +15,7 @@ class CartIcon extends Component {
     }
   }
 
-  checkAsync = async () => {
+  componentDidMount = async () => {
     try {
       const token = await AsyncStorage.getItem('access_token')
       if (token !== null) {
@@ -32,9 +32,6 @@ class CartIcon extends Component {
     const items = this.props.cart;
     return(
       <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
-        <NavigationEvents
-          onWillFocus={() => this.checkAsync()}
-          />
         {
           this.props.cart.length > 0 &&
           <Animatable.View style={styles.badge}

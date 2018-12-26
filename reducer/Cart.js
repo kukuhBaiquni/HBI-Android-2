@@ -18,6 +18,9 @@ export default function cart(state = initialState, action) {
     case 'REMOVE_ITEM_WITH_DATA_SUCCESS':
     return action.data;
 
+    case 'DIRECT_PURCHASE':
+    return action.data;
+
     default:
     return state;
   }
