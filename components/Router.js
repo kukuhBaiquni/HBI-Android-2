@@ -16,7 +16,8 @@ import DeepLinkHandler from './stack/Deep_Link_Handler';
 import AfterDeeplink from './stack/After_Deeplink';
 import Payment from './stack/Payment';
 import EditAddress from './stack/Edit_Address';
-import DirectPurchase from './stack/Direct_Purchase';
+import EditAddressDP from './stack/Edit_Address_DP';
+import DirectPayment from './stack/Direct_Payment';
 import { SERVER_URL } from '../config';
 
 const Tabs = createMaterialTopTabNavigator({
@@ -182,8 +183,14 @@ const RootStack = createStackNavigator({
       header: null
     })
   },
-  DirectPurchase: {
-    screen: DirectPurchase,
+  EditAddressDP: {
+    screen: EditAddressDP,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  DirectPayment: {
+    screen: DirectPayment,
     navigationOptions: ({navigation}) => ({
       header: null
     })

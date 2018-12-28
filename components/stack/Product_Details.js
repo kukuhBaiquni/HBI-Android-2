@@ -147,9 +147,18 @@ class ProductDetails extends Component {
     }
   }
 
-  directPurchase() {
-    const item = this.props.navigation.state.params;
-    this.props.navigation.navigate('DirectPurchase', item)
+  directPurchase = async () => {
+    try{
+      const item = this.props.navigation.state.params;
+      await AsyncStorage.setItem('direct_purchase', JSON.stringify(item))
+      this.props.navigation.navigate('DirectPayment')
+    }catch(error) {}
+  }
+
+  removeStorage = async () => {
+    try{
+      await AsyncStorage.removeItem('direct_purchase');
+    }catch(error) {}
   }
 
   render() {
@@ -158,6 +167,7 @@ class ProductDetails extends Component {
       <View style={{flex: 1}}>
         <NavigationEvents
           onDidFocus={() => this.checkToken()}
+          onWillFocus={() => this.removeStorage()}
           />
         <RNParallax
           headerMinHeight={55}

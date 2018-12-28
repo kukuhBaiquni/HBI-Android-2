@@ -12,7 +12,7 @@ import { saveAddress } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 
-class EditAddress extends Component {
+class EditAddressDP extends Component {
   constructor(props){
     super(props)
     this.state = {
@@ -42,7 +42,7 @@ class EditAddress extends Component {
     this.setState({
       nameHandler: this.props.navigation.state.params.name,
       token: this.props.navigation.state.params.token,
-      phoneHandler: phone,
+      phoneHandler: phone.toString(),
       addressHandler: this.props.navigation.state.params.address.street
     })
     this.props.dispatch(loadCities())
@@ -95,7 +95,7 @@ class EditAddress extends Component {
       if (this.state.saveState === 'default') {
         this.props.dispatch(saveAddress(data))
       }else{
-        this.props.navigation.navigate('Payment', data)
+        this.props.navigation.navigate('DirectPayment', data)
       }
     }else{
       Alert.alert(
@@ -325,7 +325,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapDispatchToProps
-)(EditAddress);
+)(EditAddressDP);
 
 const styles = StyleSheet.create({
   header: {

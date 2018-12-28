@@ -160,7 +160,12 @@ class Cart extends Component {
 
   onSave() {
     this.setState({showModal: false, showModalContent: false})
-    const process = this.state.picked + ' ' + this.state.selected;
+    let process = '';
+    if (this.state.selected === '') {
+      process = this.state.picked;
+    }else{
+      process = this.state.picked + ' ' + this.state.selected;      
+    }
     const data = {
       token: this.state.token,
       id: this.state.idProduct,

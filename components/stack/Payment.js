@@ -11,6 +11,7 @@ import { forceResetSA } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { confirmTransaction } from '../../actions/Confirm_Transaction';
+import moment from 'moment';
 
 class Payment extends Component {
   constructor(props) {
@@ -122,7 +123,6 @@ class Payment extends Component {
         <Modal
           isVisible={this.state.loading}
           style={{alignItems: 'center'}}
-          onBackdropPress={() => this.setState({loading: false})}
           hideModalContentWhileAnimating={true}
           useNativeDriver
           >
@@ -154,7 +154,7 @@ class Payment extends Component {
                   <Text style={{textAlign: 'center', color:'#bababa'}}>dengan jumlah tagihan (hingga 3 digit terakhir)</Text>
                   <Text style={{textAlign: 'center', color:'#bababa', marginBottom: 10}}>Isi Nomor Transaksi pada kolom Detail Transfer</Text>
                   <Text style={{color: '#bababa', marginBottom: 10}}>Lakukan pembayaran sebelum</Text>
-                  <Text style={{fontSize: 20, marginBottom: 20}}>22:10:32</Text>
+                  <Text style={{fontSize: 20, marginBottom: 20}}>{moment(this.props.transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
                 </View>
                 <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
                   <Text style={{color: '#228200'}}>Lihat Detail</Text>
