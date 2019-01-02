@@ -18,6 +18,7 @@
     "react-native-google-sign-in": "^1.0.16",
     "react-native-image-picker": "^0.27.2",
     "react-native-indicators": "^0.13.0",
+    "react-native-linear-gradient": "^2.5.3",
     "react-native-modal": "^7.0.1",
     "react-native-searchbar": "^1.15.0",
     "react-native-send-intent": "^1.0.28",

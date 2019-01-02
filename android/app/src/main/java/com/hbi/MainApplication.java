@@ -9,6 +9,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.imagepicker.ImagePickerPackage;
 
 import com.facebook.react.ReactApplication;
+import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.burnweb.rnsendintent.RNSendIntentPackage;
 import com.facebook.react.ReactNativeHost;
@@ -38,6 +39,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new LinearGradientPackage(),
           new ImagePickerPackage(),
           new VectorIconsPackage(),
           new RNGoogleSignInPackage(),
