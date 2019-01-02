@@ -129,30 +129,32 @@ class Profile extends Component {
             <View style={styles.headerMenu}>
               <Text style={{fontWeight: 'bold', fontSize: 16, color: '#757575'}}>Alamat</Text>
             </View>
-            <TouchableNativeFeedback>
-              <View style={styles.listMenu}>
-                <Text style={styles.menuTitle}>Kota / Kabupaten</Text>
-                <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.city}</Text>
-              </View>
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback>
-              <View style={styles.listMenu}>
-                <Text style={styles.menuTitle}>Kecamatan</Text>
-                <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.district}</Text>
-              </View>
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback>
-              <View style={styles.listMenu}>
-                <Text style={styles.menuTitle}>Kelurahan</Text>
-                <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.village}</Text>
-              </View>
-            </TouchableNativeFeedback>
-            <TouchableNativeFeedback>
-              <View style={styles.listMenu}>
-                <Text style={styles.menuTitle}>Alamat Lengkap</Text>
-                <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.street}</Text>
-              </View>
-            </TouchableNativeFeedback>
+            <View>
+              <TouchableNativeFeedback>
+                <View style={styles.listMenu}>
+                  <Text style={styles.menuTitle}>Kota / Kabupaten</Text>
+                  <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.city}</Text>
+                </View>
+              </TouchableNativeFeedback>
+              <TouchableNativeFeedback>
+                <View style={styles.listMenu}>
+                  <Text style={styles.menuTitle}>Kecamatan</Text>
+                  <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.district}</Text>
+                </View>
+              </TouchableNativeFeedback>
+              <TouchableNativeFeedback>
+                <View style={styles.listMenu}>
+                  <Text style={styles.menuTitle}>Kelurahan</Text>
+                  <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.village}</Text>
+                </View>
+              </TouchableNativeFeedback>
+              <TouchableNativeFeedback>
+                <View style={styles.listMenu}>
+                  <Text style={styles.menuTitle}>Alamat Lengkap</Text>
+                  <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.street}</Text>
+                </View>
+              </TouchableNativeFeedback>
+            </View>
             <View style={styles.headerMenu}>
               <Text style={{fontWeight: 'bold', fontSize: 16, color: '#757575'}}>Akun</Text>
             </View>
