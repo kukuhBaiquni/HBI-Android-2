@@ -137,7 +137,15 @@ class DirectPayment extends Component {
   }
 
   combineSelector(x) {
-    this.setState({selected: x, selectedProcess: this.state.picked + ' ' + x})
+    this.setState({selected: '-'})
+    if (this.state.picked !== 'Grind' && this.state.selected === '') {
+      this.setState({selectedProcess: '-'})
+    }else{
+      this.setState({selected: x, selectedProcess: this.state.picked + ' ' + x})
+    }
+    if (this.state.picked === 'Grind') {
+      this.setState({selectedProcess: x})
+    }
   }
 
   render() {

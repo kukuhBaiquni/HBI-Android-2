@@ -162,9 +162,9 @@ class Cart extends Component {
     this.setState({showModal: false, showModalContent: false})
     let process = '';
     if (this.state.selected === '') {
-      process = this.state.picked;
+      process = this.state.picked
     }else{
-      process = this.state.picked + ' ' + this.state.selected;      
+      process = this.state.picked + ' ' + this.state.selected;
     }
     const data = {
       token: this.state.token,

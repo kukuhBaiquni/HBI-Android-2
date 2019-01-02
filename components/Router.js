@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { createMaterialTopTabNavigator, createStackNavigator} from 'react-navigation';
-import { TouchableOpacity, Text, View, StyleSheet, AsyncStorage } from 'react-native';
+import { createMaterialTopTabNavigator, createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
+import { TouchableOpacity, Text, View, StyleSheet, AsyncStorage, ScrollView, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import SearchAutocomplete from './stack/Search_Autocomplete';
 import Example from './Static_Example';
@@ -18,16 +18,101 @@ import Payment from './stack/Payment';
 import EditAddress from './stack/Edit_Address';
 import EditAddressDP from './stack/Edit_Address_DP';
 import DirectPayment from './stack/Direct_Payment';
+import Blank from './stack/Blank';
 import { SERVER_URL } from '../config';
+
+const DrawerComponent = (props) => (
+  <ScrollView style={{flex: 1}}>
+    <SafeAreaView>
+      <View style={{justifyContent: 'center', alignItems: 'center', height: 110, backgroundColor: '#bababa'}}>
+        <View style={{height: 10}} />
+        <Image
+          style={{width: 50, height: 50, borderRadius: 50, paddingTop: 10}}
+          source={{uri: `${SERVER_URL}logo favicon/apple-touch-icon-114x114.jpg`}}
+          />
+        <Text style={{marginTop: 10, fontSize: 20}}>Halal Beef Indonesia</Text>
+      </View>
+        <DrawerItems {...props} />
+        <View style={{borderBottomColor: '#bababa', borderBottomWidth: 1}} />
+        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Timeline')}>
+          <View style={styles.customIcon}>
+            <Icon name='event-note' />
+          </View>
+          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Timeline</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Shopping')}>
+          <View style={styles.customIcon}>
+            <Icon name='store-mall-directory' />
+          </View>
+          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Shopping</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Mail')}>
+          <View style={styles.customIcon}>
+            <Icon name='mail' />
+          </View>
+          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Mail</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Profile')}>
+          <View style={styles.customIcon}>
+            <Icon name='account-box' />
+          </View>
+          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Profile</Text>
+        </TouchableOpacity>
+    </SafeAreaView>
+  </ScrollView>
+)
+
+const Drawer = createDrawerNavigator({
+  Page1:{
+    screen: Blank,
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+    }
+  },
+  Page2:{
+    screen: Blank,
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+    }
+  },
+  Page3:{
+    screen: Blank,
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+    }
+  },
+  Page4:{
+    screen: Blank,
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+    }
+  },
+  Page5:{
+    screen: Blank,
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+    }
+  },
+  Page6:{
+    screen: Blank,
+    navigationOptions: {
+      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+    }
+  }
+},
+{
+  contentComponent: DrawerComponent
+})
 
 const Tabs = createMaterialTopTabNavigator({
   About: {
-    screen: Example,
+    screen: Drawer,
     navigationOptions: {
-      tabBarIcon: ({tintColor}) => <Icon name='home' size={24} color={tintColor} />
+      tabBarIcon: ({tintColor}) => <Icon name='home' size={24} color={tintColor} />,
+    tabBarOnPress: (x) => {x.navigation.navigate('FirstPage')}
     }
   },
-  TulisResep: {
+  Timeline: {
     screen: Example,
     navigationOptions: {
       tabBarLabel: 'Timeline',
@@ -194,6 +279,12 @@ const RootStack = createStackNavigator({
     navigationOptions: ({navigation}) => ({
       header: null
     })
+  },
+  FirstPage: {
+    screen: Drawer,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
   }
 })
 
@@ -214,6 +305,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     marginTop: -1,
     fontWeight: 'bold'
+  },
+  customIcon: {
+    position: 'absolute',
+    left: 17,
+    top: 13
   }
 });
 
