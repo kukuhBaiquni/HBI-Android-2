@@ -19,6 +19,7 @@ import EditAddress from './stack/Edit_Address';
 import EditAddressDP from './stack/Edit_Address_DP';
 import DirectPayment from './stack/Direct_Payment';
 import Blank from './stack/Blank';
+import UserProfile from './stack/User_Profile';
 import { SERVER_URL } from '../config';
 
 const DrawerComponent = (props) => (
@@ -140,20 +141,20 @@ const Tabs = createMaterialTopTabNavigator({
     screen: Profile,
     navigationOptions: {
       tabBarIcon: ({tintColor}) => <Icon name='account-box' size={24} color={tintColor} />,
-    tabBarOnPress: async (x) => {
-      {
-        try {
-          const val = await AsyncStorage.getItem('access_token');
-          if (val !== null) {
-            x.navigation.navigate('Profile')
-          }else{
+      tabBarOnPress: async (x) => {
+        {
+          try {
+            const val = await AsyncStorage.getItem('access_token');
+            if (val !== null) {
+              x.navigation.navigate('Profile')
+            }else{
+              x.navigation.navigate('ProfilePrevention')
+            }
+          } catch (error) {
             x.navigation.navigate('ProfilePrevention')
           }
-        } catch (error) {
-          x.navigation.navigate('ProfilePrevention')
         }
       }
-    }
     }
   }
 },{
@@ -282,6 +283,12 @@ const RootStack = createStackNavigator({
   },
   FirstPage: {
     screen: Drawer,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  UserProfile: {
+    screen: UserProfile,
     navigationOptions: ({navigation}) => ({
       header: null
     })
