@@ -49,18 +49,14 @@ class EditAddress extends Component {
   }
 
   citySelected(x, f) {
-    if (f === 0) {
-      this.props.dispatch(resetDistricts());
-      this.props.dispatch(resetVillages());
-    }
+    this.props.dispatch(resetDistricts());
+    this.props.dispatch(resetVillages());
     this.props.dispatch(loadDistricts(x));
     this.setState({selectedCity: x, cityName: this.props.territorial.cities[f].nama_kota, selectedDistrict: '', selectedVillage: ''})
   }
 
   districtSelected(x, f) {
-    if (f === 0) {
-      this.props.dispatch(resetVillages());
-    }
+    this.props.dispatch(resetVillages());
     this.props.dispatch(loadVillages(x))
     this.setState({selectedDistrict: x, districtName: this.props.territorial.districts[f].nama_kecamatan, selectedVillage: ''})
   }
@@ -230,11 +226,11 @@ class EditAddress extends Component {
                     selectedValue={this.state.selectedCity}
                     onValueChange={(x, f) => this.citySelected(x, f)}
                   >
-                      {
-                        this.props.territorial.cities.map((x, i) =>
-                          <Picker.Item key={i} label={x.nama_kota} value={x.kode_kota} />
-                        )
-                      }
+                  {
+                    this.props.territorial.cities.map((x, i) =>
+                      <Picker.Item key={i} label={x.nama_kota} value={x.kode_kota} />
+                    )
+                  }
                   </Picker>
                 </Item>
                 <Label style={{fontSize: 15, marginLeft: 15, marginTop: 10, color: '#a0a0a0'}}>Kecamatan</Label>

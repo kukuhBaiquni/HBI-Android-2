@@ -19,7 +19,8 @@ import EditAddress from './stack/Edit_Address';
 import EditAddressDP from './stack/Edit_Address_DP';
 import DirectPayment from './stack/Direct_Payment';
 import Blank from './stack/Blank';
-import UserProfile from './stack/User_Profile';
+import EditProfile from './stack/Edit_Profile';
+import MyProfile from './stack/My_Profile';
 import { SERVER_URL } from '../config';
 
 const DrawerComponent = (props) => (
@@ -141,6 +142,7 @@ const Tabs = createMaterialTopTabNavigator({
     screen: Profile,
     navigationOptions: {
       tabBarIcon: ({tintColor}) => <Icon name='account-box' size={24} color={tintColor} />,
+      title: 'Akun',
       tabBarOnPress: async (x) => {
         {
           try {
@@ -287,8 +289,14 @@ const RootStack = createStackNavigator({
       header: null
     })
   },
-  UserProfile: {
-    screen: UserProfile,
+  EditProfile: {
+    screen: EditProfile,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  MyProfile: {
+    screen: MyProfile,
     navigationOptions: ({navigation}) => ({
       header: null
     })

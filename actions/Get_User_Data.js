@@ -10,12 +10,8 @@ const fetchUserSuccess = (data) => {
   return { type: 'FETCH_USER_SUCCESS', data }
 };
 
-const requestDone = () => {
-  return { type: 'REQUEST_DONE' }; // To Reducer Global_Status.js
-};
-
-const requestFailed = () => {
-  return { type: 'REQUEST_FAILED' }; // To Reducer Global_Status.js
+const InternalServerError = () => {
+  return { type: 'INTERNAL_SERVER_ERROR' }
 };
 
 export function* watcherFecthUserData(token) {
@@ -35,8 +31,7 @@ function* workerFetchUserData(data) {
     var raw = JSON.parse(response.xhr._response);
     var data = raw.data;
     yield put(fetchUserSuccess(data));
-    yield put(requestDone());
   }catch (error) {
-    yield put(requestFailed());
+    yield put(InternalServerError());
   }
 }

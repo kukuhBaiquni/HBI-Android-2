@@ -19,6 +19,7 @@ import { watcherLoadVillages } from './Load_Villages';
 import { watcherSaveAddress } from './Save_Address';
 import { watcherConfirmTransaction } from './Confirm_Transaction';
 import { watcherDirectPurchase } from './Direct_Purchase';
+import { watcherLoadBank } from './Load_Bank';
 
 export default function* rootSaga() {
   yield all([
@@ -41,6 +42,7 @@ export default function* rootSaga() {
     watcherLoadVillages(),
     watcherSaveAddress(),
     watcherConfirmTransaction(),
-    watcherDirectPurchase()
+    watcherDirectPurchase(),
+    watcherLoadBank(),
   ]);
 };
