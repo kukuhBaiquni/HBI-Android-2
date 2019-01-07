@@ -40,6 +40,14 @@ let initialState = {
     success: false,
     error: false
   },
+  editProfile: {
+    success: false,
+    error: false
+  },
+  editRekening: {
+    success: true,
+    error: false
+  },
   InternalServerError: false
 };
 
@@ -257,6 +265,48 @@ export default function status(state = initialState, action) {
     return Object.assign({}, state, {
       saveAddress: {
         ...state.saveAddress, success: false, error: false
+      }
+    });
+
+    case 'EDIT_PROFILE_SUCCESS':
+    return Object.assign({}, state, {
+      editProfile: {
+        ...state.editProfile, success: true, error: false
+      }
+    });
+
+    case 'EDIT_PROFILE_FAILED':
+    return Object.assign({}, state, {
+      editProfile: {
+        ...state.editProfile, success: false, error: true
+      }
+    });
+
+    case 'RESET_EDIT_PROFILE_STATE':
+    return Object.assign({}, state, {
+      editProfile: {
+        ...state.editProfile, success: false, error: false
+      }
+    });
+
+    case 'EDIT_REKENING_SUCCESS':
+    return Object.assign({}, state, {
+      editRekening: {
+        ...state.editRekening, success: true, error: false
+      }
+    });
+
+    case 'EDIT_REKENING_FAILED':
+    return Object.assign({}, state, {
+      editRekening: {
+        ...state.editRekening, success: false, error: true
+      }
+    });
+
+    case 'RESET_EDIT_REKENING_STATE':
+    return Object.assign({}, state, {
+      editRekening: {
+        ...state.editRekening, success: false, error: false
       }
     });
 

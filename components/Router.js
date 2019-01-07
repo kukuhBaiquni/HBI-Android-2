@@ -21,6 +21,8 @@ import DirectPayment from './stack/Direct_Payment';
 import Blank from './stack/Blank';
 import EditProfile from './stack/Edit_Profile';
 import MyProfile from './stack/My_Profile';
+import EditRekening from './stack/Edit_Rekening';
+import MyRekening from './stack/My_Rekening';
 import { SERVER_URL } from '../config';
 
 const DrawerComponent = (props) => (
@@ -297,6 +299,18 @@ const RootStack = createStackNavigator({
   },
   MyProfile: {
     screen: MyProfile,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  EditRekening: {
+    screen: EditRekening,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  MyRekening: {
+    screen: MyRekening,
     navigationOptions: ({navigation}) => ({
       header: null
     })

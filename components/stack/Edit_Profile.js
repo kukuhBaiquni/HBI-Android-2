@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, TouchableNativeFeedback, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, TouchableNativeFeedback, StyleSheet, ScrollView, ToastAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { Form, Item, Input, Label, Picker } from 'native-base';
@@ -10,6 +10,7 @@ import { loadDistricts } from '../../actions/Load_Districts';
 import { loadVillages } from '../../actions/Load_Villages';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
+import { editProfile, forceResetEP } from '../../actions/Edit_Profile';
 
 class EditProfile extends Component {
   constructor(props) {
@@ -28,21 +29,21 @@ class EditProfile extends Component {
   }
 
   beforeRender() {
-    let gender = this.props.navigation.state.params.gender;
-    let phone = this.props.navigation.state.params.phone
+    let gender = this.props.userData.gender;
+    let phone = this.props.userData.phone
     if (gender === undefined || gender === '') {
       this.setState({gender: 'male'})
     }
     if (phone !== undefined) {
-      phone = '0' + this.props.navigation.state.params.phone;
+      phone = '0' + this.props.userData.phone;
     }else{
       phone = ''
     }
     this.setState({
-      nameHandler: this.props.navigation.state.params.name,
+      nameHandler: this.props.userData.name,
       phoneHandler: phone,
-      gender,
-      streetHandler: this.props.navigation.state.params.address.street
+      gender: gender,
+      streetHandler: this.props.userData.address.street
     })
     this.props.dispatch(loadCities())
   }
@@ -67,33 +68,33 @@ class EditProfile extends Component {
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.territorial.cities !== this.props.territorial.cities) {
       if (this.state.cityHandler === '') {
-        const index = this.props.territorial.cities.map(x => x.nama_kota).indexOf(this.props.navigation.state.params.address.city);
+        const index = this.props.territorial.cities.map(x => x.nama_kota).indexOf(this.props.userData.address.city);
         let code = null
         if (index !== -1) {
           code = this.props.territorial.cities[index].kode_kota;
           this.props.dispatch(loadDistricts(code))
         }
-        this.setState({cityHandler: this.props.navigation.state.params.address.city})
+        this.setState({cityHandler: this.props.userData.address.city})
       }
     }
     if (prevProps.territorial.districts !== this.props.territorial.districts) {
       if (this.state.districtHandler === '') {
-        const index = this.props.territorial.districts.map(x => x.nama_kecamatan).indexOf(this.props.navigation.state.params.address.district);
+        const index = this.props.territorial.districts.map(x => x.nama_kecamatan).indexOf(this.props.userData.address.district);
         let code = null;
         if (index !== -1) {
           code = this.props.territorial.districts[index].kode_kecamatan
           this.props.dispatch(loadVillages(code))
         }
-        this.setState({districtHandler: this.props.navigation.state.params.address.district})
+        this.setState({districtHandler: this.props.userData.address.district})
       }
     }
     if (prevProps.territorial.villages !== this.props.territorial.villages) {
       if (this.state.villageHandler === '') {
-        const index = this.props.territorial.villages.map(x => x.nama_kota).indexOf(this.props.navigation.state.params.address.village);
-        this.setState({villageHandler: this.props.navigation.state.params.address.village})
+        const index = this.props.territorial.villages.map(x => x.nama_kota).indexOf(this.props.userData.address.village);
+        this.setState({villageHandler: this.props.userData.address.village})
       }
     }
-    if (this.props.navigation.state.params.address.city !== '') {
+    if (this.props.userData.address.city !== '') {
       const { cityHandler, districtHandler, villageHandler } = this.state
       if (cityHandler !== '' && districtHandler !== '' && villageHandler !== '') {
         if (this.state.loading) {
@@ -105,6 +106,27 @@ class EditProfile extends Component {
         this.setState({loading: false})
       }
     }
+    if (prevProps.status.editProfile.success !== this.props.status.editProfile.success) {
+      if (this.props.status.editProfile.success) {
+        this.props.dispatch(forceResetEP())
+        ToastAndroid.show('Perubahan berhasil disimpan', ToastAndroid.SHORT, ToastAndroid.BOTTOM)
+      }
+    }
+  }
+
+  onSave() {
+    const data = {
+      name: this.state.nameHandler,
+      phone: this.state.phoneHandler,
+      gender: this.state.gender,
+      city: this.state.cityHandler,
+      district: this.state.districtHandler,
+      village: this.state.villageHandler,
+      street: this.state.streetHandler,
+      token: this.props.navigation.state.params.token
+    }
+    this.setState({loading: true})
+    this.props.dispatch(editProfile(data))
   }
 
   render(){
@@ -215,7 +237,7 @@ class EditProfile extends Component {
           </Item>
         </Form>
         <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20, marginBottom: 20}}>
-          <TouchableOpacity style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: 330, height: 50, borderRadius: 5}}>
+          <TouchableOpacity onPress={() => this.onSave()} style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: 330, height: 50, borderRadius: 5}}>
             <Text style={{color: 'white'}}>Simpan</Text>
           </TouchableOpacity>
         </View>

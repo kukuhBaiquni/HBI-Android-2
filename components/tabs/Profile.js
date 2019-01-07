@@ -307,7 +307,7 @@ class Profile extends Component {
           }
           {/*LIST MENU*/}
           <View style={{marginTop: 20, marginBottom: 20}}>
-            <TouchableNativeFeedback onPress={() => navigation.navigate('MyProfile', userData)}>
+            <TouchableNativeFeedback onPress={() => navigation.navigate('MyProfile', {token: this.state.token})}>
               <View style={styles.listMenu}>
                 <View style={{flexDirection: 'row', paddingTop: 10}}>
                   <Icon name='face' />
@@ -315,7 +315,7 @@ class Profile extends Component {
                 </View>
               </View>
             </TouchableNativeFeedback>
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={() => navigation.navigate('MyRekening', {token: this.state.token})}>
               <View style={styles.listMenu}>
                 <View style={{flexDirection: 'row', paddingTop: 10}}>
                   <Icon name='account-balance' />

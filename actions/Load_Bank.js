@@ -18,6 +18,10 @@ const loadBankFailed = () => {
   return { type: 'LOAD_BANK_FAILED' };
 };
 
+export const forceResetLB = () => {
+  return { type: 'RESET_LOAD_BANK_STATE' };
+};
+
 const InternalServerError = () => {
   return { type: 'INTERNAL_SERVER_ERROR' };
 };

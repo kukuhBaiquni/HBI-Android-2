@@ -1,20 +1,36 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView } from 'react-native';
+import { NavigationEvents } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { SERVER_URL } from '../../config';
 import LinearGradient from 'react-native-linear-gradient';
+import { fetchUser } from '../../actions/Get_User_Data';
 
 class MyProfile extends Component {
   render() {
-    const userData = this.props.navigation.state.params;
+    const userData = this.props.userData;
+    let gender = userData.gender;
+    if (gender === 'male') {
+      gender = 'Pria'
+    }else{
+      gender = 'Wanita'
+    }
     return(
       <ScrollView>
+        <NavigationEvents
+          onWillFocus={() => this.props.dispatch(fetchUser(this.props.navigation.state.params.token))}
+          />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
             <Icon name='arrow-back' color='#7c0c10' />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Profil Saya</Text>
+          <View style={{position: 'absolute', right: 18, top: 23}}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfile', {token: this.props.navigation.state.params.token})}>
+              <Icon name='create' color='#7c0c10' size={20} />
+            </TouchableOpacity>
+          </View>
         </View>
         <TouchableNativeFeedback>
           <View style={[styles.listMenu, {marginTop: 10}]}>
@@ -37,7 +53,7 @@ class MyProfile extends Component {
         <TouchableNativeFeedback>
           <View style={styles.listMenu}>
             <Text style={styles.menuTitle}>Jenis Kelamin</Text>
-            <Text style={{marginTop: 2, color: '#939393'}}>{userData.gender === undefined ? 'Belum diatur' : userData.gender}</Text>
+            <Text style={{marginTop: 2, color: '#939393'}}>{userData.gender === undefined ? 'Belum diatur' : gender}</Text>
           </View>
         </TouchableNativeFeedback>
         <TouchableNativeFeedback>
@@ -64,11 +80,6 @@ class MyProfile extends Component {
             <Text style={{marginTop: 2, color: '#939393'}}>{userData.address.street}</Text>
           </View>
         </TouchableNativeFeedback>
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <TouchableOpacity onPress={() => this.props.navigation.navigate('EditProfile', userData)} style={{borderRadius: 5, backgroundColor: '#7c0c10', marginTop: 10, width: 310, height: 50, justifyContent: 'center', alignItems: 'center'}}>
-            <Text style={{color: 'white'}}>Edit Profil</Text>
-          </TouchableOpacity>
-        </View>
       </ScrollView>
     )
   }
