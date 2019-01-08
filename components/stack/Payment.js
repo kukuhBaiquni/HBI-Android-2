@@ -99,6 +99,8 @@ class Payment extends Component {
 
   render() {
     const listData = this.props.cart.filter(x => x.status === true)
+    let total = 0;
+    const loop = this.props.cart.map(x => total += x.subtotal)
     let params = {}
     if (this.props.navigation.state.params === undefined) {
         params = this.props.userData
@@ -238,8 +240,12 @@ class Payment extends Component {
               )
             }
           </View>
-          <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 20}}>
-            <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 20, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
+            <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Belanja</Text>
+            <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>{idrFormat(total)}</Text>
+          </View>
+          <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+            <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
               <Text style={{color: 'white', fontSize: 16}}>Konfirmasi Pemesanan</Text>
             </TouchableOpacity>
           </View>

@@ -23,6 +23,9 @@ import EditProfile from './stack/Edit_Profile';
 import MyProfile from './stack/My_Profile';
 import EditRekening from './stack/Edit_Rekening';
 import MyRekening from './stack/My_Rekening';
+import TransactionRecords from './stack/Transaction_Records';
+import TransactionDetails from './stack/Transaction_Details';
+import Help from './stack/Help';
 import { SERVER_URL } from '../config';
 
 const DrawerComponent = (props) => (
@@ -129,15 +132,21 @@ const Tabs = createMaterialTopTabNavigator({
       tabBarIcon: ({tintColor}) => <Icon name='store-mall-directory' size={24} color={tintColor} />
     }
   },
+  // Mail: {
+  //   screen: Mail,
+  //   navigationOptions: {
+  //     tabBarIcon: ({tintColor}) => <View>
+  //     <TouchableOpacity style={styles.badge}>
+  //       <Text style={styles.text}>6</Text>
+  //     </TouchableOpacity>
+  //     <Icon name='mail' size={24} color={tintColor} />
+  //   </View>
+  //   }
+  // },
   Mail: {
     screen: Mail,
     navigationOptions: {
-      tabBarIcon: ({tintColor}) => <View>
-      <TouchableOpacity style={styles.badge}>
-        <Text style={styles.text}>6</Text>
-      </TouchableOpacity>
-      <Icon name='mail' size={24} color={tintColor} />
-    </View>
+      tabBarIcon: ({tintColor}) => <Icon name='mail' size={24} color={tintColor} />
     }
   },
   Profile: {
@@ -311,6 +320,24 @@ const RootStack = createStackNavigator({
   },
   MyRekening: {
     screen: MyRekening,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  TransactionRecords: {
+    screen: TransactionRecords,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  TransactionDetails: {
+    screen: TransactionDetails,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  Help: {
+    screen: Help,
     navigationOptions: ({navigation}) => ({
       header: null
     })

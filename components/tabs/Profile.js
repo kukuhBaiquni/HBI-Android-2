@@ -292,7 +292,7 @@ class Profile extends Component {
           {
             this.state.showDialog &&
             <View style={{marginTop: 20, alignItems: 'center', justifyContent: 'center'}}>
-              <View style={{width: 330, backgroundColor: 'white', height: 110, padding: 10, borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
+              <View style={{width: 330, backgroundColor: 'white', height: 110, padding: 10, elevation: 5, borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
                 <Text style={{textAlign: 'center', color: '#828282'}}>Profil anda mengalami perubahan, apakah anda ingin menyimpannya?</Text>
                 <View style={{flexDirection: 'row'}}>
                   <TouchableOpacity onPress={() => this.onSave()} style={{width: 100, height: 40, backgroundColor: '#7c0c10', borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginTop: 10}}>
@@ -323,7 +323,7 @@ class Profile extends Component {
                 </View>
               </View>
             </TouchableNativeFeedback>
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionRecords', {token: this.state.token})}>
               <View style={styles.listMenu}>
                 <View style={{flexDirection: 'row', paddingTop: 10}}>
                   <Icon name='compare-arrows' />
@@ -331,11 +331,11 @@ class Profile extends Component {
                 </View>
               </View>
             </TouchableNativeFeedback>
-            <TouchableNativeFeedback>
+            <TouchableNativeFeedback onPress={() => navigation.navigate('Help')}>
               <View style={styles.listMenu}>
                 <View style={{flexDirection: 'row', paddingTop: 10}}>
-                  <Icon name='settings' />
-                  <Text style={[styles.menuTitle, {marginLeft: 10}]}>Pengaturan</Text>
+                  <Icon name='help' />
+                  <Text style={[styles.menuTitle, {marginLeft: 10}]}>Bantuan</Text>
                 </View>
               </View>
             </TouchableNativeFeedback>

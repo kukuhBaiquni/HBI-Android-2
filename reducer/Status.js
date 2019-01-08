@@ -45,7 +45,11 @@ let initialState = {
     error: false
   },
   editRekening: {
-    success: true,
+    success: false,
+    error: false
+  },
+  loadTransaction: {
+    success: false,
     error: false
   },
   InternalServerError: false
@@ -307,6 +311,27 @@ export default function status(state = initialState, action) {
     return Object.assign({}, state, {
       editRekening: {
         ...state.editRekening, success: false, error: false
+      }
+    });
+
+    case 'LOAD_TRANSACTION_SUCCESS':
+    return Object.assign({}, state, {
+      loadTransaction: {
+        ...state.loadTransaction, success: true, error: false
+      }
+    });
+
+    case 'LOAD_TRANSACTION_FAILED':
+    return Object.assign({}, state, {
+      loadTransaction: {
+        ...state.loadTransaction, success: false, error: true
+      }
+    });
+
+    case 'RESET_LOAD_TRANSACTION_STATE':
+    return Object.assign({}, state, {
+      loadTransaction: {
+        ...state.loadTransaction, success: false, error: false
       }
     });
 

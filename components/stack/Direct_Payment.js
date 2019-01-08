@@ -149,6 +149,8 @@ class DirectPayment extends Component {
   }
 
   render() {
+    let total = 0;
+    const loop = this.props.cart.map(x => total += x.subtotal)
     let params = {}
     if (this.props.navigation.state.params === undefined) {
         params = this.props.userData
@@ -393,7 +395,7 @@ class DirectPayment extends Component {
                           <Text style={{fontStyle: 'italic', color: '#bababa', marginLeft: 10, marginBottom: 3}}>Proses tidak tersedia</Text>
                         }
                       <View style={this.state.editMode && this.state.picked !== 'Grind' && this.state.picked !== '-' ? {flexDirection: 'row', marginBottom: 6} : {flexDirection: 'row', marginBottom: 12}}>
-                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Subtotal :</Text>
+                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Total :</Text>
                         <Text style={{marginLeft: 10, color: '#9b9b9b'}}>
                           {
                             this.props.userData.status === 'Non Member'
@@ -405,6 +407,16 @@ class DirectPayment extends Component {
                     </View>
                   </View>
                 </View>
+            </View>
+            <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
+              <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Belanja</Text>
+              <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
+                {
+                  this.props.userData.status === 'Non Member'
+                  ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty))
+                  : idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty))
+                }
+              </Text>
             </View>
             <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 20}}>
               <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 20, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
