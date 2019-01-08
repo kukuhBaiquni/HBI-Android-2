@@ -14,6 +14,10 @@ const InternalServerError = () => {
   return { type: 'INTERNAL_SERVER_ERROR' }
 };
 
+export const logOutRequest = () => {
+  return { type: 'LOGOUT_SUCCESS' };
+};
+
 export function* watcherFecthUserData(token) {
   yield takeEvery('FETCH_USER_DATA', workerFetchUserData);
 };

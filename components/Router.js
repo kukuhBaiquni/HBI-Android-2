@@ -26,7 +26,12 @@ import MyRekening from './stack/My_Rekening';
 import TransactionRecords from './stack/Transaction_Records';
 import TransactionDetails from './stack/Transaction_Details';
 import Help from './stack/Help';
+import Timeline from './tabs/Timeline';
 import { SERVER_URL } from '../config';
+
+const openC = async (x) => {
+  console.log(x);
+}
 
 const DrawerComponent = (props) => (
   <ScrollView style={{flex: 1}}>
@@ -59,7 +64,22 @@ const DrawerComponent = (props) => (
           </View>
           <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Mail</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Profile')}>
+        <TouchableOpacity style={{flexDirection: 'row'}}
+          onPress={
+           async () => {
+              try {
+                const val = await AsyncStorage.getItem('access_token')
+                if (val !== null) {
+                  props.navigation.navigate('Profile')
+                }else{
+                  props.navigation.navigate('ProfilePrevention')
+                }
+              }catch (error) {
+                props.navigation.navigate('ProfilePrevention')
+              }
+            }
+          }
+          >
           <View style={styles.customIcon}>
             <Icon name='account-box' />
           </View>
@@ -70,37 +90,37 @@ const DrawerComponent = (props) => (
 )
 
 const Drawer = createDrawerNavigator({
-  Page1:{
+  About:{
     screen: Blank,
     navigationOptions: {
       drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
     }
   },
-  Page2:{
+  Membership:{
     screen: Blank,
     navigationOptions: {
       drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
     }
   },
-  Page3:{
+  Wholesales:{
     screen: Blank,
     navigationOptions: {
       drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
     }
   },
-  Page4:{
+  Aqiqah:{
     screen: Blank,
     navigationOptions: {
       drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
     }
   },
-  Page5:{
+  Kurban:{
     screen: Blank,
     navigationOptions: {
       drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
     }
   },
-  Page6:{
+  Help:{
     screen: Blank,
     navigationOptions: {
       drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
@@ -120,7 +140,7 @@ const Tabs = createMaterialTopTabNavigator({
     }
   },
   Timeline: {
-    screen: Example,
+    screen: Timeline,
     navigationOptions: {
       tabBarLabel: 'Timeline',
       tabBarIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />

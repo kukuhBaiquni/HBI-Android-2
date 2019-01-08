@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, ScrollView, Text, AsyncStorage, Alert, TouchableOpacity, Image, StyleSheet, TouchableNativeFeedback, ToastAndroid } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
-import { fetchUser } from '../../actions/Get_User_Data';
+import { fetchUser, logOutRequest } from '../../actions/Get_User_Data';
 import FBSDK, { LoginManager } from 'react-native-fbsdk';
 import GoogleSignIn from 'react-native-google-sign-in';
 import { SERVER_URL } from '../../config';
@@ -74,6 +74,7 @@ class Profile extends Component {
       await LoginManager.logOut()
       await GoogleSignIn.signOutPromise()
       this.props.navigation.replace('MainTabs')
+      this.props.dispatch(logOutRequest())
     }catch (error) {
       Alert.alert(
         'Logout gagal',

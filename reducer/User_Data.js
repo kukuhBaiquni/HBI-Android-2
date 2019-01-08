@@ -12,6 +12,9 @@ export default function userData(state = initialState, action) {
     case 'EDIT_REKENING_WITH_DATA_SUCCESS':
     return action.data;
 
+    case 'LOGOUT_SUCCESS':
+    return {};
+
     default:
       return state;
   }

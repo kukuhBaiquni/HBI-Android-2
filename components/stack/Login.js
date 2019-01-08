@@ -281,8 +281,8 @@ class Login extends Component {
                 <TouchableOpacity style={{position: 'absolute', right: 5}}>
                   {
                     this.state.secure
-                    ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={24}/>
-                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={24}/>
+                    ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={20}/>
+                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={20}/>
                   }
                 </TouchableOpacity>
               </Item>

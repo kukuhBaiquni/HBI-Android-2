@@ -1,5 +1,4 @@
 const futch = (url, opts={}, onProgress) => {
-    console.log(url, opts)
     return new Promise( (res, rej)=>{
         var xhr = new XMLHttpRequest();
         xhr.open(opts.method || 'get', url);

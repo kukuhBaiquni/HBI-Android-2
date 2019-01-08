@@ -35,7 +35,7 @@ class Register extends Component {
       isPasswordMatch: true,
       isFormValid: false,
       isFormEmpty: false,
-      oauthData: {}
+      oauthData: {},
     }
   }
 
@@ -142,13 +142,17 @@ class Register extends Component {
       }
     }else{
       if (!this.state.externalData) {
-        if (this.state.oauthData === {}) {
-          this.checkAsync()
-        }else{
-          let data = this.state.oauthData;
-          this.setState({externalData: true, nameHandler: data.name, emailHandler: data.email})
-        }
+        this.props.dispatch(forceResetRG())
+        this.setState({nameHandler: this.state.oauthData.name, emailHandler: this.state.oauthData.email, externalData: true, loading: false})
       }
+      // if (!this.state.externalData) {
+      //   if (this.state.oauthData === {}) {
+      //     this.checkAsync()
+      //   }else{
+      //     let data = this.state.oauthData;
+      //     this.setState({externalData: true, nameHandler: data.name, emailHandler: data.email})
+      //   }
+      // }
     }
     if (this.props.status.register.error) {
       if (this.state.loading) {
@@ -210,7 +214,7 @@ class Register extends Component {
     }
   }
 
-  facebookRegister() {
+  facebookRegisterX() {
     LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
       if (!result.isCancelled) {
         AccessToken.getCurrentAccessToken()
@@ -268,6 +272,7 @@ class Register extends Component {
       if (data !== null) {
         const raw = JSON.parse(data);
         const email = raw.email;
+        this.setState({oauthData: raw, loading: true})
         this.props.dispatch(checkEmail(email));
       }else{
         Alert.alert(
@@ -405,8 +410,8 @@ class Register extends Component {
                 <TouchableOpacity style={{position: 'absolute', right: 5}}>
                   {
                     this.state.secure
-                    ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={24}/>
-                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={24}/>
+                    ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={20}/>
+                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={20}/>
                   }
                 </TouchableOpacity>
               </Item>
@@ -434,8 +439,8 @@ class Register extends Component {
                 <TouchableOpacity style={{position: 'absolute', right: 5}}>
                   {
                     this.state.secure2
-                    ? <Icon onPress={() => this.setState({secure2: false})} name='visibility' color='#919191' size={24}/>
-                  : <Icon onPress={() => this.setState({secure2: true})} name='visibility-off' color='#919191' size={24}/>
+                    ? <Icon onPress={() => this.setState({secure2: false})} name='visibility' color='#919191' size={20}/>
+                  : <Icon onPress={() => this.setState({secure2: true})} name='visibility-off' color='#919191' size={20}/>
                   }
                 </TouchableOpacity>
               </Item>
@@ -471,7 +476,7 @@ class Register extends Component {
               duration={500}
               iterationCount={1}
               >
-            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => this.facebookRegister()}>
+            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => this.facebookRegisterX()}>
               <SocialIcon
                 type='facebook'
                 raised={false}
