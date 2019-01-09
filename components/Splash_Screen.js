@@ -27,16 +27,14 @@ export default class Splash extends Component {
             backgroundColor = '#7c0c10'
             barStyle = 'light-content'
         />
-        <Animatable.Image
-          animation='flipInX'
-          iterationCount={1}
-          direction='alternate'
-          style={{width: 50, height: 50}}
-          source={{uri: `${SERVER_URL}logo favicon/apple-touch-icon-114x114.jpg`}}
-          onAnimationEnd={() => this.showLoader()}
-        />
-        <Animatable.Text animation="fadeInUpBig" iterationCount={1} direction="alternate" style={styles.welcome}>HALAL BEEF INDONESIA</Animatable.Text>
-        <BarIndicator count={5} size={30} color={this.state.color} />
+        <Image
+          resizeMode='contain'
+          style={{height: 110, width: 220, marginTop: 500}}
+          source={{uri: `${SERVER_URL}images/support/SScreen.png`}}
+           />
+         <View style={{marginTop: -550}}>
+           <BarIndicator count={5} size={23} color='white' />
+         </View>
       </View>
     );
   }
@@ -45,10 +43,9 @@ export default class Splash extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     backgroundColor: '#7c0c10',
-    paddingTop: 200
+    justifyContent: 'center',
+    alignItems: 'center'
   },
   welcome: {
     fontSize: 20,

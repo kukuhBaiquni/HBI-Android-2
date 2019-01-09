@@ -13,7 +13,7 @@ class Timeline extends Component {
             style={{width: 50, height: 50, borderRadius: 120}}
             source={{uri: `${SERVER_URL}images/logos/logo.png`}}
             />
-          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, paddingTop: 10, paddingLeft: 10}}>Halal Beef Indonesia</Text>
+          <Text style={{color: 'white', fontWeight: 'bold', fontSize: 20, paddingTop: 10, paddingLeft: 10}}>Timeline</Text>
         </View>
       </View>
     )

@@ -27,6 +27,7 @@ import TransactionRecords from './stack/Transaction_Records';
 import TransactionDetails from './stack/Transaction_Details';
 import Help from './stack/Help';
 import Timeline from './tabs/Timeline';
+import Splash from './Splash_Screen';
 import { SERVER_URL } from '../config';
 
 const openC = async (x) => {
@@ -36,13 +37,13 @@ const openC = async (x) => {
 const DrawerComponent = (props) => (
   <ScrollView style={{flex: 1}}>
     <SafeAreaView>
-      <View style={{justifyContent: 'center', alignItems: 'center', height: 110, backgroundColor: '#bababa'}}>
+      <View style={{justifyContent: 'center', alignItems: 'center', height: 120, backgroundColor: '#7c0c10'}}>
         <View style={{height: 10}} />
         <Image
-          style={{width: 50, height: 50, borderRadius: 50, paddingTop: 10}}
-          source={{uri: `${SERVER_URL}logo favicon/apple-touch-icon-114x114.jpg`}}
+          resizeMode='contain'
+          style={{width: 150, height: 90, paddingTop: 0}}
+          source={{uri: `${SERVER_URL}images/support/SScreen.png`}}
           />
-        <Text style={{marginTop: 10, fontSize: 20}}>Halal Beef Indonesia</Text>
       </View>
         <DrawerItems {...props} />
         <View style={{borderBottomColor: '#bababa', borderBottomWidth: 1}} />
@@ -93,37 +94,35 @@ const Drawer = createDrawerNavigator({
   About:{
     screen: Blank,
     navigationOptions: {
-      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+      title: 'Tentang Kami',
+      drawerIcon: ({tintColor}) => <Icon name='contacts' size={24} color={tintColor} />
     }
   },
-  Membership:{
+  Member:{
     screen: Blank,
     navigationOptions: {
-      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+      drawerIcon: ({tintColor}) => <Icon name='people' size={24} color={tintColor} />
     }
   },
-  Wholesales:{
+  Business:{
     screen: Blank,
     navigationOptions: {
-      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+      title: 'Bisnis',
+      drawerIcon: ({tintColor}) => <Icon name='business-center' size={24} color={tintColor} />
     }
   },
-  Aqiqah:{
+  CallUs:{
     screen: Blank,
     navigationOptions: {
-      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+      title: 'Hubungi Kami',
+      drawerIcon: ({tintColor}) => <Icon name='phone' size={24} color={tintColor} />
     }
   },
-  Kurban:{
-    screen: Blank,
+  Help2:{
+    screen: Help,
     navigationOptions: {
-      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
-    }
-  },
-  Help:{
-    screen: Blank,
-    navigationOptions: {
-      drawerIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+      title: 'Bantuan',
+      drawerIcon: ({tintColor}) => <Icon name='help' size={24} color={tintColor} />
     }
   }
 },
