@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView, AsyncStorage, Alert } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
@@ -16,8 +16,23 @@ class TransactionRecords extends Component {
     }
   }
 
-  beforeRender() {
-    this.props.dispatch(loadTransaction(this.props.navigation.state.params.token))
+  beforeRender = async () => {
+    try {
+      const token = await AsyncStorage.getItem('access_token');
+      if (token !== null) {
+        const raw = JSON.parse(token)
+        this.props.dispatch(loadTransaction(raw))
+      }
+    }catch (error) {
+      Alert.alert(
+        'Kesalahan',
+        'Gagal memuat data',
+        [
+          {text: 'OK'}
+        ],
+        { cancelable: false }
+      );
+    }
   }
 
   render() {

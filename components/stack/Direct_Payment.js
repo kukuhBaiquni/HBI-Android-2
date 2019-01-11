@@ -140,7 +140,7 @@ class DirectPayment extends Component {
 
   queueRouting() {
     this.props.navigation.popToTop();
-    this.props.navigation.navigate('Profile');
+    this.props.navigation.navigate('TransactionDetails');
   }
 
   render() {
