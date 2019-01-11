@@ -128,6 +128,11 @@ class Register extends Component {
     }
   }
   componentDidUpdate(prevProps, prevState) {
+    if (this.state.emailHandler === '') {
+      if (this.state.externalData) {
+        this.setState({externalData: false})
+      }
+    }
     if (!this.props.status.isEmailFree) {
       const remove = async () => {
         try {
@@ -141,7 +146,7 @@ class Register extends Component {
         this.props.dispatch(registerFailedPrototype())
       }
     }else{
-      if (!this.state.externalData) {
+      if (this.state.loading) {
         this.props.dispatch(forceResetRG())
         this.setState({nameHandler: this.state.oauthData.name, emailHandler: this.state.oauthData.email, externalData: true, loading: false})
       }
@@ -274,6 +279,7 @@ class Register extends Component {
         const email = raw.email;
         this.setState({oauthData: raw, loading: true})
         this.props.dispatch(checkEmail(email));
+        GoogleSignIn.signOut()
       }else{
         Alert.alert(
           'Login gagal',
@@ -293,6 +299,7 @@ class Register extends Component {
   }
 
   googleRegister = async () => {
+    LoginManager.logOut()
     try {
       await GoogleSignIn.configure({
         scopes: ['profile'],
@@ -303,7 +310,7 @@ class Register extends Component {
         name: user.name,
         email: user.email
       }
-      this.setState({oauthData: raw});
+      this.setState({oauthData: raw, loading: true, nameHandler: this.state.oauthData.name});
       await this.props.dispatch(checkEmail(user.email))
     } catch(error) {
       Alert.alert(
@@ -373,19 +380,26 @@ class Register extends Component {
               duration={500}
               iterationCount={1}
               >
-              <Item regular style={{borderColor: 'transparent'}}>
-                <Input
-                  placeholder='Email'
-                  placeholderTextColor='#919191'
-                  underlineColorAndroid='transparent'
-                  keyboardType='email-address'
-                  onChangeText={(x) => this.emailHandler(x)}
-                  onBlur={() => this.emailBlur()}
-                  editable={!this.state.externalData}
-                  defaultValue={this.state.emailHandler}
-                  style={[styles.defaultInput, this.state.externalData ? {color: '#919191'} : {color: 'black'}]}
-                  />
-              </Item>
+              {
+                this.state.oauthData.email !== undefined
+                ?
+                <View style={{width: 255, height: 35,backgroundColor: 'white', padding: 10, borderRadius: 3, marginBottom: 1, marginTop: 1}}>
+                  <Text style={{fontSize: 12, color: '#919191'}}>{this.state.oauthData.email}</Text>
+                </View>
+                :
+                <Item regular style={{borderColor: 'transparent'}}>
+                  <Input
+                    placeholder='Email'
+                    placeholderTextColor='#919191'
+                    underlineColorAndroid='transparent'
+                    keyboardType='email-address'
+                    onChangeText={(x) => this.emailHandler(x)}
+                    onBlur={() => this.emailBlur()}
+                    defaultValue={this.state.emailHandler}
+                    style={[styles.defaultInput, this.state.externalData ? {color: '#919191'} : {color: 'black'}]}
+                    />
+                </Item>
+              }
             </Animatable.View>
             {!isEmailValid && <Text style={{fontSize: 12, color: 'red', marginLeft: -150, paddingBottom: 5}}>*Email tidak valid</Text>}
             <View style={{height: 3}}></View>

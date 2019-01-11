@@ -30,7 +30,8 @@ class Login extends Component {
       isFormEmpty: false,
       loading: false,
       isLoginError: false,
-      oauthData: {}
+      oauthData: {},
+      error: ''
     }
   }
 
@@ -205,6 +206,7 @@ class Login extends Component {
       this.setState({oauthData: raw});
       await this.props.dispatch(checkEmail(user.email))
     } catch(error) {
+      this.setState({error: JSON.stringify(error)})
       Alert.alert(
         'Login gagal',
         'Login dibatalkan oleh pengguna',
@@ -300,6 +302,7 @@ class Login extends Component {
                 <Text style={{color: 'white', fontWeight: 'bold'}}>Masuk</Text>
               </TouchableOpacity>
             </Animatable.View>
+            <Text>{this.state.error}</Text>
             <Animatable.View
               style={{width: 260, alignItems: 'center'}}
               animation='fadeIn'
