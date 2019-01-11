@@ -115,9 +115,21 @@ class ProductDetails extends Component {
 
   directPurchase = async () => {
     try{
-      const item = this.props.navigation.state.params;
-      await AsyncStorage.setItem('direct_purchase', JSON.stringify(item))
-      this.props.navigation.navigate('DirectPayment')
+      if (this.state.token !== '') {
+        const item = this.props.navigation.state.params;
+        await AsyncStorage.setItem('direct_purchase', JSON.stringify(item))
+        this.props.navigation.navigate('DirectPayment')
+      }else{
+        Alert.alert(
+          'Kesalahan',
+          'Anda harus login untuk berbelanja, login sekarang?',
+          [
+            {text: 'YA', onPress: () => this.props.navigation.navigate('Login')},
+            {text: 'TIDAK'}
+          ],
+          { cancelable: false }
+        );
+      }
     }catch(error) {}
   }
 
