@@ -195,7 +195,7 @@ class EditAddressDP extends Component {
         </View>
         <ScrollView>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <View style={{backgroundColor: 'white', width: '100%'}}>
+            <View style={{backgroundColor: 'white', width: '100%', elevation: 3}}>
               <Form>
                 <Item stackedLabel style={{width: 330}}>
                   <Label style={{color: '#a0a0a0'}}>Nama Penerima</Label>

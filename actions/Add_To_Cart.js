@@ -10,6 +10,10 @@ const addToCartSuccess = () => {
   return { type: 'ADD_TO_CART_SUCCESS' };
 };
 
+const loadCartWithDataSuccess = (data) => {
+  return { type: 'LOAD_CART_WITH_DATA_SUCCESS', data };
+};
+
 const addToCartFailed = () => {
   return { type: 'ADD_TO_CART_FAILED' };
 };
@@ -40,6 +44,7 @@ function* workerAddtoCart(product) {
     var raw = JSON.parse(response.xhr._response);
     var data = raw;
     if (data.success) {
+      yield put(loadCartWithDataSuccess(data.data))
       yield put(addToCartSuccess());
     }else{
       yield put(addToCartFailed());

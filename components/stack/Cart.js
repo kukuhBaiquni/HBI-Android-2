@@ -246,6 +246,8 @@ class Cart extends Component {
 
   render() {
     const { navigation, cart } = this.props;
+    let total = 0
+    cart.forEach(x => total += x.subtotal)
     return(
       <View style={{flex: 1}}>
         <NavigationEvents
@@ -392,7 +394,7 @@ class Cart extends Component {
         <View style={[styles.productHeader, {marginTop: 0, height: 60, paddingLeft: 20}]}>
           <View>
             <Text style={{fontSize: 14}}>Total Harga</Text>
-            <Text style={{color: '#7c0c10', fontSize: 20}}>{idrFormat(this.props.cartTotal)}</Text>
+            <Text style={{color: '#7c0c10', fontSize: 20}}>{idrFormat(total)}</Text>
           </View>
           {
             this.state.number !== 0 &&

@@ -47,11 +47,8 @@ function* workerLoadCart(data) {
     var raw = JSON.parse(response.xhr._response);
     var data = raw;
     if (data.success) {
-      var total = 0;
-      data.data.forEach(x => total += x.subtotal)
       yield put(loadCartWithDataSuccess(data.data));
       yield put(loadCartSuccess())
-      yield put(cartTotal(total))
     }else{
       yield put(loadCartFailed());
     }
