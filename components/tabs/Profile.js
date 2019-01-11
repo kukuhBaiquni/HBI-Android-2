@@ -71,20 +71,12 @@ class Profile extends Component {
   confirmLogout = async (x) => {
     try {
       await AsyncStorage.removeItem('access_token')
-      await LoginManager.logOut()
-      await GoogleSignIn.signOutPromise()
-      this.props.navigation.replace('MainTabs')
-      this.props.dispatch(logOutRequest())
+      LoginManager.logOut()
+      GoogleSignIn.signOut()
+      this.props.navigation.replace('MainTabs');
+      this.props.dispatch(logOutRequest());
     }catch (error) {
-      Alert.alert(
-        'Logout gagal',
-        'Proses logout gagal, silahkan ulangi permintaan anda',
-        [
-          {text: 'YA', onPress: () => this.confirmLogout()},
-          {text: 'TIDAK'}
-        ],
-        { cancelable: false }
-      );
+      this.props.navigation.replace('MainTabs');
     }
   }
 
