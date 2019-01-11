@@ -33,7 +33,6 @@ function* workerAddtoCart(product) {
       .post(`${SERVER_URL}android/add-to-cart/${product.data.id}`)
       .send({token: product.data.token})
       .send({qty: product.data.qty})
-      .send({selected_process: product.data.selected_process})
       .then((res) => {
         return res;
       })

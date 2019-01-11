@@ -43,7 +43,6 @@ function* workerSaveChanges(form) {
       .send({id: form.data.id})
       .send({_id: form.data._id})
       .send({qty: form.data.qty})
-      .send({selected_process: form.data.selected_process})
       .then((res) => {
         return res;
       })

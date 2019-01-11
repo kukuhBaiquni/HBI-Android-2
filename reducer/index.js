@@ -10,9 +10,10 @@ import territorial from './Territorial';
 import transaction from './Transaction';
 import bank from './Bank';
 import transactionRecords from './Transaction_Records';
+import ongkir from './Ongkir';
 
 const rootReducer = combineReducers({
-  listProducts, status, token, userData, resultCounting, cart, cartTotal, territorial, transaction, bank, transactionRecords
+  listProducts, status, token, userData, resultCounting, cart, cartTotal, territorial, transaction, bank, transactionRecords, ongkir
 });
 
 export default rootReducer

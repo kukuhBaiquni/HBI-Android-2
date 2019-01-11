@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, ToastAndroid } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { Form, Item, Input, Label, Picker } from 'native-base';
@@ -145,7 +145,7 @@ class EditAddressDP extends Component {
     }
     if (prevProps.status.saveAddress.success !== this.props.status.saveAddress.success) {
       if (this.props.status.saveAddress.success) {
-        this.props.navigation.navigate('Direct_Payment');
+        ToastAndroid.show('Perubahan berhasil disimpan', ToastAndroid.SHORT, ToastAndroid.BOTTOM)
       }
     }
     if (prevProps.status.saveAddress.error !== this.props.status.saveAddress.error) {

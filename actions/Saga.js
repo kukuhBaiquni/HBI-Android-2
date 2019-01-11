@@ -23,6 +23,7 @@ import { watcherLoadBank } from './Load_Bank';
 import { watcherEditProfile } from './Edit_Profile';
 import { watcherEditRekening } from './Edit_Rekening';
 import { watcherLoadTransaction } from './Load_Transaction';
+import { watcherCheckOngkir } from './Check_Ongkir';
 
 export default function* rootSaga() {
   yield all([
@@ -49,6 +50,7 @@ export default function* rootSaga() {
     watcherLoadBank(),
     watcherEditProfile(),
     watcherEditRekening(),
-    watcherLoadTransaction()
+    watcherLoadTransaction(),
+    watcherCheckOngkir()
   ]);
 };

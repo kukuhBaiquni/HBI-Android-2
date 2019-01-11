@@ -299,7 +299,7 @@ class Register extends Component {
         clientID: '912178815288-2fia498v78qdsm487k9ngvrjcn46m343.apps.googleusercontent.com'
       })
       const user = await GoogleSignIn.signInPromise();
-      const raw = await {
+      const raw = {
         name: user.name,
         email: user.email
       }

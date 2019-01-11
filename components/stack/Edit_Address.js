@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, ToastAndroid } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { Form, Item, Input, Label, Picker } from 'native-base';
@@ -16,18 +16,15 @@ class EditAddress extends Component {
   constructor(props){
     super(props)
     this.state = {
-      selectedCity: '-',
-      selectedDistrict: '-',
-      selectedVillage: '-',
-      cityName: '',
-      districtName: '',
-      villageName: '',
+      cityHandler: '',
+      districtHandler: '',
+      villageHandler: '',
       nameHandler: '',
       phoneHandler: '',
       addressHandler: '',
       saveState: 'default',
       index: 0,
-      loading: false,
+      loading: true,
       token: ''
     }
   }
@@ -51,18 +48,18 @@ class EditAddress extends Component {
   citySelected(x, f) {
     this.props.dispatch(resetDistricts());
     this.props.dispatch(resetVillages());
-    this.props.dispatch(loadDistricts(x));
-    this.setState({selectedCity: x, cityName: this.props.territorial.cities[f].nama_kota, selectedDistrict: '', selectedVillage: ''})
+    this.props.dispatch(loadDistricts(this.props.territorial.cities[f].kode_kota));
+    this.setState({cityHandler: x, districtHandler: '', villageHandler: ''})
   }
 
   districtSelected(x, f) {
     this.props.dispatch(resetVillages());
-    this.props.dispatch(loadVillages(x))
-    this.setState({selectedDistrict: x, districtName: this.props.territorial.districts[f].nama_kecamatan, selectedVillage: ''})
+    this.props.dispatch(loadVillages(this.props.territorial.districts[f].kode_kecamatan))
+    this.setState({districtHandler: x, villageHandler: ''})
   }
 
   villageSelected(x, f) {
-    this.setState({selectedVillage: x, villageName: this.props.territorial.villages[f].nama_kelurahan})
+    this.setState({villageHandler: x})
   }
 
   onValueChange(x) {
@@ -81,12 +78,12 @@ class EditAddress extends Component {
       name: this.state.nameHandler,
       phone: this.state.phoneHandler,
       street: this.state.addressHandler,
-      city: this.state.cityName,
-      district: this.state.districtName,
-      village: this.state.villageName
+      city: this.state.cityHandler,
+      district: this.state.districtHandler,
+      village: this.state.villageHandler
     }
-    const { cityName, districtName, villageName, nameHandler, phoneHandler, addressHandler } = this.state;
-    if (cityName !== '' && districtName !== '' && villageName !== '' && nameHandler !== '' && phoneHandler !== '' && addressHandler !== '') {
+    const { cityHandler, districtHandler, villageHandler, nameHandler, phoneHandler, addressHandler } = this.state;
+    if (cityHandler !== '' && districtHandler !== '' && villageHandler !== '' && nameHandler !== '' && phoneHandler !== '' && addressHandler !== '') {
       this.setState({loading: true})
       if (this.state.saveState === 'default') {
         this.props.dispatch(saveAddress(data))
@@ -107,49 +104,48 @@ class EditAddress extends Component {
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.territorial.cities !== this.props.territorial.cities) {
-      let indexer = 0;
-      this.props.territorial.cities.map((x, i) => {
-        if (x.nama_kota === this.props.navigation.state.params.address.city) {
-          indexer = i
+      if (this.state.cityHandler === '') {
+        const index = this.props.territorial.cities.map(x => x.nama_kota).indexOf(this.props.navigation.state.params.address.city);
+        let code = null
+        if (index !== -1) {
+          code = this.props.territorial.cities[index].kode_kota;
+          this.props.dispatch(loadDistricts(code))
         }
-      })
-      if (this.props.navigation.state.params.address.city !== '') {
-        const code = this.props.territorial.cities[indexer].kode_kota;
-        this.props.dispatch(loadDistricts(code))
-        this.setState({selectedCity: this.props.territorial.cities[indexer].kode_kota, cityName: this.props.territorial.cities[indexer].nama_kota})
+        this.setState({cityHandler: this.props.navigation.state.params.address.city})
       }
     }
     if (prevProps.territorial.districts !== this.props.territorial.districts) {
-      let indexer = 0;
-      this.props.territorial.districts.map((x, i) => {
-        if (x.nama_kecamatan === this.props.navigation.state.params.address.district) {
-          indexer = i
+      if (this.state.districtHandler === '') {
+        const index = this.props.territorial.districts.map(x => x.nama_kecamatan).indexOf(this.props.navigation.state.params.address.district);
+        let code = null;
+        if (index !== -1) {
+          code = this.props.territorial.districts[index].kode_kecamatan
+          this.props.dispatch(loadVillages(code))
         }
-      })
-      if (this.props.navigation.state.params.address.district !== '') {
-        if (this.state.selectedDistrict === '-') {
-          const code = this.props.territorial.districts[indexer].kode_kecamatan;
-          this.props.dispatch(loadVillages(code));
-          this.setState({selectedDistrict: this.props.territorial.districts[indexer].kode_kecamatan, districtName: this.props.territorial.districts[indexer].nama_kecamatan})
-        }
+        this.setState({districtHandler: this.props.navigation.state.params.address.district})
       }
     }
     if (prevProps.territorial.villages !== this.props.territorial.villages) {
-      let indexer = 0;
-      this.props.territorial.villages.map((x, i) => {
-        if (x.nama_kelurahan === this.props.navigation.state.params.address.village) {
-          indexer = i
+      if (this.state.villageHandler === '') {
+        const index = this.props.territorial.villages.map(x => x.nama_kota).indexOf(this.props.navigation.state.params.address.village);
+        this.setState({villageHandler: this.props.navigation.state.params.address.village})
+      }
+    }
+    if (this.props.navigation.state.params.address.city !== '') {
+      const { cityHandler, districtHandler, villageHandler } = this.state
+      if (cityHandler !== '' && districtHandler !== '' && villageHandler !== '') {
+        if (this.state.loading) {
+          this.setState({loading: false})
         }
-      })
-      if (this.props.navigation.state.params.address.village !== '') {
-        if (this.state.selectedVillage === '-') {
-          this.setState({selectedVillage: this.props.territorial.villages[indexer].kode_kelurahan, villageName: this.props.territorial.villages[indexer].nama_kelurahan});
-        }
+      }
+    }else{
+      if (this.state.loading) {
+        this.setState({loading: false})
       }
     }
     if (prevProps.status.saveAddress.success !== this.props.status.saveAddress.success) {
       if (this.props.status.saveAddress.success) {
-        this.props.navigation.navigate('Direct_Payment');
+        ToastAndroid.show('Perubahan berhasil disimpan', ToastAndroid.SHORT, ToastAndroid.BOTTOM)
       }
     }
     if (prevProps.status.saveAddress.error !== this.props.status.saveAddress.error) {
@@ -223,12 +219,12 @@ class EditAddress extends Component {
                   <Picker
                     mode="dropdown"
                     iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    selectedValue={this.state.selectedCity}
+                    selectedValue={this.state.cityHandler}
                     onValueChange={(x, f) => this.citySelected(x, f)}
                   >
                   {
                     this.props.territorial.cities.map((x, i) =>
-                      <Picker.Item key={i} label={x.nama_kota} value={x.kode_kota} />
+                      <Picker.Item key={i} label={x.nama_kota} value={x.nama_kota} />
                     )
                   }
                   </Picker>
@@ -238,12 +234,12 @@ class EditAddress extends Component {
                   <Picker
                     mode="dropdown"
                     iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    selectedValue={this.state.selectedDistrict}
+                    selectedValue={this.state.districtHandler}
                     onValueChange={(x, f) => this.districtSelected(x, f)}
                   >
                       {
                         this.props.territorial.districts.map((x, i) =>
-                          <Picker.Item key={i} label={x.nama_kecamatan} value={x.kode_kecamatan} />
+                          <Picker.Item key={i} label={x.nama_kecamatan} value={x.nama_kecamatan} />
                         )
                       }
                   </Picker>
@@ -253,12 +249,12 @@ class EditAddress extends Component {
                   <Picker
                     mode="dropdown"
                     iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    selectedValue={this.state.selectedVillage}
+                    selectedValue={this.state.villageHandler}
                     onValueChange={(x, f) => this.villageSelected(x, f)}
                   >
                       {
                         this.props.territorial.villages.map((x, i) =>
-                          <Picker.Item key={i} label={x.nama_kelurahan} value={x.kode_kelurahan} />
+                          <Picker.Item key={i} label={x.nama_kelurahan} value={x.nama_kelurahan} />
                         )
                       }
                   </Picker>

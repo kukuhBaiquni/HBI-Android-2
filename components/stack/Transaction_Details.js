@@ -6,7 +6,6 @@ import moment from 'moment';
 
 export default class TransactionDetails extends Component {
   render() {
-    console.log(this.props.navigation.state.params);
     const { navigation } = this.props;
     return(
       <View style={{flex: 1}}>
@@ -57,7 +56,6 @@ export default class TransactionDetails extends Component {
                   <View style={{marginLeft: 10, marginTop: -5, width: 140}}>
                     <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 16}}>{x.product_name}</Text>
                     <Text>Harga: <Text style={{color: '#a5a5a5'}}>{idrFormat(x.price)}</Text></Text>
-                    <Text>Proses: <Text style={{color: '#a5a5a5'}}>{x.selected_process}</Text></Text>
                     <Text>Kuantitas: <Text style={{color: '#a5a5a5'}}>{x.qty}</Text></Text>
                     <Text style={{marginTop: 10, fontWeight: 'bold'}}>Subtotal </Text>
                   </View>
@@ -66,16 +64,24 @@ export default class TransactionDetails extends Component {
                     <Text></Text>
                     <Text></Text>
                     <Text></Text>
-                    <Text style={{marginTop: 6}}>{idrFormat(x.price * x.qty)}</Text>
+                    <Text style={{marginTop: 6, marginLeft: 30}}>{idrFormat(x.price * x.qty)}</Text>
                   </View>
                 </View>
               </View>
               )
             }
           </View>
+          <View style={{backgroundColor: 'white', marginTop: 10, marginBottom: 0, flexDirection: 'row'}}>
+            <Text style={{padding: 10, fontSize: 18, marginLeft: 83}}>Ongkir</Text>
+            <Text style={{padding: 10, fontSize: 18, fontWeight: 'bold', marginLeft: 80}}>{idrFormat(navigation.state.params.ongkir)}</Text>
+          </View>
+          <View style={{backgroundColor: 'white', marginTop: 10, marginBottom: 0, flexDirection: 'row'}}>
+            <Text style={{padding: 10, fontSize: 18, marginLeft: 83}}>Total Belanja</Text>
+            <Text style={{padding: 10, fontSize: 18, fontWeight: 'bold', marginLeft: 20}}>{idrFormat(navigation.state.params.total_price - navigation.state.params.ongkir)}</Text>
+          </View>
           <View style={{backgroundColor: 'white', marginTop: 10, marginBottom: 20, flexDirection: 'row'}}>
-            <Text style={{padding: 10, fontSize: 18, marginLeft: 83}}>Total Harga</Text>
-            <Text style={{padding: 10, fontSize: 18, fontWeight: 'bold', marginLeft: 27}}>{idrFormat(navigation.state.params.total_price)}</Text>
+            <Text style={{padding: 10, fontSize: 18, marginLeft: 83}}>Total Bayar</Text>
+            <Text style={{padding: 10, fontSize: 18, fontWeight: 'bold', marginLeft: 30}}>{idrFormat(navigation.state.params.total_price)}</Text>
           </View>
         </ScrollView>
       </View>

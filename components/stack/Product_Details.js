@@ -10,7 +10,6 @@ import Swipable from '../Swipable';
 import RNParallax from '../Parallax_Header';
 import CartIcon from '../Cart_Icon';
 import Modal from "react-native-modal";
-import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationEvents } from 'react-navigation';
@@ -21,32 +20,13 @@ class ProductDetails extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      showProcess: false,
       showModal: false,
       isLoggedIn: false,
       loading: false,
       token: '',
-      picked: 'None', // data
-      selected: '', //data
-      options: [{label: 'None', value: 'None'}, {label: 'Cut', value: 'Cut'}, {label: 'Slice', value: 'Slice'}, {label: 'Grind', value: 'Grind'}],
-      index: 0,
       showModalContent: false,
       itemCount: 1 // data
     }
-  }
-
-  onValueChange(val) {
-    let target = 0
-    if (val === 'Cut') {
-      target = 1
-    }else if(val === 'Slice') {
-      target = 2
-    }else if(val === 'Grind') {
-      target = 3
-    }else{
-      target = 0
-    }
-    this.setState({picked: val, index: target})
   }
 
   changeCount(x) {
@@ -73,23 +53,9 @@ class ProductDetails extends Component {
     const item = {
       token: this.state.token,
       id: this.props.navigation.state.params.id,
-      qty: this.state.itemCount,
-      selected_process: this.state.picked + ' ' + this.state.selected
+      qty: this.state.itemCount
     }
     this.props.dispatch(addToCart(item));
-  }
-
-  goToCartHideModal() {
-    this.setState({showModal: false})
-    this.props.navigation.navigate('Cart')
-  }
-
-  showProcess() {
-    this.setState({showProcess: true})
-  }
-
-  hideProcess() {
-    this.setState({showProcess: false})
   }
 
   showModal() {
@@ -203,58 +169,11 @@ class ProductDetails extends Component {
                 <Text style={styles.subtitle}>Deskripsi Produk</Text>
                 <Text style={styles.text}>{navigation.state.params.description}</Text>
               </View>
-              <View style={styles.viewContainer}>
+              <View style={[styles.viewContainer, {marginBottom: 10}]}>
                 <Text style={styles.subtitle}>Harga</Text>
                 <Text style={styles.text}>Harga Member: {idrFormat(navigation.state.params.resellerprice)}</Text>
                 <Text style={styles.text}>Harga Normal: {idrFormat(navigation.state.params.enduserprice)}</Text>
               </View>
-              {
-                !this.state.showProcess
-                ?
-                <TouchableNativeFeedback onPress={() => this.showProcess()}>
-                  <View style={styles.containerWithIcon}>
-                    <Text style={styles.subtitle}>Pilihan Proses</Text>
-                    <Right>
-                      <Icon name='chevron-right'/>
-                    </Right>
-                  </View>
-                </TouchableNativeFeedback>
-                :
-                <TouchableNativeFeedback onPress={() => this.hideProcess()}>
-                  <View style={{backgroundColor: 'white', marginBottom: 20}}>
-                    <View style={styles.containerWithIcon}>
-                      <Text style={styles.subtitle}>Pilihan Proses</Text>
-                      <Right>
-                        <Icon name='expand-more'/>
-                      </Right>
-                    </View>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{paddingLeft: 25, paddingBottom: 15}}>Cutting</Text>
-                      {
-                        navigation.state.params.process.cut.length === 0
-                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -15}} name="cancel" />
-                      : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -15}} name="check-circle" />
-                      }
-                    </View>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{paddingLeft: 25, paddingBottom: 15}}>Slicing</Text>
-                      {
-                        navigation.state.params.process.slice.length === 0
-                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -15}} name="cancel" />
-                      : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -15}} name="check-circle" />
-                      }
-                    </View>
-                    <View style={{flex: 1, flexDirection: 'row'}}>
-                      <Text style={{paddingLeft: 25, paddingBottom: 15}}>Grinding</Text>
-                      {
-                        navigation.state.params.process.grind === null
-                        ? <Icon color='red' iconStyle={{marginLeft: 10, marginTop: -15}} name="cancel" />
-                      : <Icon color='#00ff0c' iconStyle={{marginLeft: 10, marginTop: -15}} name="check-circle" />
-                      }
-                    </View>
-                  </View>
-                </TouchableNativeFeedback>
-              }
               <Swipable navigation={ navigation } />
               <View style={{height: 50}} />
             </ScrollView>
@@ -282,7 +201,7 @@ class ProductDetails extends Component {
           hideModalContentWhileAnimating={true}
           useNativeDriver
           >
-            <View style={{ backgroundColor: 'white', width: 300, height: 395, borderRadius: 4}}>
+            <View style={{ backgroundColor: 'white', width: 300, height: 250, borderRadius: 4}}>
               <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
                 <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Pilihan Anda</Text>
                 <TouchableOpacity style={{position: 'absolute', right: 10, top: 15}}>
@@ -327,115 +246,6 @@ class ProductDetails extends Component {
                         </View>
                       </TouchableNativeFeedback>
                     </View>
-                  </View>
-                </View>
-                <View style={{alignItems: 'center', marginTop: 10}}>
-                  <View style={{height: 195, width: 260, borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3, padding: 5}}>
-                    <Text style={{color: '#919191', marginRight: 5}}>Pilihan Proses</Text>
-                      <View style={{height: 50, width: 165, marginTop: 10, marginBottom: 45}}>
-                        <RadioForm
-                          formHorizontal={false}
-                          animation={true}
-                          >
-                          {
-                            this.state.options.map((x, i) =>
-                            <RadioButton labelHorizontal={true} key={i} >
-                              <RadioButtonInput
-                                obj={x}
-                                index={i}
-                                onPress={(x) => this.onValueChange(x)}
-                                borderWidth={1}
-                                buttonInnerColor={'#7c0c10'}
-                                buttonOuterColor={this.state.index === i ? '#7c0c10' : '#919191'}
-                                isSelected={this.state.index === i}
-                                buttonSize={10}
-                                buttonOuterSize={20}
-                                buttonWrapStyle={{marginLeft: 10}}
-                                />
-                              <RadioButtonLabel
-                                obj={x}
-                                index={i}
-                                labelHorizontal={true}
-                                onPress={(x) => this.onValueChange(x)}
-                                labelStyle={this.state.index === i ? {fontSize: 12, color: '#7c0c10', marginTop: -2, fontWeight: 'bold'} : {fontSize: 12, color: '#919191', marginTop: -2}}
-                              />
-                              </RadioButton>
-                            )
-                          }
-                        </RadioForm>
-                      </View>
-                      {
-                        this.state.picked === 'None' &&
-                        <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Anda dapat memilih proses untuk pemesanan setiap produk.</Text>
-                      }
-                      {
-                        this.state.picked === 'Cut' &&
-                        <View>
-                          {
-                            navigation.state.params.process.cut.length > 0
-                            ?
-                            <View style={{marginTop: 10}}>
-                              <Text>Pilih Ukuran</Text>
-                              <Picker
-                                note
-                                mode='dropdown'
-                                style={{ width: 80, height: 20, marginTop: 5 }}
-                                selectedValue={this.state.selected}
-                                onValueChange={(x) => this.setState({selected: x})}
-                                >
-                                <Picker.Item label='-' value='0' style={{color: 'red'}} />
-                                {
-                                  navigation.state.params.process.cut.map((x, i) => {
-                                    return <Picker.Item key={i} label={x + 'cm'} value={x + 'cm'} style={{color: 'red'}} />
-                                  })
-                                }
-                              </Picker>
-                            </View>
-                            :
-                            <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                          }
-                        </View>
-                      }
-                      {
-                        this.state.picked === 'Slice' &&
-                        <View>
-                          {
-                            navigation.state.params.process.slice.length > 0
-                            ?
-                            <View style={{marginTop: 10}}>
-                              <Text>Pilih Ukuran</Text>
-                              <Picker
-                                note
-                                mode='dropdown'
-                                style={{ width: 80, height: 20, marginTop: 5 }}
-                                selectedValue={this.state.selected}
-                                onValueChange={(x) => this.setState({selected: x})}
-                                >
-                                <Picker.Item label='-' value='0' style={{color: 'red'}} />
-                                {
-                                  navigation.state.params.process.slice.map((x, i) => {
-                                    return <Picker.Item key={i} label={x + 'mm'} value={x + 'mm'} style={{color: 'red'}} />
-                                  })
-                                }
-                              </Picker>
-                            </View>
-                            :
-                            <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                          }
-                        </View>
-                      }
-                      {
-                        this.state.picked === 'Grind' &&
-                        <View>
-                          {
-                            navigation.state.params.process.grind === null
-                            ?
-                            <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                            :
-                            <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses <Text style={{color: '#7c0c10'}}>"Grind"</Text> tersedia</Text>
-                          }
-                        </View>
-                      }
                   </View>
                 </View>
                 <View style={{alignItems: 'center', marginTop: 10, marginBottom:20}}>

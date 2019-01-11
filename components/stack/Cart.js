@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, Text, Button, Alert, StyleSheet, AsyncStorage, ScrollView, TouchableOpacity, Image, Picker, TouchableNativeFeedback } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
 import { SERVER_URL } from '../../config';
-import { idrFormat, processParser } from '../../config';
+import { idrFormat } from '../../config';
 import Modal from "react-native-modal";
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import { countItem } from '../../actions/Counting_Items';
@@ -25,9 +25,6 @@ class Cart extends Component {
       showModalContent: false,
       token: '',
       loading: false,
-      options: [{label: 'None', value: 'None'}, {label: 'Cut', value: 'Cut'}, {label: 'Slice', value: 'Slice'}, {label: 'Grind', value: 'Grind'}],
-      picked: 'None',
-      selected: '',
       index: 0,
       idProduct: 0,
       id_Product: '',
@@ -36,8 +33,6 @@ class Cart extends Component {
       subtotal: 0,
       qty: 0,
       productPhoto: '',
-      productProcess: {},
-      selected_process: {},
       number: 0,
       checkControl: true
     }
@@ -102,22 +97,6 @@ class Cart extends Component {
     this.props.dispatch(cartCheckAll(data))
   }
 
-  onValueChange(val) {
-    let target = 0
-    if (val === 'Cut') {
-      target = 1
-    }else if(val === 'Slice') {
-      target = 2
-    }else if(val === 'Grind') {
-      target = 3
-    }else{
-      target = 0
-    }
-    let spCopy = Object.assign({}, this.state.selected_process);
-    spCopy.index = target;
-    this.setState({picked: val, selected_process: spCopy})
-  }
-
   changeCount(x) {
     let count = this.state.qty
     if (x === 'inc') {
@@ -140,7 +119,6 @@ class Cart extends Component {
   showSpecificModal(x) {
     this.props.dispatch(forceResetSC())
     const { cart } = this.props;
-    const process = processParser(cart[x].selected_process);
     this.setState({
       idProduct: cart[x].id,
       id_Product: cart[x]._id,
@@ -150,28 +128,17 @@ class Cart extends Component {
       productPrice: cart[x].price,
       productPhoto: cart[x].photo,
       qty: cart[x].qty,
-      productProcess: cart[x].process,
-      selected_process: process,
-      picked: process.process,
-      selected: process.size,
       index: x
     });
   }
 
   onSave() {
     this.setState({showModal: false, showModalContent: false})
-    let process = '';
-    if (this.state.selected === '') {
-      process = this.state.picked
-    }else{
-      process = this.state.picked + ' ' + this.state.selected;
-    }
     const data = {
       token: this.state.token,
       id: this.state.idProduct,
       _id: this.state.id_Product,
-      qty: this.state.qty,
-      selected_process: process
+      qty: this.state.qty
     }
     this.props.dispatch(saveChanges(data))
   }
@@ -295,7 +262,7 @@ class Cart extends Component {
             hideModalContentWhileAnimating={true}
             useNativeDriver
             >
-              <View style={{ backgroundColor: 'white', width: 300, height: 395, borderRadius: 4}}>
+              <View style={{ backgroundColor: 'white', width: 300, height: 250, borderRadius: 4}}>
                 <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
                   <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Pilihan Anda</Text>
                   <TouchableOpacity style={{position: 'absolute', right: 10, top: 15}}>
@@ -340,115 +307,6 @@ class Cart extends Component {
                           </View>
                         </TouchableNativeFeedback>
                       </View>
-                    </View>
-                  </View>
-                  <View style={{alignItems: 'center', marginTop: 10}}>
-                    <View style={{height: 195, width: 260, borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3, padding: 5}}>
-                      <Text style={{color: '#919191', marginRight: 5}}>Pilihan Proses</Text>
-                        <View style={{height: 50, width: 165, marginTop: 10, marginBottom: 45}}>
-                          <RadioForm
-                            formHorizontal={false}
-                            animation={true}
-                            >
-                            {
-                              this.state.options.map((x, i) =>
-                              <RadioButton labelHorizontal={true} key={i} >
-                                <RadioButtonInput
-                                  obj={x}
-                                  index={i}
-                                  onPress={(x) => this.onValueChange(x)}
-                                  borderWidth={1}
-                                  buttonInnerColor={'#7c0c10'}
-                                  buttonOuterColor={this.state.selected_process.index === i ? '#7c0c10' : '#919191'}
-                                  isSelected={this.state.selected_process.index === i}
-                                  buttonSize={10}
-                                  buttonOuterSize={20}
-                                  buttonWrapStyle={{marginLeft: 10}}
-                                  />
-                                <RadioButtonLabel
-                                  obj={x}
-                                  index={i}
-                                  labelHorizontal={true}
-                                  onPress={(x) => this.onValueChange(x)}
-                                  labelStyle={this.state.selected_process.index === i ? {fontSize: 12, color: '#7c0c10', marginTop: -2, fontWeight: 'bold'} : {fontSize: 12, color: '#919191', marginTop: -2}}
-                                />
-                                </RadioButton>
-                              )
-                            }
-                          </RadioForm>
-                        </View>
-                        {
-                          this.state.picked === 'None' &&
-                          <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Anda dapat memilih proses untuk pemesanan setiap produk.</Text>
-                        }
-                        {
-                          this.state.picked === 'Cut' &&
-                          <View>
-                            {
-                              this.state.productProcess.cut.length > 0
-                              ?
-                              <View style={{marginTop: 10}}>
-                                <Text>Pilih Ukuran</Text>
-                                <Picker
-                                  note
-                                  mode='dropdown'
-                                  style={{ width: 80, height: 20, marginTop: 5 }}
-                                  selectedValue={this.state.selected}
-                                  onValueChange={(x) => this.setState({selected: x})}
-                                  >
-                                  <Picker.Item label='-' value='0' style={{color: 'red'}} />
-                                  {
-                                    this.state.productProcess.cut.map((x, i) => {
-                                      return <Picker.Item key={i} label={x + 'cm'} value={x + 'cm'} style={{color: 'red'}} />
-                                    })
-                                  }
-                                </Picker>
-                              </View>
-                              :
-                              <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                            }
-                          </View>
-                        }
-                        {
-                          this.state.picked === 'Slice' &&
-                          <View>
-                            {
-                              this.state.productProcess.slice.length > 0
-                              ?
-                              <View style={{marginTop: 10}}>
-                                <Text>Pilih Ukuran</Text>
-                                <Picker
-                                  note
-                                  mode='dropdown'
-                                  style={{ width: 80, height: 20, marginTop: 5 }}
-                                  selectedValue={this.state.selected}
-                                  onValueChange={(x) => this.setState({selected: x})}
-                                  >
-                                  <Picker.Item label='-' value='0' style={{color: 'red'}} />
-                                  {
-                                    this.state.productProcess.slice.map((x, i) => {
-                                      return <Picker.Item key={i} label={x + 'mm'} value={x + 'mm'} style={{color: 'red'}} />
-                                    })
-                                  }
-                                </Picker>
-                              </View>
-                              :
-                              <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                            }
-                          </View>
-                        }
-                        {
-                          this.state.picked === 'Grind' &&
-                          <View>
-                            {
-                              this.state.productProcess.grind === null
-                              ?
-                              <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses tidak tersedia</Text>
-                              :
-                              <Text style={{marginLeft: 5, color: '#919191', marginTop: 10}}>Proses <Text style={{color: '#7c0c10'}}>"Grind"</Text> tersedia</Text>
-                            }
-                          </View>
-                        }
                     </View>
                   </View>
                   <View style={{alignItems: 'center', marginTop: 10, marginBottom:20}}>
@@ -509,19 +367,15 @@ class Cart extends Component {
                   source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
                   />
                 <View>
-                  <View style={{marginBottom: 3, flexDirection: 'row'}}>
+                  <View style={{marginBottom: 11, flexDirection: 'row'}}>
                     <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Harga :</Text>
                     <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.price)}</Text>
                   </View>
-                  <View style={{marginBottom: 3, flexDirection: 'row'}}>
+                  <View style={{marginBottom: 11, flexDirection: 'row'}}>
                     <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Kuantitas :</Text>
                     <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{x.qty}</Text>
                   </View>
-                  <View style={{marginBottom: 3, flexDirection: 'row'}}>
-                    <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Pilihan Proses :</Text>
-                    <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{x.selected_process.includes('None') ? '-' : x.selected_process}</Text>
-                  </View>
-                  <View style={{marginBottom: 3, flexDirection: 'row'}}>
+                  <View style={{marginBottom: 11, flexDirection: 'row'}}>
                     <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Subtotal :</Text>
                     <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.subtotal)}</Text>
                   </View>

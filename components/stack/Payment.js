@@ -11,6 +11,8 @@ import { forceResetSA } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { confirmTransaction } from '../../actions/Confirm_Transaction';
+import { checkOngkir } from '../../actions/Check_Ongkir';
+
 import moment from 'moment';
 
 class Payment extends Component {
@@ -19,6 +21,7 @@ class Payment extends Component {
     this.state = {
       isAddressValid: false,
       token: '',
+      ongkir: 0,
       loading: false,
       transactionLoading: true
     }
@@ -26,6 +29,10 @@ class Payment extends Component {
   beforeRender = async () => {
     this.props.dispatch(forceResetSA())
     this.props.dispatch(forceResetRoot())
+    if (this.props.navigation.state.params !== undefined) {
+      const village = this.props.navigation.state.params.village;
+      this.props.dispatch(checkOngkir(village))
+    }
     try {
       const token = await AsyncStorage.getItem('access_token');
       if (token !== null) {
@@ -47,9 +54,15 @@ class Payment extends Component {
           this.setState({isAddressValid: true})
         }
       }
+      if (this.props.userData.address.village !== '' && this.props.navigation.state.params === undefined) {
+        this.setState({ongkir: this.props.userData.ongkir})
+      }
     }
     if (prevProps.transaction !== this.props.transaction) {
       this.setState({transactionLoading: false})
+    }
+    if (prevProps.ongkir !== this.props.ongkir) {
+      this.setState({ongkir: this.props.ongkir})
     }
   }
 
@@ -227,10 +240,6 @@ class Payment extends Component {
                       <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{x.qty}</Text>
                     </View>
                     <View style={{marginBottom: 12, flexDirection: 'row'}}>
-                      <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Pilihan Proses :</Text>
-                      <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{x.selected_process.includes('None') ? '-' : x.selected_process}</Text>
-                    </View>
-                    <View style={{marginBottom: 12, flexDirection: 'row'}}>
                       <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Subtotal :</Text>
                       <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.subtotal)}</Text>
                     </View>
@@ -241,8 +250,18 @@ class Payment extends Component {
             }
           </View>
           <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
+            <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
+            <Text style={{fontSize: 16, position: 'absolute', right: 45, top: 10}}>
+              {idrFormat(Number(this.state.ongkir))}
+            </Text>
+          </View>
+          <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
             <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Belanja</Text>
             <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>{idrFormat(total)}</Text>
+          </View>
+          <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
+            <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Pembayaran</Text>
+            <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>{idrFormat(total + this.state.ongkir)}</Text>
           </View>
           <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
             <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>

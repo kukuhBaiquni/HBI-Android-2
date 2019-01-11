@@ -11,6 +11,7 @@ import { forceResetSA } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { directPurchase } from '../../actions/Direct_Purchase';
+import { checkOngkir } from '../../actions/Check_Ongkir';
 import moment from 'moment';
 
 class DirectPayment extends Component {
@@ -21,17 +22,19 @@ class DirectPayment extends Component {
       token: '',
       loading: false,
       transactionLoading: true,
+      ongkir: 0,
       data: {},
       qty: 1,
-      editMode: false,
-      selectedProcess: '-',
-      picked: '-',
-      selected: ''
+      editMode: false
     }
   }
   beforeRender = async () => {
     this.props.dispatch(forceResetSA())
     this.props.dispatch(forceResetRoot())
+    if (this.props.navigation.state.params !== undefined) {
+      const village = this.props.navigation.state.params.village;
+      this.props.dispatch(checkOngkir(village))
+    }
     try {
       const token = await AsyncStorage.getItem('access_token');
       if (token !== null) {
@@ -53,9 +56,15 @@ class DirectPayment extends Component {
           this.setState({isAddressValid: true})
         }
       }
+      if (this.props.userData.address.village !== '' && this.props.navigation.state.params === undefined) {
+        this.setState({ongkir: this.props.userData.ongkir})
+      }
     }
     if (prevProps.transaction !== this.props.transaction) {
       this.setState({transactionLoading: false})
+    }
+    if (prevProps.ongkir !== this.props.ongkir) {
+      this.setState({ongkir: this.props.ongkir})
     }
   }
 
@@ -74,7 +83,6 @@ class DirectPayment extends Component {
           token: this.state.token,
           id: this.state.data.id,
           qty: this.state.qty,
-          process: this.state.selectedProcess
         }
       }else{
         data = {
@@ -87,7 +95,6 @@ class DirectPayment extends Component {
           token: this.state.token,
           id: this.state.data.id,
           qty: this.state.qty,
-          process: this.state.selectedProcess
         }
       }
       this.setState({loading: true})
@@ -134,18 +141,6 @@ class DirectPayment extends Component {
   queueRouting() {
     this.props.navigation.popToTop();
     this.props.navigation.navigate('Profile');
-  }
-
-  combineSelector(x) {
-    this.setState({selected: '-'})
-    if (this.state.picked !== 'Grind' && this.state.selected === '') {
-      this.setState({selectedProcess: '-'})
-    }else{
-      this.setState({selected: x, selectedProcess: this.state.picked + ' ' + x})
-    }
-    if (this.state.picked === 'Grind') {
-      this.setState({selectedProcess: x})
-    }
   }
 
   render() {
@@ -286,7 +281,7 @@ class DirectPayment extends Component {
                       source={{uri: `${SERVER_URL}images/products/${this.state.data.photo}`}}
                       />
                     <View>
-                      <View style={this.state.editMode && this.state.picked !== 'Grind' && this.state.picked !== '-' ? {flexDirection: 'row', marginBottom: 6} : {flexDirection: 'row', marginBottom: 12}}>
+                      <View style={{flexDirection: 'row', marginBottom: 12}}>
                         <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Harga :</Text>
                         <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{this.props.userData.status === 'Non Member' ? idrFormat(Number(this.state.data.enduserprice)) : idrFormat(Number(this.state.data.resellerprice))}</Text>
                       </View>
@@ -323,78 +318,7 @@ class DirectPayment extends Component {
                           <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{this.state.qty}</Text>
                         }
                       </View>
-                      <View style={this.state.editMode && this.state.picked !== 'Grind' && this.state.picked !== '-' ? {flexDirection: 'row', marginBottom: 6} : {flexDirection: 'row', marginBottom: 12}}>
-                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Pilihan Proses :</Text>
-                        {
-                          this.state.editMode
-                          ?
-                          <Picker
-                            note
-                            mode='dropdown'
-                            style={{ width: 80, height: 20, marginTop: -1 }}
-                            selectedValue={this.state.picked}
-                            onValueChange={(x) => this.setState({picked: x})}
-                            >
-                            <Picker.Item label='-' value='-' />
-                            <Picker.Item label='Cut' value='Cut' />
-                            <Picker.Item label='Slice' value='Slice' />
-                            <Picker.Item label='Grind' value='Grind' />
-                          </Picker>
-                          :
-                          <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{this.state.picked === '-' ? '-' : this.state.selectedProcess}</Text>
-                        }
-                      </View>
-                      {
-                        this.state.editMode && this.state.picked === 'Cut' && this.state.data.process.cut.length > 0 &&
-                          <View style={this.state.editMode && this.state.picked !== 'Grind' && this.state.picked !== '-' ? {flexDirection: 'row', marginBottom: 6} : {flexDirection: 'row', marginBottom: 12}}>
-                            <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Ukuran :</Text>
-                            <Picker
-                              note
-                              mode='dropdown'
-                              style={{ width: 80, height: 20, marginTop: -1 }}
-                              selectedValue={this.state.selected}
-                              onValueChange={(x) => this.combineSelector(x)}
-                              >
-                              {
-                                this.state.data.process.cut.map((x, i) =>
-                                  <Picker.Item key={i} label={ (i+1) + 'cm'} value={ (i+1) + 'cm'} />
-                                )
-                              }
-                            </Picker>
-                          </View>
-                        }
-                        {
-                          this.state.editMode && this.state.data.process.cut.length === 0 && this.state.picked === 'Cut' &&
-                          <Text style={{fontStyle: 'italic', color: '#bababa', marginLeft: 10, marginBottom: 3}}>Proses tidak tersedia</Text>
-                        }
-                      {
-                        this.state.editMode && this.state.picked === 'Slice' && this.state.data.process.slice.length > 0 &&
-                          <View style={this.state.editMode && this.state.picked !== 'Grind' && this.state.picked !== '-' ? {flexDirection: 'row', marginBottom: 6} : {flexDirection: 'row', marginBottom: 12}}>
-                            <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Ukuran :</Text>
-                            <Picker
-                              note
-                              mode='dropdown'
-                              style={{ width: 80, height: 20, marginTop: -1 }}
-                              selectedValue={this.state.selected}
-                              onValueChange={(x) => this.combineSelector(x)}
-                              >
-                              {
-                                this.state.data.process.slice.map((x, i) =>
-                                  <Picker.Item key={i} label={ (i+1) + 'mm'} value={ (i+1) + 'mm'} />
-                                )
-                              }
-                            </Picker>
-                          </View>
-                        }
-                        {
-                          this.state.editMode && this.state.data.process.slice.length === 0 && this.state.picked === 'Slice' &&
-                          <Text style={{fontStyle: 'italic', color: '#bababa', marginLeft: 10, marginBottom: 3}}>Proses tidak tersedia</Text>
-                        }
-                        {
-                          this.state.editMode && this.state.data.process.grind !== 'grind' && this.state.picked === 'Grind' &&
-                          <Text style={{fontStyle: 'italic', color: '#bababa', marginLeft: 10, marginBottom: 3}}>Proses tidak tersedia</Text>
-                        }
-                      <View style={this.state.editMode && this.state.picked !== 'Grind' && this.state.picked !== '-' ? {flexDirection: 'row', marginBottom: 6} : {flexDirection: 'row', marginBottom: 12}}>
+                      <View style={{flexDirection: 'row', marginBottom: 12}}>
                         <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Total :</Text>
                         <Text style={{marginLeft: 10, color: '#9b9b9b'}}>
                           {
@@ -409,12 +333,28 @@ class DirectPayment extends Component {
                 </View>
             </View>
             <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
+              <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
+              <Text style={{fontSize: 16, position: 'absolute', right: 45, top: 10}}>
+                {idrFormat(Number(this.state.ongkir))}
+              </Text>
+            </View>
+            <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
               <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Belanja</Text>
               <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
                 {
                   this.props.userData.status === 'Non Member'
-                  ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty))
-                  : idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty))
+                  ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)))
+                  : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)))
+                }
+              </Text>
+            </View>
+            <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
+              <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Pembayaran</Text>
+              <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
+                {
+                  this.props.userData.status === 'Non Member'
+                  ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)) + this.state.ongkir)
+                  : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)) + this.state.ongkir)
                 }
               </Text>
             </View>
