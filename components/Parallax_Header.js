@@ -130,7 +130,7 @@ class RNParallax extends Component {
 
   getImageOpacity() {
     return this.state.scrollY.interpolate({
-      inputRange: [0, 115, 145],
+      inputRange: [0, 175, 205],
       outputRange: [1, 1, 0],
       extrapolate: 'clamp',
     });
@@ -155,7 +155,7 @@ class RNParallax extends Component {
   getTitleTranslate() {
     return this.state.scrollY.interpolate({
       inputRange: this.getInputRange(),
-      outputRange: [5, 125, 0],
+      outputRange: [5, 110, 0],
       extrapolate: 'clamp',
     });
   }
@@ -163,7 +163,7 @@ class RNParallax extends Component {
   // title background color transition from white to red
   transparency() {
     return this.state.scrollY.interpolate({
-      inputRange: [0, 135, 145],
+      inputRange: [0, 200, 205],
       outputRange: ['rgba(255,255,255, 0)', 'rgba(255,255,255, 0)', '#7c0c10'],
       extrapolate: 'clamp'
     })
@@ -172,7 +172,7 @@ class RNParallax extends Component {
   // from read to white
   titleTransition() {
     return this.state.scrollY.interpolate({
-      inputRange: [0, 135, 145],
+      inputRange: [0, 200, 205],
       outputRange: ['#7c0c10', '#7c0c10', 'rgba(255,255,255, 1)'],
       extrapolate: 'clamp'
     })
@@ -180,7 +180,7 @@ class RNParallax extends Component {
 
   elevation() {
     return this.state.scrollY.interpolate({
-      inputRange: [0, 140, 145],
+      inputRange: [0, 200, 205],
       outputRange: [0, 0, 4],
       extrapolate: 'clamp'
     })
@@ -188,7 +188,7 @@ class RNParallax extends Component {
 
   transparency2() {
     return this.state.scrollY.interpolate({
-      inputRange: [0, 140, 145],
+      inputRange: [0, 200, 205],
       outputRange: [0, 0, 1],
       extrapolate: 'clamp'
     })
@@ -196,8 +196,16 @@ class RNParallax extends Component {
 
   titleWidth() {
     return this.state.scrollY.interpolate({
-      inputRange: [0, 135, 145],
+      inputRange: [0, 135, 205],
       outputRange: [290, 290, 250],
+      extrapolate: 'clamp'
+    })
+  }
+
+  marginTransition() {
+    return this.state.scrollY.interpolate({
+      inputRange: [0, 205, 205],
+      outputRange: [-180, 0, 0],
       extrapolate: 'clamp'
     })
   }

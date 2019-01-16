@@ -1,35 +1,35 @@
 {
   "project_info": {
-    "project_number": "912178815288",
-    "firebase_url": "https://halalbeef-c367a.firebaseio.com",
-    "project_id": "halalbeef-c367a",
-    "storage_bucket": "halalbeef-c367a.appspot.com"
+    "project_number": "482052818855",
+    "firebase_url": "https://halal-beef-indonesia.firebaseio.com",
+    "project_id": "halal-beef-indonesia",
+    "storage_bucket": "halal-beef-indonesia.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:912178815288:android:5931203115015cda",
+        "mobilesdk_app_id": "1:482052818855:android:5931203115015cda",
         "android_client_info": {
           "package_name": "com.hbi"
         }
       },
       "oauth_client": [
         {
-          "client_id": "912178815288-22od5qv7uu4e5eci02tvri81nhmq55e9.apps.googleusercontent.com",
+          "client_id": "482052818855-1es0gsh0gnha1ej51lj4mosl9j5vb3g1.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.hbi",
-            "certificate_hash": "93f03b562da7ddf22a85bced89d89cdc57b0939c"
+            "certificate_hash": "61ab9b86137617672839fbf7284f2b1a3c0aab55"
           }
         },
         {
-          "client_id": "912178815288-2fia498v78qdsm487k9ngvrjcn46m343.apps.googleusercontent.com",
+          "client_id": "482052818855-k825ol3id455sejkmbl5elquvc9p8jvv.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyAI_w7EIRuho9kkJfQpkw0aVqkF-CKmi2s"
+          "current_key": "AIzaSyAnndQzoP3No-CCJ8RuHcBO6unRvoFmzxk"
         }
       ],
       "services": {
@@ -40,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "912178815288-h2bm268qm71o1p5g9mmr9oe0sjhpb4mv.apps.googleusercontent.com",
+              "client_id": "482052818855-k825ol3id455sejkmbl5elquvc9p8jvv.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

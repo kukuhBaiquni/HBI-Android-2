@@ -149,7 +149,7 @@ class ProductDetails extends Component {
           />
         <RNParallax
           headerMinHeight={55}
-          headerMaxHeight={200}
+          headerMaxHeight={260}
           extraScrollHeight={20}
           navbarColor='white'
           scrollEventThrottle={5}
@@ -176,7 +176,6 @@ class ProductDetails extends Component {
           )}
           renderContent={() => (
             <ScrollView style={{backgroundColor: '#e2e2e2'}}>
-              <View style={{backgroundColor: 'white', height: 50}}></View>
               <View style={styles.viewContainer}>
                 <Text style={styles.subtitle}>Deskripsi Produk</Text>
                 <Text style={styles.text}>{navigation.state.params.description}</Text>

@@ -147,6 +147,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-google-sign-in')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-vector-icons')
     compile project(':react-native-fbsdk')

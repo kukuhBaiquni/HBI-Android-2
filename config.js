@@ -1,6 +1,6 @@
-// export const SERVER_URL = 'http://halalbeef.co.id/';
+export const SERVER_URL = 'http://halalbeef.co.id/';
 // export const SERVER_URL = 'http://192.168.43.69/';
-export const SERVER_URL = 'http://192.168.100.18/';
+// export const SERVER_URL = 'http://192.168.100.18/';
 
 export function idrFormat(angka) {
   var rupiah = '';

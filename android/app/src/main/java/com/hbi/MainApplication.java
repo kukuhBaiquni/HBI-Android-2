@@ -1,7 +1,6 @@
 package com.hbi;
 
 import android.app.Application;
-import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookSdk;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
@@ -9,6 +8,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.imagepicker.ImagePickerPackage;
 
 import com.facebook.react.ReactApplication;
+import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
 import com.burnweb.rnsendintent.RNSendIntentPackage;
@@ -39,10 +39,10 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new RNGoogleSignInPackage(),
             new LinearGradientPackage(),
           new ImagePickerPackage(),
           new VectorIconsPackage(),
-          new RNGoogleSignInPackage(),
           new FBSDKPackage(mCallbackManager),
           new RNSendIntentPackage()
       );

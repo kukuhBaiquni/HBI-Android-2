@@ -1,17 +1,21 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer';
 
-export default class Blank extends Component {
+export default class Home extends Component {
   render() {
     return(
       <View style={{flex: 1}}>
+        <StatusBar
+          backgroundColor = '#7c0c10'
+          barStyle = 'light-content'
+          />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
             <Icon name='menu' color='#7c0c10' />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>About</Text>
+          <Text style={styles.headerTitle}>Home</Text>
         </View>
       </View>
     )

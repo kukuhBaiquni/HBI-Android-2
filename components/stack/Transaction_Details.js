@@ -105,23 +105,24 @@ class TransactionDetails extends Component {
               }
             </View>
             <View style={{backgroundColor: 'white', marginTop: 10, marginBottom: 0, flexDirection: 'row'}}>
-              <Text style={{padding: 10, fontSize: 18, marginLeft: 83}}>Ongkir</Text>
+              <Text style={{padding: 10, fontSize: 16, marginLeft: 83}}>Ongkir</Text>
               <View style={{width: '100%', position: 'absolute'}}>
                 <Text style={{padding: 10, fontSize: 18, fontWeight: 'bold', textAlign: 'right'}}>{idrFormat(data.ongkir)}</Text>
               </View>
             </View>
             <View style={{backgroundColor: 'white', marginTop: 10, marginBottom: 0, flexDirection: 'row'}}>
-              <Text style={{padding: 10, fontSize: 18, marginLeft: 83}}>Total Belanja</Text>
+              <Text style={{padding: 10, fontSize: 16, marginLeft: 83}}>Total Belanja</Text>
               <View style={{width: '100%', position: 'absolute'}}>
                 <Text style={{padding: 10, fontSize: 18, fontWeight: 'bold', textAlign: 'right'}}>{idrFormat(data.total_price - data.ongkir)}</Text>
               </View>
             </View>
             <View style={{backgroundColor: 'white', marginTop: 10, marginBottom: 20, flexDirection: 'row'}}>
-              <Text style={{padding: 10, fontSize: 18, marginLeft: 83}}>Total Bayar</Text>
+              <Text style={{padding: 10, fontSize: 16, marginLeft: 83}}>Total Pembayaran</Text>
               <View style={{width: '100%', position: 'absolute'}}>
                 <Text style={{padding: 10, fontSize: 18, fontWeight: 'bold', textAlign: 'right'}}>{idrFormat(data.total_price)}</Text>
               </View>
             </View>
+            <View style={{marginTop: 50}}></View>
           </ScrollView>
         </View>
       }

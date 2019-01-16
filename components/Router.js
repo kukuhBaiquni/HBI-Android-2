@@ -18,7 +18,7 @@ import Payment from './stack/Payment';
 import EditAddress from './stack/Edit_Address';
 import EditAddressDP from './stack/Edit_Address_DP';
 import DirectPayment from './stack/Direct_Payment';
-import Blank from './stack/Blank';
+import Home from './drawer/Home';
 import EditProfile from './stack/Edit_Profile';
 import MyProfile from './stack/My_Profile';
 import EditRekening from './stack/Edit_Rekening';
@@ -28,11 +28,11 @@ import TransactionDetails from './stack/Transaction_Details';
 import Help from './stack/Help';
 import Timeline from './tabs/Timeline';
 import Splash from './Splash_Screen';
+import About from './drawer/About';
+import Member from './drawer/Member';
+import Business from './drawer/Business';
+import CallUs from './drawer/CallUs';
 import { SERVER_URL } from '../config';
-
-const openC = async (x) => {
-  console.log(x);
-}
 
 const DrawerComponent = (props) => (
   <ScrollView style={{flex: 1}}>
@@ -57,7 +57,7 @@ const DrawerComponent = (props) => (
           <View style={styles.customIcon}>
             <Icon name='store-mall-directory' />
           </View>
-          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Shopping</Text>
+          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Katalog</Text>
         </TouchableOpacity>
         <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Mail')}>
           <View style={styles.customIcon}>
@@ -91,28 +91,35 @@ const DrawerComponent = (props) => (
 )
 
 const Drawer = createDrawerNavigator({
+  HomeMain:{
+    screen: Home,
+    navigationOptions: {
+      title: 'Home',
+      drawerIcon: ({tintColor}) => <Icon name='home' size={24} color={tintColor} />
+    }
+  },
   About:{
-    screen: Blank,
+    screen: About,
     navigationOptions: {
       title: 'Tentang Kami',
       drawerIcon: ({tintColor}) => <Icon name='contacts' size={24} color={tintColor} />
     }
   },
   Member:{
-    screen: Blank,
+    screen: Member,
     navigationOptions: {
       drawerIcon: ({tintColor}) => <Icon name='people' size={24} color={tintColor} />
     }
   },
   Business:{
-    screen: Blank,
+    screen: Business,
     navigationOptions: {
       title: 'Bisnis',
       drawerIcon: ({tintColor}) => <Icon name='business-center' size={24} color={tintColor} />
     }
   },
   CallUs:{
-    screen: Blank,
+    screen: CallUs,
     navigationOptions: {
       title: 'Hubungi Kami',
       drawerIcon: ({tintColor}) => <Icon name='phone' size={24} color={tintColor} />
@@ -131,9 +138,10 @@ const Drawer = createDrawerNavigator({
 })
 
 const Tabs = createMaterialTopTabNavigator({
-  About: {
+  Home: {
     screen: Drawer,
     navigationOptions: {
+      title: 'Home',
       tabBarIcon: ({tintColor}) => <Icon name='home' size={24} color={tintColor} />,
     tabBarOnPress: (x) => {x.navigation.navigate('FirstPage')}
     }
@@ -148,6 +156,7 @@ const Tabs = createMaterialTopTabNavigator({
   Shopping: {
     screen: ShopPage,
     navigationOptions: {
+      title: 'Katalog',
       tabBarIcon: ({tintColor}) => <Icon name='store-mall-directory' size={24} color={tintColor} />
     }
   },
@@ -191,7 +200,7 @@ const Tabs = createMaterialTopTabNavigator({
   }
 },{
   lazy: true,
-  initialRouteName: 'Shopping',
+  initialRouteName: 'Home',
   tabBarPosition: 'bottom',
   swipeEnabled: false,
   animationEnabled: true,
@@ -361,6 +370,8 @@ const RootStack = createStackNavigator({
       header: null
     })
   }
+}, {
+  initialRouteName: 'FirstPage'
 })
 
 const styles = StyleSheet.create({

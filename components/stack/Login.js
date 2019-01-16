@@ -196,7 +196,7 @@ class Login extends Component {
     try {
       await GoogleSignIn.configure({
         scopes: ['profile'],
-        clientID: '912178815288-2fia498v78qdsm487k9ngvrjcn46m343.apps.googleusercontent.com'
+        clientID: '482052818855-k825ol3id455sejkmbl5elquvc9p8jvv.apps.googleusercontent.com'
       })
       const user = await GoogleSignIn.signInPromise();
       const raw = await {

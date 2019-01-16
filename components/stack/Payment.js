@@ -252,7 +252,7 @@ class Payment extends Component {
           <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
             <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
             <Text style={{fontSize: 16, position: 'absolute', right: 45, top: 10}}>
-              {idrFormat(Number(this.state.ongkir))}
+              {this.state.isFreeOngkir ? 'Gratis' : idrFormat(Number(this.state.ongkir))}
             </Text>
           </View>
           <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
