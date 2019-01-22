@@ -18,7 +18,7 @@ import Payment from './stack/Payment';
 import EditAddress from './stack/Edit_Address';
 import EditAddressDP from './stack/Edit_Address_DP';
 import DirectPayment from './stack/Direct_Payment';
-import Home from './drawer/Home';
+import Suggestion from './drawer/Suggestion';
 import EditProfile from './stack/Edit_Profile';
 import MyProfile from './stack/My_Profile';
 import EditRekening from './stack/Edit_Rekening';
@@ -32,79 +32,34 @@ import About from './drawer/About';
 import Member from './drawer/Member';
 import Business from './drawer/Business';
 import CallUs from './drawer/CallUs';
+import PrivacyPolicy from './stack/PrivacyPolicy';
+import TermsAndCondition from './stack/TermsAndCondition';
+import Faq from './stack/Faq';
 import { SERVER_URL } from '../config';
 
 const DrawerComponent = (props) => (
   <ScrollView style={{flex: 1}}>
     <SafeAreaView>
-      <View style={{justifyContent: 'center', alignItems: 'center', height: 120, backgroundColor: '#7c0c10'}}>
-        <View style={{height: 10}} />
-        <Image
-          resizeMode='contain'
-          style={{width: 150, height: 90, paddingTop: 0}}
-          source={{uri: `${SERVER_URL}images/support/SScreen.png`}}
-          />
+      <View style={{height: 120, backgroundColor: '#7c0c10', padding: 10}}>
+        <Text style={{color: 'white', fontSize: 19}}>Selamat Datang!</Text>
       </View>
         <DrawerItems {...props} />
         <View style={{borderBottomColor: '#bababa', borderBottomWidth: 1}} />
-        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Timeline')}>
-          <View style={styles.customIcon}>
-            <Icon name='event-note' />
-          </View>
-          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Timeline</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Shopping')}>
-          <View style={styles.customIcon}>
-            <Icon name='store-mall-directory' />
-          </View>
-          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Katalog</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection: 'row'}} onPress={() => props.navigation.navigate('Mail')}>
-          <View style={styles.customIcon}>
-            <Icon name='mail' />
-          </View>
-          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Mail</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={{flexDirection: 'row'}}
-          onPress={
-           async () => {
-              try {
-                const val = await AsyncStorage.getItem('access_token')
-                if (val !== null) {
-                  props.navigation.navigate('Profile')
-                }else{
-                  props.navigation.navigate('ProfilePrevention')
-                }
-              }catch (error) {
-                props.navigation.navigate('ProfilePrevention')
-              }
-            }
-          }
-          >
-          <View style={styles.customIcon}>
-            <Icon name='account-box' />
-          </View>
-          <Text style={{paddingTop: 15, paddingBottom: 15, marginLeft: 69, color: 'black', fontWeight: 'bold'}}>Profile</Text>
-        </TouchableOpacity>
+        <View style={{alignItems: 'center'}}>
+          <TouchableOpacity style={styles.customToShop} onPress={() => props.navigation.navigate('Shopping')}>
+            <Text style={{color: 'white'}}>Mulai Belanja Disini</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={{paddingTop: 10, paddingLeft: 20}}>
+          <Text style={{marginBottom: 10}}>FAQ</Text>
+          <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('PrivacyPolicy')}>Kebijakan Privasi</Text>
+          <Text style={{marginBottom: 10}}>Syarat & Ketentuan</Text>
+        </View>
     </SafeAreaView>
   </ScrollView>
 )
 
 const Drawer = createDrawerNavigator({
-  HomeMain:{
-    screen: Home,
-    navigationOptions: {
-      title: 'Home',
-      drawerIcon: ({tintColor}) => <Icon name='home' size={24} color={tintColor} />
-    }
-  },
-  About:{
-    screen: About,
-    navigationOptions: {
-      title: 'Tentang Kami',
-      drawerIcon: ({tintColor}) => <Icon name='contacts' size={24} color={tintColor} />
-    }
-  },
   Member:{
     screen: Member,
     navigationOptions: {
@@ -118,6 +73,13 @@ const Drawer = createDrawerNavigator({
       drawerIcon: ({tintColor}) => <Icon name='business-center' size={24} color={tintColor} />
     }
   },
+  About:{
+    screen: About,
+    navigationOptions: {
+      title: 'Tentang Kami',
+      drawerIcon: ({tintColor}) => <Icon name='contacts' size={24} color={tintColor} />
+    }
+  },
   CallUs:{
     screen: CallUs,
     navigationOptions: {
@@ -125,11 +87,11 @@ const Drawer = createDrawerNavigator({
       drawerIcon: ({tintColor}) => <Icon name='phone' size={24} color={tintColor} />
     }
   },
-  Help2:{
-    screen: Help,
+  Suggestion:{
+    screen: Suggestion,
     navigationOptions: {
-      title: 'Bantuan',
-      drawerIcon: ({tintColor}) => <Icon name='help' size={24} color={tintColor} />
+      title: 'Kirim saran kepada Kami',
+      drawerIcon: ({tintColor}) => <Icon name='textsms' size={24} color={tintColor} />
     }
   }
 },
@@ -369,7 +331,25 @@ const RootStack = createStackNavigator({
     navigationOptions: ({navigation}) => ({
       header: null
     })
-  }
+  },
+  PrivacyPolicy: {
+    screen: PrivacyPolicy,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  TermsAndCondition: {
+    screen: TermsAndCondition,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  Faq: {
+    screen: Faq,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
 }, {
   initialRouteName: 'FirstPage'
 })
@@ -396,6 +376,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 17,
     top: 13
+  },
+  customToShop: {
+    backgroundColor: '#7c0c10',
+    borderRadius: 5,
+    width: 250,
+    height: 50,
+    elevation: 3,
+    marginTop: 10,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 

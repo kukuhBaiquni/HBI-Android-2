@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-nativ
 import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer';
 
-export default class Home extends Component {
+export default class Suggestion extends Component {
   render() {
     return(
       <View style={{flex: 1}}>
@@ -15,7 +15,7 @@ export default class Home extends Component {
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
             <Icon name='menu' color='#7c0c10' />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Home</Text>
+          <Text style={styles.headerTitle}>Kirim Saran</Text>
         </View>
       </View>
     )
