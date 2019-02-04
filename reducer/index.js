@@ -10,9 +10,29 @@ import transaction from './Transaction';
 import bank from './Bank';
 import transactionRecords from './Transaction_Records';
 import ongkir from './Ongkir';
+import categoryContent from './Category_Content';
+import transactionTypePending from './Transaction_Pending';
+import transactionTypeFailed from './Transaction_Failed';
+import transactionTypeExpired from './Transaction_Expired';
+import transactionTypeSuccess from './Transaction_Success';
 
 const rootReducer = combineReducers({
-  listProducts, status, token, userData, resultCounting, cart, territorial, transaction, bank, transactionRecords, ongkir
+  listProducts,
+  status,
+  token,
+  userData,
+  resultCounting,
+  cart,
+  territorial,
+  transaction,
+  bank,
+  transactionRecords,
+  ongkir,
+  categoryContent,
+  transactionTypePending,
+  transactionTypeFailed,
+  transactionTypeExpired,
+  transactionTypeSuccess
 });
 
 export default rootReducer

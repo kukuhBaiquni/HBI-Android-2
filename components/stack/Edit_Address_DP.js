@@ -11,6 +11,7 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 import { saveAddress } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
+import { addressParser } from '../../config';
 
 class EditAddressDP extends Component {
   constructor(props){
@@ -25,7 +26,11 @@ class EditAddressDP extends Component {
       saveState: 'default',
       index: 0,
       loading: true,
-      token: ''
+      token: '',
+      jalanHandler: '',
+      nomorHandler: '',
+      rtHandler: '',
+      rwHandler: ''
     }
   }
 
@@ -36,11 +41,16 @@ class EditAddressDP extends Component {
     }else{
       phone = '0' + this.props.navigation.state.params.phone
     }
+    const addressX = addressParser(this.props.navigation.state.params.address.street)
     this.setState({
       nameHandler: this.props.navigation.state.params.name,
       token: this.props.navigation.state.params.token,
       phoneHandler: phone.toString(),
-      addressHandler: this.props.navigation.state.params.address.street
+      addressHandler: this.props.navigation.state.params.address.street,
+      jalanHandler: addressX.jalan,
+      nomorHandler: addressX.no,
+      rtHandler: addressX.rt,
+      rwHandler: addressX.rw
     })
     this.props.dispatch(loadCities())
   }
@@ -73,11 +83,12 @@ class EditAddressDP extends Component {
   }
 
   onSave() {
+    const addressX = 'Jl. ' + this.state.jalanHandler + ' No.' + this.state.nomorHandler + ' Rt.0' + this.state.rtHandler + ' Rw.0' + this.state.rwHandler;
     const data = {
       token: this.state.token,
       name: this.state.nameHandler,
       phone: this.state.phoneHandler,
-      street: this.state.addressHandler,
+      street: addressX,
       city: this.state.cityHandler,
       district: this.state.districtHandler,
       village: this.state.villageHandler
@@ -189,13 +200,18 @@ class EditAddressDP extends Component {
           </Modal>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Icon name='arrow-back' color='#7c0c10' />
+            <Icon name='arrow-back' color='white' />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Ubah Alamat</Text>
+          <View style={{position: 'absolute', right: 18, top: 20}}>
+            <TouchableOpacity onPress={() => this.onSave()}>
+              <Icon name='done' color='white' size={26} />
+            </TouchableOpacity>
+          </View>
         </View>
         <ScrollView>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
-            <View style={{backgroundColor: 'white', width: '100%', elevation: 3}}>
+            <View style={{backgroundColor: 'white', width: '100%'}}>
               <Form>
                 <Item stackedLabel style={{width: 330}}>
                   <Label style={{color: '#a0a0a0'}}>Nama Penerima</Label>
@@ -260,16 +276,40 @@ class EditAddressDP extends Component {
                   </Picker>
                 </Item>
                 <Item stackedLabel style={{width: 330}}>
-                  <Label style={{color: '#a0a0a0'}}>Alamat Lengkap</Label>
+                  <Label style={{color: '#a0a0a0'}}>Jalan</Label>
                   <Input
-                    value={this.state.addressHandler}
-                    onChangeText={(x) => this.setState({addressHandler: x})}
+                    value={this.state.jalanHandler}
+                    onChangeText={(x) => this.setState({jalanHandler: x})}
+                     />
+                </Item>
+                <Item stackedLabel style={{width: 330}}>
+                  <Label style={{color: '#a0a0a0'}}>Nomor</Label>
+                  <Input
+                    keyboardType='numeric'
+                    value={this.state.nomorHandler}
+                    onChangeText={(x) => this.setState({nomorHandler: x})}
+                     />
+                </Item>
+                <Item stackedLabel style={{width: 330}}>
+                  <Label style={{color: '#a0a0a0'}}>RT</Label>
+                  <Input
+                    keyboardType='numeric'
+                    value={this.state.rtHandler}
+                    onChangeText={(x) => this.setState({rtHandler: x})}
+                     />
+                </Item>
+                <Item stackedLabel style={{width: 330}}>
+                  <Label style={{color: '#a0a0a0'}}>RW</Label>
+                  <Input
+                    keyboardType='numeric'
+                    value={this.state.rwHandler}
+                    onChangeText={(x) => this.setState({rwHandler: x})}
                      />
                 </Item>
               </Form>
             </View>
           </View>
-          <View style={{paddingTop: 20, paddingLeft: 20}}>
+          <View style={{paddingTop: 20, paddingLeft: 20, backgroundColor: 'white'}}>
             <RadioForm
               formHorizontal={false}
               animation={true}
@@ -300,11 +340,6 @@ class EditAddressDP extends Component {
               }
             </RadioForm>
           </View>
-          <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
-            <TouchableOpacity onPress={() => this.onSave()} style={{width: 350, borderRadius: 3, marginBottom: 5, backgroundColor: '#7c0c10', height: 50, justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={{color: 'white', fontSize: 16}}>Simpan</Text>
-            </TouchableOpacity>
-          </View>
         </ScrollView>
       </View>
     )
@@ -322,7 +357,7 @@ export default connect(
 const styles = StyleSheet.create({
   header: {
     height: 60,
-    backgroundColor: 'white',
+    backgroundColor: '#7c0c10',
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -331,6 +366,6 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: '#7c0c10'
+    color: 'white'
   }
 })

@@ -14,29 +14,23 @@ export default class Mail extends Component {
         <NavigationEvents
           onDidFocus={() => this.test()}
         />
-        <Header
-          androidStatusBarColor='#7c0c10'
-          style={{backgroundColor: 'white', marginBottom: 10}}
-          >
-          <Left/>
-          <Body>
-            <Title style={{color: '#7c0c10', fontWeight: 'bold'}}>Mail</Title>
-          </Body>
-          <Right />
-          <Right />
-        </Header>
-        <TouchableNativeFeedback>
-          <View style={styles.containerWithIcon}>
-            <Icon name='drafts' size={20} color='#515151'/>
-            <Left>
-              <Text style={styles.subtitle}>Inbox</Text>
-            </Left>
-          </View>
-        </TouchableNativeFeedback>
-
-        <View style={{paddingTop: 15, paddingBottom: 15}}>
-          <Text style={{fontStyle: 'italic', color: '#a3a3a3', textAlign: 'center'}}>Belum ada surat</Text>
+        <View style={{backgroundColor: 'white', padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', elevation: 3}}>
+          <Text style={{color: '#7c0c10', fontWeight: 'bold', fontSize: 20, paddingTop: 10}}>Pesan</Text>
         </View>
+        <View style={{height: 10}} />
+
+          <TouchableNativeFeedback>
+            <View style={styles.containerWithIcon}>
+              <Icon name='local-mall' size={20} color='#515151'/>
+              <Left>
+                <Text style={styles.subtitle}>Notifikasi Order</Text>
+              </Left>
+            </View>
+          </TouchableNativeFeedback>
+
+          <View style={{paddingTop: 15, paddingBottom: 15}}>
+            <Text style={{fontStyle: 'italic', color: '#a3a3a3', textAlign: 'center'}}>Belum ada surat</Text>
+          </View>
 
         <TouchableNativeFeedback>
           <View style={styles.containerWithIcon}>
@@ -53,9 +47,9 @@ export default class Mail extends Component {
 
         <TouchableNativeFeedback>
           <View style={styles.containerWithIcon}>
-            <Icon name='local-mall' size={20} color='#515151'/>
+            <Icon name='drafts' size={20} color='#515151'/>
             <Left>
-              <Text style={styles.subtitle}>Notifikasi Order</Text>
+              <Text style={styles.subtitle}>Inbox</Text>
             </Left>
           </View>
         </TouchableNativeFeedback>
@@ -63,6 +57,8 @@ export default class Mail extends Component {
         <View style={{paddingTop: 15, paddingBottom: 15}}>
           <Text style={{fontStyle: 'italic', color: '#a3a3a3', textAlign: 'center'}}>Belum ada surat</Text>
         </View>
+
+
       </View>
     )
   }

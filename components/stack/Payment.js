@@ -23,13 +23,20 @@ class Payment extends Component {
       token: '',
       ongkir: 0,
       loading: false,
-      transactionLoading: true
+      transactionLoading: true,
+      isFreeOngkir: false
     }
   }
   beforeRender = async () => {
+    let acu = 0;
+    this.props.cart.map(x => acu += x.freeOngkirConsideration)
+    if (acu > 25) {
+      this.setState({isFreeOngkir: true})
+    }
     this.props.dispatch(forceResetSA())
     this.props.dispatch(forceResetRoot())
     if (this.props.navigation.state.params !== undefined) {
+      console.log('custom params');
       const village = this.props.navigation.state.params.village;
       this.props.dispatch(checkOngkir(village))
     }
@@ -172,7 +179,7 @@ class Payment extends Component {
                   <Text style={{fontSize: 20, marginBottom: 20}}>{moment(this.props.transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
                 </View>
                 <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
-                  <Text style={{color: '#228200'}}>Lihat Detail</Text>
+                  <Text style={{color: '#228200'}}>Kembali</Text>
                 </TouchableOpacity>
               </ScrollView>
             </View>
@@ -250,18 +257,18 @@ class Payment extends Component {
             }
           </View>
           <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
-            <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
-            <Text style={{fontSize: 16, position: 'absolute', right: 45, top: 10}}>
-              {this.state.isFreeOngkir ? 'Gratis' : idrFormat(Number(this.state.ongkir))}
-            </Text>
-          </View>
-          <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
             <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Belanja</Text>
             <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>{idrFormat(total)}</Text>
           </View>
           <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
+            <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
+            <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
+              {this.state.isFreeOngkir ? 'Gratis' : idrFormat(Number(this.state.ongkir))}
+            </Text>
+          </View>
+          <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
             <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Pembayaran</Text>
-            <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>{idrFormat(total + this.state.ongkir)}</Text>
+            <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>{this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + this.state.ongkir)}</Text>
           </View>
           <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
             <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>

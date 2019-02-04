@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, TouchableNativeFeedback } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { fetchUser } from '../../actions/Get_User_Data';
 import { NavigationEvents } from 'react-navigation';
 
 class MyRekening extends Component {
@@ -10,19 +9,11 @@ class MyRekening extends Component {
     const { userData, navigation } = this.props;
     return(
       <View style={{flex: 1}}>
-        <NavigationEvents
-          onWillFocus={() => this.props.dispatch(fetchUser(navigation.state.params.token))}
-          />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='#7c0c10' />
+            <Icon name='arrow-back' color='white' />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Rekening Bank</Text>
-            <View style={{position: 'absolute', right: 18, top: 23}}>
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('EditRekening', {token:navigation.state.params.token})}>
-                <Icon name='create' color='#7c0c10' size={20} />
-              </TouchableOpacity>
-            </View>
         </View>
         <TouchableNativeFeedback>
           <View style={[styles.listMenu, {marginTop: 10}]}>
@@ -44,7 +35,7 @@ class MyRekening extends Component {
 const styles = StyleSheet.create({
   header: {
     height: 60,
-    backgroundColor: 'white',
+    backgroundColor: '#7c0c10',
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -53,7 +44,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: '#7c0c10'
+    color: 'white'
   },
   headerMenu: {
     height: 50,

@@ -1,12 +1,7 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView, AsyncStorage, Alert } from 'react-native';
-import { NavigationEvents } from 'react-navigation';
+import { View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Text } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { loadTransaction } from '../../actions/Load_Transaction';
-import { DotIndicator } from 'react-native-indicators';
-import { Container, Header, Item, Text, Right, Button, Content, Tab, Tabs, ScrollableTab } from 'native-base';
-import TransactionBundler from './Transaction_Bundler';
 
 class TransactionRecords extends Component {
   constructor(props) {
@@ -16,52 +11,56 @@ class TransactionRecords extends Component {
     }
   }
 
-  beforeRender = async () => {
-    try {
-      const token = await AsyncStorage.getItem('access_token');
-      if (token !== null) {
-        const raw = JSON.parse(token)
-        this.props.dispatch(loadTransaction(raw))
-      }
-    }catch (error) {
-      Alert.alert(
-        'Kesalahan',
-        'Gagal memuat data',
-        [
-          {text: 'OK'}
-        ],
-        { cancelable: false }
-      );
-    }
-  }
-
   render() {
     const { transactionRecords, navigation } = this.props;
+    const token = navigation.state.params.token;
     return(
       <View style={{flex: 1}}>
         <View style={styles.header}>
-          <NavigationEvents
-            onWillFocus={() => this.beforeRender()}
-            />
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
             <Icon name='arrow-back' color='#7c0c10' />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Riwayat Transaksi</Text>
         </View>
-        <Tabs tabBarUnderlineStyle={{backgroundColor: '#7c0c10'}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: '#e5e5e5', height: 45}} />}>
-          <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Pending">
-            <TransactionBundler navigation={navigation} transaction={transactionRecords.filter(x => x.status === 'pending')}/>
-          </Tab>
-          <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Sending">
-            <TransactionBundler navigation={navigation} transaction={transactionRecords.filter(x => x.status === 'sending')} />
-          </Tab>
-          <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Success">
-            <TransactionBundler navigation={navigation} transaction={transactionRecords.filter(x => x.status === 'success')} />
-          </Tab>
-          <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Expired">
-            <TransactionBundler navigation={navigation} transaction={transactionRecords.filter(x => x.status === 'expired')} />
-          </Tab>
-        </Tabs>
+        <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionList', {token, type: 0})}>
+          <View style={[styles.listMenu, {backgroundColor: 'white', marginTop: 5}]}>
+            <View style={{flexDirection: 'row', paddingTop: 10}}>
+              <Text style={[styles.menuTitle, {marginLeft: 10}]}>Sukses</Text>
+              {/*<View style={[styles.badge, {backgroundColor: '#fcbe05'}]}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>{data1.length}</Text>
+              </View>*/}
+              <View style={{position: 'absolute', right: 10, top: 10}}>
+                <Icon name='chevron-right' color='#545454' />
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionList', {token, type: 1})}>
+          <View style={[styles.listMenu, {backgroundColor: 'white'}]}>
+            <View style={{flexDirection: 'row', paddingTop: 10}}>
+              <Text style={[styles.menuTitle, {marginLeft: 10}]}>Gagal</Text>
+              {/*<View style={[styles.badge, {backgroundColor: '#fcbe05'}]}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>{data1.length}</Text>
+              </View>*/}
+              <View style={{position: 'absolute', right: 10, top: 10}}>
+                <Icon name='chevron-right' color='#545454' />
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
+        <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionList', {token, type: 2})}>
+          <View style={[styles.listMenu, {backgroundColor: 'white'}]}>
+            <View style={{flexDirection: 'row', paddingTop: 10}}>
+              <Text style={[styles.menuTitle, {marginLeft: 10}]}>Kadaluarsa</Text>
+              {/*<View style={[styles.badge, {backgroundColor: '#fcbe05'}]}>
+                <Text style={{color: 'white', fontWeight: 'bold'}}>{data1.length}</Text>
+              </View>*/}
+              <View style={{position: 'absolute', right: 10, top: 10}}>
+                <Icon name='chevron-right' color='#545454' />
+              </View>
+            </View>
+          </View>
+        </TouchableNativeFeedback>
       </View>
     )
   }
@@ -96,7 +95,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   menuTitle: {
-    fontSize: 16
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#545454'
   },
 })
 

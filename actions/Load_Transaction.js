@@ -34,8 +34,8 @@ function* workerLoadTransaction(form) {
   try {
     var response = yield call(() => {
       return request
-      .post(`${SERVER_URL}profile/android/user-transaction`)
-      .send({token: form.data})
+      .post(`${SERVER_URL}profile/android/user-transaction/${form.data.type}`)
+      .send({token: form.data.token})
       .then((res) => {
         return res;
       })

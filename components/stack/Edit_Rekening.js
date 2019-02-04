@@ -82,39 +82,44 @@ class EditRekening extends Component {
           </Modal>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='#7c0c10' />
+            <Icon name='arrow-back' color='white' />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Edit Rekening</Text>
+            <View style={{position: 'absolute', right: 18, top: 18}}>
+              <TouchableOpacity onPress={() => this.onSave()}>
+                <Icon name='done' color='white' size={24} />
+              </TouchableOpacity>
+            </View>
         </View>
-        <Form>
-          <Label style={{fontSize: 15, marginLeft: 15, marginTop: 10, color: '#a0a0a0'}}>Nama Bank</Label>
-          <Item picker style={{width: 335, marginLeft: 10, borderBottomColor: '#a8a8a8'}}>
-            <Picker
-              mode="dropdown"
-              iosIcon={<Icon name="ios-arrow-down-outline" />}
-              selectedValue={this.state.naRek}
-              onValueChange={(x) => this.setState({naRek: x})}
-              >
-              {
-                this.props.bank.map((x, i) =>
-                  <Picker key={i} label={x.name} value={x.name} />
-                )
-              }
-            </Picker>
-          </Item>
-          <Item stackedLabel style={{width: 330, borderBottomColor: '#a8a8a8'}}>
-            <Label style={{color: '#a8a8a8'}}>Nomor Rekening</Label>
-            <Input
-              keyboardType='numeric'
-              onChangeText={(x) => this.setState({noRek: x})}
-              value={this.state.noRek}
-              />
-          </Item>
-        </Form>
-        <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
-          <TouchableOpacity onPress={() => this.onSave()} style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', borderRadius: 5, width: 300, height: 50}}>
-            <Text style={{color: 'white'}}>Simpan</Text>
-          </TouchableOpacity>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <View style={{backgroundColor: 'white', width: '95%', elevation: 3, marginTop: 10}}>
+            <Form>
+              <Label style={{fontSize: 15, marginLeft: 15, marginTop: 10, color: '#a0a0a0'}}>Nama Bank</Label>
+              <Item picker style={{width: 315, marginLeft: 10, borderBottomColor: '#a8a8a8'}}>
+                <Picker
+                  mode="dropdown"
+                  iosIcon={<Icon name="ios-arrow-down-outline" />}
+                  selectedValue={this.state.naRek}
+                  onValueChange={(x) => this.setState({naRek: x})}
+                  >
+                  {
+                    this.props.bank.map((x, i) =>
+                      <Picker key={i} label={x.name} value={x.name} />
+                    )
+                  }
+                </Picker>
+              </Item>
+              <Item stackedLabel style={{width: 315, borderBottomColor: '#a8a8a8'}}>
+                <Label style={{color: '#a8a8a8'}}>Nomor Rekening</Label>
+                <Input
+                  keyboardType='numeric'
+                  onChangeText={(x) => this.setState({noRek: x})}
+                  value={this.state.noRek}
+                  />
+              </Item>
+            </Form>
+            <View style={{height: 20}} />
+          </View>
         </View>
       </View>
     )
@@ -124,7 +129,7 @@ class EditRekening extends Component {
 const styles = StyleSheet.create({
   header: {
     height: 60,
-    backgroundColor: 'white',
+    backgroundColor: '#7c0c10',
     justifyContent: 'center',
     flexDirection: 'row',
     alignItems: 'center',
@@ -133,7 +138,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 18,
-    color: '#7c0c10'
+    color: 'white'
   }
 })
 

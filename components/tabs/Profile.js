@@ -3,8 +3,6 @@ import { connect } from 'react-redux';
 import { View, ScrollView, Text, AsyncStorage, Alert, TouchableOpacity, Image, StyleSheet, TouchableNativeFeedback, ToastAndroid } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { fetchUser, logOutRequest } from '../../actions/Get_User_Data';
-import FBSDK, { LoginManager } from 'react-native-fbsdk';
-import GoogleSignIn from 'react-native-google-sign-in';
 import { SERVER_URL } from '../../config';
 import LinearGradient from 'react-native-linear-gradient';
 import { Icon } from 'react-native-elements';
@@ -29,7 +27,6 @@ class Profile extends Component {
     super(props)
     this.state = {
       token: '',
-      refreshing: false,
       showModal: false,
       mode: '',
       whichPhoto: true,
@@ -38,7 +35,8 @@ class Profile extends Component {
       showDialog: false,
       loading: false,
       showIconAddPhoto: true,
-      progress : 0
+      progress : 0,
+      isVisible: false
     }
   }
 
@@ -53,30 +51,6 @@ class Profile extends Component {
     } catch (error) {
       this.props.navigation.goBack()
       this.props.navigation.navigate('ProfilePrevention')
-    }
-  }
-
-  logOut() {
-    Alert.alert(
-      'Logout',
-      'Apakah anda yakin ingin keluar ?',
-      [
-        {text: 'YA', onPress: () => this.confirmLogout()},
-        {text: 'TIDAK'}
-      ],
-      { cancelable: false }
-    );
-  }
-
-  confirmLogout = async (x) => {
-    try {
-      await AsyncStorage.removeItem('access_token')
-      LoginManager.logOut()
-      GoogleSignIn.signOut()
-      this.props.navigation.replace('MainTabs');
-      this.props.dispatch(logOutRequest());
-    }catch (error) {
-      this.props.navigation.replace('MainTabs');
     }
   }
 
@@ -133,10 +107,10 @@ class Profile extends Component {
     if (this.state.coverHandler !== '') {
       let filename = 'cv' + a.replace('.','') + '.jpg';
       form.append('photo', {
-            uri: this.state.coverHandler,
-            type: 'image/jpeg',
-            name: filename
-          });
+        uri: this.state.coverHandler,
+        type: 'image/jpeg',
+        name: filename
+      });
     }
     if (this.state.fpHandler !== '') {
       let filename = 'fp' + a.replace('.','') + '.jpg';
@@ -263,21 +237,21 @@ class Profile extends Component {
               ?
               <Image
                 source={{uri: `${SERVER_URL}images/dummy/${userData.photo}`}}
-                style={{height: 60, width: 60, borderRadius: 30}}>
+                style={{height: 70, width: 70, borderRadius: 35, borderWidth: 2, borderColor: 'white', marginTop: 25}}>
               </Image>
               :
               <Image
                 source={{uri: this.state.fpHandler}}
-                style={{height: 60, width: 60, borderRadius: 30}}>
+                style={{height: 70, width: 70, borderRadius: 35, borderWidth: 2, borderColor: 'white', marginTop: 25}}>
               </Image>
             }
-            <View style={{marginLeft: 15, marginTop: 5}}>
+            <View style={{marginLeft: 12, marginTop: 26}}>
               <Text style={{color: 'white', fontSize: 17}}>{userData.name}</Text>
-              <Text style={{color: '#e2e2e2', fontSize: 13}}>Bergabung sejak {userData.join}</Text>
+              <Text style={{color: '#e2e2e2', fontSize: 12}}>Bergabung sejak {userData.join}</Text>
             </View>
             {
               this.state.showIconAddPhoto &&
-              <TouchableOpacity style={{position: 'absolute', right: 20, bottom: 15}} onPress={() => this.setState({showModal: true})}>
+              <TouchableOpacity style={{position: 'absolute', right: 20, bottom: 35}} onPress={() => this.setState({showModal: true})}>
                 <Icon name='create' color='#e2e2e2' />
               </TouchableOpacity>
             }
@@ -308,7 +282,7 @@ class Profile extends Component {
                 </View>
               </View>
             </TouchableNativeFeedback>
-            <TouchableNativeFeedback onPress={() => navigation.navigate('MyRekening', {token: this.state.token})}>
+            <TouchableNativeFeedback onPress={() => navigation.navigate('MyRekening')}>
               <View style={styles.listMenu}>
                 <View style={{flexDirection: 'row', paddingTop: 10}}>
                   <Icon name='account-balance' />
@@ -316,28 +290,44 @@ class Profile extends Component {
                 </View>
               </View>
             </TouchableNativeFeedback>
-            <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionRecords', {token: this.state.token})}>
+            <TouchableNativeFeedback onPress={() => this.setState({isVisible: !this.state.isVisible})}>
               <View style={styles.listMenu}>
                 <View style={{flexDirection: 'row', paddingTop: 10}}>
                   <Icon name='compare-arrows' />
-                  <Text style={[styles.menuTitle, {marginLeft: 10}]}>Riwayat Transaksi</Text>
+                  <Text style={[styles.menuTitle, {marginLeft: 10}]}>Transaksi</Text>
+                  <View style={{position: 'absolute', right: 10, top: 10}}>
+                    <Icon name={this.state.isVisible ? 'keyboard-arrow-up' : 'keyboard-arrow-down'} />
+                  </View>
                 </View>
               </View>
             </TouchableNativeFeedback>
-            <TouchableNativeFeedback onPress={() => navigation.navigate('Help')}>
+            {
+              this.state.isVisible &&
+              <View>
+                <TouchableNativeFeedback onPress={() => navigation.navigate('MyTransaction', {token: this.state.token})}>
+                  <View style={styles.listMenu}>
+                    <View style={{flexDirection: 'row', paddingTop: 10}}>
+                      <Text style={[styles.menuTitle, {marginLeft: 30}]}>Transaksi Saya</Text>
+                    </View>
+                  </View>
+                </TouchableNativeFeedback>
+                <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionRecords', {token: this.state.token})}>
+                  <View style={styles.listMenu}>
+                    <View style={{flexDirection: 'row', paddingTop: 10}}>
+                      <Text style={[styles.menuTitle, {marginLeft: 30}]}>Riwayat Transaksi</Text>
+                    </View>
+                  </View>
+                </TouchableNativeFeedback>
+              </View>
+            }
+            <TouchableNativeFeedback onPress={() => navigation.navigate('Settings', {token: this.state.token})}>
               <View style={styles.listMenu}>
                 <View style={{flexDirection: 'row', paddingTop: 10}}>
-                  <Icon name='help' />
-                  <Text style={[styles.menuTitle, {marginLeft: 10}]}>Bantuan</Text>
+                  <Icon name='settings' />
+                  <Text style={[styles.menuTitle, {marginLeft: 10}]}>Pengaturan</Text>
                 </View>
               </View>
             </TouchableNativeFeedback>
-
-            <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
-              <TouchableOpacity onPress={() => this.logOut()} style={{elevation: 3, height: 50, borderRadius: 5, width: 250, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={{color: 'white', fontSize: 16}}>Logout</Text>
-              </TouchableOpacity>
-            </View>
           </View>
       </ScrollView>
     )

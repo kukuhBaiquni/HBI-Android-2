@@ -1,26 +1,31 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { DrawerActions } from 'react-navigation-drawer';
+import { connect } from 'react-redux';
 
-export default class TermsAndCondition extends Component {
+class Tracking extends Component {
   render() {
+    const { navigation } = this.props;
     return(
-      <View style={{flex: 1}}>
-        <StatusBar
-          backgroundColor = '#7c0c10'
-          barStyle = 'light-content'
-          />
+      <View>
         <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
+          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
             <Icon name='arrow-back' color='#7c0c10' />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Syarat dan Ketentuan</Text>
+          <Text style={styles.headerTitle}>Tracking</Text>
         </View>
       </View>
     )
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return dispatch
+};
+
+export default connect(
+  mapDispatchToProps
+)(Tracking);
 
 const styles = StyleSheet.create({
   header: {
@@ -35,5 +40,5 @@ const styles = StyleSheet.create({
   headerTitle: {
     fontSize: 18,
     color: '#7c0c10'
-  }
+  },
 })

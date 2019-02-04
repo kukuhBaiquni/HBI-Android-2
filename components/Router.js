@@ -25,16 +25,19 @@ import EditRekening from './stack/Edit_Rekening';
 import MyRekening from './stack/My_Rekening';
 import TransactionRecords from './stack/Transaction_Records';
 import TransactionDetails from './stack/Transaction_Details';
-import Help from './stack/Help';
 import Timeline from './tabs/Timeline';
 import Splash from './Splash_Screen';
 import About from './drawer/About';
 import Member from './drawer/Member';
 import Business from './drawer/Business';
 import CallUs from './drawer/CallUs';
-import PrivacyPolicy from './stack/PrivacyPolicy';
-import TermsAndCondition from './stack/TermsAndCondition';
 import Faq from './stack/Faq';
+import MyActiveTransaction from './stack/My_Active_Transaction';
+import Tracking from './stack/Tracking';
+import TransactionList from './stack/Transaction_List';
+import Settings from './stack/Settings';
+import SettingNotifications from './stack/Setting_Notifications';
+import SettingResetPassword from './stack/Setting_Reset_Password';
 import { SERVER_URL } from '../config';
 
 const DrawerComponent = (props) => (
@@ -51,9 +54,9 @@ const DrawerComponent = (props) => (
           </TouchableOpacity>
         </View>
         <View style={{paddingTop: 10, paddingLeft: 20}}>
-          <Text style={{marginBottom: 10}}>FAQ</Text>
-          <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('PrivacyPolicy')}>Kebijakan Privasi</Text>
-          <Text style={{marginBottom: 10}}>Syarat & Ketentuan</Text>
+          <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('About', {type: 0})}>FAQ</Text>
+          <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('About', {type: 1})}>Kebijakan Privasi</Text>
+          <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('About', {type: 2})}>Syarat & Ketentuan</Text>
         </View>
     </SafeAreaView>
   </ScrollView>
@@ -103,7 +106,7 @@ const Tabs = createMaterialTopTabNavigator({
   Home: {
     screen: Drawer,
     navigationOptions: {
-      title: 'Home',
+      title: 'Beranda',
       tabBarIcon: ({tintColor}) => <Icon name='home' size={24} color={tintColor} />,
     tabBarOnPress: (x) => {x.navigation.navigate('FirstPage')}
     }
@@ -111,14 +114,14 @@ const Tabs = createMaterialTopTabNavigator({
   Timeline: {
     screen: Timeline,
     navigationOptions: {
-      tabBarLabel: 'Timeline',
+      tabBarLabel: 'Berita',
       tabBarIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
     }
   },
   Shopping: {
     screen: ShopPage,
     navigationOptions: {
-      title: 'Katalog',
+      title: 'Belanja',
       tabBarIcon: ({tintColor}) => <Icon name='store-mall-directory' size={24} color={tintColor} />
     }
   },
@@ -136,7 +139,8 @@ const Tabs = createMaterialTopTabNavigator({
   Mail: {
     screen: Mail,
     navigationOptions: {
-      tabBarIcon: ({tintColor}) => <Icon name='mail' size={24} color={tintColor} />
+      title: 'Notifikasi',
+      tabBarIcon: ({tintColor}) => <Icon name='notifications' size={24} color={tintColor} />
     }
   },
   Profile: {
@@ -162,7 +166,7 @@ const Tabs = createMaterialTopTabNavigator({
   }
 },{
   lazy: true,
-  initialRouteName: 'Home',
+  initialRouteName: 'Shopping',
   tabBarPosition: 'bottom',
   swipeEnabled: false,
   animationEnabled: true,
@@ -326,30 +330,48 @@ const RootStack = createStackNavigator({
       header: null
     })
   },
-  Help: {
-    screen: Help,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    })
-  },
-  PrivacyPolicy: {
-    screen: PrivacyPolicy,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    })
-  },
-  TermsAndCondition: {
-    screen: TermsAndCondition,
-    navigationOptions: ({navigation}) => ({
-      header: null
-    })
-  },
   Faq: {
     screen: Faq,
     navigationOptions: ({navigation}) => ({
       header: null
     })
   },
+  MyTransaction: {
+    screen: MyActiveTransaction,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  Tracking: {
+    screen: Tracking,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  TransactionList: {
+    screen: TransactionList,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  Settings: {
+    screen: Settings,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  SettingNotifications: {
+    screen: SettingNotifications,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  SettingResetPassword: {
+    screen: SettingResetPassword,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  }
 }, {
   initialRouteName: 'FirstPage'
 })

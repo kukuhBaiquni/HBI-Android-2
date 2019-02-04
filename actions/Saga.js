@@ -24,6 +24,12 @@ import { watcherEditProfile } from './Edit_Profile';
 import { watcherEditRekening } from './Edit_Rekening';
 import { watcherLoadTransaction } from './Load_Transaction';
 import { watcherCheckOngkir } from './Check_Ongkir';
+import { watcherLoadCategory } from './Load_Category';
+import { watcherLoadTransactionTypePending } from './Load_Transaction_Type_Pending';
+import { watcherLoadTransactionTypeExpired } from './Load_Transaction_Type_Expired';
+import { watcherLoadTransactionTypeSuccess } from './Load_Transaction_Type_Success';
+import { watcherLoadTransactionTypeFailed } from './Load_Transaction_Type_Failed';
+import { watcherResetPassword } from './Reset_Password';
 
 export default function* rootSaga() {
   yield all([
@@ -51,6 +57,12 @@ export default function* rootSaga() {
     watcherEditProfile(),
     watcherEditRekening(),
     watcherLoadTransaction(),
-    watcherCheckOngkir()
+    watcherCheckOngkir(),
+    watcherLoadCategory(),
+    watcherLoadTransactionTypePending(),
+    watcherLoadTransactionTypeExpired(),
+    watcherLoadTransactionTypeSuccess(),
+    watcherLoadTransactionTypeFailed(),
+    watcherResetPassword()
   ]);
 };

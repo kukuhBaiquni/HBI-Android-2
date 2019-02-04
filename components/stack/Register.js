@@ -425,7 +425,7 @@ class Register extends Component {
                   {
                     this.state.secure
                     ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={20}/>
-                  : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={20}/>
+                    : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={20}/>
                   }
                 </TouchableOpacity>
               </Item>

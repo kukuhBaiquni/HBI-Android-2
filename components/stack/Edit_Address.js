@@ -11,6 +11,7 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 import { saveAddress } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
+import { addressParser } from '../../config';
 
 class EditAddress extends Component {
   constructor(props){
@@ -25,7 +26,11 @@ class EditAddress extends Component {
       saveState: 'default',
       index: 0,
       loading: true,
-      token: ''
+      token: '',
+      jalanHandler: '',
+      nomorHandler: '',
+      rtHandler: '',
+      rwHandler: ''
     }
   }
 
@@ -36,11 +41,16 @@ class EditAddress extends Component {
     }else{
       phone = '0' + this.props.navigation.state.params.phone
     }
+    const addressX = addressParser(this.props.navigation.state.params.address.street)
     this.setState({
       nameHandler: this.props.navigation.state.params.name,
       token: this.props.navigation.state.params.token,
       phoneHandler: phone,
-      addressHandler: this.props.navigation.state.params.address.street
+      addressHandler: this.props.navigation.state.params.address.street,
+      jalanHandler: addressX.jalan,
+      nomorHandler: addressX.no,
+      rtHandler: addressX.rt,
+      rwHandler: addressX.rw
     })
     this.props.dispatch(loadCities())
   }
@@ -73,11 +83,12 @@ class EditAddress extends Component {
   }
 
   onSave() {
+    const addressX = 'Jl. ' + this.state.jalanHandler + ' No.' + this.state.nomorHandler + ' Rt.0' + this.state.rtHandler + ' Rw.0' + this.state.rwHandler;
     const data = {
       token: this.state.token,
       name: this.state.nameHandler,
       phone: this.state.phoneHandler,
-      street: this.state.addressHandler,
+      street: addressX,
       city: this.state.cityHandler,
       district: this.state.districtHandler,
       village: this.state.villageHandler
@@ -260,10 +271,34 @@ class EditAddress extends Component {
                   </Picker>
                 </Item>
                 <Item stackedLabel style={{width: 330}}>
-                  <Label style={{color: '#a0a0a0'}}>Alamat Lengkap</Label>
+                  <Label style={{color: '#a0a0a0'}}>Jalan</Label>
                   <Input
-                    value={this.state.addressHandler}
-                    onChangeText={(x) => this.setState({addressHandler: x})}
+                    value={this.state.jalanHandler}
+                    onChangeText={(x) => this.setState({jalanHandler: x})}
+                     />
+                </Item>
+                <Item stackedLabel style={{width: 330}}>
+                  <Label style={{color: '#a0a0a0'}}>Nomor</Label>
+                  <Input
+                    keyboardType='numeric'
+                    value={this.state.nomorHandler}
+                    onChangeText={(x) => this.setState({nomorHandler: x})}
+                     />
+                </Item>
+                <Item stackedLabel style={{width: 330}}>
+                  <Label style={{color: '#a0a0a0'}}>RT</Label>
+                  <Input
+                    keyboardType='numeric'
+                    value={this.state.rtHandler}
+                    onChangeText={(x) => this.setState({rtHandler: x})}
+                     />
+                </Item>
+                <Item stackedLabel style={{width: 330}}>
+                  <Label style={{color: '#a0a0a0'}}>RW</Label>
+                  <Input
+                    keyboardType='numeric'
+                    value={this.state.rwHandler}
+                    onChangeText={(x) => this.setState({rwHandler: x})}
                      />
                 </Item>
               </Form>

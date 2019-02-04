@@ -52,6 +52,12 @@ let initialState = {
     success: false,
     error: false
   },
+  resetPassword: {
+    success: false,
+    error: false,
+    message: ''
+  },
+  processing: false,
   InternalServerError: false
 };
 
@@ -333,6 +339,37 @@ export default function status(state = initialState, action) {
       loadTransaction: {
         ...state.loadTransaction, success: false, error: false
       }
+    });
+
+    case 'RESET_PASSWORD_SUCCESS':
+    return Object.assign({}, state, {
+      resetPassword: {
+        ...state.resetPassword, success: true, error: false, message: action.data
+      }
+    });
+
+    case 'RESET_PASSWORD_FAILED':
+    return Object.assign({}, state, {
+      resetPassword: {
+        ...state.resetPassword, success: false, error: true, message: action.data
+      }
+    });
+
+    case 'RESET_PASSWORD_STATE':
+    return Object.assign({}, state, {
+      resetPassword: {
+        ...state.resetPassword, success: false, error: false, message: ''
+      }
+    });
+
+    case 'ON_PROCESS':
+    return Object.assign({}, state, {
+      process: true
+    });
+
+    case 'PROCESS_DONE':
+    return Object.assign({}, state, {
+      process: false
     });
 
     case 'INTERNAL_SERVER_ERROR':

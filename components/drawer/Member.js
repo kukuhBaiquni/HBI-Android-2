@@ -15,7 +15,7 @@ export default class Member extends Component {
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
             <Icon name='menu' color='#7c0c10' />
           </TouchableOpacity>
-          <Text style={styles.headerTitle}>Member</Text>
+          <Text style={styles.headerTitle}>Halal Beef Indonesia</Text>
         </View>
       </View>
     )

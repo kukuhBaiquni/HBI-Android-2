@@ -23,12 +23,11 @@ export function* watcherCheckOngkir(data) {
 };
 
 function* workerCheckOngkir(form) {
-  console.log(form);
   try {
     var response = yield call(() => {
       return request
-      .post(`${SERVER_URL}android/counting-items`)
-      .send({id: form.data})
+      .post(`${SERVER_URL}ongkir-generator`)
+      .send({village: form.data})
       .then((res) => {
         return res;
       })

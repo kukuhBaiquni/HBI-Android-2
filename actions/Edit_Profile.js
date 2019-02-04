@@ -6,6 +6,14 @@ export const editProfile = (data) => {
   return { type: 'EDIT_PROFILE', data };
 };
 
+export const editBannerSuccess = (data) => {
+  return { type: 'EDIT_BANNER', data }
+}
+
+export const editPhotoSuccess = (data) => {
+  return {type: 'EDIT_PHOTO', data }
+}
+
 const editProfileSuccess = () => {
   return { type: 'EDIT_PROFILE_SUCCESS' };
 };
@@ -35,14 +43,7 @@ function* workerEditProfile(form) {
     var response = yield call(() => {
       return request
       .post(`${SERVER_URL}profile/android/edit-profile`)
-      .send({token: form.data.token})
-      .send({name: form.data.name})
-      .send({phone: form.data.phone})
-      .send({gender: form.data.gender})
-      .send({city: form.data.city})
-      .send({district: form.data.district})
-      .send({village: form.data.village})
-      .send({street: form.data.street})
+      .send(form.data)
       .then((res) => {
         return res;
       })

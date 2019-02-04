@@ -25,7 +25,8 @@ class DirectPayment extends Component {
       ongkir: 0,
       data: {},
       qty: 1,
-      editMode: false
+      editMode: false,
+      isFreeOngkir: false
     }
   }
   beforeRender = async () => {
@@ -143,6 +144,15 @@ class DirectPayment extends Component {
     this.props.navigation.navigate('TransactionDetails');
   }
 
+  checkIsFreeOngkir(x) {
+    this.setState({qty: Number(x)})
+    if (this.state.data.packing * x > 25) {
+      this.setState({isFreeOngkir: true, ongkir: 0})
+    }else{
+      this.setState({isFreeOngkir: false, ongkir: this.props.userData.ongkir})
+    }
+  }
+
   render() {
     let total = 0;
     const loop = this.props.cart.map(x => total += x.subtotal)
@@ -212,7 +222,7 @@ class DirectPayment extends Component {
                     <Text style={{fontSize: 20, marginBottom: 20}}>{moment(this.props.transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
                   </View>
                   <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
-                    <Text style={{color: '#228200'}}>Lihat Detail</Text>
+                    <Text style={{color: '#228200'}}>Kembali</Text>
                   </TouchableOpacity>
                 </ScrollView>
               </View>
@@ -293,9 +303,9 @@ class DirectPayment extends Component {
                           <Picker
                             note
                             mode='dropdown'
-                            style={{ width: 50, height: 20, marginTop: -1 }}
+                            style={{ width: 60, height: 20, marginTop: -1 }}
                             selectedValue={this.state.qty.toString()}
-                            onValueChange={(x) => this.setState({qty: Number(x)})}
+                            onValueChange={(x) => this.checkIsFreeOngkir(x)}
                             >
                             <Picker.Item label='1' value='1' />
                             <Picker.Item label='2' value='2' />
@@ -333,12 +343,6 @@ class DirectPayment extends Component {
                 </View>
             </View>
             <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
-              <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
-              <Text style={{fontSize: 16, position: 'absolute', right: 45, top: 10}}>
-                {idrFormat(Number(this.state.ongkir))}
-              </Text>
-            </View>
-            <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
               <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Belanja</Text>
               <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
                 {
@@ -346,6 +350,12 @@ class DirectPayment extends Component {
                   ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)))
                   : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)))
                 }
+              </Text>
+            </View>
+            <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
+              <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
+              <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
+                {this.state.isFreeOngkir ? 'Gratis' : idrFormat(Number(this.state.ongkir))}
               </Text>
             </View>
             <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>

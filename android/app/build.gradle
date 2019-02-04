@@ -100,6 +100,8 @@ android {
         applicationId "com.hbi"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+        manifestPlaceholders = [onesignal_app_id: "11d7b6aa-5d16-4660-9309-f4b58de10ae7",
+                                onesignal_google_project_number: "482052818855"]
         versionCode 1
         versionName "1.0"
         ndk {
@@ -147,6 +149,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-onesignal')
     compile project(':react-native-google-sign-in')
     compile project(':react-native-linear-gradient')
     compile project(':react-native-vector-icons')
@@ -170,5 +173,5 @@ task copyDownloadableDepsToLibs(type: Copy) {
     from configurations.compile
     into 'libs'
 }
-
+apply plugin: 'com.onesignal.androidsdk.onesignal-gradle-plugin'
 apply plugin: 'com.google.gms.google-services'

@@ -32,7 +32,7 @@ export default class ProductsTab extends Component {
                     <View style={{flexDirection: 'row'}}>
                       <Text style={styles.title}>{x.productname}</Text>
                     </View>
-                    <Text style={styles.price}>{idrFormat(x.enduserprice)}/Kg</Text>
+                    <Text style={styles.price}>{idrFormat(x.enduserprice)}/{x.unit}</Text>
                   </View>
                 </TouchableOpacity>
                 )
