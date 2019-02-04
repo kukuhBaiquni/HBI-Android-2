@@ -15,6 +15,7 @@ import transactionTypePending from './Transaction_Pending';
 import transactionTypeFailed from './Transaction_Failed';
 import transactionTypeExpired from './Transaction_Expired';
 import transactionTypeSuccess from './Transaction_Success';
+import customContent from './Custom_Content';
 
 const rootReducer = combineReducers({
   listProducts,
@@ -32,7 +33,8 @@ const rootReducer = combineReducers({
   transactionTypePending,
   transactionTypeFailed,
   transactionTypeExpired,
-  transactionTypeSuccess
+  transactionTypeSuccess,
+  customContent
 });
 
 export default rootReducer

@@ -51,14 +51,19 @@
 // let modification = [...newState3, ...newState3[0].list = []]
 // console.log(modification);
 
-function addressParser(street) {
-  const data = {
-    jalan: street.split(' ').filter(x => !x.includes('No') && !x.includes('Rt') && !x.includes('Rw') && !x.includes('Jl')).join(' '),
-    no: street.split(' ').filter(x => x.includes('No'))[0].replace('No.',''),
-    rt: street.split(' ').filter(x => x.includes('Rt'))[0].replace('Rt.0',''),
-    rw: street.split(' ').filter(x => x.includes('Rw'))[0].replace('Rw.0','')
-  }
-  return data
-}
+// function addressParser(street) {
+//   const data = {
+//     jalan: street.split(' ').filter(x => !x.includes('No') && !x.includes('Rt') && !x.includes('Rw') && !x.includes('Jl')).join(' '),
+//     no: street.split(' ').filter(x => x.includes('No'))[0].replace('No.',''),
+//     rt: street.split(' ').filter(x => x.includes('Rt'))[0].replace('Rt.0',''),
+//     rw: street.split(' ').filter(x => x.includes('Rw'))[0].replace('Rw.0','')
+//   }
+//   return data
+// }
+//
+// console.log(addressParser('Jl. Kaki Seribu Warna No.121 Rt.01 Rw.03'));
 
-console.log(addressParser('Jl. Kaki Seribu Warna No.121 Rt.01 Rw.03'));
+var a = ['1', '2', '3'];
+var b = ['4', '5', '6'];
+
+console.log([...a, ...b]);

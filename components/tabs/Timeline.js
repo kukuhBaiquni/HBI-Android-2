@@ -7,10 +7,6 @@ import { connect } from 'react-redux';
 import { loadCategory } from '../../actions/Load_Category';
 
 class Timeline extends Component {
-  constructor(props) {
-    super(props)
-
-  }
 
   beforeRender() {
     this.props.dispatch(loadCategory())
@@ -29,9 +25,9 @@ class Timeline extends Component {
         </View>
         <ScrollView>
           {
-            categoryContent.map((x, i) =>
+            categoryContent.data.map((x, i) =>
             <View key={i} style={{backgroundColor: 'white', marginTop: 10, elevation: 3}}>
-              <Text style={{paddingTop: 10, paddingLeft: 10, fontSize: 16, fontWeight: 'bold'}}>{x.name}</Text>
+              <Text style={{paddingTop: 10, paddingLeft: 10, fontSize: 16, fontWeight: 'bold'}}>{x}</Text>
               <TouchableNativeFeedback>
                 <View style={{position: 'absolute', right: 20, top: 8, borderRadius: 4}}>
                   <Icon name='more-horiz' size={28} />

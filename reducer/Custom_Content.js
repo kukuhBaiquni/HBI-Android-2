@@ -1,10 +1,11 @@
-let initialState = [];
+let initialState = {};
 
-export default function categoryContent(state = initialState, action) {
+export default function customContent(state = initialState, action) {
   switch (action.type) {
 
     case 'SHARE_TO_CUSTOM_CONTENT':
-    return action.data;
+    const looper = action.data.reduce((o, key) => ({ ...o, [key]: []}), {})
+    return looper
 
     default:
     return state;
