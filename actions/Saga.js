@@ -30,6 +30,8 @@ import { watcherLoadTransactionTypeExpired } from './Load_Transaction_Type_Expir
 import { watcherLoadTransactionTypeSuccess } from './Load_Transaction_Type_Success';
 import { watcherLoadTransactionTypeFailed } from './Load_Transaction_Type_Failed';
 import { watcherResetPassword } from './Reset_Password';
+import { watcherLoadCustomContent } from './Load_Custom_Content';
+import { watcherLoadListContent } from './Load_List_Content';
 
 export default function* rootSaga() {
   yield all([
@@ -63,6 +65,8 @@ export default function* rootSaga() {
     watcherLoadTransactionTypeExpired(),
     watcherLoadTransactionTypeSuccess(),
     watcherLoadTransactionTypeFailed(),
-    watcherResetPassword()
+    watcherResetPassword(),
+    watcherLoadCustomContent(),
+    watcherLoadListContent()
   ]);
 };

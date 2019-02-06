@@ -6,7 +6,7 @@ export const loadCategory = () => {
   return { type: 'LOAD_CATEGORY' };
 };
 
-const startProcess = () => {
+export const startProcess = () => {
   return { type: 'START_PROCESS_LOAD_CATEGORY' };
 };
 
@@ -27,7 +27,6 @@ const InternalServerError = () => {
 };
 
 export function* watcherLoadCategory(data) {
-  yield put(startProcess())
   yield takeEvery('LOAD_CATEGORY', workerLoadCategory);
 };
 

@@ -38,6 +38,8 @@ import TransactionList from './stack/Transaction_List';
 import Settings from './stack/Settings';
 import SettingNotifications from './stack/Setting_Notifications';
 import SettingResetPassword from './stack/Setting_Reset_Password';
+import ListContent from './stack/List_Content';
+import ContentDetails from './stack/Content_Details';
 import { SERVER_URL } from '../config';
 
 const DrawerComponent = (props) => (
@@ -125,24 +127,24 @@ const Tabs = createMaterialTopTabNavigator({
       tabBarIcon: ({tintColor}) => <Icon name='store-mall-directory' size={24} color={tintColor} />
     }
   },
-  // Mail: {
-  //   screen: Mail,
-  //   navigationOptions: {
-  //     tabBarIcon: ({tintColor}) => <View>
-  //     <TouchableOpacity style={styles.badge}>
-  //       <Text style={styles.text}>6</Text>
-  //     </TouchableOpacity>
-  //     <Icon name='mail' size={24} color={tintColor} />
-  //   </View>
-  //   }
-  // },
   Mail: {
     screen: Mail,
     navigationOptions: {
-      title: 'Notifikasi',
-      tabBarIcon: ({tintColor}) => <Icon name='notifications' size={24} color={tintColor} />
+      tabBarIcon: ({tintColor}) => <View>
+      <TouchableOpacity style={styles.badge}>
+        <Text style={styles.text}>6</Text>
+      </TouchableOpacity>
+      <Icon name='mail' size={24} color={tintColor} />
+    </View>
     }
   },
+  // Mail: {
+  //   screen: Mail,
+  //   navigationOptions: {
+  //     title: 'Notifikasi',
+  //     tabBarIcon: ({tintColor}) => <Icon name='notifications' size={24} color={tintColor} />
+  //   }
+  // },
   Profile: {
     screen: Profile,
     navigationOptions: {
@@ -368,6 +370,18 @@ const RootStack = createStackNavigator({
   },
   SettingResetPassword: {
     screen: SettingResetPassword,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  ListContent: {
+    screen: ListContent,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  ContentDetails: {
+    screen: ContentDetails,
     navigationOptions: ({navigation}) => ({
       header: null
     })

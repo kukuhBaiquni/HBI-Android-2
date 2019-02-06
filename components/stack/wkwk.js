@@ -63,7 +63,10 @@
 //
 // console.log(addressParser('Jl. Kaki Seribu Warna No.121 Rt.01 Rw.03'));
 
-var a = ['1', '2', '3'];
-var b = ['4', '5', '6'];
+function x(r) {
+  if (r == 1) console.log('kimaque');
+  if (r == 2) console.log('z');
+  if (r == 3) console.log('x');
+}
 
-console.log([...a, ...b]);
+x(1)
