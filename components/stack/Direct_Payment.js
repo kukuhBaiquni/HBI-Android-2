@@ -13,6 +13,7 @@ import { DotIndicator } from 'react-native-indicators';
 import { directPurchase } from '../../actions/Direct_Purchase';
 import { checkOngkir } from '../../actions/Check_Ongkir';
 import moment from 'moment';
+import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
 
 class DirectPayment extends Component {
   constructor(props) {
@@ -62,7 +63,10 @@ class DirectPayment extends Component {
       }
     }
     if (prevProps.transaction !== this.props.transaction) {
-      this.setState({transactionLoading: false})
+      if (this.state.transactionLoading) {
+        this.setState({transactionLoading: false})
+        this.props.dispatch(loadTransactionTypePending(this.state.token))
+      }
     }
     if (prevProps.ongkir !== this.props.ongkir) {
       this.setState({ongkir: this.props.ongkir})
@@ -141,7 +145,7 @@ class DirectPayment extends Component {
 
   queueRouting() {
     this.props.navigation.popToTop();
-    this.props.navigation.navigate('TransactionDetails');
+    this.props.navigation.navigate('MyTransaction');
   }
 
   checkIsFreeOngkir(x) {
@@ -222,7 +226,7 @@ class DirectPayment extends Component {
                     <Text style={{fontSize: 20, marginBottom: 20}}>{moment(this.props.transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
                   </View>
                   <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
-                    <Text style={{color: '#228200'}}>Kembali</Text>
+                    <Text style={{color: '#228200'}}>Lihat</Text>
                   </TouchableOpacity>
                 </ScrollView>
               </View>

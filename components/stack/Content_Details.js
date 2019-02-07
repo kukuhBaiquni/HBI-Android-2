@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL, locale } from '../../config';
 import moment from 'moment';
 
 export default class ContentDetails extends Component {
   render() {
     const data = this.props.navigation.state.params.data;
     const { navigation } = this.props;
-    const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
     const x1 = locale[new Date(data.start_date).getDay()] + ', ' + moment(data.start_date).format('DD MMM YYYY');
     const x2 = locale[new Date(data.end_date).getDay()] + ', ' + moment(data.end_date).format('DD MMM YYYY');
     return(

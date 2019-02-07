@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'rea
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
-import { SERVER_URL, idrFormat } from '../../config';
+import { SERVER_URL, idrFormat, locale } from '../../config';
 import moment from 'moment';
 
 class TransactionDetails extends Component {
@@ -31,7 +31,6 @@ class TransactionDetails extends Component {
   render() {
     const { navigation } = this.props;
     const { data } = this.state;
-    const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
     const trackingTitle = ['Menunggu Konfirmasi Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
     return(
       <View style={{flex: 1}}>

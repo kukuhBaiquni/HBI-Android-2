@@ -1,12 +1,35 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, AsyncStorage } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer';
+import { NavigationEvents } from 'react-navigation';
+import { SERVER_URL } from '../../config';
+import { connect } from 'react-redux';
+import { setPlayerId } from '../../actions/Set_Player_Id';
+import { setInitialToken } from '../../actions/Set_Initial_Token';
 
-export default class Member extends Component {
+class Member extends Component {
+
+  beforeRender = async () => {
+    try{
+      const id = await AsyncStorage.getItem('PlayerID')
+      const token = await AsyncStorage.getItem('access_token');
+      if (id !== null && token !== null) {
+        const ids = JSON.parse(id)
+        const tokens = JSON.parse(token)
+        this.props.dispatch(setInitialToken(tokens))
+        this.props.dispatch(setPlayerId({ids, token: tokens}))
+      }
+    }catch(error) {
+    }
+  }
+
   render() {
     return(
       <View style={{flex: 1}}>
+        <NavigationEvents
+          onWillFocus={() => this.beforeRender()}
+          />
         <StatusBar
           backgroundColor = '#7c0c10'
           barStyle = 'light-content'
@@ -21,6 +44,14 @@ export default class Member extends Component {
     )
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return dispatch
+}
+
+export default connect(
+  mapDispatchToProps
+)(Member)
 
 const styles = StyleSheet.create({
   header: {

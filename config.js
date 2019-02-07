@@ -2,6 +2,8 @@
 // export const SERVER_URL = 'http://192.168.43.69/';
 export const SERVER_URL = 'http://192.168.100.7/';
 
+export const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
+
 export function idrFormat(angka) {
   var rupiah = '';
   var angkarev = angka.toString().split('').reverse().join('');

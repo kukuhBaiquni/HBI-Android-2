@@ -12,6 +12,7 @@ import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { confirmTransaction } from '../../actions/Confirm_Transaction';
 import { checkOngkir } from '../../actions/Check_Ongkir';
+import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
 
 import moment from 'moment';
 
@@ -36,7 +37,6 @@ class Payment extends Component {
     this.props.dispatch(forceResetSA())
     this.props.dispatch(forceResetRoot())
     if (this.props.navigation.state.params !== undefined) {
-      console.log('custom params');
       const village = this.props.navigation.state.params.village;
       this.props.dispatch(checkOngkir(village))
     }
@@ -66,7 +66,10 @@ class Payment extends Component {
       }
     }
     if (prevProps.transaction !== this.props.transaction) {
-      this.setState({transactionLoading: false})
+      if (this.state.transactionLoading) {
+        this.setState({transactionLoading: false})
+        this.props.dispatch(loadTransactionTypePending(this.state.token))
+      }
     }
     if (prevProps.ongkir !== this.props.ongkir) {
       this.setState({ongkir: this.props.ongkir})
@@ -114,7 +117,7 @@ class Payment extends Component {
 
   queueRouting() {
     this.props.navigation.popToTop();
-    this.props.navigation.navigate('TransactionDetails');
+    this.props.navigation.navigate('MyTransaction');
   }
 
   render() {
@@ -179,7 +182,7 @@ class Payment extends Component {
                   <Text style={{fontSize: 20, marginBottom: 20}}>{moment(this.props.transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
                 </View>
                 <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
-                  <Text style={{color: '#228200'}}>Kembali</Text>
+                  <Text style={{color: '#228200'}}>Lihat</Text>
                 </TouchableOpacity>
               </ScrollView>
             </View>

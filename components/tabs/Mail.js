@@ -1,64 +1,56 @@
 import React, { Component } from 'react';
-import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, StatusBar } from 'react-native';
+import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, StatusBar, TouchableOpacity, AsyncStorage } from 'react-native';
 import { Right, Button, Body, Header, Title, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
-import { NavigationEvents } from 'react-navigation';
+import MailPartials from './Mail_Partials';
 
 export default class Mail extends Component {
-  test() {
-  }
-
   render() {
+    const { userData, navigation } = this.props;
     return(
       <View>
-        <NavigationEvents
-          onDidFocus={() => this.test()}
-        />
         <View style={{backgroundColor: 'white', padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', elevation: 3}}>
-          <Text style={{color: '#7c0c10', fontWeight: 'bold', fontSize: 20, paddingTop: 10}}>Pesan</Text>
+          <Text style={{color: '#7c0c10', fontWeight: 'bold', fontSize: 20, paddingTop: 10}}>Notifikasi</Text>
         </View>
-        <View style={{height: 10}} />
-
+        <ScrollView>
           <TouchableNativeFeedback>
             <View style={styles.containerWithIcon}>
               <Icon name='local-mall' size={20} color='#515151'/>
               <Left>
                 <Text style={styles.subtitle}>Notifikasi Order</Text>
               </Left>
+              <View syle={{position: 'absolute', right: 20, top: '50%'}}>
+                <Icon name='chevron-right' />
+              </View>
             </View>
           </TouchableNativeFeedback>
-
-          <View style={{paddingTop: 15, paddingBottom: 15}}>
-            <Text style={{fontStyle: 'italic', color: '#a3a3a3', textAlign: 'center'}}>Belum ada surat</Text>
-          </View>
-
-        <TouchableNativeFeedback>
-          <View style={styles.containerWithIcon}>
-            <Icon name='notifications' size={20} color='#515151'/>
-            <Left>
-              <Text style={styles.subtitle}>Notifikasi Sistem</Text>
-            </Left>
-          </View>
-        </TouchableNativeFeedback>
-
-        <View style={styles.viewContent}>
-          <Text style={{color: '#878787'}}>Selamat akun Anda telah aktif, Anda dapat berbelanja di menu Shopping.</Text>
-        </View>
-
-        <TouchableNativeFeedback>
-          <View style={styles.containerWithIcon}>
-            <Icon name='drafts' size={20} color='#515151'/>
-            <Left>
-              <Text style={styles.subtitle}>Inbox</Text>
-            </Left>
-          </View>
-        </TouchableNativeFeedback>
-
-        <View style={{paddingTop: 15, paddingBottom: 15}}>
-          <Text style={{fontStyle: 'italic', color: '#a3a3a3', textAlign: 'center'}}>Belum ada surat</Text>
-        </View>
-
-
+          <MailPartials navigation={navigation} type='order' />
+          <TouchableNativeFeedback>
+            <View style={styles.containerWithIcon}>
+              <Icon name='notifications' size={20} color='#515151'/>
+              <Left>
+                <Text style={styles.subtitle}>Notifikasi Sistem</Text>
+              </Left>
+              <View syle={{position: 'absolute', right: 20, top: '50%'}}>
+                <Icon name='chevron-right' />
+              </View>
+            </View>
+          </TouchableNativeFeedback>
+          <MailPartials navigation={navigation} type='system' />
+          <TouchableNativeFeedback>
+            <View style={styles.containerWithIcon}>
+              <Icon name='drafts' size={20} color='#515151'/>
+              <Left>
+                <Text style={styles.subtitle}>Inbox</Text>
+              </Left>
+              <View syle={{position: 'absolute', right: 20, top: '50%'}}>
+                <Icon name='chevron-right' />
+              </View>
+            </View>
+          </TouchableNativeFeedback>
+          <MailPartials navigation={navigation} type='inbox' />
+          <View style={{height: 70}} />
+        </ScrollView>
       </View>
     )
   }
@@ -80,13 +72,14 @@ const styles = StyleSheet.create({
   },
   containerWithIcon: {
     backgroundColor: 'white',
-    paddingTop: 25,
-    paddingBottom: 25,
+    paddingTop: 15,
+    paddingBottom: 15,
     paddingLeft: 25,
     paddingRight: 10,
     flex: 1,
     borderWidth: 1,
     borderColor: '#e2e2e2',
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: 5
   }
 })

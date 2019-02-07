@@ -17,7 +17,13 @@ let initialState = {
   email: '',
   nama_rekening: '',
   no_rekening: 0,
-  banner: ''
+  banner: '',
+  notifications: {
+    order: [],
+    system: [],
+    inbox: []
+  },
+  playerID: ''
 };
 
 export default function userData(state = initialState, action) {
@@ -40,22 +46,40 @@ export default function userData(state = initialState, action) {
       },
       ttl: action.data.ttl,
       ongkir: action.data.ongkir
-    })
+    });
 
     case 'EDIT_REKENING_WITH_DATA_SUCCESS':
     return Object.assign({}, state, {
       nama_rekening: action.data.nama_rekening,
       no_rekening: action.data.no_rekening
-    })
+    });
 
     case 'EDIT_BANNER':
     return Object.assign({}, state, {
       banner: action.data
-    })
+    });
 
     case 'EDIT_PHOTO':
     return Object.assign({}, state, {
       photo: action.data
+    });
+
+    case 'FETCH_NOTIFICATIONS_SUCCESS':
+    const key = action.data.type;
+    const reversed = action.data.data[key].reverse()
+    return Object.assign({}, state, {
+      notifications: {
+        ...state.notifications, [key]: [...reversed]
+      }
+    });
+
+    case 'READING_NOTIFICATION_SUCCESS':
+    const type = action.data.type;
+    const reversed2 = action.data.data[type]
+    return Object.assign({}, state, {
+      notifications: {
+        ...state.notifications, [type]: [...reversed2]
+      }
     })
 
     default:

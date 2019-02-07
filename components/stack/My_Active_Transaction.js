@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
 import moment from 'moment';
-import { idrFormat } from '../../config';
+import { idrFormat, locale } from '../../config';
 
 class MyActiveTransaction extends Component {
   constructor(props) {
@@ -29,7 +29,6 @@ class MyActiveTransaction extends Component {
     const data2 = transactionTypePending.filter(x => x.tracking === 2);
     const data3 = transactionTypePending.filter(x => x.tracking === 3);
     const data4 = transactionTypePending.filter(x => x.tracking === 4);
-    const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
     return(
       <View>
         <NavigationEvents

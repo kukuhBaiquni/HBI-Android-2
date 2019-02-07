@@ -40,6 +40,7 @@ import SettingNotifications from './stack/Setting_Notifications';
 import SettingResetPassword from './stack/Setting_Reset_Password';
 import ListContent from './stack/List_Content';
 import ContentDetails from './stack/Content_Details';
+import NotificationDetails from './stack/Notification_Details';
 import { SERVER_URL } from '../config';
 
 const DrawerComponent = (props) => (
@@ -130,11 +131,12 @@ const Tabs = createMaterialTopTabNavigator({
   Mail: {
     screen: Mail,
     navigationOptions: {
+      title: 'Notifikasi',
       tabBarIcon: ({tintColor}) => <View>
       <TouchableOpacity style={styles.badge}>
         <Text style={styles.text}>6</Text>
       </TouchableOpacity>
-      <Icon name='mail' size={24} color={tintColor} />
+      <Icon name='notifications' size={24} color={tintColor} />
     </View>
     }
   },
@@ -382,6 +384,12 @@ const RootStack = createStackNavigator({
   },
   ContentDetails: {
     screen: ContentDetails,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  NotificationDetails: {
+    screen: NotificationDetails,
     navigationOptions: ({navigation}) => ({
       header: null
     })

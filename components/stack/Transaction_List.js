@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableNativeFeedback, ScrollView, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
 import { Icon } from 'react-native-elements';
 import moment from 'moment';
-import { idrFormat } from '../../config';
+import { idrFormat, locale } from '../../config';
 import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
 import { loadTransactionTypeSuccess } from '../../actions/Load_Transaction_Type_Success';
@@ -45,7 +45,6 @@ class TransactionList extends Component {
   render() {
     const { transaction, navigation } = this.props;
     const title = ['Sukses', 'Gagal', 'Kadaluarsa'];
-    const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
     return(
       <View style={{flex: 1}}>
         <NavigationEvents

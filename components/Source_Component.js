@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import RouterTabs from './Router';
+import { AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from '../store';
 import SplashScreen from './Splash_Screen';
@@ -13,7 +14,8 @@ export default class SourceComponent extends Component {
     let requiresConsent = false;
     this.state = {
       count: 0,
-      changeScreen: false
+      changeScreen: false,
+      playerID: ''
     }
     OneSignal.setRequiresUserPrivacyConsent(requiresConsent);
     OneSignal.init("11d7b6aa-5d16-4660-9309-f4b58de10ae7");
@@ -40,6 +42,14 @@ export default class SourceComponent extends Component {
 
   onIds(device) {
     console.log('Device info: ', device);
+    const toStorage = async () => {
+      try {
+        await AsyncStorage.setItem('PlayerID', JSON.stringify(device.userId))
+      }catch(error) {
+        console.log(error);
+      }
+    }
+    toStorage()
   }
 
   componentDidMount() {
@@ -62,7 +72,7 @@ export default class SourceComponent extends Component {
         {
           this.state.changeScreen
           ?
-          <RouterTabs />
+          <RouterTabs playerID={this.state.playerID} />
           :
           <SplashScreen />
         }
