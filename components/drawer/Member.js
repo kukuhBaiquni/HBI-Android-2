@@ -18,13 +18,14 @@ class Member extends Component {
         const ids = JSON.parse(id)
         const tokens = JSON.parse(token)
         this.props.dispatch(setInitialToken(tokens))
-        this.props.dispatch(setPlayerId({ids, token: tokens}))
+        this.props.dispatch(setPlayerId(ids))
       }
     }catch(error) {
     }
   }
 
   render() {
+    console.log(this.props);
     return(
       <View style={{flex: 1}}>
         <NavigationEvents

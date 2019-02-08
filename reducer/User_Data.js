@@ -22,8 +22,7 @@ let initialState = {
     order: [],
     system: [],
     inbox: []
-  },
-  playerID: ''
+  }
 };
 
 export default function userData(state = initialState, action) {
@@ -75,7 +74,7 @@ export default function userData(state = initialState, action) {
 
     case 'READING_NOTIFICATION_SUCCESS':
     const type = action.data.type;
-    const reversed2 = action.data.data[type]
+    const reversed2 = action.data.data[type].reverse()
     return Object.assign({}, state, {
       notifications: {
         ...state.notifications, [type]: [...reversed2]

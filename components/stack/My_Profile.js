@@ -11,7 +11,6 @@ import moment from 'moment';
 class MyProfile extends Component {
   render() {
     const userData = this.props.userData;
-    console.log(userData);
     let gender = userData.gender;
     if (gender === 'male') {
       gender = 'Pria'

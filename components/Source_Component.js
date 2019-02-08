@@ -32,15 +32,15 @@ export default class SourceComponent extends Component {
     OneSignal.removeEventListener('ids', this.onIds);
   }
 
-  onReceived(notification) {
+  onReceived = (notification) => {
     console.log("Notification received: ", notification);
   }
 
-  onOpened(openResult) {
+  onOpened = (openResult) => {
     console.log('openResult: ', openResult);
   }
 
-  onIds(device) {
+  onIds = (device) => {
     console.log('Device info: ', device);
     const toStorage = async () => {
       try {
@@ -72,7 +72,7 @@ export default class SourceComponent extends Component {
         {
           this.state.changeScreen
           ?
-          <RouterTabs playerID={this.state.playerID} />
+          <RouterTabs />
           :
           <SplashScreen />
         }

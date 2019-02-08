@@ -130,6 +130,7 @@ const Tabs = createMaterialTopTabNavigator({
   },
   Mail: {
     screen: Mail,
+    path: 'mail',
     navigationOptions: {
       title: 'Notifikasi',
       tabBarIcon: ({tintColor}) => <View>
