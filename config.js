@@ -12,11 +12,13 @@ export function idrFormat(angka) {
 }
 
 export function addressParser(street) {
-  const data = {
-    jalan: street.split(' ').filter(x => !x.includes('No') && !x.includes('Rt') && !x.includes('Rw') && !x.includes('Jl')).join(' '),
-    no: street.split(' ').filter(x => x.includes('No'))[0].replace('No.',''),
-    rt: street.split(' ').filter(x => x.includes('Rt'))[0].replace('Rt.0',''),
-    rw: street.split(' ').filter(x => x.includes('Rw'))[0].replace('Rw.0','')
+  if (street) {
+    const data = {
+      jalan: street.split(' ').filter(x => !x.includes('No') && !x.includes('Rt') && !x.includes('Rw') && !x.includes('Jl')).join(' '),
+      no: street.split(' ').filter(x => x.includes('No'))[0].replace('No.',''),
+      rt: street.split(' ').filter(x => x.includes('Rt'))[0].replace('Rt.0',''),
+      rw: street.split(' ').filter(x => x.includes('Rw'))[0].replace('Rw.0','')
+    }
+    return data
   }
-  return data
 }

@@ -79,18 +79,28 @@ class EditProfile extends Component {
       ttlHandler = moment(this.props.userData.ttl).format('DD MMM YYYY')
     }
     const addressX = addressParser(this.props.userData.address.street)
-    this.setState({
-      nameHandler: this.props.userData.name,
-      phoneHandler: phone,
-      gender: gender,
-      streetHandler: this.props.userData.address.street,
-      jalanHandler: addressX.jalan,
-      nomorHandler: addressX.no,
-      rtHandler: addressX.rt,
-      rwHandler: addressX.rw,
-      ttlHandler,
-      ttl: this.props.userData.ttl
-    })
+    if (addressX !== undefined) {
+      this.setState({
+        nameHandler: this.props.userData.name,
+        phoneHandler: phone,
+        gender: gender,
+        streetHandler: this.props.userData.address.street,
+        jalanHandler: addressX.jalan,
+        nomorHandler: addressX.no,
+        rtHandler: addressX.rt,
+        rwHandler: addressX.rw,
+        ttlHandler,
+        ttl: this.props.userData.ttl
+      })
+    }else{
+      this.setState({
+        nameHandler: this.props.userData.name,
+        phoneHandler: phone,
+        gender: gender,
+        ttlHandler,
+        ttl: this.props.userData.ttl
+      })
+    }
     this.props.dispatch(loadCities())
   }
 

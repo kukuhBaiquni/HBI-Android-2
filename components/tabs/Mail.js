@@ -13,7 +13,7 @@ export default class Mail extends Component {
           <Text style={{color: '#7c0c10', fontWeight: 'bold', fontSize: 20, paddingTop: 10}}>Notifikasi</Text>
         </View>
         <ScrollView>
-          <TouchableNativeFeedback>
+          <TouchableNativeFeedback onPress={() => navigation.navigate('ListNotifications', {type: 1})}>
             <View style={styles.containerWithIcon}>
               <Icon name='local-mall' size={20} color='#515151'/>
               <Left>
@@ -25,7 +25,7 @@ export default class Mail extends Component {
             </View>
           </TouchableNativeFeedback>
           <MailPartials navigation={navigation} type='order' />
-          <TouchableNativeFeedback>
+          <TouchableNativeFeedback onPress={() => navigation.navigate('ListNotifications', {type: 2})}>
             <View style={styles.containerWithIcon}>
               <Icon name='notifications' size={20} color='#515151'/>
               <Left>
@@ -37,7 +37,7 @@ export default class Mail extends Component {
             </View>
           </TouchableNativeFeedback>
           <MailPartials navigation={navigation} type='system' />
-          <TouchableNativeFeedback>
+          <TouchableNativeFeedback onPress={() => navigation.navigate('ListNotifications', {type: 3})}>
             <View style={styles.containerWithIcon}>
               <Icon name='drafts' size={20} color='#515151'/>
               <Left>

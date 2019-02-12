@@ -31,7 +31,9 @@ class TransactionDetails extends Component {
   render() {
     const { navigation } = this.props;
     const { data } = this.state;
-    const trackingTitle = ['Menunggu Konfirmasi Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
+    const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e']
+    const trackingTitle = ['','Menunggu Konfirmasi Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai'];
+
     return(
       <View style={{flex: 1}}>
         <NavigationEvents
@@ -66,8 +68,19 @@ class TransactionDetails extends Component {
                 <Text style={{color: '#a5a5a5'}}>{data.address.villages}</Text>
               </View>
               <View style={styles.container}>
-                <Text style={[styles.subTitle, {marginBottom: 5}]}>Lacak Pesanan</Text>
-
+                <Text style={styles.subTitle}>Lacak Pesanan</Text>
+                {
+                  data.status !== 'expired'
+                  ?
+                  data.tracking_history.map((x, i) =>
+                  <View key={i} style={{marginTop: 10}}>
+                    <Text style={{color: '#a5a5a5'}}>{locale[new Date(x.time).getDay()] + ', ' + moment(x.time).format('DD MMM YYYY') + ' - ' + moment(x.time).format('HH:mm')}</Text>
+                    <Text style={{color: color[x.tracking_type]}}>{trackingTitle[x.tracking_type]}</Text>
+                  </View>
+                  )
+                  :
+                  <Text style={{color: '#a5a5a5'}}>Anda tidak menyelesaikan pembayaran untuk transaksi ini.</Text>
+                }
               </View>
               <View style={[styles.container, {padding: 5}]}>
                 <Text style={{fontWeight: 'bold', padding: 10, color: '#7c0c10', fontSize: 17}}>Detail Pesanan</Text>

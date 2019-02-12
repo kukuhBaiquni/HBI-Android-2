@@ -23,6 +23,7 @@ export function* watcherReadingNotification(data) {
 };
 
 function* workerReadingNotification(form) {
+  console.log(form);
   try {
     var response = yield call(() => {
       return request

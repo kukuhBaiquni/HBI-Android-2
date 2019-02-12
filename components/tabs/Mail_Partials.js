@@ -41,6 +41,10 @@ class MailPartials extends Component {
               <Text style={{position: 'absolute', right: 10, top: 7, fontWeight: 'bold'}}>{x.trx}</Text>
               <Text style={{fontSize: 12, color: '#a3a3a3'}}>{locale[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}</Text>
               <Text style={{color: color[x.tracking]}}>{tracking[x.tracking]}</Text>
+              {
+                !x.status &&
+                <Text style={{position: 'absolute', right: 10, bottom: 5, fontSize: 13, fontWeight: 'bold', color: '#36ce00'}}>BARU</Text>
+              }
             </TouchableOpacity>
             )
           }
@@ -67,14 +71,5 @@ const styles = StyleSheet.create({
     paddingTop: 5,
     paddingLeft: 15,
     elevation: 3
-  },
-  unreadMark: {
-    position: 'absolute',
-    top: '50%',
-    left: 2,
-    height: 6,
-    width: 6,
-    backgroundColor: 'cyan',
-    borderRadius: 5
   }
 })

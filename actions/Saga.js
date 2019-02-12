@@ -36,6 +36,10 @@ import { watcherSetPlayerId } from './Set_Player_Id';
 import { watcherFetchNotifications } from './Fetch_Notifications';
 import { watcherSetInitialToken } from './Set_Initial_Token';
 import { watcherReadingNotification } from './Reading_Notification';
+import { watcherLoadBadge } from './Load_Badge';
+import { watcherNotificationController } from './Notification_Controller';
+import { watcherUpdateListNotifications } from './Update_List_Notifications';
+import { watcherSendForm } from './Send_Call_Us';
 
 export default function* rootSaga() {
   yield all([
@@ -75,6 +79,10 @@ export default function* rootSaga() {
     watcherSetPlayerId(),
     watcherFetchNotifications(),
     watcherSetInitialToken(),
-    watcherReadingNotification()
+    watcherReadingNotification(),
+    watcherLoadBadge(),
+    watcherNotificationController(),
+    watcherUpdateListNotifications(),
+    watcherSendForm()
   ]);
 };

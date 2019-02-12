@@ -41,7 +41,9 @@ import SettingResetPassword from './stack/Setting_Reset_Password';
 import ListContent from './stack/List_Content';
 import ContentDetails from './stack/Content_Details';
 import NotificationDetails from './stack/Notification_Details';
+import ListNotifications from './stack/List_Notifications';
 import { SERVER_URL } from '../config';
+import BadgeNotification from './Badge_Notification';
 
 const DrawerComponent = (props) => (
   <ScrollView style={{flex: 1}}>
@@ -110,7 +112,7 @@ const Tabs = createMaterialTopTabNavigator({
     screen: Drawer,
     navigationOptions: {
       title: 'Beranda',
-      tabBarIcon: ({tintColor}) => <Icon name='home' size={24} color={tintColor} />,
+      tabBarIcon: ({tintColor}) => <Image style={{height: 20, width: 20}} source={require('../android/app/src/main/assets/custom/Tab/Beranda.png')} />,
     tabBarOnPress: (x) => {x.navigation.navigate('FirstPage')}
     }
   },
@@ -118,14 +120,26 @@ const Tabs = createMaterialTopTabNavigator({
     screen: Timeline,
     navigationOptions: {
       tabBarLabel: 'Berita',
-      tabBarIcon: ({tintColor}) => <Icon name='event-note' size={24} color={tintColor} />
+      tabBarIcon: ({focused}) => (
+        focused
+        ?
+        <Image source={require('../android/app/src/main/assets/custom/Tab/BeritaC.png')} style={{height: 20, width: 20}} />
+        :
+        <Image source={require('../android/app/src/main/assets/custom/Tab/Berita.png')} style={{height: 20, width: 20}} />
+      )
     }
   },
   Shopping: {
     screen: ShopPage,
     navigationOptions: {
       title: 'Belanja',
-      tabBarIcon: ({tintColor}) => <Icon name='store-mall-directory' size={24} color={tintColor} />
+      tabBarIcon: ({focused}) => (
+        focused
+        ?
+        <Image source={require('../android/app/src/main/assets/custom/Tab/BelanjaC.png')} style={{height: 20, width: 20}} />
+        :
+        <Image source={require('../android/app/src/main/assets/custom/Tab/Belanja.png')} style={{height: 20, width: 20}} />
+      )
     }
   },
   Mail: {
@@ -133,12 +147,19 @@ const Tabs = createMaterialTopTabNavigator({
     path: 'mail',
     navigationOptions: {
       title: 'Notifikasi',
-      tabBarIcon: ({tintColor}) => <View>
-      <TouchableOpacity style={styles.badge}>
-        <Text style={styles.text}>6</Text>
-      </TouchableOpacity>
-      <Icon name='notifications' size={24} color={tintColor} />
-    </View>
+      tabBarIcon: ({focused}) => (
+        focused
+        ?
+        <View>
+          <BadgeNotification />
+          <Image style={{height: 20, width: 20}} source={require('../android/app/src/main/assets/custom/Tab/NotifikasiC.png')} />
+        </View>
+        :
+        <View>
+          <BadgeNotification />
+          <Image style={{height: 20, width: 20}} source={require('../android/app/src/main/assets/custom/Tab/Notifikasi.png')} />
+        </View>
+      )
     }
   },
   // Mail: {
@@ -151,7 +172,13 @@ const Tabs = createMaterialTopTabNavigator({
   Profile: {
     screen: Profile,
     navigationOptions: {
-      tabBarIcon: ({tintColor}) => <Icon name='account-box' size={24} color={tintColor} />,
+      tabBarIcon: ({focused}) => (
+        focused
+        ?
+        <Image source={require('../android/app/src/main/assets/custom/Tab/AkunC.png')} style={{height: 20, width: 20}} />
+        :
+        <Image source={require('../android/app/src/main/assets/custom/Tab/Akun.png')} style={{height: 20, width: 20}} />
+      ),
       title: 'Akun',
       tabBarOnPress: async (x) => {
         {
@@ -394,29 +421,18 @@ const RootStack = createStackNavigator({
     navigationOptions: ({navigation}) => ({
       header: null
     })
+  },
+  ListNotifications: {
+    screen: ListNotifications,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
   }
 }, {
   initialRouteName: 'FirstPage'
 })
 
 const styles = StyleSheet.create({
-  badge: {
-    backgroundColor: 'orange',
-    height: 15,
-    width: 15,
-    borderRadius: 8,
-    position: 'absolute',
-    zIndex: 2,
-    marginLeft: 13,
-    marginTop: -3
-  },
-  text: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 12,
-    marginTop: -1,
-    fontWeight: 'bold'
-  },
   customIcon: {
     position: 'absolute',
     left: 17,
@@ -433,11 +449,30 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 });
+import { connect } from 'react-redux';
+import { modifyNotification } from '../actions/Notification_Controller';
+import { updateListNotifications } from '../actions/Update_List_Notifications';
 
-export default class RouterTabs extends Component {
+class RouterTabs extends Component {
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.dataNotif !== this.props.dataNotif) {
+      this.props.dispatch(modifyNotification('inc'))
+      this.props.dispatch(updateListNotifications(this.props.dataNotif))
+    }
+  }
+
   render() {
     return(
       <RootStack uriPrefix={ SERVER_URL }/>
     )
   }
 }
+
+function mapDispatchToProps(dispatch) {
+  return dispatch
+}
+
+export default connect(
+  mapDispatchToProps
+)(RouterTabs)

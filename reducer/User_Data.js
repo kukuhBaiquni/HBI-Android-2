@@ -18,6 +18,7 @@ let initialState = {
   nama_rekening: '',
   no_rekening: 0,
   banner: '',
+  playerID: '',
   notifications: {
     order: [],
     system: [],
@@ -78,6 +79,13 @@ export default function userData(state = initialState, action) {
     return Object.assign({}, state, {
       notifications: {
         ...state.notifications, [type]: [...reversed2]
+      }
+    })
+
+    case 'NEW_DATA':
+    return Object.assign({}, state, {
+      notifications: {
+        ...state.notifications, order: [action.data, ...state.notifications.order]
       }
     })
 

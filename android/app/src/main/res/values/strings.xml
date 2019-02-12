@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Halal Beef Indonesia</string>
     <string name="facebook_app_id">319042592271428</string>
+    <string name="fb_login_protocol_scheme">fb319042592271428</string>
 </resources>

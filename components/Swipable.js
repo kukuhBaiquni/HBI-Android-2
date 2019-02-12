@@ -1,32 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { connect } from 'react-redux';
 import { SERVER_URL } from '../config';
 
-class Swipable extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      renderItems: []
-    }
-  }
-
-  componentDidMount() {
-    let list = [];
-    let arr = [];
-    let exception = this.props.listProducts.map(function(e) { return e.id }).indexOf(this.props.navigation.state.params.id);
-    while(list.length < 5){
-      var random = Math.floor(Math.random()*this.props.listProducts.length);
-      if(arr.indexOf(random) > -1 || random == exception) continue;
-      arr[arr.length] = random;
-      list.push(this.props.listProducts[random])
-    }
-    this.setState({renderItems: list})
-  }
-
+export default class Swipable extends Component {
   render() {
-    const { navigation } = this.props;
+    const { navigation, renderItems } = this.props;
     return(
       <View style={styles.slideContainer}>
         <Text style={[styles.subtitle, {marginBottom: 10, color: 'white'}]}>Lihat juga</Text>
@@ -38,7 +17,7 @@ class Swipable extends Component {
           activeDotColor='white'
           >
           {
-            this.state.renderItems.map((x, i) =>
+            this.props.renderItems.map((x, i) =>
             <TouchableOpacity key={i} onPress={() => navigation.replace('ProductDetails', x)}>
               <View style={styles.slide}>
                 <Text direction='alternate' animation='zoomIn' iterationCount={1} style={{color: 'white', fontSize: 18, fontWeight: 'bold', position: 'absolute', zIndex: 3, bottom: 45}}>{x.productname}</Text>
@@ -58,14 +37,6 @@ class Swipable extends Component {
     )
   }
 }
-
-function mapDispatchToProps(dispatch) {
-  return dispatch
-};
-
-export default connect(
-  mapDispatchToProps
-)(Swipable);
 
 const styles = StyleSheet.create({
   slide: {

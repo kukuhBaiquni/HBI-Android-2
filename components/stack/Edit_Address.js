@@ -42,16 +42,23 @@ class EditAddress extends Component {
       phone = '0' + this.props.navigation.state.params.phone
     }
     const addressX = addressParser(this.props.navigation.state.params.address.street)
-    this.setState({
-      nameHandler: this.props.navigation.state.params.name,
-      token: this.props.navigation.state.params.token,
-      phoneHandler: phone,
-      addressHandler: this.props.navigation.state.params.address.street,
-      jalanHandler: addressX.jalan,
-      nomorHandler: addressX.no,
-      rtHandler: addressX.rt,
-      rwHandler: addressX.rw
-    })
+    if (addressX !== undefined) {
+      this.setState({
+        nameHandler: this.props.navigation.state.params.name,
+        token: this.props.navigation.state.params.token,
+        phoneHandler: phone.toString(),
+        addressHandler: this.props.navigation.state.params.address.street,
+        jalanHandler: addressX.jalan,
+        nomorHandler: addressX.no,
+        rtHandler: addressX.rt,
+        rwHandler: addressX.rw
+      })
+    }else{
+      this.setState({
+        nameHandler: this.props.navigation.state.params.name,
+        phoneHandler: phone.toString()
+      })
+    }
     this.props.dispatch(loadCities())
   }
 

@@ -5,10 +5,20 @@ import { Provider } from 'react-redux';
 import { store } from '../store';
 import SplashScreen from './Splash_Screen';
 import OneSignal from 'react-native-onesignal';
+import { YellowBox } from 'react-native';
+
+YellowBox.ignoreWarnings([
+    'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?',
+    'Remote debugger'
+]);
 
 export default class SourceComponent extends Component {
   constructor(props) {
     super(props)
+
+    this.state = {
+      dataNotif: Object.assign({})
+    }
 
     OneSignal.setLogLevel(7, 0);
     let requiresConsent = false;
@@ -34,6 +44,9 @@ export default class SourceComponent extends Component {
 
   onReceived = (notification) => {
     console.log("Notification received: ", notification);
+    if (notification.payload.additionalData) {
+      this.setState({dataNotif: notification.payload.additionalData})
+    }
   }
 
   onOpened = (openResult) => {
@@ -72,7 +85,7 @@ export default class SourceComponent extends Component {
         {
           this.state.changeScreen
           ?
-          <RouterTabs />
+          <RouterTabs dataNotif={this.state.dataNotif} />
           :
           <SplashScreen />
         }

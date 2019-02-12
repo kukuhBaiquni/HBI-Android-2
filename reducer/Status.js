@@ -58,6 +58,10 @@ let initialState = {
     message: ''
   },
   processing: false,
+  sendFormCallUs: {
+    success: false,
+    error: false
+  },
   InternalServerError: false
 };
 
@@ -376,6 +380,27 @@ export default function status(state = initialState, action) {
     return Object.assign({}, state, {
       InternalServerError: true
     });
+
+    case 'SEND_FORM_SUCCESS':
+    return Object.assign({}, state, {
+      sendFormCallUs: {
+        ...state.sendFormCallUs, success: true, error: false
+      }
+    });
+
+    case 'SEND_FORM_FAILED':
+    return Object.assign({}, state, {
+      sendFormCallUs: {
+        ...state.sendFormCallUs, success: false, error: true
+      }
+    });
+
+    case 'RESET_SEND_FORM_STATE':
+    return Object.assign({}, state, {
+      sendFormCallUs: {
+        ...state.sendFormCallUs, success: false, error: false
+      }
+    })
 
     default:
     return state;

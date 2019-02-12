@@ -25,8 +25,22 @@ class ProductDetails extends Component {
       loading: false,
       token: '',
       showModalContent: false,
-      itemCount: 1 // data
+      itemCount: 1, // data
+      renderItems: []
     }
+  }
+
+  componentDidMount() {
+    let list = [];
+    let arr = [];
+    let exception = this.props.listProducts.map(function(e) { return e.id }).indexOf(this.props.navigation.state.params.id);
+    while(list.length < 5){
+      var random = Math.floor(Math.random()*this.props.listProducts.length);
+      if(arr.indexOf(random) > -1 || random == exception) continue;
+      arr[arr.length] = random;
+      list.push(this.props.listProducts[random])
+    }
+    this.setState({renderItems: list})
   }
 
   changeCount(x) {
@@ -185,7 +199,7 @@ class ProductDetails extends Component {
                 <Text style={styles.text}>Harga Member: {idrFormat(navigation.state.params.resellerprice)}</Text>
                 <Text style={styles.text}>Harga Normal: {idrFormat(navigation.state.params.enduserprice)}</Text>
               </View>
-              <Swipable navigation={ navigation } />
+              <Swipable renderItems={this.state.renderItems} navigation={ navigation } />
               <View style={{height: 50}} />
             </ScrollView>
           )}

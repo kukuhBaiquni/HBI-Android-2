@@ -6,6 +6,7 @@ import { locale } from '../../config';
 import moment from 'moment';
 import { readingNotification } from '../../actions/Reading_Notification';
 import { NavigationEvents } from 'react-navigation';
+import { modifyNotification } from '../../actions/Notification_Controller';
 
 class NotificationDetails extends Component {
 
@@ -13,7 +14,10 @@ class NotificationDetails extends Component {
     const token = this.props.token;
     const type = this.props.navigation.state.params.type;
     const data = this.props.navigation.state.params.data
-    this.props.dispatch(readingNotification({token, type, id: data._id}))
+    if (!data.status) {
+      this.props.dispatch(modifyNotification('min'))
+      this.props.dispatch(readingNotification({token, type, id: data._id}))
+    }
   }
 
   render() {

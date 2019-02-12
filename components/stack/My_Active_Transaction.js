@@ -89,7 +89,7 @@ class MyActiveTransaction extends Component {
           {
             this.state.isOpen2 &&
             data2.map((x, i) =>
-            <TouchableNativeFeedback key={i} >
+            <TouchableNativeFeedback key={i} onPress={() => navigation.navigate('TransactionDetails', x)}>
               <View style={[styles.listMenu, {height: 70, flexDirection: 'row'}]}>
                 <View style={{paddingLeft: 10}}>
                   <Text style={[styles.menuTitle, {color: '#bababa', fontSize: 15}]}>Nomor Transaksi</Text>
@@ -120,7 +120,7 @@ class MyActiveTransaction extends Component {
           {
             this.state.isOpen3 &&
             data3.map((x, i) =>
-            <TouchableNativeFeedback key={i} >
+            <TouchableNativeFeedback key={i} onPress={() => navigation.navigate('TransactionDetails', x)}>
               <View style={[styles.listMenu, {height: 70, flexDirection: 'row'}]}>
                 <View style={{paddingLeft: 10}}>
                   <Text style={[styles.menuTitle, {color: '#bababa', fontSize: 15}]}>Nomor Transaksi</Text>
@@ -151,7 +151,7 @@ class MyActiveTransaction extends Component {
           {
             this.state.isOpen4 &&
             data4.map((x, i) =>
-            <TouchableNativeFeedback key={i} >
+            <TouchableNativeFeedback key={i} onPress={() => navigation.navigate('TransactionDetails', x)}>
               <View style={[styles.listMenu, {height: 70, flexDirection: 'row'}]}>
                 <View style={{paddingLeft: 10}}>
                   <Text style={[styles.menuTitle, {color: '#bababa', fontSize: 15}]}>Nomor Transaksi</Text>
