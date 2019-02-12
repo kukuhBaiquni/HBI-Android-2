@@ -3,9 +3,9 @@ import RouterTabs from './Router';
 import { AsyncStorage } from 'react-native';
 import { Provider } from 'react-redux';
 import { store } from '../store';
-import SplashScreen from './Splash_Screen';
 import OneSignal from 'react-native-onesignal';
 import { YellowBox } from 'react-native';
+import SplashScreen from 'react-native-splash-screen';
 
 YellowBox.ignoreWarnings([
     'Unrecognized WebSocket connection option(s) `agent`, `perMessageDeflate`, `pfx`, `key`, `passphrase`, `cert`, `ca`, `ciphers`, `rejectUnauthorized`. Did you mean to put these under `headers`?',
@@ -23,8 +23,6 @@ export default class SourceComponent extends Component {
     OneSignal.setLogLevel(7, 0);
     let requiresConsent = false;
     this.state = {
-      count: 0,
-      changeScreen: false,
       playerID: ''
     }
     OneSignal.setRequiresUserPrivacyConsent(requiresConsent);
@@ -34,6 +32,10 @@ export default class SourceComponent extends Component {
     OneSignal.addEventListener('received', this.onReceived);
     OneSignal.addEventListener('opened', this.onOpened);
     OneSignal.addEventListener('ids', this.onIds);
+  }
+
+  componentDidMount() {
+    SplashScreen.hide();
   }
 
   componentWillUnmount() {
@@ -65,30 +67,10 @@ export default class SourceComponent extends Component {
     toStorage()
   }
 
-  componentDidMount() {
-    this.timer = setInterval(() => this.tick(), 1000)
-  }
-
-  tick() {
-    var state = this.state.count;
-    state++
-    this.setState({count: state})
-    if (this.state.count === 3) {
-      this.setState({changeScreen: true})
-      clearInterval(this.timer)
-    }
-  }
-
   render() {
     return(
       <Provider store = { store }>
-        {
-          this.state.changeScreen
-          ?
-          <RouterTabs dataNotif={this.state.dataNotif} />
-          :
-          <SplashScreen />
-        }
+        <RouterTabs dataNotif={this.state.dataNotif} />
       </Provider>
     )
   }

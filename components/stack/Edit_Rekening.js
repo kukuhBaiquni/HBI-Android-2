@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity, StyleSheet, ToastAndroid } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, ToastAndroid, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Form, Item, Input, Label, Picker } from 'native-base';
 import { Icon } from 'react-native-elements';
@@ -82,7 +82,7 @@ class EditRekening extends Component {
           </Modal>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='white' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/CancelWhite.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Edit Rekening</Text>
             <View style={{position: 'absolute', right: 18, top: 18}}>

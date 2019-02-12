@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 
@@ -10,7 +10,7 @@ class Tracking extends Component {
       <View>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='#7c0c10' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Tracking</Text>
         </View>

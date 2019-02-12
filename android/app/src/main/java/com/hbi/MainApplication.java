@@ -8,6 +8,7 @@ import com.facebook.appevents.AppEventsLogger;
 import com.imagepicker.ImagePickerPackage;
 
 import com.facebook.react.ReactApplication;
+import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.reactlibrary.googlesignin.RNGoogleSignInPackage;
 import com.BV.LinearGradient.LinearGradientPackage;
@@ -40,6 +41,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SplashScreenReactPackage(),
             new ReactNativeOneSignalPackage(),
             new RNGoogleSignInPackage(),
             new LinearGradientPackage(),

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Text } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, TouchableNativeFeedback, Text, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 
@@ -18,7 +18,7 @@ class TransactionRecords extends Component {
       <View style={{flex: 1}}>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Icon name='arrow-back' color='#7c0c10' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Riwayat Transaksi</Text>
         </View>

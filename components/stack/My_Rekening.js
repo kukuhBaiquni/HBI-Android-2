@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TouchableNativeFeedback } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TouchableNativeFeedback, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
@@ -11,7 +11,7 @@ class MyRekening extends Component {
       <View style={{flex: 1}}>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='white' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Rekening Bank</Text>
         </View>

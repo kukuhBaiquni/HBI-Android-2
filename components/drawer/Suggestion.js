@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer';
 
@@ -13,7 +13,7 @@ export default class Suggestion extends Component {
           />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
-            <Icon name='menu' color='#7c0c10' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Kirim Saran</Text>
         </View>

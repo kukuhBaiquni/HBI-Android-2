@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, ToastAndroid } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Alert, ToastAndroid, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { Form, Item, Input, Label, Picker } from 'native-base';
@@ -207,7 +207,7 @@ class EditAddress extends Component {
           </Modal>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Icon name='arrow-back' color='#7c0c10' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/CancelDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Ubah Alamat</Text>
         </View>

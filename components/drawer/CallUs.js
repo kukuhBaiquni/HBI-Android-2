@@ -77,7 +77,7 @@ class CallUs extends Component {
           </Modal>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
-            <Icon name='menu' color='#7c0c10' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Hubungi Kami</Text>
         </View>

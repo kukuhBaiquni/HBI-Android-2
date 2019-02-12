@@ -429,7 +429,7 @@ const RootStack = createStackNavigator({
     })
   }
 }, {
-  initialRouteName: 'FirstPage'
+  initialRouteName: 'MainTabs'
 })
 
 const styles = StyleSheet.create({

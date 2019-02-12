@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { locale } from '../../config';
@@ -18,7 +18,7 @@ class ListNotifications extends Component {
       <View style={{flex: 1}}>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='white' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Telusuri Notifikasi {display[navigation.state.params.type]}</Text>
         </View>

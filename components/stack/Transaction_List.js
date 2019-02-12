@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableNativeFeedback, ScrollView, StyleSheet, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, TouchableNativeFeedback, ScrollView, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import moment from 'moment';
 import { idrFormat, locale } from '../../config';
@@ -52,7 +52,7 @@ class TransactionList extends Component {
           />
         <View style={[styles.header]}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='#7c0c10' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Transaksi {title[navigation.state.params.type]}</Text>
         </View>

@@ -351,7 +351,7 @@ class EditProfile extends Component {
           </Modal>
         <View style={styles.header}>
         <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-          <Icon name='arrow-back' color='white' />
+          <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/CancelWhite.png')} />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Edit Profil</Text>
           <View style={{position: 'absolute', right: 18, top: 18}}>

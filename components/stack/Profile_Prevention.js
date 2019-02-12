@@ -24,7 +24,7 @@ class ProfilePrevention extends Component {
       <View style={{flex: 1, alignItems: 'center'}}>
         <View style={{height: 60, backgroundColor: 'white', width: '100%', elevation: 3, marginTop: 1}}>
           <TouchableOpacity style={{position: 'absolute', left: 10, top: 18}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='#7c0c10' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
           </TouchableOpacity>
         </View>
         <Image

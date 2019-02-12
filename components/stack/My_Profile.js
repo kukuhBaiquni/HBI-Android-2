@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView, Image } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
@@ -24,7 +24,7 @@ class MyProfile extends Component {
           />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Icon name='arrow-back' color='white' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Profil Saya</Text>
         </View>

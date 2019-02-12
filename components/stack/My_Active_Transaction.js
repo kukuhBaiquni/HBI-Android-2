@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, TouchableNativeFeedback, AsyncStorage, Alert, ScrollView, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
@@ -36,7 +36,7 @@ class MyActiveTransaction extends Component {
           />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Icon name='arrow-back' color='white' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Transaksi Saya</Text>
         </View>

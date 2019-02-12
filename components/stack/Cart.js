@@ -325,91 +325,103 @@ class Cart extends Component {
           {/*=============================================*/}
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Icon name='arrow-back' color='white' />
+            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Keranjang Belanja</Text>
         </View>
-        <View style={[styles.productHeader, {marginTop: 0}]}>
-          <CheckBox
-            containerStyle={{backgroundColor: 'transparent', position: 'absolute', borderWidth: 0}}
-            iconType='material'
-            checkedIcon='check-box'
-            uncheckedIcon='check-box-outline-blank'
-            checked={this.state.checkControl}
-            checkedColor='#7c0c10'
-            uncheckedColor='#a5a5a5'
-            onPress={() => this.checkAll()}
-            />
-          <Text style={styles.productName}>Pilih semua ({this.state.number}/{this.props.cart.length})</Text>
-        </View>
-        <ScrollView style={{backgroundColor: '#d9d9d9'}}>
-          {
-            cart.map((x, i) =>
-            <View key={i} style={styles.productWrapper}>
-              <View style={styles.productHeader}>
-                <CheckBox
-                  onPress={(c, d) => this.checkPartial(i, x._id)}
-                  containerStyle={{backgroundColor: 'transparent', position: 'absolute', borderWidth: 0}}
-                  iconType='material'
-                  checkedIcon='check-box'
-                  uncheckedIcon='check-box-outline-blank'
-                  checked={this.props.cart[i].status}
-                  checkedColor='#7c0c10'
-                  uncheckedColor='#a5a5a5'
-                  />
-                <Text style={styles.productName}>{x.product_name}</Text>
-                <TouchableOpacity style={{position: 'absolute', right: 15}} onPress={(x) => this.removeSingleItem(i)}>
-                  <Icon name='delete' color='#9b9b9b' />
-                </TouchableOpacity>
-              </View>
-              <View style={styles.productDetails}>
-                <Image
-                  resizeMode='contain'
-                  style={{width: 120, height: 120, borderColor: '#eaeaea', borderWidth: 1}}
-                  source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
-                  />
-                <View>
-                  <View style={{marginBottom: 11, flexDirection: 'row'}}>
-                    <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Harga :</Text>
-                    <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.price)}</Text>
-                  </View>
-                  <View style={{marginBottom: 11, flexDirection: 'row'}}>
-                    <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Kuantitas :</Text>
-                    <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{x.qty}</Text>
-                  </View>
-                  <View style={{marginBottom: 11, flexDirection: 'row'}}>
-                    <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Subtotal :</Text>
-                    <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.subtotal)}</Text>
-                  </View>
-                  <TouchableOpacity style={{marginTop: 10, flexDirection: 'row'}} onPress={(x) => this.showSpecificModal(i)}>
-                    <Text style={{marginLeft: 10, fontWeight: 'bold', textDecorationLine: 'underline', color: '#942A2A'}}>Ubah Rincian</Text>
-                  </TouchableOpacity>
-                </View>
-
-              </View>
-            </View>
-            )
-          }
-        </ScrollView>
-        <View style={[styles.productHeader, {marginTop: 0, height: 60, paddingLeft: 20}]}>
+        {
+          cart.length !== 0
+          ?
           <View>
-            <Text style={{fontSize: 14}}>Total Harga</Text>
-            <Text style={{color: '#7c0c10', fontSize: 20}}>{idrFormat(total)}</Text>
+            <View style={[styles.productHeader, {marginTop: 0}]}>
+              <CheckBox
+                containerStyle={{backgroundColor: 'transparent', position: 'absolute', borderWidth: 0}}
+                iconType='material'
+                checkedIcon='check-box'
+                uncheckedIcon='check-box-outline-blank'
+                checked={this.state.checkControl}
+                checkedColor='#7c0c10'
+                uncheckedColor='#a5a5a5'
+                onPress={() => this.checkAll()}
+                />
+              <Text style={styles.productName}>Pilih semua ({this.state.number}/{this.props.cart.length})</Text>
+            </View>
+            <ScrollView style={{backgroundColor: '#d9d9d9'}}>
+              {
+                cart.map((x, i) =>
+                <View key={i} style={styles.productWrapper}>
+                  <View style={styles.productHeader}>
+                    <CheckBox
+                      onPress={(c, d) => this.checkPartial(i, x._id)}
+                      containerStyle={{backgroundColor: 'transparent', position: 'absolute', borderWidth: 0}}
+                      iconType='material'
+                      checkedIcon='check-box'
+                      uncheckedIcon='check-box-outline-blank'
+                      checked={this.props.cart[i].status}
+                      checkedColor='#7c0c10'
+                      uncheckedColor='#a5a5a5'
+                      />
+                    <Text style={styles.productName}>{x.product_name}</Text>
+                    <TouchableOpacity style={{position: 'absolute', right: 15}} onPress={(x) => this.removeSingleItem(i)}>
+                      <Icon name='delete' color='#9b9b9b' />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.productDetails}>
+                    <Image
+                      resizeMode='contain'
+                      style={{width: 120, height: 120, borderColor: '#eaeaea', borderWidth: 1}}
+                      source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
+                      />
+                    <View>
+                      <View style={{marginBottom: 11, flexDirection: 'row'}}>
+                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Harga :</Text>
+                        <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.price)}</Text>
+                      </View>
+                      <View style={{marginBottom: 11, flexDirection: 'row'}}>
+                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Kuantitas :</Text>
+                        <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{x.qty}</Text>
+                      </View>
+                      <View style={{marginBottom: 11, flexDirection: 'row'}}>
+                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Subtotal :</Text>
+                        <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.subtotal)}</Text>
+                      </View>
+                      <TouchableOpacity style={{marginTop: 10, flexDirection: 'row'}} onPress={(x) => this.showSpecificModal(i)}>
+                        <Text style={{marginLeft: 10, fontWeight: 'bold', textDecorationLine: 'underline', color: '#942A2A'}}>Ubah Rincian</Text>
+                      </TouchableOpacity>
+                    </View>
+
+                  </View>
+                </View>
+                )
+              }
+            </ScrollView>
+            <View style={[styles.productHeader, {marginTop: 0, height: 60, paddingLeft: 20}]}>
+              <View>
+                <Text style={{fontSize: 14}}>Total Harga</Text>
+                <Text style={{color: '#7c0c10', fontSize: 20}}>{idrFormat(total)}</Text>
+              </View>
+              {
+                this.state.number !== 0 &&
+                <TouchableOpacity onPress={() => this.props.navigation.replace('Payment')} style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3}}>
+                  <Text style={{color: 'white', fontSize: 16}}>Bayar</Text>
+                </TouchableOpacity>
+              }
+            </View>
+            <FlashMessage
+              position='top'
+              floating={true}
+              duration={3000}
+              ref='suc-cart'
+              icon={this.props.status.saveChanges.success ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
+              />
           </View>
-          {
-            this.state.number !== 0 &&
-            <TouchableOpacity onPress={() => this.props.navigation.replace('Payment')} style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3}}>
-              <Text style={{color: 'white', fontSize: 16}}>Bayar</Text>
-            </TouchableOpacity>
-          }
-        </View>
-        <FlashMessage
-          position='top'
-          floating={true}
-          duration={3000}
-          ref='suc-cart'
-          icon={this.props.status.saveChanges.success ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
-          />
+          :
+          <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+            <Image style={{height: 80, width: 80}} source={require('../../android/app/src/main/assets/custom/emptycart.png')} />
+            <Text style={{color: '#7c0c10', fontWeight: 'bold', fontSize: 24, marginTop: 20}}>Oops..</Text>
+            <Text style={{color: '#7c0c10', fontWeight: 'bold', fontSize: 16, marginTop: 10}}>Keranjang Belanja Anda kosong!</Text>
+          </View>
+        }
       </View>
     )
   }

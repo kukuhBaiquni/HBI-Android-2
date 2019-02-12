@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     right: 0,
     width: null,
     height: DEFAULT_HEADER_MAX_HEIGHT,
-    resizeMode: 'contain',
+    resizeMode: 'cover',
   },
   bar: {
     backgroundColor: 'transparent',
