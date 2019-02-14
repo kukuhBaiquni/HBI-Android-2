@@ -189,15 +189,26 @@ class ProductDetails extends Component {
             <CartIcon navigation={navigation} bcolor='#7c0c10'/>
           )}
           renderContent={() => (
-            <ScrollView style={{backgroundColor: '#e2e2e2'}}>
+            <ScrollView style={{backgroundColor: '#f4f4f4', marginTop: -10}}>
+              <View style={[styles.viewContainer, {marginBottom: 30, flexDirection: 'row', justifyContent: 'space-between', elevation: 3}]}>
+                <View style={{width: '35%'}}>
+                  <Text style={{fontSize: 15, color: '#666666', fontWeight: 'bold'}}>Harga Normal</Text>
+                  <Text style={{fontSize: 15, color: '#666666', fontWeight: 'bold'}}>{idrFormat(navigation.state.params.enduserprice)}</Text>
+                </View>
+                <View style={{width: '35%'}}>
+                  <Text style={{fontSize: 15, color: 'red', fontWeight: 'bold'}}>Harga Member</Text>
+                  <Text style={{fontSize: 15, color: 'red', fontWeight: 'bold'}}>{idrFormat(navigation.state.params.resellerprice)}</Text>
+                </View>
+                <View style={{width: '20%'}}>
+                  <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
+                  <View style={{borderWidth: 1, borderColor: 'red', backgroundColor: '#ffc4c4', justifyContent: 'center', alignItems: 'center', borderRadius: 10, marginTop: 3}}>
+                    <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
+                  </View>
+                </View>
+              </View>
               <View style={styles.viewContainer}>
                 <Text style={styles.subtitle}>Deskripsi Produk</Text>
                 <Text style={styles.text}>{navigation.state.params.description}</Text>
-              </View>
-              <View style={[styles.viewContainer, {marginBottom: 10}]}>
-                <Text style={styles.subtitle}>Harga</Text>
-                <Text style={styles.text}>Harga Member: {idrFormat(navigation.state.params.resellerprice)}</Text>
-                <Text style={styles.text}>Harga Normal: {idrFormat(navigation.state.params.enduserprice)}</Text>
               </View>
               <Swipable renderItems={this.state.renderItems} navigation={ navigation } />
               <View style={{height: 50}} />
@@ -206,14 +217,12 @@ class ProductDetails extends Component {
         />
         <TouchableNativeFeedback>
           <View style={styles.footerWrapper}>
-            <TouchableOpacity  style={{backgroundColor: 'white', width: '20%', height: 50, justifyContent: 'center'}} onPress={() => this.showModal()}>
-              <Icon name='add-shopping-cart' size={28} color='#7c0c10'/>
+            <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
+              <Text style={{color: '#7c0c10'}}>Beli Sekarang</Text>
             </TouchableOpacity>
-            <TouchableNativeFeedback onPress={() => this.directPurchase()}>
-              <View style={{alignItems: 'center', justifyContent: 'center', width: '80%'}}>
-                <Text style={{color: 'white', textAlign: 'center', fontSize: 16, fontWeight: 'bold'}}>Beli Sekarang</Text>
-              </View>
-            </TouchableNativeFeedback>
+            <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10', backgroundColor: '#7c0c10'}]} onPress={() => this.showModal()}>
+              <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
+            </TouchableOpacity>
           </View>
         </TouchableNativeFeedback>
         <Modal
@@ -325,7 +334,9 @@ const styles = StyleSheet.create({
   viewContainer: {
     backgroundColor: 'white',
     padding: 25,
-    marginTop: 10
+    marginTop: 10,
+    marginBottom: 40,
+    elevation: 3
   },
   text: {
     textAlign: 'left',
@@ -359,13 +370,15 @@ const styles = StyleSheet.create({
     height: 55
   },
   footerWrapper: {
-    backgroundColor: '#7c0c10',
-    height: 50, width: '100%',
+    backgroundColor: 'white',
+    height: 60, width: '100%',
     right: 0,
     position: 'absolute',
     bottom: 0,
     flexDirection: 'row',
-    borderTopColor: '#7c0c10',
-    borderTopWidth: 1
-  }
+    paddingTop: 10,
+    justifyContent: 'space-around',
+    elevation: 3
+  },
+  button: {borderWidth: 1, borderRadius: 3, alignItems: 'center', justifyContent: 'center', width: '47%', height: 40}
 });

@@ -1,13 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Image, TextInput } from 'react-native';
-import { Icon } from 'react-native-elements';
-import { DrawerActions } from 'react-navigation-drawer';
+import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native';
 import { sendForm, resetStatus } from '../../actions/Send_Call_Us';
-import { connect } from 'react-redux';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
+import { connect } from 'react-redux';
 
-class Suggestion extends Component {
+class AskQuestion extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -60,32 +58,23 @@ class Suggestion extends Component {
   }
 
   render() {
+    console.log(this.props);
     return(
       <View style={{flex: 1}}>
-        <StatusBar
-          backgroundColor = '#7c0c10'
-          barStyle = 'light-content'
-          />
-          <Modal
-            isVisible={this.state.loading}
-            style={{alignItems: 'center'}}
-            hideModalContentWhileAnimating={true}
-            useNativeDriver
-            >
-            <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
-              <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
-              <DotIndicator
-                color='#7c0c10'
-                size={8}
-                />
-            </View>
-          </Modal>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
-            <Image resizeMode='contain' style={{height: 21, width: 21}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Kirim Saran Kepada Kami</Text>
-        </View>
+        <Modal
+          isVisible={this.state.loading}
+          style={{alignItems: 'center'}}
+          hideModalContentWhileAnimating={true}
+          useNativeDriver
+          >
+          <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
+            <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
+            <DotIndicator
+              color='#7c0c10'
+              size={8}
+              />
+          </View>
+        </Modal>
         {
           this.state.showSuccess &&
           <TouchableOpacity style={{backgroundColor: '#fff568', height: 40, borderBottomColor: '#f4f4f4', borderBottomWidth: 1, justifyContent: 'center', alignItems: 'center'}}>
@@ -98,17 +87,15 @@ class Suggestion extends Component {
             <Text style={{color: '#f71616', fontSize: 12}}>Pesan Anda tidak terkirim.</Text>
           </TouchableOpacity>
         }
-        <View style={{alignItems: 'center', paddingTop: 10}}>
-          <View style={{width: '95%'}}>
-            <Text style={{fontWeight: 'bold', fontSize: 16, marginBottom: 10}}>Sampaikan Saran Anda kepada Kami</Text>
-              <TextInput
-                style={{width: '100%', paddingLeft: 10, fontSize: 16, backgroundColor: 'white', elevation: 3, borderRadius: 3, borderWidth: 1, borderColor: '#f4f4f4'}}
-                multiline={true}
-                numberOfLines={4}
-                onChangeText={(text) => this.setState({text})}
-                value={this.state.text}
-                />
-          </View>
+        <Text style={{fontWeight: 'bold', color: '#7c0c10', marginTop: 10, marginBottom: 10, marginLeft: 20, textAlign: 'left', fontSize: 16}}>Ajukan Pertanyaan Anda disini</Text>
+        <View style={{alignItems: 'center'}}>
+          <TextInput
+            style={{width: '90%', paddingLeft: 10, fontSize: 16, backgroundColor: 'white', elevation: 3, borderRadius: 3, borderWidth: 1, borderColor: '#f4f4f4'}}
+            multiline={true}
+            numberOfLines={6}
+            onChangeText={(text) => this.setState({text})}
+            value={this.state.text}
+            />
         </View>
         <View style={{flex: 1, alignItems: 'center'}}>
           <TouchableOpacity onPress={() => this.submitForm()} style={{elevation: 3, position: 'absolute', bottom: 10, justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: '95%', height: 50, borderRadius: 3}}>
@@ -126,20 +113,4 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
   mapDispatchToProps
-)(Suggestion)
-
-const styles = StyleSheet.create({
-  header: {
-    height: 60,
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderBottomColor: '#cecece',
-    borderBottomWidth: 1
-  },
-  headerTitle: {
-    fontSize: 18,
-    color: '#7c0c10'
-  }
-})
+)(AskQuestion);

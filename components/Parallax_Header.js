@@ -131,7 +131,7 @@ class RNParallax extends Component {
   getImageOpacity() {
     return this.state.scrollY.interpolate({
       inputRange: [0, 175, 205],
-      outputRange: [1, 1, 0],
+      outputRange: [1, 1, 1],
       extrapolate: 'clamp',
     });
   }
@@ -361,7 +361,6 @@ class RNParallax extends Component {
     return (
       <View style={styles.container}>
         {this.renderScrollView()}
-        {this.renderNavbarBackground()}
         {this.renderHeaderBackground()}
         {this.renderHeaderTitle()}
         {this.renderHeaderForeground()}

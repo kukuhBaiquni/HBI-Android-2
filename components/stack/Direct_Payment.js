@@ -226,8 +226,8 @@ class DirectPayment extends Component {
           <Modal
             isVisible={this.state.loading}
             style={{alignItems: 'center'}}
-            onBackdropPress={() => this.setState({showModal: false})}
-            onBackButtonPress={() => this.setState({showModal: false})}
+            onBackdropPress={() => this.setState({loading: false})}
+            onBackButtonPress={() => this.setState({loading: false})}
             onModalShow={() => this.setState({showModalContent: true})}
             onModalHide={() => this.setState({showModalContent: false})}
             hideModalContentWhileAnimating={true}

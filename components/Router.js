@@ -42,6 +42,10 @@ import ListContent from './stack/List_Content';
 import ContentDetails from './stack/Content_Details';
 import NotificationDetails from './stack/Notification_Details';
 import ListNotifications from './stack/List_Notifications';
+import AskQuestion from './drawer/AskQuestion';
+import Excellence from './drawer/Excellence';
+import Join from './drawer/Join';
+import Profit from './drawer/Profit'
 import { SERVER_URL } from '../config';
 import BadgeNotification from './Badge_Notification';
 import { connect } from 'react-redux';
@@ -63,7 +67,9 @@ class Names extends Component {
           <Text style={{color: 'white', fontSize: 17, position: 'absolute', bottom: -95}}>Selamat Datang!</Text>
           :
           <View>
-            <Image style={{height: 50, width: 50, borderRadius: 30}} source={{uri: `${SERVER_URL}/images/dummy/${this.props.userData.photo}`}} />
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
+              <Image style={{height: 50, width: 50, borderRadius: 30}} source={{uri: `${SERVER_URL}/images/dummy/${this.props.userData.photo}`}} />
+            </TouchableOpacity>
             <Text style={{color: 'white', fontSize: 14, marginTop: 5}}>Selamat Datang!</Text>
             <Text style={{color: 'white', fontSize: 17}}>{this.props.userData.name}</Text>
           </View>
@@ -83,7 +89,7 @@ const DrawerComponent = (props) => (
   <ScrollView style={{flex: 1}}>
     <SafeAreaView>
       <View style={{height: 120, backgroundColor: '#7c0c10', padding: 10}}>
-        <UserData />
+        <UserData {...props} />
       </View>
         <DrawerItems {...props} />
         <View style={{borderBottomColor: '#bababa', borderBottomWidth: 1}} />
@@ -582,6 +588,54 @@ const RootStack = createStackNavigator({
     screen: ListNotifications,
     navigationOptions: ({navigation}) => ({
       title: 'Telusuri Notifikasi',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
+    })
+  },
+  AskQuestion: {
+    screen: AskQuestion,
+    navigationOptions: ({navigation}) => ({
+      title: 'Ajukan Pertanyaan',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
+    })
+  },
+  Excellence: {
+    screen: Excellence,
+    navigationOptions: ({navigation}) => ({
+      title: 'Keunggulan',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
+    })
+  },
+  Join: {
+    screen: Join,
+    navigationOptions: ({navigation}) => ({
+      title: 'Bergabung',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
+    })
+  },
+  Profit: {
+    screen: Profit,
+    navigationOptions: ({navigation}) => ({
+      title: 'Keuntungan',
       headerTintColor: '#7c0c10',
       headerStyle: {
         backgroundColor: 'white',

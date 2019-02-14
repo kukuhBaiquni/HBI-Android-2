@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Image, TextInput, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, StatusBar, Image, TextInput, ScrollView, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer';
 import { connect } from 'react-redux';
@@ -20,13 +20,25 @@ class CallUs extends Component {
   }
 
   submitForm() {
-    const data = {
-      type: 'Call Us',
-      email: this.state.email,
-      text: this.state.text
+    if (this.props.userData.email !== '') {
+      const data = {
+        type: 'Call Us',
+        email: this.state.email,
+        text: this.state.text
+      }
+      this.props.dispatch(sendForm(data))
+      this.setState({email: '', text: '', loading: true})
+    }else{
+      Alert.alert(
+        'Kesalahan',
+        'Anda harus login untuk mengirim formulir, login sekarang?',
+        [
+          {text: 'YA', onPress: () => this.props.navigation.navigate('Login')},
+          {text: 'TIDAK'}
+        ],
+        { cancelable: false }
+      );
     }
-    this.props.dispatch(sendForm(data))
-    this.setState({email: '', text: '', loading: true})
   }
 
   componentDidUpdate(prevProps, prevState) {
