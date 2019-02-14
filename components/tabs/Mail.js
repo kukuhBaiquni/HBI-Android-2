@@ -6,7 +6,7 @@ import MailPartials from './Mail_Partials';
 
 export default class Mail extends Component {
   render() {
-    const { userData, navigation } = this.props;
+    const { navigation } = this.props;
     return(
       <View>
         <View style={{backgroundColor: 'white', padding: 10, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', elevation: 3}}>

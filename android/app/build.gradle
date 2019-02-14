@@ -102,8 +102,8 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         manifestPlaceholders = [onesignal_app_id: "11d7b6aa-5d16-4660-9309-f4b58de10ae7",
                                 onesignal_google_project_number: "482052818855"]
-        versionCode 3
-        versionName "1.02"
+        versionCode 4
+        versionName "1.03"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }

@@ -4,10 +4,13 @@ import { connect } from 'react-redux';
 import { loadBadge } from '../actions/Load_Badge';
 
 class BadgeNotification extends Component {
-
-  componentDidMount() {
-    var token = this.props.token;
-    this.props.dispatch(loadBadge(token))
+  componentDidUpdate(prevProps, prevState) {
+    if (this.props.token !== prevProps.token) {
+      if (this.props.token !== '') {
+        const token = this.props.token;
+        this.props.dispatch(loadBadge(token))
+      }
+    }
   }
 
   render() {

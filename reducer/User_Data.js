@@ -66,19 +66,17 @@ export default function userData(state = initialState, action) {
 
     case 'FETCH_NOTIFICATIONS_SUCCESS':
     const key = action.data.type;
-    const reversed = action.data.data[key].reverse()
     return Object.assign({}, state, {
       notifications: {
-        ...state.notifications, [key]: [...reversed]
+        ...state.notifications, [key]: [...action.data.data[key]]
       }
     });
 
     case 'READING_NOTIFICATION_SUCCESS':
     const type = action.data.type;
-    const reversed2 = action.data.data[type].reverse()
     return Object.assign({}, state, {
       notifications: {
-        ...state.notifications, [type]: [...reversed2]
+        ...state.notifications, [type]: [...action.data.data[type]]
       }
     })
 

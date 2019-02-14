@@ -32,7 +32,7 @@ function* workerLoadBadge(form) {
     var raw = JSON.parse(response.xhr._response);
     var data = raw;
     if (data.success) {
-      yield put(loadBadgeSuccess(data.data));      
+      yield put(loadBadgeSuccess(data.data));
     }
   }catch (error) {
     yield put(InternalServerError());

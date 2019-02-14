@@ -35,7 +35,7 @@ class MailPartials extends Component {
             onWillFocus={() => this.beforeRender()}
             />
           {
-            data.map((x, i) =>
+            data.reverse().map((x, i) =>
             <TouchableOpacity onPress={() => navigation.navigate('NotificationDetails', {data: x, type})} key={i} style={x.status ? [styles.listItem, {backgroundColor: '#eaeaea'}] : [styles.listItem, {backgroundColor: 'white'}]}>
               <Text>Nomor Transaksi</Text>
               <Text style={{position: 'absolute', right: 10, top: 7, fontWeight: 'bold'}}>{x.trx}</Text>
