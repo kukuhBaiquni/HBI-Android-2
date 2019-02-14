@@ -12,13 +12,6 @@ export default class ContentDetails extends Component {
     const x2 = locale[new Date(data.end_date).getDay()] + ', ' + moment(data.end_date).format('DD MMM YYYY');
     return(
       <View style={{flex: 1}}>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/CancelWhite.png')} />
-
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Detail Konten</Text>
-        </View>
         <ScrollView>
           <View style={{alignItems: 'center', marginTop: 10}}>
             <View style={{backgroundColor: 'white', width: '95%', padding: 10, elevation: 3, borderRadius: 5}}>

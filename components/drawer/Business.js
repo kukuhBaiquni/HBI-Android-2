@@ -13,7 +13,7 @@ export default class Business extends Component {
           />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
+            <Image resizeMode='contain' style={{height: 21, width: 21}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Bisnis</Text>
         </View>

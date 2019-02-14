@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, ScrollView, Text, AsyncStorage, Alert, TouchableOpacity, Image, StyleSheet, TouchableNativeFeedback, ToastAndroid } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
-import { fetchUser, logOutRequest } from '../../actions/Get_User_Data';
+import { fetchUser } from '../../actions/Get_User_Data';
 import { SERVER_URL } from '../../config';
 import LinearGradient from 'react-native-linear-gradient';
 import { Icon } from 'react-native-elements';

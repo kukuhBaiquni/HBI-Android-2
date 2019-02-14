@@ -42,12 +42,6 @@ class TransactionDetails extends Component {
       {
         data.address !== undefined &&
         <View>
-          <View style={styles.header}>
-            <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-              <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/CancelDarkred.png')} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Detail Transaksi</Text>
-          </View>
           <ScrollView>
             <View style={{justifyContent: 'center', alignItems: 'center'}}>
               <View style={styles.container}>

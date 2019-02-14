@@ -44,12 +44,46 @@ import NotificationDetails from './stack/Notification_Details';
 import ListNotifications from './stack/List_Notifications';
 import { SERVER_URL } from '../config';
 import BadgeNotification from './Badge_Notification';
+import { connect } from 'react-redux';
+
+const BDR = '../android/app/src/main/assets/custom/BackDarkred.png';
+const CDR = '../android/app/src/main/assets/custom/CancelDarkred.png';
+const YDR = '../android/app/src/main/assets/custom/CeklisDarkred.png';
+const DDR = '../android/app/src/main/assets/custom/DrawerDarkred.png';
+const rectangle = {height: 19, width: 19};
+const xrectangle = {height: 16, width: 16};
+
+class Names extends Component {
+  render() {
+    return(
+      <View style={{marginTop: 5}}>
+        {
+          this.props.userData.name === ''
+          ?
+          <Text style={{color: 'white', fontSize: 17, position: 'absolute', bottom: -95}}>Selamat Datang!</Text>
+          :
+          <View>
+            <Image style={{height: 50, width: 50, borderRadius: 30}} source={{uri: `${SERVER_URL}/images/dummy/${this.props.userData.photo}`}} />
+            <Text style={{color: 'white', fontSize: 14, marginTop: 5}}>Selamat Datang!</Text>
+            <Text style={{color: 'white', fontSize: 17}}>{this.props.userData.name}</Text>
+          </View>
+        }
+      </View>
+    )
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return dispatch
+}
+
+const UserData = connect(mapDispatchToProps)(Names)
 
 const DrawerComponent = (props) => (
   <ScrollView style={{flex: 1}}>
     <SafeAreaView>
       <View style={{height: 120, backgroundColor: '#7c0c10', padding: 10}}>
-        <Text style={{color: 'white', fontSize: 19}}>Selamat Datang!</Text>
+        <UserData />
       </View>
         <DrawerItems {...props} />
         <View style={{borderBottomColor: '#bababa', borderBottomWidth: 1}} />
@@ -246,7 +280,13 @@ const RootStack = createStackNavigator({
   Cart: {
     screen: Cart,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Keranjang Belanja',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   SearchAutocomplete: {
@@ -263,7 +303,8 @@ const RootStack = createStackNavigator({
       headerStyle: {
         backgroundColor: 'white',
         borderBottomColor: 'black'
-      }
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   Register: {
@@ -274,13 +315,20 @@ const RootStack = createStackNavigator({
       headerStyle: {
         backgroundColor: 'white',
         borderBottomColor: 'black'
-      }
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   ProfilePrevention: {
     screen: ProfilePrevention,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: '',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   DeepLinkHandler: {
@@ -299,25 +347,49 @@ const RootStack = createStackNavigator({
   Payment: {
     screen: Payment,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Pembayaran',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   EditAddress: {
     screen: EditAddress,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Ubah Alamat',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   EditAddressDP: {
     screen: EditAddressDP,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Ubah Alamat',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   DirectPayment: {
     screen: DirectPayment,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Pembayaran',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   FirstPage: {
@@ -329,37 +401,73 @@ const RootStack = createStackNavigator({
   EditProfile: {
     screen: EditProfile,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Perbarui Profil',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   MyProfile: {
     screen: MyProfile,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Profil Saya',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   EditRekening: {
     screen: EditRekening,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Edit Rekening',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   MyRekening: {
     screen: MyRekening,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Rekening Bank',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   TransactionRecords: {
     screen: TransactionRecords,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Riwayat Transaksi',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   TransactionDetails: {
     screen: TransactionDetails,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Detail Transaksi',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   Faq: {
@@ -371,7 +479,13 @@ const RootStack = createStackNavigator({
   MyTransaction: {
     screen: MyActiveTransaction,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Transaksi Saya',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   Tracking: {
@@ -383,49 +497,97 @@ const RootStack = createStackNavigator({
   TransactionList: {
     screen: TransactionList,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Telusuri Transaksi',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   Settings: {
     screen: Settings,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Pengaturan',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   SettingNotifications: {
     screen: SettingNotifications,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Pengaturan Notifikasi',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   },
   SettingResetPassword: {
     screen: SettingResetPassword,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Ubah Password',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   ListContent: {
     screen: ListContent,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Telusuri Berita',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   ContentDetails: {
     screen: ContentDetails,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Detail Content',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   NotificationDetails: {
     screen: NotificationDetails,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Detail Notifikasi',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={require(CDR)} /> )
     })
   },
   ListNotifications: {
     screen: ListNotifications,
     navigationOptions: ({navigation}) => ({
-      header: null
+      title: 'Telusuri Notifikasi',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
   }
 }, {
@@ -449,7 +611,6 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   }
 });
-import { connect } from 'react-redux';
 import { modifyNotification } from '../actions/Notification_Controller';
 import { updateListNotifications } from '../actions/Update_List_Notifications';
 

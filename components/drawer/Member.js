@@ -5,25 +5,9 @@ import { DrawerActions } from 'react-navigation-drawer';
 import { NavigationEvents } from 'react-navigation';
 import { SERVER_URL } from '../../config';
 import { connect } from 'react-redux';
-import { setPlayerId } from '../../actions/Set_Player_Id';
-import { setInitialToken } from '../../actions/Set_Initial_Token';
 import Swiper from 'react-native-swiper';
 
 class Member extends Component {
-
-  beforeRender = async () => {
-    try{
-      const id = await AsyncStorage.getItem('PlayerID')
-      const token = await AsyncStorage.getItem('access_token');
-      if (id !== null && token !== null) {
-        const ids = JSON.parse(id)
-        const tokens = JSON.parse(token)
-        this.props.dispatch(setInitialToken(tokens))
-        this.props.dispatch(setPlayerId({ids, token: tokens}))
-      }
-    }catch(error) {
-    }
-  }
 
   moveToBrowser() {
     let url = `${SERVER_URL}register/member`;
@@ -35,16 +19,13 @@ class Member extends Component {
     const { navigation } = this.props;
     return(
       <View style={{flex: 1, backgroundColor: 'white'}}>
-        <NavigationEvents
-          onWillFocus={() => this.beforeRender()}
-          />
         <StatusBar
           backgroundColor = '#7c0c10'
           barStyle = 'light-content'
           />
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
+            <Image resizeMode='contain' style={{height: 21, width: 21}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Halal Beef Indonesia</Text>
         </View>

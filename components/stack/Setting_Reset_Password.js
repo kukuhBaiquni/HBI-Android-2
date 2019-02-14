@@ -89,17 +89,6 @@ class SettingResetPassword extends Component {
               />
           </View>
         </Modal>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/CancelWhite.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Ubah Pasword</Text>
-            <View style={{position: 'absolute', right: 18, top: 18}}>
-              <TouchableOpacity onPress={() => this.onSave()}>
-                <Icon name='done' color='white' size={24} />
-              </TouchableOpacity>
-            </View>
-        </View>
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <View style={{backgroundColor: 'white', width: '95%', borderRadius: 3, elevation: 3, marginTop: 10}}>
             {
@@ -150,7 +139,11 @@ class SettingResetPassword extends Component {
                 </TouchableOpacity>
               </Item>
             </Form>
-            <View style={{height: 30}} />
+            <View style={{alignItems: 'center', marginTop: 20, marginBottom: 10}}>
+              <TouchableOpacity onPress={() => this.onSave()} style={{borderRadius: 3, width: '95%', height: 50, backgroundColor: '#7c0c10', alignItems: 'center', justifyContent: 'center'}}>
+                <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Simpan</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </View>

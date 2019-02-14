@@ -175,18 +175,18 @@ class ProductDetails extends Component {
           renderNavBar={() => (
             <View style={styles.fixedNavbar}>
               <TouchableOpacity onPress={() => navigation.navigate('Shopping')} style={{position: 'absolute', left: 0, marginLeft: 10}}>
-                <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
+                <Image resizeMode='contain' style={{height: 19, width: 19}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
               </TouchableOpacity>
-              <TouchableOpacity style={{position: 'absolute', right: 20, borderRadius: 50, height: 30, width: 30, justifyContent: 'center'}}>
+              <TouchableOpacity style={{position: 'absolute', right: 17, borderRadius: 50, height: 30, width: 30, justifyContent: 'center'}}>
                 <CartIcon navigation={navigation} bcolor='#7c0c10'/>
               </TouchableOpacity>
             </View>
           )}
           renderBackButton={() => (
-            <Icon onPress={() => navigation.navigate('Shopping')} name='arrow-back' color='white' />
+            <Image onPress={() => navigation.navigate('Shopping')} resizeMode='contain' style={{height: 19, width: 19}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
           )}
           renderCartIcon={() => (
-            <CartIcon navigation={navigation} />
+            <CartIcon navigation={navigation} bcolor='#7c0c10'/>
           )}
           renderContent={() => (
             <ScrollView style={{backgroundColor: '#e2e2e2'}}>

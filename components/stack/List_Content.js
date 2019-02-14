@@ -23,12 +23,6 @@ class ListContent extends Component {
         <NavigationEvents
           onWillFocus={() => this.beforeRender()}
           />
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Telusuri {navigation.state.params.tag}</Text>
-        </View>
         <ScrollView>
           <View style={{alignItems: 'center', paddingBottom: 10}}>
             {

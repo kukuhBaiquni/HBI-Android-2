@@ -27,8 +27,9 @@ function* workerSendForm(form) {
     var response = yield call(() => {
       return request
       .post(`${SERVER_URL}android/request/call-us/form`)
-      .send({email: `${form.data.email}`})
-      .send({text: `${form.data.text}`})
+      .send({email: form.data.email})
+      .send({text: form.data.text})
+      .send({type: form.data.type})
       .then((res) => {
         return res;
       })

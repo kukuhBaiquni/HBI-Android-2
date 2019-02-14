@@ -50,12 +50,6 @@ class TransactionList extends Component {
         <NavigationEvents
           onWillFocus={() => this.beforeRender()}
           />
-        <View style={[styles.header]}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Transaksi {title[navigation.state.params.type]}</Text>
-        </View>
         <FlatList
           data={this.state.data}
           keyExtractor={item => item.trx}

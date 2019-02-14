@@ -16,12 +16,6 @@ class TransactionRecords extends Component {
     const token = navigation.state.params.token;
     return(
       <View style={{flex: 1}}>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Riwayat Transaksi</Text>
-        </View>
         <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionList', {token, type: 0})}>
           <View style={[styles.listMenu, {backgroundColor: 'white', marginTop: 5}]}>
             <View style={{flexDirection: 'row', paddingTop: 10}}>

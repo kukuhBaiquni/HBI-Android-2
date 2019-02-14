@@ -9,12 +9,6 @@ class MyRekening extends Component {
     const { userData, navigation } = this.props;
     return(
       <View style={{flex: 1}}>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Rekening Bank</Text>
-        </View>
         <TouchableNativeFeedback>
           <View style={[styles.listMenu, {marginTop: 10}]}>
             <Text style={styles.menuTitle}>Nama Bank</Text>

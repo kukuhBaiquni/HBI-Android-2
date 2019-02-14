@@ -33,8 +33,10 @@ function* workerFetchUserData(data) {
       })
     })
     var raw = JSON.parse(response.xhr._response);
-    var data = raw.data;
-    yield put(fetchUserSuccess(data));
+    var data = raw;
+    if (data.success) {
+      yield put(fetchUserSuccess(data.data));
+    }
   }catch (error) {
     yield put(InternalServerError());
   }

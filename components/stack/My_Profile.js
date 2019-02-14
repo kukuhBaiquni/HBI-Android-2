@@ -22,12 +22,6 @@ class MyProfile extends Component {
         <NavigationEvents
           onWillFocus={() => this.props.dispatch(fetchUser(this.props.navigation.state.params.token))}
           />
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Profil Saya</Text>
-        </View>
         <View style={{height: 50, backgroundColor: '#f4f4f4', marginTop: 10, justifyContent: 'center', paddingLeft: 10}}>
           <Text style={{fontSize: 17}}>Informasi Pribadi</Text>
         </View>

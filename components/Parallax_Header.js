@@ -164,7 +164,7 @@ class RNParallax extends Component {
   transparency() {
     return this.state.scrollY.interpolate({
       inputRange: [0, 200, 205],
-      outputRange: ['rgba(255,255,255, 0)', 'rgba(255,255,255, 0)', '#7c0c10'],
+      outputRange: ['rgba(255,255,255, 0)', 'rgba(255,255,255, 0)', 'white'],
       extrapolate: 'clamp'
     })
   }
@@ -173,7 +173,7 @@ class RNParallax extends Component {
   titleTransition() {
     return this.state.scrollY.interpolate({
       inputRange: [0, 200, 205],
-      outputRange: ['#7c0c10', '#7c0c10', 'rgba(255,255,255, 1)'],
+      outputRange: ['#7c0c10', '#7c0c10', '#7c0c10'],
       extrapolate: 'clamp'
     })
   }

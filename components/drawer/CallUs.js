@@ -21,6 +21,7 @@ class CallUs extends Component {
 
   submitForm() {
     const data = {
+      type: 'Call Us',
       email: this.state.email,
       text: this.state.text
     }
@@ -28,15 +29,12 @@ class CallUs extends Component {
     this.setState({email: '', text: '', loading: true})
   }
 
-  resetState() {
-    this.props.dispatch(resetStatus())
-  }
-
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.status.sendFormCallUs.success !== this.props.status.sendFormCallUs.success) {
       if (this.state.loading) {
         if (this.props.status.sendFormCallUs.success) {
           this.setState({loading: false, showSuccess: true, showError: false})
+          this.props.dispatch(resetStatus())
         }
       }
     }
@@ -44,12 +42,8 @@ class CallUs extends Component {
       if (this.state.loading) {
         if (this.props.status.sendFormCallUs.error) {
           this.setState({loading: false, showError: true, showSuccess: false})
+          this.props.dispatch(resetStatus())
         }
-      }
-    }
-    if (prevProps.status.sendFormCallUs.success !== this.props.status.sendFormCallUs.success && prevProps.status.sendFormCallUs.error !== this.props.status.sendFormCallUs.error) {
-      if (!this.props.status.sendFormCallUs.success && !this.props.status.sendFormCallUs.error) {
-        this.setState({loading: false, showSuccess: false, showError: false})
       }
     }
   }
@@ -77,7 +71,7 @@ class CallUs extends Component {
           </Modal>
         <View style={styles.header}>
           <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.dispatch(DrawerActions.toggleDrawer())}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
+            <Image resizeMode='contain' style={{height: 21, width: 21}} source={require('../../android/app/src/main/assets/custom/DrawerDarkred.png')} />
           </TouchableOpacity>
           <Text style={styles.headerTitle}>Hubungi Kami</Text>
         </View>
@@ -123,7 +117,6 @@ class CallUs extends Component {
                   numberOfLines={4}
                   onChangeText={(text) => this.setState({text})}
                   value={this.state.text}
-                  onFocus={() => this.resetState()}
                   />
               </View>
             </View>

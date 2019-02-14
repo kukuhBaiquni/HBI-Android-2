@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollView, Alert, Picker } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollView, Alert, Picker, TouchableNativeFeedback } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { fetchUser } from '../../actions/Get_User_Data';
 import { SERVER_URL } from '../../config';
 import { idrFormat } from '../../config';
+import { BarIndicator } from 'react-native-indicators';
 import { forceResetRoot } from '../../actions/Load_Cities';
-import { forceResetSA } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { directPurchase } from '../../actions/Direct_Purchase';
 import { checkOngkir } from '../../actions/Check_Ongkir';
 import moment from 'moment';
 import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
+import { countItem } from '../../actions/Counting_Items';
 
 class DirectPayment extends Component {
   constructor(props) {
@@ -22,16 +23,21 @@ class DirectPayment extends Component {
       isAddressValid: false,
       token: '',
       loading: false,
+      loadingCount: false,
+      transactionContent: false,
       transactionLoading: true,
       ongkir: 0,
       data: {},
       qty: 1,
       editMode: false,
-      isFreeOngkir: false
+      isFreeOngkir: false,
+      changeAmount: false,
+      subtotal: 0,
+      productPrice: 0,
+      showModalContent: false
     }
   }
   beforeRender = async () => {
-    this.props.dispatch(forceResetSA())
     this.props.dispatch(forceResetRoot())
     if (this.props.navigation.state.params !== undefined) {
       const village = this.props.navigation.state.params.village;
@@ -50,6 +56,9 @@ class DirectPayment extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if (prevProps.resultCounting !== this.props.resultCounting) {
+      this.setState({loadingCount: false, subtotal: this.props.resultCounting})
+    }
     if (prevProps.userData !== this.props.userData) {
       if (this.props.userData.address.street !== '') {
         this.setState({isAddressValid: true})
@@ -102,7 +111,7 @@ class DirectPayment extends Component {
           qty: this.state.qty,
         }
       }
-      this.setState({loading: true})
+      this.setState({loading: true, changeAmount: false, transactionContent: true})
       this.props.dispatch(directPurchase(data))
     }else{
       Alert.alert(
@@ -120,7 +129,14 @@ class DirectPayment extends Component {
     try {
       const data = await AsyncStorage.getItem('direct_purchase');
       if (data !== null) {
-        this.setState({data: JSON.parse(data)})
+        const parsed = JSON.parse(data)
+        let realPrice = 0;
+        if (this.props.userData === 'Non Member') {
+          realPrice = parsed.enduserprice;
+        }else{
+          realPrice = parsed.resellerprice;
+        }
+        this.setState({data: parsed, productPrice: realPrice})
       }else{
         Alert.alert(
           'Kesalahan',
@@ -132,15 +148,31 @@ class DirectPayment extends Component {
         );
       }
     }catch (error) {
-      Alert.alert(
-        'Kesalahan',
-        'Gagal memuat data',
-        [
-          {text: 'OK'}
-        ],
-        { cancelable: false }
-      );
+      Alert.alert('Kesalahan', 'Gagal memuat data', [{text: 'OK'} ], { cancelable: false });
     }
+  }
+
+  changeCount(x) {
+    let count = this.state.qty
+    if (x === 'inc') {
+      count ++
+      this.setState({qty: count, loadingCount: true})
+    }else{
+      if (count > 1) {
+        count --
+        this.setState({qty: count, loadingCount: true})
+      }
+    }
+    var data = {
+      token: this.state.token,
+      id: this.state.data.id,
+      qty: count
+    }
+    this.props.dispatch(countItem(data))
+  }
+
+  onSave() {
+    this.setState({loading: false})
   }
 
   queueRouting() {
@@ -157,9 +189,11 @@ class DirectPayment extends Component {
     }
   }
 
+  showInfo() {
+    Alert.alert('Gratis Ongkir', 'Mininum pembelian diatas 12kg.', [{text: 'OK'}], { cancelable: true });
+  }
+
   render() {
-    let total = 0;
-    const loop = this.props.cart.map(x => total += x.subtotal)
     let params = {}
     if (this.props.navigation.state.params === undefined) {
         params = this.props.userData
@@ -176,7 +210,7 @@ class DirectPayment extends Component {
       }
     }
     const newParams = Object.assign({}, params, {token: this.state.token})
-    if (this.state.data === {}) {
+    if (this.state.data === Object.assign({})) {
       return(
         <View style={{justifyContent: 'center', alignItems: 'center'}}>
           <Text>Memuat Data...</Text>
@@ -192,10 +226,16 @@ class DirectPayment extends Component {
           <Modal
             isVisible={this.state.loading}
             style={{alignItems: 'center'}}
+            onBackdropPress={() => this.setState({showModal: false})}
+            onBackButtonPress={() => this.setState({showModal: false})}
+            onModalShow={() => this.setState({showModalContent: true})}
+            onModalHide={() => this.setState({showModalContent: false})}
             hideModalContentWhileAnimating={true}
             useNativeDriver
             >
             {
+              this.state.transactionContent
+              ?
               this.state.transactionLoading
               ?
               <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
@@ -215,7 +255,7 @@ class DirectPayment extends Component {
                     <Text style={{color: '#bababa', marginBottom: 2}}>Kode Transaksi</Text>
                     <Text style={{fontSize: 20, marginBottom: 10}}>{this.props.transaction.trx}</Text>
                     <Text style={{color: '#bababa'}}>Jumlah Tagiahan Anda</Text>
-                    <Text style={{marginBottom: 10, fontSize: 18}}>{idrFormat(this.props.transaction.total_price)}</Text>
+                    <Text style={{marginBottom: 10, fontSize: 18}}>{this.props.transaction.total_price === undefined ? '' : idrFormat(this.props.transaction.total_price)}</Text>
                     <Text style={{color: '#bababa', marginBottom: 5}}>Metode Pembayaran</Text>
                     <Text>Transfer ke rekening BCA</Text>
                     <Text style={{fontSize: 17, marginBottom: 10}}>2820260417</Text>
@@ -230,151 +270,188 @@ class DirectPayment extends Component {
                   </TouchableOpacity>
                 </ScrollView>
               </View>
-            }
-          </Modal>
-          <View style={styles.header}>
-            <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-              <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Pembayaran</Text>
-          </View>
-          <ScrollView>
-            <View style={{backgroundColor: 'white', padding: 20}}>
-              <Text style={{fontSize: 15, fontWeight: 'bold', marginBottom: 10}}>Alamat Pengiriman</Text>
-              {
-                this.props.navigation.state.params === undefined
-                ?
-                this.state.isAddressValid
-                ?
-                <View>
-                  <Text>{this.props.userData.address.street}</Text>
-                  <Text>Kecamatan {this.props.userData.address.district}</Text>
-                  <Text>Kelurahan {this.props.userData.address.village}</Text>
-                  <Text>{this.props.userData.address.city}</Text>
-                  <Text>Penerima <Text style={{fontWeight: 'bold'}}>{this.props.userData.name}</Text></Text>
-                  <Text>Nomor Telepon Penerima: 0{this.props.userData.phone}</Text>
+              :
+              <View style={{ backgroundColor: 'white', width: 300, height: 250, borderRadius: 4}}>
+                <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
+                  <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Pilihan Anda</Text>
+                  <TouchableOpacity style={{position: 'absolute', right: 10, top: 15}}>
+                    <Icon name='clear' color='#919191' size={22} onPress={() => this.setState({loading: false})}/>
+                  </TouchableOpacity>
                 </View>
-                :
-                <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
-                :
-                <View>
-                  <Text>{this.props.navigation.state.params.street}</Text>
-                  <Text>Kecamatan {this.props.navigation.state.params.district}</Text>
-                  <Text>Kelurahan {this.props.navigation.state.params.village}</Text>
-                  <Text>{this.props.navigation.state.params.city}</Text>
-                  <Text>Penerima <Text style={{fontWeight: 'bold'}}>{this.props.navigation.state.params.name}</Text></Text>
-                  <Text>Nomor Telepon Penerima: {this.props.navigation.state.params.phone}</Text>
-                </View>
-              }
-              <TouchableOpacity onPress={() => this.props.navigation.navigate('EditAddressDP', newParams)} style={{marginTop: 20, height: 40, width: 70, backgroundColor: '#bcbcbc', borderRadius: 3, justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={{fontSize: 16, fontWeight: 'bold'}}>Edit</Text>
-              </TouchableOpacity>
-            </View>
-            <View style={{backgroundColor: 'white', paddingTop: 10}}>
-              <Text style={{textAlign: 'center', fontSize: 20, padding: 10}}>Detail Pesanan</Text>
-                <View style={styles.productWrapper}>
-                  <View style={styles.productHeader}>
-                    <Text style={styles.productName}>{this.state.data.productname}</Text>
-                    {
-                      this.state.editMode
-                      ?
-                      <TouchableOpacity style={{position: 'absolute', right: 30}} onPress={() => this.setState({editMode: false})}>
-                        <Text>Simpan</Text>
-                      </TouchableOpacity>
-                      :
-                      <TouchableOpacity style={{position: 'absolute', right: 30, flexDirection: 'row'}} onPress={() => this.setState({editMode: true})}>
-                        <Text style={{marginRight: 5}}>Ubah Rincian</Text>
-                        <Icon name='create' size={20}/>
-                      </TouchableOpacity>
-                    }
-                  </View>
-                  <View style={styles.productDetails}>
-                    <Image
-                      resizeMode='contain'
-                      style={{width: 120, height: 120, borderColor: '#eaeaea', borderWidth: 1}}
-                      source={{uri: `${SERVER_URL}images/products/${this.state.data.photo}`}}
-                      />
-                    <View>
-                      <View style={{flexDirection: 'row', marginBottom: 12}}>
-                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Harga :</Text>
-                        <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{this.props.userData.status === 'Non Member' ? idrFormat(Number(this.state.data.enduserprice)) : idrFormat(Number(this.state.data.resellerprice))}</Text>
-                      </View>
-                      <View style={this.state.editMode && this.state.picked !== 'Grind' && this.state.picked !== '-' ? {flexDirection: 'row', marginBottom: 6} : {flexDirection: 'row', marginBottom: 12}}>
-                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Kuantitas :</Text>
-                        {
-                          this.state.editMode
-                          ?
-                          <Picker
-                            note
-                            mode='dropdown'
-                            style={{ width: 60, height: 20, marginTop: -1 }}
-                            selectedValue={this.state.qty.toString()}
-                            onValueChange={(x) => this.checkIsFreeOngkir(x)}
-                            >
-                            <Picker.Item label='1' value='1' />
-                            <Picker.Item label='2' value='2' />
-                            <Picker.Item label='3' value='3' />
-                            <Picker.Item label='4' value='4' />
-                            <Picker.Item label='5' value='5' />
-                            <Picker.Item label='6' value='6' />
-                            <Picker.Item label='7' value='7' />
-                            <Picker.Item label='8' value='8' />
-                            <Picker.Item label='9' value='9' />
-                            <Picker.Item label='10' value='10' />
-                            <Picker.Item label='11' value='11' />
-                            <Picker.Item label='12' value='12' />
-                            <Picker.Item label='13' value='13' />
-                            <Picker.Item label='14' value='14' />
-                            <Picker.Item label='15' value='15' />
-                            <Picker.Item label='16' value='16' />
-                          </Picker>
-                          :
-                          <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{this.state.qty}</Text>
-                        }
-                      </View>
-                      <View style={{flexDirection: 'row', marginBottom: 12}}>
-                        <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Total :</Text>
-                        <Text style={{marginLeft: 10, color: '#9b9b9b'}}>
-                          {
-                            this.props.userData.status === 'Non Member'
-                            ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty))
-                            : idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty))
-                          }
-                        </Text>
+                <ScrollView>
+                  <View style={{flexDirection: 'row'}}>
+                    <View style={{elevation: 1, width: 120, height: 120, marginTop: 10, marginLeft: 20}}>
+                      <Image
+                        resizeMode='contain'
+                        style={{width: 120, height: 120, borderColor: '#e2e2e2', borderWidth: 1}}
+                        source={{uri: `${SERVER_URL}images/products/${this.state.data.photo}`}}
+                        />
+                    </View>
+                    <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
+                      <Text style={{fontSize: 16, width: 140, textAlign: 'left', color: '#919191'}}>{this.state.data.productname}</Text>
+                      {
+                        this.state.loadingCount
+                        ?
+                        <View style={{height: 24, width: 80, paddingTop: 7, alignItems: 'center'}}>
+                          <BarIndicator count={5} size={15} color='#919191' />
+                        </View>
+                        :
+                        <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(this.state.qty === 1 ? Number(this.state.productPrice) : Number(this.props.resultCounting))}</Text>
+                      }
+                      {/*Increment Button*/}
+                      <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
+                        <TouchableNativeFeedback onPress={(x) => this.changeCount('dec')}>
+                          <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
+                            <Text style={{color: 'white', fontSize: 22}}>-</Text>
+                          </View>
+                        </TouchableNativeFeedback>
+                        <View style={{width: 40, height: 30, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3}}>
+                          <Text>{this.state.qty}</Text>
+                        </View>
+                        <TouchableNativeFeedback onPress={(x) => this.changeCount('inc')}>
+                          <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
+                            <Text style={{color: 'white', fontSize: 18}}>+</Text>
+                          </View>
+                        </TouchableNativeFeedback>
                       </View>
                     </View>
                   </View>
+                  <View style={{alignItems: 'center', marginTop: 10, marginBottom:20}}>
+                    <TouchableOpacity onPress={() => this.onSave()}>
+                      <View style={{height: 45, width: 260, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
+                        <Text style={{color: 'white'}}>Simpan perubahan</Text>
+                      </View>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
+            </View>
+            }
+          </Modal>
+          <ScrollView>
+            <View style={{alignItems: 'center', marginTop: 15}}>
+              <View style={{backgroundColor: 'white', padding: 10, width: '95%', elevation: 3, borderRadius: 3}}>
+                <View>
+                  <Text style={{fontSize: 16, fontWeight: 'bold', color: '#7c0c10', marginBottom: 10}}>Informasi Pembeli</Text>
+                  <TouchableOpacity style={{position: 'absolute', right: 10, top: 0}} onPress={() => this.props.navigation.navigate('EditAddressDP', newParams)}>
+                    <Text style={{color: '#7c0c10', fontSize: 15}}>Ubah</Text>
+                  </TouchableOpacity>
                 </View>
-            </View>
-            <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
-              <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Belanja</Text>
-              <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
                 {
-                  this.props.userData.status === 'Non Member'
-                  ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)))
-                  : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)))
+                  this.props.navigation.state.params === undefined
+                  ?
+                  this.state.isAddressValid
+                  ?
+                  <View>
+                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
+                    <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.userData.name}</Text>
+                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
+                    <Text style={{marginBottom: 5, fontSize: 13}}>0{this.props.userData.phone}</Text>
+                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
+                    <Text style={{fontSize: 13}}>{this.props.userData.address.street}</Text>
+                    <Text style={{fontSize: 13}}>Kecamatan {this.props.userData.address.district}</Text>
+                    <Text style={{fontSize: 13}}>Kelurahan {this.props.userData.address.village}</Text>
+                    <Text style={{fontSize: 13}}>{this.props.userData.address.city}</Text>
+                  </View>
+                  :
+                  <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
+                  :
+                  <View>
+                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
+                    <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.name}</Text>
+                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
+                    <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.phone}</Text>
+                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
+                    <Text style={{fontSize: 13}}>{this.props.navigation.state.params.street}</Text>
+                    <Text style={{fontSize: 13}}>Kecamatan {this.props.navigation.state.params.district}</Text>
+                    <Text style={{fontSize: 13}}>Kelurahan {this.props.navigation.state.params.village}</Text>
+                    <Text style={{fontSize: 13}}>{this.props.navigation.state.params.city}</Text>
+                  </View>
                 }
-              </Text>
+              </View>
             </View>
-            <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
-              <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
-              <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
-                {this.state.isFreeOngkir ? 'Gratis' : idrFormat(Number(this.state.ongkir))}
-              </Text>
+            <View style={{alignItems: 'center'}}>
+              <View style={{backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 3}}>
+                <View>
+                  <Text style={{fontSize: 20, padding: 10, fontWeight: 'bold', color: '#7c0c10'}}>Detail Pesanan</Text>
+                  <TouchableOpacity onPress={() => this.setState({loading: true, changeAmount: true})} style={{position: 'absolute', right: 18, top: 15}}>
+                    <Text style={{color: '#7c0c10', fontSize: 15}}>Ubah</Text>
+                  </TouchableOpacity>
+                </View>
+                <View>
+                  <Text style={{marginLeft: 12, fontWeight: 'bold', fontSize: 16, marginBottom: 5}}>{this.state.data.productname}</Text>
+                  <View style={styles.productDetails}>
+                    <Image
+                      resizeMode='contain'
+                      style={{width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1}}
+                      source={{uri: `${SERVER_URL}images/products/${this.state.data.photo}`}}
+                      />
+                    <View style={{marginBottom: 5, width: '48%'}}>
+                      <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Harga</Text>
+                      <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Kuantitas</Text>
+                      <Text style={{marginLeft: 10, fontWeight: 'bold', position: 'absolute', bottom: 3}}>Total</Text>
+                    </View>
+                    <View style={{marginBottom: 5}}>
+                      <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{this.props.userData.status === 'Non Member' ? idrFormat(Number(this.state.data.enduserprice)) : idrFormat(Number(this.state.data.resellerprice))}</Text>
+                      <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{this.state.qty}</Text>
+                      <Text style={{textAlign: 'right', position: 'absolute', bottom: 3}}>
+                        {
+                          this.props.userData.status === 'Non Member'
+                          ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty))
+                          : idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty))
+                        }
+                      </Text>
+                    </View>
+                  </View>
+                  <View style={{alignItems: 'center'}}>
+                    <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                  </View>
+                </View>
+                <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}}>Total Belanja</Text>
+                  <Text style={{fontSize: 15, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                    {
+                      this.props.userData.status === 'Non Member'
+                      ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)))
+                      : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)))
+                    }
+                  </Text>
+                </View>
+                <View style={{paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 15}}>Ongkir</Text>
+                  <TouchableOpacity onPress={() => this.showInfo()} style={{position: 'absolute', left: 60, top: 4, borderWidth: 2, borderColor: 'red', borderRadius: 10, width: 16, height: 16, justifyContent: 'center', alignItems: 'center'}}>
+                    <Text style={{color: 'red', fontWeight: 'bold', fontSize: 11}}>i</Text>
+                  </TouchableOpacity>
+                  {
+                    this.state.isFreeOngkir
+                    ?
+                    <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10}} source={require('../../android/app/src/main/assets/custom/FreeOngkir.png')}/>
+                    :
+                    <Text style={{fontSize: 15, position: 'absolute', right: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                      {idrFormat(Number(this.state.ongkir))}
+                    </Text>
+                  }
+                </View>
+                <View style={{alignItems: 'center'}}>
+                  <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                </View>
+                <View style={{alignItems: 'center', marginTop: 3}}>
+                  <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                </View>
+                <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
+                  <Text style={{fontWeight: 'bold', fontSize: 17}}>Total Bayar</Text>
+                    <Text style={{fontSize: 17, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                      {
+                        this.props.userData.status === 'Non Member'
+                        ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)) + this.state.ongkir)
+                        : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)) + this.state.ongkir)
+                      }
+                    </Text>
+                </View>
+              </View>
             </View>
-            <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
-              <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Pembayaran</Text>
-              <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
-                {
-                  this.props.userData.status === 'Non Member'
-                  ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)) + this.state.ongkir)
-                  : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)) + this.state.ongkir)
-                }
-              </Text>
-            </View>
-            <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 20}}>
-              <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 20, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
-                <Text style={{color: 'white', fontSize: 16}}>Konfirmasi Pemesanan</Text>
+            <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+              <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
+                <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold', letterSpacing: 1.5}}>Konfirmasi Pemesanan</Text>
               </TouchableOpacity>
             </View>
           </ScrollView>
@@ -398,9 +475,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#7c0c10'
   },
-  productWrapper: {
-    alignItems: 'center'
-  },
   productHeader: {
     borderColor: '#eaeaea',
     height: 50,
@@ -410,17 +484,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     width: '100%'
   },
-  productName: {
-    fontWeight: 'bold',
-    fontSize: 16,
-    marginLeft: 20
-  },
   productDetails: {
     backgroundColor: 'white',
-    height: 160,
-    width: '100%',
-    padding: 20,
-    flexDirection: 'row'
+    height: 100,
+    flexDirection: 'row',
+    marginLeft: 12
   },
   button: {
     marginBottom: 40,

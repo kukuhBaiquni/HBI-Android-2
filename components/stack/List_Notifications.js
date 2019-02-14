@@ -16,12 +16,6 @@ class ListNotifications extends Component {
     const type = fetchinx[navigation.state.params.type];
     return(
       <View style={{flex: 1}}>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Telusuri Notifikasi {display[navigation.state.params.type]}</Text>
-        </View>
         <ScrollView>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             {

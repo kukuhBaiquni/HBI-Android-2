@@ -163,11 +163,13 @@ class EditAddress extends Component {
     }
     if (prevProps.status.saveAddress.success !== this.props.status.saveAddress.success) {
       if (this.props.status.saveAddress.success) {
+        this.props.dispatch(forceResetSA())
         ToastAndroid.show('Perubahan berhasil disimpan', ToastAndroid.SHORT, ToastAndroid.BOTTOM)
       }
     }
     if (prevProps.status.saveAddress.error !== this.props.status.saveAddress.error) {
       if (this.props.status.saveAddress.error) {
+        this.props.dispatch(forceResetSA())
         Alert.alert(
           'Kesalahan',
           'Server sibuk, silahkan ulangi permintaan anda.',
@@ -205,12 +207,6 @@ class EditAddress extends Component {
                 />
             </View>
           </Modal>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/CancelDarkred.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Ubah Alamat</Text>
-        </View>
         <ScrollView>
           <View style={{justifyContent: 'center', alignItems: 'center'}}>
             <View style={{backgroundColor: 'white', width: '100%', elevation: 3}}>
@@ -342,9 +338,9 @@ class EditAddress extends Component {
               }
             </RadioForm>
           </View>
-          <View style={{justifyContent: 'center', alignItems: 'center', marginTop: 20}}>
-            <TouchableOpacity onPress={() => this.onSave()} style={{width: 350, borderRadius: 3, marginBottom: 5, backgroundColor: '#7c0c10', height: 50, justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={{color: 'white', fontSize: 16}}>Simpan</Text>
+          <View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
+            <TouchableOpacity onPress={() => this.onSave()} style={{borderRadius: 3, width: '95%', height: 50, backgroundColor: '#7c0c10', alignItems: 'center', justifyContent: 'center'}}>
+              <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Simpan</Text>
             </TouchableOpacity>
           </View>
         </ScrollView>

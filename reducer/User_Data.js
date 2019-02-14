@@ -89,6 +89,35 @@ export default function userData(state = initialState, action) {
       }
     })
 
+    case 'LOGOUT_SUCCESS':
+    return {
+      id: '',
+      name: '',
+      status: '',
+      photo: '',
+      gender: '',
+      phone: 0,
+      address: {
+        city: '',
+        district: '',
+        village: '',
+        street: ''
+      },
+      ongkir: 0,
+      ttl: 0,
+      join: '',
+      email: '',
+      nama_rekening: '',
+      no_rekening: 0,
+      banner: '',
+      playerID: '',
+      notifications: {
+        order: [],
+        system: [],
+        inbox: []
+      }
+    };
+
     default:
       return state;
   }

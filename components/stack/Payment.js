@@ -7,7 +7,6 @@ import { fetchUser } from '../../actions/Get_User_Data';
 import { SERVER_URL } from '../../config';
 import { idrFormat } from '../../config';
 import { forceResetRoot } from '../../actions/Load_Cities';
-import { forceResetSA } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { confirmTransaction } from '../../actions/Confirm_Transaction';
@@ -34,7 +33,6 @@ class Payment extends Component {
     if (acu > 25) {
       this.setState({isFreeOngkir: true})
     }
-    this.props.dispatch(forceResetSA())
     this.props.dispatch(forceResetRoot())
     if (this.props.navigation.state.params !== undefined) {
       const village = this.props.navigation.state.params.village;
@@ -120,6 +118,10 @@ class Payment extends Component {
     this.props.navigation.navigate('MyTransaction');
   }
 
+  showInfo() {
+    Alert.alert('Gratis Ongkir', 'Mininum pembelian diatas 12kg.', [{text: 'OK'}], { cancelable: true });
+  }
+
   render() {
     const listData = this.props.cart.filter(x => x.status === true)
     let total = 0;
@@ -188,90 +190,129 @@ class Payment extends Component {
             </View>
           }
         </Modal>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => this.props.navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/CancelDarkred.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Pembayaran</Text>
-        </View>
         <ScrollView>
-          <View style={{backgroundColor: 'white', padding: 20}}>
-            <Text style={{fontSize: 15, fontWeight: 'bold', marginBottom: 10}}>Alamat Pengiriman</Text>
-            {
-              this.props.navigation.state.params === undefined
-              ?
-              this.state.isAddressValid
-              ?
+          <View style={{alignItems: 'center', marginTop: 15}}>
+            <View style={{backgroundColor: 'white', padding: 10, width: '95%', elevation: 3, borderRadius: 3}}>
               <View>
-                <Text>{this.props.userData.address.street}</Text>
-                <Text>Kecamatan {this.props.userData.address.district}</Text>
-                <Text>Kelurahan {this.props.userData.address.village}</Text>
-                <Text>{this.props.userData.address.city}</Text>
-                <Text>Penerima <Text style={{fontWeight: 'bold'}}>{this.props.userData.name}</Text></Text>
-                <Text>Nomor Telepon Penerima: 0{this.props.userData.phone}</Text>
+                <Text style={{fontSize: 16, fontWeight: 'bold', color: '#7c0c10', marginBottom: 10}}>Informasi Pembeli</Text>
+                <TouchableOpacity style={{position: 'absolute', right: 10, top: 0}} onPress={() => this.props.navigation.navigate('EditAddress', newParams)}>
+                  <Text style={{color: '#7c0c10', fontSize: 15}}>Ubah</Text>
+                </TouchableOpacity>
               </View>
-              :
-              <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
-              :
-              <View>
-                <Text>{this.props.navigation.state.params.street}</Text>
-                <Text>Kecamatan {this.props.navigation.state.params.district}</Text>
-                <Text>Kelurahan {this.props.navigation.state.params.village}</Text>
-                <Text>{this.props.navigation.state.params.city}</Text>
-                <Text>Penerima <Text style={{fontWeight: 'bold'}}>{this.props.navigation.state.params.name}</Text></Text>
-                <Text>Nomor Telepon Penerima: {this.props.navigation.state.params.phone}</Text>
-              </View>
-            }
-            <TouchableOpacity onPress={() => this.props.navigation.navigate('EditAddress', newParams)} style={{marginTop: 20, height: 40, width: 70, backgroundColor: '#bcbcbc', borderRadius: 3, justifyContent: 'center', alignItems: 'center'}}>
-              <Text style={{fontSize: 16, fontWeight: 'bold'}}>Edit</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={{backgroundColor: 'white', paddingTop: 10}}>
-            <Text style={{textAlign: 'center', fontSize: 20, padding: 10}}>Detail Pesanan</Text>
-            {
-              listData.map((x, i) =>
-              <View key={i} style={styles.productWrapper}>
-                <View style={styles.productHeader}>
-                  <Text style={styles.productName}>{x.product_name}</Text>
+              {
+                this.props.navigation.state.params === undefined
+                ?
+                <View>
+                  <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
+                  <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.userData.name}</Text>
+                  <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
+                  <Text style={{marginBottom: 5, fontSize: 13}}>0{this.props.userData.phone}</Text>
+                  <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
+                  {
+                    this.state.isAddressValid
+                    ?
+                    <View>
+                      <Text style={{fontSize: 13}}>{this.props.userData.address.street}</Text>
+                      <Text style={{fontSize: 13}}>Kecamatan {this.props.userData.address.district}</Text>
+                      <Text style={{fontSize: 13}}>Kelurahan {this.props.userData.address.village}</Text>
+                      <Text style={{fontSize: 13}}>{this.props.userData.address.city}</Text>
+                    </View>
+                    :
+                    <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
+                  }
                 </View>
-                <View style={styles.productDetails}>
-                  <Image
-                    resizeMode='contain'
-                    style={{width: 120, height: 120, borderColor: '#eaeaea', borderWidth: 1}}
-                    source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
-                    />
-                  <View>
-                    <View style={{marginBottom: 12, flexDirection: 'row'}}>
-                      <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Harga :</Text>
-                      <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.price)}</Text>
+                :
+                <View>
+                  <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
+                  <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.name}</Text>
+                  <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
+                  <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.phone}</Text>
+                  <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
+                  {
+                    this.state.isAddressValid
+                    ?
+                    <View>
+                      <Text style={{fontSize: 13}}>{this.props.navigation.state.params.street}</Text>
+                      <Text style={{fontSize: 13}}>Kecamatan {this.props.navigation.state.params.district}</Text>
+                      <Text style={{fontSize: 13}}>Kelurahan {this.props.navigation.state.params.village}</Text>
+                      <Text style={{fontSize: 13}}>{this.props.navigation.state.params.city}</Text>
                     </View>
-                    <View style={{marginBottom: 12, flexDirection: 'row'}}>
-                      <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Kuantitas :</Text>
-                      <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{x.qty}</Text>
+                    :
+                    <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
+                  }
+                </View>
+              }
+            </View>
+          </View>
+          <View style={{alignItems: 'center'}}>
+            <View style={{backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 3}}>
+              <View>
+                <Text style={{fontSize: 20, padding: 10, fontWeight: 'bold', color: '#7c0c10'}}>Detail Pesanan</Text>
+              </View>
+              {
+                listData.map((x, i) =>
+                <View key={i}>
+                  <Text style={{marginLeft: 12, fontWeight: 'bold', fontSize: 16, marginBottom: 5}}>{x.product_name}</Text>
+                  <View style={styles.productDetails}>
+                    <Image
+                      resizeMode='contain'
+                      style={{width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1}}
+                      source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
+                      />
+                    <View style={{marginBottom: 5, width: '51%'}}>
+                      <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Harga</Text>
+                      <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Kuantitas</Text>
+                      <Text style={{marginLeft: 10, color: '#a3a3a3', position: 'absolute', bottom: 3}}>Subtotal</Text>
                     </View>
-                    <View style={{marginBottom: 12, flexDirection: 'row'}}>
-                      <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Subtotal :</Text>
-                      <Text style={{marginLeft: 10, color: '#9b9b9b'}}>{idrFormat(x.subtotal)}</Text>
+                    <View style={{marginBottom: 5}}>
+                      <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{idrFormat(x.price)}</Text>
+                      <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{x.qty}</Text>
+                      <Text style={{textAlign: 'right', position: 'absolute', bottom: 3}}>
+                        {idrFormat(x.subtotal)}
+                      </Text>
                     </View>
                   </View>
+                  <View style={{alignItems: 'center'}}>
+                    <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                  </View>
                 </View>
+                )
+              }
+              <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10}}>
+                <Text style={{fontWeight: 'bold', fontSize: 15}}>Total Belanja</Text>
+                <Text style={{fontSize: 15, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                  {idrFormat(total)}
+                </Text>
               </View>
-              )
-            }
-          </View>
-          <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
-            <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Belanja</Text>
-            <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>{idrFormat(total)}</Text>
-          </View>
-          <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
-            <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Ongkos Kirim</Text>
-            <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>
-              {this.state.isFreeOngkir ? 'Gratis' : idrFormat(Number(this.state.ongkir))}
-            </Text>
-          </View>
-          <View style={{marginTop: 10, flexDirection: 'row', backgroundColor: 'white'}}>
-            <Text style={{fontSize: 18, padding: 10, marginLeft: 10}}>Total Pembayaran</Text>
-            <Text style={{fontSize: 18, position: 'absolute', right: 45, top: 10, fontWeight: 'bold'}}>{this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + this.state.ongkir)}</Text>
+              <View style={{paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
+                <Text style={{fontWeight: 'bold', fontSize: 15}}>Ongkir</Text>
+                <TouchableOpacity onPress={() => this.showInfo()} style={{position: 'absolute', left: 60, top: 4, borderWidth: 2, borderColor: 'red', borderRadius: 10, width: 16, height: 16, justifyContent: 'center', alignItems: 'center'}}>
+                  <Text style={{color: 'red', fontWeight: 'bold', fontSize: 11}}>i</Text>
+                </TouchableOpacity>
+                {
+                  this.state.isFreeOngkir
+                  ?
+                  <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10}} source={require('../../android/app/src/main/assets/custom/FreeOngkir.png')}/>
+                  :
+                  <Text style={{fontSize: 15, position: 'absolute', right: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                    {idrFormat(Number(this.state.ongkir))}
+                  </Text>
+                }
+              </View>
+              <View style={{alignItems: 'center'}}>
+                <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+              </View>
+              <View style={{alignItems: 'center', marginTop: 3}}>
+                <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+              </View>
+              <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
+                <Text style={{fontWeight: 'bold', fontSize: 17}}>Total Bayar</Text>
+                  <Text style={{fontSize: 17, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                    {idrFormat(total + this.state.ongkir)}
+                  </Text>
+              </View>
+            </View>
+            {/**/}
           </View>
           <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
             <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
@@ -317,10 +358,9 @@ const styles = StyleSheet.create({
   },
   productDetails: {
     backgroundColor: 'white',
-    height: 160,
-    width: '100%',
-    padding: 20,
-    flexDirection: 'row'
+    height: 100,
+    flexDirection: 'row',
+    marginLeft: 12
   },
   button: {
     marginBottom: 40,

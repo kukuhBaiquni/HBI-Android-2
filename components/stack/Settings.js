@@ -43,12 +43,6 @@ class Settings extends Component {
     const { navigation } = this.props;
     return(
       <View style={{flex: 1}}>
-        <View style={styles.header}>
-          <TouchableOpacity style={{position: 'absolute', left: 0, marginLeft: 10}} onPress={() => navigation.goBack()}>
-            <Image style={{height: 18, width: 18}} source={require('../../android/app/src/main/assets/custom/BackWhite.png')} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Pengaturan</Text>
-        </View>
         <ScrollView>
           <TouchableNativeFeedback>
             <View style={styles.listMenu}>
