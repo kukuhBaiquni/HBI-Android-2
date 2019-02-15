@@ -40,6 +40,7 @@ import { watcherLoadBadge } from './Load_Badge';
 import { watcherNotificationController } from './Notification_Controller';
 import { watcherUpdateListNotifications } from './Update_List_Notifications';
 import { watcherSendForm } from './Send_Call_Us';
+import { watcherLoadSingleTransaction } from './Load_Single_Transaction';
 
 export default function* rootSaga() {
   yield all([
@@ -83,6 +84,7 @@ export default function* rootSaga() {
     watcherLoadBadge(),
     watcherNotificationController(),
     watcherUpdateListNotifications(),
-    watcherSendForm()
+    watcherSendForm(),
+    watcherLoadSingleTransaction()
   ]);
 };

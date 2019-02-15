@@ -18,7 +18,7 @@ class EditAddressDP extends Component {
   constructor(props){
     super(props)
     this.state = {
-      cityHandler: '',
+      cityHandler: 'KOTA BANDUNG',
       districtHandler: '',
       villageHandler: '',
       nameHandler: '',
@@ -46,7 +46,7 @@ class EditAddressDP extends Component {
     if (addressX !== undefined) {
       this.setState({
         nameHandler: this.props.navigation.state.params.name,
-        token: this.props.navigation.state.params.token,
+        token: this.props.token,
         phoneHandler: phone.toString(),
         addressHandler: this.props.navigation.state.params.address.street,
         jalanHandler: addressX.jalan,
@@ -60,14 +60,7 @@ class EditAddressDP extends Component {
         phoneHandler: phone.toString()
       })
     }
-    this.props.dispatch(loadCities())
-  }
-
-  citySelected(x, f) {
-    this.props.dispatch(resetDistricts());
-    this.props.dispatch(resetVillages());
-    this.props.dispatch(loadDistricts(this.props.territorial.cities[f].kode_kota));
-    this.setState({cityHandler: x, districtHandler: '', villageHandler: ''})
+    this.props.dispatch(loadDistricts(3273))
   }
 
   districtSelected(x, f) {
@@ -93,7 +86,7 @@ class EditAddressDP extends Component {
   onSave() {
     const addressX = 'Jl. ' + this.state.jalanHandler + ' No.' + this.state.nomorHandler + ' Rt.0' + this.state.rtHandler + ' Rw.0' + this.state.rwHandler;
     const data = {
-      token: this.state.token,
+      token: this.props.token,
       name: this.state.nameHandler,
       phone: this.state.phoneHandler,
       street: addressX,
@@ -101,8 +94,8 @@ class EditAddressDP extends Component {
       district: this.state.districtHandler,
       village: this.state.villageHandler
     }
-    const { cityHandler, districtHandler, villageHandler, nameHandler, phoneHandler, addressHandler } = this.state;
-    if (cityHandler !== '' && districtHandler !== '' && villageHandler !== '' && nameHandler !== '' && phoneHandler !== '' && addressHandler !== '') {
+    const { cityHandler, districtHandler, villageHandler, nameHandler, phoneHandler, jalanHandler, nomorHandler, rtHandler, rwHandler } = this.state;
+    if (cityHandler !== '' && districtHandler !== '' && villageHandler !== '' && nameHandler !== '' && phoneHandler !== '' && jalanHandler !== '' && nomorHandler !== '' && rtHandler !== '' && rwHandler !== '') {
       this.setState({loading: true})
       if (this.state.saveState === 'default') {
         this.props.dispatch(saveAddress(data))
@@ -122,17 +115,6 @@ class EditAddressDP extends Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.territorial.cities !== this.props.territorial.cities) {
-      if (this.state.cityHandler === '') {
-        const index = this.props.territorial.cities.map(x => x.nama_kota).indexOf(this.props.navigation.state.params.address.city);
-        let code = null
-        if (index !== -1) {
-          code = this.props.territorial.cities[index].kode_kota;
-          this.props.dispatch(loadDistricts(code))
-        }
-        this.setState({cityHandler: this.props.navigation.state.params.address.city})
-      }
-    }
     if (prevProps.territorial.districts !== this.props.territorial.districts) {
       if (this.state.districtHandler === '') {
         const index = this.props.territorial.districts.map(x => x.nama_kecamatan).indexOf(this.props.navigation.state.params.address.district);
@@ -178,6 +160,7 @@ class EditAddressDP extends Component {
           ],
           { cancelable: false }
         );
+        this.props.dispatch(forceResetSA())
       }
     }
   }
@@ -232,15 +215,12 @@ class EditAddressDP extends Component {
                 <Item picker style={{width: 335, marginLeft: 10}}>
                   <Picker
                     mode="dropdown"
+                    enabled={false}
                     iosIcon={<Icon name="ios-arrow-down-outline" />}
-                    selectedValue={this.state.cityHandler}
+                    selectedValue='KOTA BANDUNG'
                     onValueChange={(x, f) => this.citySelected(x, f)}
                   >
-                      {
-                        this.props.territorial.cities.map((x, i) =>
-                          <Picker.Item key={i} label={x.nama_kota} value={x.nama_kota} />
-                        )
-                      }
+                  <Picker.Item label='KOTA BANDUNG' value='KOTA BANDUNG' />
                   </Picker>
                 </Item>
                 <Label style={{fontSize: 15, marginLeft: 15, marginTop: 10, color: '#a0a0a0'}}>Kecamatan</Label>

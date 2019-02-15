@@ -54,7 +54,7 @@ class TransactionList extends Component {
           data={this.state.data}
           keyExtractor={item => item.trx}
           renderItem={({ item }) => (
-            <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionDetails', item)}>
+            <TouchableNativeFeedback onPress={() => navigation.navigate('TransactionDetails', {transaction: item})}>
               <View style={[styles.listMenu, {height: 70, flexDirection: 'row'}]}>
                 <View style={{paddingLeft: 10}}>
                   <Text style={[styles.menuTitle, {color: '#bababa', fontSize: 15}]}>Nomor Transaksi</Text>

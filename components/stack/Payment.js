@@ -30,7 +30,7 @@ class Payment extends Component {
   beforeRender = async () => {
     let acu = 0;
     this.props.cart.map(x => acu += x.freeOngkirConsideration)
-    if (acu > 25) {
+    if (acu > 23) {
       this.setState({isFreeOngkir: true})
     }
     this.props.dispatch(forceResetRoot())
@@ -252,22 +252,22 @@ class Payment extends Component {
               {
                 listData.map((x, i) =>
                 <View key={i}>
-                  <Text style={{marginLeft: 12, fontWeight: 'bold', fontSize: 16, marginBottom: 5}}>{x.product_name}</Text>
+                  <Text style={{marginLeft: 12, fontWeight: 'bold', fontSize: 16, marginBottom: 5, marginTop: 12}}>{x.product_name}</Text>
                   <View style={styles.productDetails}>
                     <Image
                       resizeMode='contain'
                       style={{width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1}}
                       source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
                       />
-                    <View style={{marginBottom: 5, width: '51%'}}>
+                    <View style={{marginBottom: 5, width: '25%'}}>
                       <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Harga</Text>
                       <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Kuantitas</Text>
                       <Text style={{marginLeft: 10, color: '#a3a3a3', position: 'absolute', bottom: 3}}>Subtotal</Text>
                     </View>
-                    <View style={{marginBottom: 5}}>
+                    <View style={{marginBottom: 5, width: '45%'}}>
                       <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{idrFormat(x.price)}</Text>
                       <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{x.qty}</Text>
-                      <Text style={{textAlign: 'right', position: 'absolute', bottom: 3}}>
+                      <Text style={{textAlign: 'right', position: 'absolute', bottom: 3, right: 0}}>
                         {idrFormat(x.subtotal)}
                       </Text>
                     </View>

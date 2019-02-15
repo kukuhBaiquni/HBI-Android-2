@@ -315,12 +315,12 @@ class Cart extends Component {
                               style={{width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1}}
                               source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
                               />
-                            <View style={{marginBottom: 5, width: '45%'}}>
+                            <View style={{marginBottom: 5, width: '25%'}}>
                               <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Harga</Text>
                               <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Kuantitas</Text>
                               <Text style={{marginLeft: 10, color: '#a3a3a3', position: 'absolute', bottom: 3}}>Subtotal</Text>
                             </View>
-                            <View style={{marginBottom: 5}}>
+                            <View style={{marginBottom: 5, width: '45%'}}>
                               <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{idrFormat(Number(x.price))}</Text>
                               <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{x.qty}</Text>
                               <Text onPress={(x) => this.showSpecificModal(i)} style={{textAlign: 'right', fontWeight: 'bold', marginTop: 13, color: '#7c0c10'}}>Ubah Rincian</Text>
@@ -337,6 +337,7 @@ class Cart extends Component {
                     </View>
                   )
                 }
+                <View style={{height: 70}} />
               </ScrollView>
               <View style={[styles.productHeader, {height: 60, paddingLeft: 20, position: 'absolute', bottom: 0}]}>
                 <View>

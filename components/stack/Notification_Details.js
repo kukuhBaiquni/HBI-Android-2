@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
-import { locale } from '../../config';
+import { locale, idrFormat } from '../../config';
 import moment from 'moment';
 import { readingNotification } from '../../actions/Reading_Notification';
 import { NavigationEvents } from 'react-navigation';
@@ -21,8 +21,8 @@ class NotificationDetails extends Component {
   }
 
   render() {
-    const { navigation } = this.props;
-    const data = this.props.navigation.state.params.data;
+    const { navigation,  } = this.props;
+    const data = navigation.state.params.data;
     const tracking = ['', 'Menunggu Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
     const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e']
     const header2 = ['', 'Pesanan Anda sedang dalam antrian.', 'Pembayaran pesanan anda berhasil dikonfirmasi.', 'Proses pengiriman pesanan anda sedang dilakukan.', 'Telah berbelanja di Halal Beef Indonesia.'];
@@ -62,7 +62,7 @@ class NotificationDetails extends Component {
                 data.tracking === 1 &&
                 <View>
                   <Text style={{color: '#a3a3a3', marginBottom: 10}}>Jumlah Tagihan</Text>
-                  <Text style={{position: 'absolute', right: 0, fontWeight: 'bold'}}>Rp.{data.content.amount.toLocaleString('IT-it')}</Text>
+                  <Text style={{position: 'absolute', right: 0, fontWeight: 'bold'}}>{idrFormat(data.content.amount)}</Text>
                 </View>
               }
               {
@@ -82,7 +82,7 @@ class NotificationDetails extends Component {
                 </TouchableOpacity>
               </View>
             }
-            <TouchableOpacity style={{alignItems: 'center'}}>
+            <TouchableOpacity style={{alignItems: 'center'}} onPress={() => navigation.navigate('TransactionDetails', data.trx)}>
               <Text style={{fontSize: 16, fontWeight: 'bold', color: '#7c0c10'}}>Lihat Detail</Text>
             </TouchableOpacity>
           </View>

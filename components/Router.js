@@ -60,18 +60,29 @@ const xrectangle = {height: 16, width: 16};
 class Names extends Component {
   render() {
     return(
-      <View style={{marginTop: 5}}>
+      <View>
         {
           this.props.userData.name === ''
           ?
-          <Text style={{color: 'white', fontSize: 17, position: 'absolute', bottom: -95}}>Selamat Datang!</Text>
+          <View style={{paddingLeft: 10}}>
+            <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
+              <Image style={{height: 50, width: 50, borderRadius: 30}} source={require('../android/app/src/main/assets/custom/drawerdefault.png')} />
+            </TouchableOpacity>
+            <Text style={{color: 'whtite', fontSize: 17, marginTop: 5}}>Selamat Datang!</Text>
+            <View>
+              <Text style={{color: 'white', fontSize: 14}}>Buat akun Anda atau login disini</Text>
+              <TouchableOpacity style={{position: 'absolute', right: 20, top: 3}} onPress={() => this.props.navigation.navigate('Login')}>
+                <Image resizeMode='contain' style={{width: 13, height: 13, opacity: 0.5}} source={require('../android/app/src/main/assets/custom/Beranda/NextGrey.png')} />
+              </TouchableOpacity>
+            </View>
+          </View>
           :
-          <View>
+          <View style={{paddingLeft: 10}}>
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Profile')}>
               <Image style={{height: 50, width: 50, borderRadius: 30}} source={{uri: `${SERVER_URL}/images/dummy/${this.props.userData.photo}`}} />
             </TouchableOpacity>
-            <Text style={{color: 'white', fontSize: 14, marginTop: 5}}>Selamat Datang!</Text>
-            <Text style={{color: 'white', fontSize: 17}}>{this.props.userData.name}</Text>
+            <Text style={{color: 'white', fontSize: 17, marginTop: 5}}>Selamat Datang!</Text>
+            <Text style={{color: 'white', fontSize: 15}}>{this.props.userData.name}</Text>
           </View>
         }
       </View>
@@ -86,22 +97,25 @@ function mapDispatchToProps(dispatch) {
 const UserData = connect(mapDispatchToProps)(Names)
 
 const DrawerComponent = (props) => (
-  <ScrollView style={{flex: 1}}>
+  <ScrollView style={{flex: 1, color: '#a3a3a3'}}>
     <SafeAreaView>
-      <View style={{height: 120, backgroundColor: '#7c0c10', padding: 10}}>
+      <View style={{height: 130, backgroundColor: '#7c0c10', padding: 10, paddingTop: 20}}>
         <UserData {...props} />
       </View>
         <DrawerItems {...props} />
-        <View style={{borderBottomColor: '#bababa', borderBottomWidth: 1}} />
+        <View style={{height: 1, backgroundColor: '#e2e2e2'}} />
         <View style={{alignItems: 'center'}}>
           <TouchableOpacity style={styles.customToShop} onPress={() => props.navigation.navigate('Shopping')}>
             <Text style={{color: 'white'}}>Mulai Belanja Disini</Text>
           </TouchableOpacity>
         </View>
-        <View style={{paddingTop: 10, paddingLeft: 20}}>
+        <View style={{paddingTop: 10, paddingLeft: 20, height: 160, width: '100%'}}>
           <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('About', {type: 0})}>FAQ</Text>
           <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('About', {type: 1})}>Kebijakan Privasi</Text>
           <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('About', {type: 2})}>Syarat & Ketentuan</Text>
+          <View style={{position: 'absolute', bottom: -5, alignItems: 'center', width: '100%', }}>
+            <Text style={{marginBottom: 10, fontSize: 12, color: '#7c0c10'}}>App Version 1.03</Text>
+          </View>
         </View>
     </SafeAreaView>
   </ScrollView>
@@ -144,7 +158,10 @@ const Drawer = createDrawerNavigator({
   }
 },
 {
-  contentComponent: DrawerComponent
+  contentComponent: DrawerComponent,
+  contentOptions: {
+    activeTintColor: '#7c0c10'
+  }
 })
 
 const Tabs = createMaterialTopTabNavigator({

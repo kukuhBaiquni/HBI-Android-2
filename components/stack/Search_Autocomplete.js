@@ -14,7 +14,7 @@ class SearchAutocomplete extends Component {
   }
 
   filterResult(x) {
-    let filtered = this.props.listProducts.filter(z => z.productname.toLowerCase().includes(x));
+    let filtered = this.props.listProducts.filter(z => z.productname.toLowerCase().includes(x.toLowerCase()));
     if (filtered.length !== 0 && x !== '') {
       this.setState({result: filtered, query: x})
     }else{

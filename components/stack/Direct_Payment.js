@@ -131,7 +131,7 @@ class DirectPayment extends Component {
       if (data !== null) {
         const parsed = JSON.parse(data)
         let realPrice = 0;
-        if (this.props.userData === 'Non Member') {
+        if (this.props.userData.status === 'Non Member') {
           realPrice = parsed.enduserprice;
         }else{
           realPrice = parsed.resellerprice;
@@ -153,14 +153,24 @@ class DirectPayment extends Component {
   }
 
   changeCount(x) {
-    let count = this.state.qty
+    let count = this.state.qty;
     if (x === 'inc') {
       count ++
       this.setState({qty: count, loadingCount: true})
+      if (this.state.data.packing * count > 23) {
+        this.setState({isFreeOngkir: true, ongkir: 0})
+      }else{
+        this.setState({isFreeOngkir: false, ongkir: this.props.userData.ongkir})
+      }
     }else{
       if (count > 1) {
         count --
         this.setState({qty: count, loadingCount: true})
+        if (this.state.data.packing * count > 23) {
+          this.setState({isFreeOngkir: true, ongkir: 0})
+        }else{
+          this.setState({isFreeOngkir: false, ongkir: this.props.userData.ongkir})
+        }
       }
     }
     var data = {
@@ -182,11 +192,7 @@ class DirectPayment extends Component {
 
   checkIsFreeOngkir(x) {
     this.setState({qty: Number(x)})
-    if (this.state.data.packing * x > 25) {
-      this.setState({isFreeOngkir: true, ongkir: 0})
-    }else{
-      this.setState({isFreeOngkir: false, ongkir: this.props.userData.ongkir})
-    }
+
   }
 
   showInfo() {
@@ -226,9 +232,7 @@ class DirectPayment extends Component {
           <Modal
             isVisible={this.state.loading}
             style={{alignItems: 'center'}}
-            onBackdropPress={() => this.setState({loading: false})}
-            onBackButtonPress={() => this.setState({loading: false})}
-            onModalShow={() => this.setState({showModalContent: true})}
+            onModalShow={() => this.setState({showModalContent: false})}
             onModalHide={() => this.setState({showModalContent: false})}
             hideModalContentWhileAnimating={true}
             useNativeDriver
@@ -385,15 +389,15 @@ class DirectPayment extends Component {
                       style={{width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1}}
                       source={{uri: `${SERVER_URL}images/products/${this.state.data.photo}`}}
                       />
-                    <View style={{marginBottom: 5, width: '48%'}}>
+                    <View style={{marginBottom: 5, width: '25%'}}>
                       <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Harga</Text>
                       <Text style={{marginLeft: 10, fontWeight: 'bold'}}>Kuantitas</Text>
                       <Text style={{marginLeft: 10, fontWeight: 'bold', position: 'absolute', bottom: 3}}>Total</Text>
                     </View>
-                    <View style={{marginBottom: 5}}>
+                    <View style={{marginBottom: 5, width: '45%'}}>
                       <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{this.props.userData.status === 'Non Member' ? idrFormat(Number(this.state.data.enduserprice)) : idrFormat(Number(this.state.data.resellerprice))}</Text>
                       <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{this.state.qty}</Text>
-                      <Text style={{textAlign: 'right', position: 'absolute', bottom: 3}}>
+                      <Text style={{textAlign: 'right', position: 'absolute', right: 0, fontWeight: 'bold', bottom: 3}}>
                         {
                           this.props.userData.status === 'Non Member'
                           ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty))

@@ -25,9 +25,9 @@ class ShopPage extends Component {
         if (this.props.userData.name === '') {
           this.props.dispatch(fetchUser(tokens))
         }
-        if (this.props.listProducts.length === 0) {
-          this.props.dispatch(getAllProducts());
-        }
+      }
+      if (this.props.listProducts.length === 0) {
+        this.props.dispatch(getAllProducts());
       }
     }catch(error) {
     }

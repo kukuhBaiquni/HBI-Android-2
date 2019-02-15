@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { SERVER_URL, idrFormat, locale } from '../../config';
 import moment from 'moment';
+import { loadSingleTransaction } from '../../actions/Load_Single_Transaction';
 
 class TransactionDetails extends Component {
   constructor(props) {
@@ -15,15 +16,16 @@ class TransactionDetails extends Component {
   }
 
   beforeRender() {
-    if (this.props.navigation.state.params === undefined) {
-      this.setState({data: this.props.transaction})
+    if (this.props.navigation.state.params.transaction === undefined) {
+      const trx = this.props.navigation.state.params;
+      this.props.dispatch(loadSingleTransaction(trx));
     }else{
-      this.setState({data: this.props.navigation.state.params})
+      this.setState({data: this.props.navigation.state.params.transaction})
     }
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (JSON.stringify(this.state.data) === JSON.stringify({})) {
+    if (prevProps.transaction !== this.props.transaction) {
       this.setState({data: this.props.transaction})
     }
   }
@@ -33,7 +35,6 @@ class TransactionDetails extends Component {
     const { data } = this.state;
     const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e']
     const trackingTitle = ['','Menunggu Konfirmasi Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai'];
-
     return(
       <View style={{flex: 1}}>
         <NavigationEvents
@@ -125,7 +126,13 @@ class TransactionDetails extends Component {
               <View style={styles.footer}>
                 <Text style={[styles.subTitle, {padding: 10, fontSize: 15, marginLeft: 83}]}>Ongkos Kirim</Text>
                 <View style={{width: '100%', position: 'absolute'}}>
-                  <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{idrFormat(data.ongkir)}</Text>
+                  {
+                    data.ongkir === 0
+                    ?
+                    <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10, top: 5}} source={require('../../android/app/src/main/assets/custom/FreeOngkir.png')}/>
+                    :
+                    <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{idrFormat(data.ongkir)}</Text>
+                  }
                 </View>
               </View>
               <View style={[styles.footer, {backgroundColor: '#fff9fa'}]}>
@@ -135,7 +142,7 @@ class TransactionDetails extends Component {
                 </View>
               </View>
             </View>
-            <View style={{marginTop: 70}}></View>
+            <View style={{height: 10}} />
           </ScrollView>
         </View>
       }
