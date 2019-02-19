@@ -82,7 +82,7 @@ class NotificationDetails extends Component {
                 </TouchableOpacity>
               </View>
             }
-            <TouchableOpacity style={{alignItems: 'center'}} onPress={() => navigation.navigate('TransactionDetails', data.trx)}>
+            <TouchableOpacity style={{alignItems: 'center'}} onPress={() => navigation.navigate('TransactionDetails', {trx: data.trx})}>
               <Text style={{fontSize: 16, fontWeight: 'bold', color: '#7c0c10'}}>Lihat Detail</Text>
             </TouchableOpacity>
           </View>

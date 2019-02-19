@@ -17,7 +17,7 @@ class TransactionDetails extends Component {
 
   beforeRender() {
     if (this.props.navigation.state.params.transaction === undefined) {
-      const trx = this.props.navigation.state.params;
+      const trx = this.props.navigation.state.params.trx;
       this.props.dispatch(loadSingleTransaction(trx));
     }else{
       this.setState({data: this.props.navigation.state.params.transaction})
@@ -31,6 +31,7 @@ class TransactionDetails extends Component {
   }
 
   render() {
+    console.log(data);
     const { navigation } = this.props;
     const { data } = this.state;
     const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e']

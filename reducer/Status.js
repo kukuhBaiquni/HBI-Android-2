@@ -62,6 +62,10 @@ let initialState = {
     success: false,
     error: false
   },
+  transaction: {
+    success: false,
+    error: false
+  },
   InternalServerError: false
 };
 
@@ -400,7 +404,28 @@ export default function status(state = initialState, action) {
       sendFormCallUs: {
         ...state.sendFormCallUs, success: false, error: false
       }
-    })
+    });
+
+    case 'CONFIRM_TRANSACTION_FAILED':
+    return Object.assign({}, state, {
+      transaction: {
+        ...state.transaction, success: false, error: true
+      }
+    });
+
+    case 'CONFIRM_TRANSACTION_SUCCESS':
+    return Object.assign({}, state, {
+      transaction: {
+        ...state.transaction, success: true, error: false
+      }
+    });
+
+    case 'RESET_TRANSACTION_STATE':
+    return Object.assign({}, state, {
+      transaction: {
+        ...state.transaction, success: true, error: false
+      }
+    });
 
     default:
     return state;

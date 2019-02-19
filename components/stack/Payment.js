@@ -12,6 +12,7 @@ import { DotIndicator } from 'react-native-indicators';
 import { confirmTransaction } from '../../actions/Confirm_Transaction';
 import { checkOngkir } from '../../actions/Check_Ongkir';
 import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
+import { resetTransactionState } from '../../actions/Direct_Purchase';
 
 import moment from 'moment';
 
@@ -28,6 +29,7 @@ class Payment extends Component {
     }
   }
   beforeRender = async () => {
+    this.props.dispatch(resetTransactionState())
     let acu = 0;
     this.props.cart.map(x => acu += x.freeOngkirConsideration)
     if (acu > 23) {
@@ -71,6 +73,12 @@ class Payment extends Component {
     }
     if (prevProps.ongkir !== this.props.ongkir) {
       this.setState({ongkir: this.props.ongkir})
+    }
+    if (prevProps.status.transaction.error !== this.props.status.transaction.error) {
+      if (this.state.transactionLoading) {
+        this.setState({transactionLoading: false})
+        this.props.dispatch(resetTransactionState())
+      }
     }
   }
 
@@ -308,7 +316,7 @@ class Payment extends Component {
               <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
                 <Text style={{fontWeight: 'bold', fontSize: 17}}>Total Bayar</Text>
                   <Text style={{fontSize: 17, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
-                    {idrFormat(total + this.state.ongkir)}
+                    {this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + this.state.ongkir)}
                   </Text>
               </View>
             </View>

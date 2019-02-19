@@ -15,6 +15,7 @@ import { checkOngkir } from '../../actions/Check_Ongkir';
 import moment from 'moment';
 import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
 import { countItem } from '../../actions/Counting_Items';
+import { resetTransactionState } from '../../actions/Direct_Purchase';
 
 class DirectPayment extends Component {
   constructor(props) {
@@ -38,6 +39,7 @@ class DirectPayment extends Component {
     }
   }
   beforeRender = async () => {
+    this.props.dispatch(resetTransactionState())
     this.props.dispatch(forceResetRoot())
     if (this.props.navigation.state.params !== undefined) {
       const village = this.props.navigation.state.params.village;
@@ -79,6 +81,12 @@ class DirectPayment extends Component {
     }
     if (prevProps.ongkir !== this.props.ongkir) {
       this.setState({ongkir: this.props.ongkir})
+    }
+    if (prevProps.status.transaction.error !== this.props.status.transaction.error) {
+      if (this.state.transactionLoading) {
+        this.setState({transactionLoading: false})
+        this.props.dispatch(resetTransactionState())
+      }
     }
   }
 

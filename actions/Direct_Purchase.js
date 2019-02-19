@@ -14,6 +14,10 @@ const confirmTransactionFailed = () => {
   return { type: 'CONFIRM_TRANSACTION_FAILED' };
 };
 
+export const resetTransactionState = () => {
+  return { type: 'RESET_TRANSACTION_STATE' };
+};
+
 const transactionData = (data) => {
   return { type: 'TRANSACTION_DATA', data };
 };
