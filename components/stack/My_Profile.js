@@ -40,10 +40,10 @@ class MyProfile extends Component {
         <View style={{height: 50, backgroundColor: '#f4f4f4', marginTop: 10, justifyContent: 'center', paddingLeft: 10}}>
           <Text style={{fontSize: 17}}>Informasi Alamat</Text>
         </View>
-        <View style={{backgroundColor: 'white', height: 100, padding: 10}}>
-          <Text style={styles.dataUser}>{userData.address.street}</Text>
-          <Text style={styles.dataUser}>{userData.address.district}</Text>
-          <Text style={styles.dataUser}>{userData.address.village}</Text>
+        <View style={{backgroundColor: 'white', padding: 10}}>
+          <Text style={styles.dataUser}>Jl.{userData.address.street} No.{userData.address.no} Rt.{userData.address.rt} Rw.{userData.address.rw}</Text>
+          <Text style={styles.dataUser}>Kecamatan {userData.address.district}</Text>
+          <Text style={styles.dataUser}>Kelurahan {userData.address.village}</Text>
           <Text style={styles.dataUser}>{userData.address.city}</Text>
         </View>
       </ScrollView>

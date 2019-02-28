@@ -176,7 +176,7 @@ class ProductDetails extends Component {
             backgroundImageScale={2}
             renderNavBar={() => (
               <View style={styles.fixedNavbar}>
-                <TouchableOpacity onPress={() => navigation.navigate('Shopping')} style={{position: 'absolute', left: 0, marginLeft: 10}}>
+                <TouchableOpacity onPress={() => navigation.goBack()} style={{position: 'absolute', left: 0, marginLeft: 10}}>
                   <Image resizeMode='contain' style={{height: 19, width: 19}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
                 </TouchableOpacity>
                 <TouchableOpacity style={{position: 'absolute', right: 17, borderRadius: 50, height: 30, width: 30, justifyContent: 'center'}}>
@@ -185,7 +185,7 @@ class ProductDetails extends Component {
               </View>
             )}
             renderBackButton={() => (
-              <Image onPress={() => navigation.navigate('Shopping')} resizeMode='contain' style={{height: 19, width: 19}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
+              <Image onPress={() => navigation.goBack()} resizeMode='contain' style={{height: 19, width: 19}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
             )}
             renderCartIcon={() => (
               <CartIcon navigation={navigation} bcolor='#7c0c10'/>

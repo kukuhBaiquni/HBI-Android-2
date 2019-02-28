@@ -41,7 +41,6 @@ class EditProfile extends Component {
       villageHandler: '',
       streetHandler: '',
       loading: true,
-      jalanHandler: '',
       nomorHandler: '',
       rtHandler: '',
       rwHandler: '',
@@ -78,29 +77,17 @@ class EditProfile extends Component {
     if (this.props.userData.ttl !== undefined) {
       ttlHandler = moment(this.props.userData.ttl).format('DD MMM YYYY')
     }
-    const addressX = addressParser(this.props.userData.address.street)
-    if (addressX !== undefined) {
-      this.setState({
-        nameHandler: this.props.userData.name,
-        phoneHandler: phone,
-        gender: gender,
-        streetHandler: this.props.userData.address.street,
-        jalanHandler: addressX.jalan,
-        nomorHandler: addressX.no,
-        rtHandler: addressX.rt,
-        rwHandler: addressX.rw,
-        ttlHandler,
-        ttl: this.props.userData.ttl
-      })
-    }else{
-      this.setState({
-        nameHandler: this.props.userData.name,
-        phoneHandler: phone,
-        gender: gender,
-        ttlHandler,
-        ttl: this.props.userData.ttl
-      })
-    }
+    this.setState({
+      nameHandler: this.props.userData.name,
+      phoneHandler: phone,
+      gender: gender,
+      streetHandler: this.props.userData.address.street,
+      nomorHandler: this.props.userData.address.no,
+      rtHandler: this.props.userData.address.rt,
+      rwHandler: this.props.userData.address.rw,
+      ttlHandler,
+      ttl: this.props.userData.ttl
+    });
     this.props.dispatch(loadCities())
   }
 
@@ -196,7 +183,6 @@ class EditProfile extends Component {
   }
 
   onSave() {
-    const addressX = 'Jl. ' + this.state.jalanHandler + ' No.' + this.state.nomorHandler + ' Rt.0' + this.state.rtHandler + ' Rw.0' + this.state.rwHandler;
     const data = {
       name: this.state.nameHandler,
       phone: this.state.phoneHandler,
@@ -204,8 +190,11 @@ class EditProfile extends Component {
       city: this.state.cityHandler,
       district: this.state.districtHandler,
       village: this.state.villageHandler,
-      street: addressX,
+      street: this.state.streetHandler,
       token: this.props.navigation.state.params.token,
+      no: this.state.nomorHandler,
+      rt: this.state.rtHandler,
+      rw: this.state.rwHandler,
       ttl: this.state.ttl
     }
     this.setState({loading: true})
@@ -512,8 +501,8 @@ class EditProfile extends Component {
                 <Item stackedLabel style={{width: '90%'}}>
                   <Label style={{color: '#a0a0a0'}}>Jalan</Label>
                   <Input
-                    value={this.state.jalanHandler}
-                    onChangeText={(x) => this.setState({jalanHandler: x})}
+                    value={this.state.streetHandler}
+                    onChangeText={(x) => this.setState({streetHandler: x})}
                      />
                 </Item>
                 <Item stackedLabel style={{width: '90%'}}>

@@ -4,42 +4,15 @@ import { Container, Header, Item, Text, Right, Button, Content, Tab, Tabs, Scrol
 import { Icon } from 'react-native-elements';
 import ProductsTab from '../Products_Tab';
 import { connect } from 'react-redux';
-import { getAllProducts } from '../../actions/Get_All_Products';
-import { fetchUser } from '../../actions/Get_User_Data';
-import { setPlayerId } from '../../actions/Set_Player_Id';
-import { setInitialToken } from '../../actions/Set_Initial_Token';
 import { NavigationEvents } from 'react-navigation';
 import CartIcon from '../Cart_Icon';
 
 class ShopPage extends Component {
 
-  beforeRender = async () => {
-    try{
-      const id = await AsyncStorage.getItem('PlayerID')
-      const token = await AsyncStorage.getItem('access_token');
-      if (id !== null && token !== null) {
-        const ids = JSON.parse(id)
-        const tokens = JSON.parse(token)
-        this.props.dispatch(setInitialToken(tokens))
-        this.props.dispatch(setPlayerId({ids, token: tokens}))
-        if (this.props.userData.name === '') {
-          this.props.dispatch(fetchUser(tokens))
-        }
-      }
-      if (this.props.listProducts.length === 0) {
-        this.props.dispatch(getAllProducts());
-      }
-    }catch(error) {
-    }
-  }
-
   render() {
     let { listProducts, navigation } = this.props;
     return(
       <Container>
-        <NavigationEvents
-          onWillFocus = {() => this.beforeRender()}
-          />
         <Header style={styles.headerColor}>
           <Item style={{borderBottomColor: '#7c0c10'}}>
             <TouchableNativeFeedback onPress={() => navigation.navigate('SearchAutocomplete')}>

@@ -38,6 +38,10 @@ function* workerConfirmTransaction(form) {
       .send({district: form.data.district})
       .send({village: form.data.village})
       .send({token: form.data.token})
+      .send({no: form.data.no})
+      .send({rt: form.data.rt})
+      .send({rw: form.data.rw})
+      .send({targetMember: form.data.targetMember})
       .then((res) => {
         return res;
       })

@@ -42,6 +42,7 @@ function* workerGetAllProducts() {
     yield put(getAllProducts_success(data));
     yield put(requestDone());
   }catch (error) {
+    console.log(error);
     yield put(requestFailed());
   }
 };

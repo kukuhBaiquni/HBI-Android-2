@@ -11,7 +11,6 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 import { saveAddress } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
-import { addressParser } from '../../config';
 import { forceResetSA } from '../../actions/Save_Address';
 
 class EditAddressDP extends Component {
@@ -23,12 +22,11 @@ class EditAddressDP extends Component {
       villageHandler: '',
       nameHandler: '',
       phoneHandler: '',
-      addressHandler: '',
+      streetHandler: '',
       saveState: 'default',
       index: 0,
       loading: true,
       token: '',
-      jalanHandler: '',
       nomorHandler: '',
       rtHandler: '',
       rwHandler: ''
@@ -42,24 +40,15 @@ class EditAddressDP extends Component {
     }else{
       phone = '0' + this.props.navigation.state.params.phone
     }
-    const addressX = addressParser(this.props.navigation.state.params.address.street)
-    if (addressX !== undefined) {
-      this.setState({
-        nameHandler: this.props.navigation.state.params.name,
-        token: this.props.token,
-        phoneHandler: phone.toString(),
-        addressHandler: this.props.navigation.state.params.address.street,
-        jalanHandler: addressX.jalan,
-        nomorHandler: addressX.no,
-        rtHandler: addressX.rt,
-        rwHandler: addressX.rw
-      })
-    }else{
-      this.setState({
-        nameHandler: this.props.navigation.state.params.name,
-        phoneHandler: phone.toString()
-      })
-    }
+    this.setState({
+      nameHandler: this.props.navigation.state.params.name,
+      token: this.props.token,
+      phoneHandler: phone.toString(),
+      streetHandler: this.props.navigation.state.params.address.street,
+      nomorHandler: this.props.navigation.state.params.address.no,
+      rtHandler: this.props.navigation.state.params.address.rt,
+      rwHandler: this.props.navigation.state.params.address.rw
+    })
     this.props.dispatch(loadDistricts(3273))
   }
 
@@ -84,18 +73,20 @@ class EditAddressDP extends Component {
   }
 
   onSave() {
-    const addressX = 'Jl. ' + this.state.jalanHandler + ' No.' + this.state.nomorHandler + ' Rt.0' + this.state.rtHandler + ' Rw.0' + this.state.rwHandler;
     const data = {
       token: this.props.token,
       name: this.state.nameHandler,
       phone: this.state.phoneHandler,
-      street: addressX,
       city: this.state.cityHandler,
       district: this.state.districtHandler,
-      village: this.state.villageHandler
+      village: this.state.villageHandler,
+      street: this.state.streetHandler,
+      no: this.state.nomorHandler,
+      rt: this.state.rtHandler,
+      rw: this.state.rwHandler
     }
-    const { cityHandler, districtHandler, villageHandler, nameHandler, phoneHandler, jalanHandler, nomorHandler, rtHandler, rwHandler } = this.state;
-    if (cityHandler !== '' && districtHandler !== '' && villageHandler !== '' && nameHandler !== '' && phoneHandler !== '' && jalanHandler !== '' && nomorHandler !== '' && rtHandler !== '' && rwHandler !== '') {
+    const { cityHandler, districtHandler, villageHandler, nameHandler, phoneHandler, streetHandler, nomorHandler, rtHandler, rwHandler } = this.state;
+    if (cityHandler !== '' && districtHandler !== '' && villageHandler !== '' && nameHandler !== '' && phoneHandler !== '' && streetHandler !== '' && nomorHandler !== '' && rtHandler !== '' && rwHandler !== '') {
       this.setState({loading: true})
       if (this.state.saveState === 'default') {
         this.props.dispatch(saveAddress(data))
@@ -256,8 +247,8 @@ class EditAddressDP extends Component {
                 <Item stackedLabel style={{width: 330}}>
                   <Label style={{color: '#a0a0a0'}}>Jalan</Label>
                   <Input
-                    value={this.state.jalanHandler}
-                    onChangeText={(x) => this.setState({jalanHandler: x})}
+                    value={this.state.streetHandler}
+                    onChangeText={(x) => this.setState({streetHandler: x})}
                      />
                 </Item>
                 <Item stackedLabel style={{width: 330}}>

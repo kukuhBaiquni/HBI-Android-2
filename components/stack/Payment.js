@@ -94,7 +94,11 @@ class Payment extends Component {
           city: userData.address.city,
           district: userData.address.district,
           village: userData.address.village,
-          token: this.state.token
+          token: this.state.token,
+          no: userData.address.no,
+          rt: userData.address.rt,
+          rw: userData.address.rw,
+          targetMember: this.props.targetMember.id
         }
       }else{
         data = {
@@ -104,7 +108,11 @@ class Payment extends Component {
           city: navigation.state.params.city,
           district: navigation.state.params.district,
           village: navigation.state.params.village,
-          token: this.state.token
+          token: this.state.token,
+          no: navigation.state.params.address.no,
+          rt: navigation.state.params.address.rt,
+          rw: navigation.state.params.address.rw,
+          targetMember: this.props.targetMember.id
         }
       }
       this.setState({loading: true})
@@ -145,7 +153,10 @@ class Payment extends Component {
           street: this.props.navigation.state.params.street,
           city: this.props.navigation.state.params.city,
           district: this.props.navigation.state.params.district,
-          village: this.props.navigation.state.params.village
+          village: this.props.navigation.state.params.village,
+          no: this.props.navigation.state.params.no,
+          rt: this.props.navigation.state.params.rt,
+          rw: this.props.navigation.state.params.rw
         }
       }
     }
@@ -220,7 +231,10 @@ class Payment extends Component {
                     this.state.isAddressValid
                     ?
                     <View>
-                      <Text style={{fontSize: 13}}>{this.props.userData.address.street}</Text>
+                      <Text style={{fontSize: 13}}>
+                        Jl.{this.props.userData.address.street} No.{this.props.userData.address.no}
+                        Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
+                      </Text>
                       <Text style={{fontSize: 13}}>Kecamatan {this.props.userData.address.district}</Text>
                       <Text style={{fontSize: 13}}>Kelurahan {this.props.userData.address.village}</Text>
                       <Text style={{fontSize: 13}}>{this.props.userData.address.city}</Text>
@@ -240,7 +254,10 @@ class Payment extends Component {
                     this.state.isAddressValid
                     ?
                     <View>
-                      <Text style={{fontSize: 13}}>{this.props.navigation.state.params.street}</Text>
+                      <Text style={{fontSize: 13}}>
+                        Jl.{this.props.navigation.state.params.street} No.{this.props.navigation.state.params.no}
+                        Rt.{this.props.navigation.state.params.rt} Rw.{this.props.navigation.state.params.rw}
+                      </Text>
                       <Text style={{fontSize: 13}}>Kecamatan {this.props.navigation.state.params.district}</Text>
                       <Text style={{fontSize: 13}}>Kelurahan {this.props.navigation.state.params.village}</Text>
                       <Text style={{fontSize: 13}}>{this.props.navigation.state.params.city}</Text>

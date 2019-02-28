@@ -17,6 +17,8 @@ import transactionTypeExpired from './Transaction_Expired';
 import transactionTypeSuccess from './Transaction_Success';
 import customContent from './Custom_Content';
 import badge from './Badge';
+import listMarket from './List_Market';
+import targetMember from './Target_Member'
 
 const rootReducer = combineReducers({
   listProducts,
@@ -36,7 +38,9 @@ const rootReducer = combineReducers({
   transactionTypeExpired,
   transactionTypeSuccess,
   customContent,
-  badge
+  badge,
+  listMarket,
+  targetMember
 });
 
 export default rootReducer

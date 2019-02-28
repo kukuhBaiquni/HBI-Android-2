@@ -9,7 +9,10 @@ let initialState = {
     city: '',
     district: '',
     village: '',
-    street: ''
+    street: '',
+    no: null,
+    rt: null,
+    rw: null
   },
   ongkir: 0,
   ttl: 0,

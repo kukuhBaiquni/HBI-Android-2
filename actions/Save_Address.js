@@ -37,6 +37,9 @@ function* workerSaveAddress(form) {
       .send({district: form.data.district})
       .send({village: form.data.village})
       .send({token: form.data.token})
+      .send({no: form.data.no})
+      .send({rt: form.data.rt})
+      .send({rw: form.data.rw})
       .then((res) => {
         return res;
       })

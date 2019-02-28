@@ -9,7 +9,6 @@ import Swiper from 'react-native-swiper';
 
 class Member extends Component {
   render() {
-    const data = ['1', '2', '3', '4'];
     const { navigation } = this.props;
     return(
       <View style={{flex: 1, backgroundColor: '#f4f4f4'}}>

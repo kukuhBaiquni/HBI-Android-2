@@ -102,9 +102,13 @@ class DirectPayment extends Component {
           city: userData.address.city,
           district: userData.address.district,
           village: userData.address.village,
+          no: userData.address.no,
+          rt: userData.address.rt,
+          rw: userData.address.rw,
           token: this.state.token,
           id: this.state.data.id,
           qty: this.state.qty,
+          targetMember: this.props.targetMember.id,
         }
       }else{
         data = {
@@ -114,9 +118,13 @@ class DirectPayment extends Component {
           city: navigation.state.params.city,
           district: navigation.state.params.district,
           village: navigation.state.params.village,
+          no: navigation.state.params.no,
+          rt: navigation.state.params.rt,
+          rw: navigation.state.params.rw,
           token: this.state.token,
           id: this.state.data.id,
           qty: this.state.qty,
+          targetMember: this.props.targetMember.id,
         }
       }
       this.setState({loading: true, changeAmount: false, transactionContent: true})
@@ -219,7 +227,10 @@ class DirectPayment extends Component {
           street: this.props.navigation.state.params.street,
           city: this.props.navigation.state.params.city,
           district: this.props.navigation.state.params.district,
-          village: this.props.navigation.state.params.village
+          village: this.props.navigation.state.params.village,
+          no: this.props.navigation.state.params.no,
+          rt: this.props.navigation.state.params.rt,
+          rw: this.props.navigation.state.params.rw
         }
       }
     }
@@ -359,7 +370,9 @@ class DirectPayment extends Component {
                     <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
                     <Text style={{marginBottom: 5, fontSize: 13}}>0{this.props.userData.phone}</Text>
                     <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
-                    <Text style={{fontSize: 13}}>{this.props.userData.address.street}</Text>
+                    <Text style={{fontSize: 13}}>
+                      Jl.{this.props.userData.address.street} No.{this.props.userData.address.no} Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
+                    </Text>
                     <Text style={{fontSize: 13}}>Kecamatan {this.props.userData.address.district}</Text>
                     <Text style={{fontSize: 13}}>Kelurahan {this.props.userData.address.village}</Text>
                     <Text style={{fontSize: 13}}>{this.props.userData.address.city}</Text>
@@ -373,7 +386,9 @@ class DirectPayment extends Component {
                     <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
                     <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.phone}</Text>
                     <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
-                    <Text style={{fontSize: 13}}>{this.props.navigation.state.params.street}</Text>
+                    <Text style={{fontSize: 13}}>
+                      Jl.{this.props.userData.address.street} No.{this.props.navigation.state.params.no} Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
+                    </Text>
                     <Text style={{fontSize: 13}}>Kecamatan {this.props.navigation.state.params.district}</Text>
                     <Text style={{fontSize: 13}}>Kelurahan {this.props.navigation.state.params.village}</Text>
                     <Text style={{fontSize: 13}}>{this.props.navigation.state.params.city}</Text>
@@ -404,7 +419,7 @@ class DirectPayment extends Component {
                     </View>
                     <View style={{marginBottom: 5, width: '45%'}}>
                       <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{this.props.userData.status === 'Non Member' ? idrFormat(Number(this.state.data.enduserprice)) : idrFormat(Number(this.state.data.resellerprice))}</Text>
-                      <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{this.state.qty}</Text>
+                      <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{this.state.qty} {this.state.data.unit}</Text>
                       <Text style={{textAlign: 'right', position: 'absolute', right: 0, fontWeight: 'bold', bottom: 3}}>
                         {
                           this.props.userData.status === 'Non Member'

@@ -31,11 +31,10 @@ class TransactionDetails extends Component {
   }
 
   render() {
-    console.log(data);
     const { navigation } = this.props;
     const { data } = this.state;
-    const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e']
-    const trackingTitle = ['','Menunggu Konfirmasi Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai'];
+    const color = ['', '#ffbf00', '#4d2e9b', '#01adbc', '#0038bc', '#00b71e']
+    const trackingTitle = ['','Menunggu Konfirmasi Pembayaran', 'Pembayaran Sudah Dikonfirmasi', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai'];
     return(
       <View style={{flex: 1}}>
         <NavigationEvents
@@ -58,10 +57,10 @@ class TransactionDetails extends Component {
                 <Text style={[styles.subTitle, {marginBottom: 5}]}>Alamat Pengiriman</Text>
                 <Text style={{color: '#a5a5a5'}}>{data.address.receiver}</Text>
                 <Text style={{color: '#a5a5a5'}}>0{data.address.receiver_phone}</Text>
-                <Text style={{color: '#a5a5a5'}}>{data.address.streets}</Text>
+                <Text style={{color: '#a5a5a5'}}>Jl.{data.address.streets} No.{data.address.no} Rt.0{data.address.rt} Rw.0{data.address.rw}</Text>
+                <Text style={{color: '#a5a5a5'}}>Kecamatan {data.address.districts}</Text>
+                <Text style={{color: '#a5a5a5'}}>Kelurahan {data.address.villages}</Text>
                 <Text style={{color: '#a5a5a5'}}>{data.address.cities}</Text>
-                <Text style={{color: '#a5a5a5'}}>{data.address.districts}</Text>
-                <Text style={{color: '#a5a5a5'}}>{data.address.villages}</Text>
               </View>
               <View style={styles.container}>
                 <Text style={styles.subTitle}>Lacak Pesanan</Text>
@@ -98,7 +97,7 @@ class TransactionDetails extends Component {
                       </View>
                       <View style={{flexDirection: 'row'}}>
                         <Text>Kuantitas: </Text>
-                        <Text style={{color: '#a5a5a5', textAlign: 'right', position: 'absolute', right: 10}}>{x.qty}</Text>
+                        <Text style={{color: '#a5a5a5', textAlign: 'right', position: 'absolute', right: 10}}>{x.qty} {this.props.listProducts.filter((r) => r.id === x.id ).map((x) => x.unit)}</Text>
                       </View>
                     </View>
                     <View>

@@ -45,7 +45,9 @@ import ListNotifications from './stack/List_Notifications';
 import AskQuestion from './drawer/AskQuestion';
 import Excellence from './drawer/Excellence';
 import Join from './drawer/Join';
-import Profit from './drawer/Profit'
+import Profit from './drawer/Profit';
+import Animate from './stack/Animate';
+import ListMarket from './stack/List_Market';
 import { SERVER_URL } from '../config';
 import BadgeNotification from './Badge_Notification';
 import { connect } from 'react-redux';
@@ -68,7 +70,7 @@ class Names extends Component {
             <TouchableOpacity onPress={() => this.props.navigation.navigate('Login')}>
               <Image style={{height: 50, width: 50, borderRadius: 30}} source={require('../android/app/src/main/assets/custom/drawerdefault.png')} />
             </TouchableOpacity>
-            <Text style={{color: 'whtite', fontSize: 17, marginTop: 5}}>Selamat Datang!</Text>
+            <Text style={{color: 'white', fontSize: 17, marginTop: 5}}>Selamat Datang!</Text>
             <View>
               <Text style={{color: 'white', fontSize: 14}}>Buat akun Anda atau login disini</Text>
               <TouchableOpacity style={{position: 'absolute', right: 20, top: 3}} onPress={() => this.props.navigation.navigate('Login')}>
@@ -114,7 +116,7 @@ const DrawerComponent = (props) => (
           <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('About', {type: 1})}>Kebijakan Privasi</Text>
           <Text style={{marginBottom: 10}} onPress={() => props.navigation.navigate('About', {type: 2})}>Syarat & Ketentuan</Text>
           <View style={{position: 'absolute', bottom: -5, alignItems: 'center', width: '100%', }}>
-            <Text style={{marginBottom: 10, fontSize: 12, color: '#7c0c10'}}>App Version 1.03</Text>
+            <Text style={{marginBottom: 10, fontSize: 12, color: '#7c0c10'}}>App Version 1.04</Text>
           </View>
         </View>
     </SafeAreaView>
@@ -187,9 +189,15 @@ const Tabs = createMaterialTopTabNavigator({
     }
   },
   Shopping: {
-    screen: ShopPage,
+    screen: ListMarket,
     navigationOptions: {
       title: 'Belanja',
+      headerTintColor: '#7c0c10',
+      headerStyle: {
+        backgroundColor: 'white',
+        borderBottomColor: 'black'
+      },
+      headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> ),
       tabBarIcon: ({focused}) => (
         focused
         ?
@@ -660,7 +668,19 @@ const RootStack = createStackNavigator({
       },
       headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
     })
-  }
+  },
+  Animate: {
+    screen: Animate,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
+  ListProducts: {
+    screen: ShopPage,
+    navigationOptions: ({navigation}) => ({
+      header: null
+    })
+  },
 }, {
   initialRouteName: 'MainTabs'
 })

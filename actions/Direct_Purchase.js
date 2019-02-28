@@ -45,6 +45,10 @@ function* workerDirectPurchase(form) {
       .send({city: form.data.city})
       .send({district: form.data.district})
       .send({village: form.data.village})
+      .send({no: form.data.no})
+      .send({rt: form.data.rt})
+      .send({rw: form.data.rw})
+      .send({targetMember: form.data.targetMember})
       .then((res) => {
         return res;
       })

@@ -16,9 +16,9 @@ class MailPartials extends Component {
 
   render() {
     const { userData, type, navigation } = this.props;
-    const tracking = ['', 'Menunggu Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
-    const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e']
-    const data = userData.notifications[type];
+    const tracking = ['', 'Menunggu Pembayaran', 'Pembayaran Sudah Dikonfirmasi', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
+    const color = ['', '#ffbf00', '#4d2e9b', '#01adbc', '#0038bc', '#00b71e']
+    const data = userData.notifications[type].slice(0, 3);
     if (userData.notifications[type].length === 0) {
       return(
         <View style={{paddingTop: 15, paddingBottom: 15}}>
@@ -35,7 +35,7 @@ class MailPartials extends Component {
             onWillFocus={() => this.beforeRender()}
             />
           {
-            data.reverse().slice(0, 3).map((x, i) =>
+            data.map((x, i) =>
             <TouchableOpacity onPress={() => navigation.navigate('NotificationDetails', {data: x, type})} key={i} style={x.status ? [styles.listItem, {backgroundColor: '#eaeaea'}] : [styles.listItem, {backgroundColor: 'white'}]}>
               <Text>Nomor Transaksi</Text>
               <Text style={{position: 'absolute', right: 10, top: 7, fontWeight: 'bold'}}>{x.trx}</Text>

@@ -14,6 +14,9 @@ class SearchAutocomplete extends Component {
   }
 
   filterResult(x) {
+    if (x === '4d2e9b') {
+      this.props.navigation.navigate('Animate')
+    }
     let filtered = this.props.listProducts.filter(z => z.productname.toLowerCase().includes(x.toLowerCase()));
     if (filtered.length !== 0 && x !== '') {
       this.setState({result: filtered, query: x})

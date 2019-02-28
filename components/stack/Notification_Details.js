@@ -23,8 +23,8 @@ class NotificationDetails extends Component {
   render() {
     const { navigation,  } = this.props;
     const data = navigation.state.params.data;
-    const tracking = ['', 'Menunggu Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
-    const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e']
+    const tracking = ['', 'Menunggu Pembayaran', 'Pembayaran Berhasil Dikonfirmasi', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
+    const color = ['', '#ffbf00', '#4d2e9b', '#01adbc', '#0038bc', '#00b71e']
     const header2 = ['', 'Pesanan Anda sedang dalam antrian.', 'Pembayaran pesanan anda berhasil dikonfirmasi.', 'Proses pengiriman pesanan anda sedang dilakukan.', 'Telah berbelanja di Halal Beef Indonesia.'];
     return(
       <View style={{flex: 1}}>
