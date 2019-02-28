@@ -7,7 +7,7 @@ import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.appevents.AppEventsLogger;
 import com.imagepicker.ImagePickerPackage;
 import com.airbnb.android.react.maps.MapsPackage;
-
+import com.agontuk.RNFusedLocation.RNFusedLocationPackage;
 import com.facebook.react.ReactApplication;
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
@@ -50,7 +50,8 @@ public class MainApplication extends Application implements ReactApplication {
           new VectorIconsPackage(),
           new FBSDKPackage(mCallbackManager),
           new RNSendIntentPackage(),
-          new MapsPackage()
+          new MapsPackage(),
+          new RNFusedLocationPackage()
       );
     }
 

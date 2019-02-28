@@ -155,7 +155,13 @@ dependencies {
     }
     implementation 'com.google.android.gms:play-services-base:10.0.1'
     implementation 'com.google.android.gms:play-services-maps:10.0.1'
-    
+
+    compile(project(':react-native-geolocation-service')) {
+        exclude group: 'com.google.android.gms', module: 'play-services-location'
+    }
+    compile 'com.google.android.gms:play-services-location:10.0.1'
+
+    compile project(':react-native-geolocation-service')
     implementation project(':react-native-maps')
     compile project(':react-native-splash-screen')
     compile project(':react-native-onesignal')
