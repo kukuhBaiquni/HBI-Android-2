@@ -10,9 +10,9 @@ import { setPlayerId } from '../../actions/Set_Player_Id';
 import { setInitialToken } from '../../actions/Set_Initial_Token';
 import { getMarket } from '../../actions/Get_Market';
 import { setTargetMember } from '../../actions/Set_Target_Member';
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
+import MapView, { Polyline, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
+import MapViewDirections from 'react-native-maps-directions';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -21,6 +21,12 @@ class ListMarket extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      myPosition: null,
+      destination: null,
+      distance: null,
+      ongkir: null,
+      addressHandler: '',
+      indexHandler: 0,
       region: {
         latitude: -6.949364630440158,
         longitude: 107.613774407655,
@@ -147,6 +153,12 @@ class ListMarket extends Component {
               altitude: 1,
               zoom: 14
             })
+            this.setState({
+              myPosition: {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+              }
+            })
         },
         (error) => {
             // See error code charts below.
@@ -157,20 +169,42 @@ class ListMarket extends Component {
   }
 
   test(i) {
+    const latitude = this.state.member[i].center.latitude;
+    const longitude = this.state.member[i].center.longitude;
+    const APIKEY =  'AIzaSyCIMNrAZbX3gmDtNVYVhJVEIV3btZesLVU'
+    const origin = this.state.myPosition;
+    const destination = {
+      latitude, longitude
+    }
+    this.setState({indexHandler: i, destination})
+    const urlAddress = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${APIKEY}`
     this.map.animateCamera({
       center: {
-        latitude: this.state.member[i].center.latitude,
-        longitude: this.state.member[i].center.longitude
+        latitude: latitude,
+        longitude: longitude
       },
       pitch: 1,
       heading: 1,
       altitude: 1,
       zoom: 13
     })
+    fetch(urlAddress)
+    .then(res => res.json())
+    .then(resJson => {
+      this.setState({addressHandler: resJson.results[0].formatted_address})
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+  }
+
+  markerPress(x, i) {
+    const prev = this.state.indexHandler;
+    let target = i - prev;
+    this.swiper.scrollBy(target, true)
   }
 
   render() {
-    const data = Array(10).fill('Master')
     const { navigation } = this.props;
     return(
       <View style={{flex: 1}}>
@@ -185,36 +219,55 @@ class ListMarket extends Component {
           ref={map => this.map = map}
           style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}
           initialRegion={this.state.region}
-          onRegionChangeComplete={(x) => console.log(x)}
+          onRegionChangeComplete={(x) => this.setState({region: x})}
           showsUserLocation={true}
         >
         {
           this.state.member.map((x, i) =>
             <Marker
               key={i}
+              onPress={(r, z) => this.markerPress(x, i)}
               coordinate={x.center}
               title='Member'
               description='Jualan Daging'
             />
           )
         }
+        {
+          this.state.myPosition !== null &&
+          <MapViewDirections
+            origin={this.state.myPosition}
+            destination={this.state.destination}
+            apikey='AIzaSyCIMNrAZbX3gmDtNVYVhJVEIV3btZesLVU'
+            strokeWidth={3}
+            strokeColor='hotpink'
+            onReady={(x) => this.setState({distance: x.distance})}
+          />
+        }
       </MapView>
         <View style={{position: 'absolute', bottom: 0, right: 0, width: SCREEN_WIDTH, alignItems: 'center'}}>
           <Swiper
             horizontal={true}
             autoplay={false}
+            loop={true}
             showsPagination={false}
+            ref={swiper => this.swiper = swiper}
             activeDotColor='#7c0c10'
+            onIndexChanged={(x) => this.test(x)}
             style={{backgroundColor: 'transparent', width: SCREEN_WIDTH, height: 120}}
             >
             {
               this.state.member.map((x, i) =>
               <View key={i} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
-                <TouchableNativeFeedback onPress={(x) => this.test(i)} background={TouchableNativeFeedback.Ripple('darkred')}>
-                  <View style={{width: SCREEN_WIDTH*0.85, height: 100, backgroundColor: '#7a7a7a', borderRadius: 5, justifyContent: 'center', alignItems: 'center'}}>
-                    <Text style={{color: 'white', fontSize: 22}}>Toko {i+1}</Text>
-                    <Text style={{color: 'white'}}>latitude: {this.state.region.latitude}</Text>
-                    <Text style={{color: 'white'}}>longitude: {this.state.region.longitude}</Text>
+                <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('darkred')}>
+                  <View style={{width: SCREEN_WIDTH*0.95, height: 100, backgroundColor: 'white', elevation: 3, borderRadius: 5, justifyContent: 'space-around',flexDirection: 'row', alignItems: 'center'}}>
+                    <Image style={{height: 90, width: '30%', borderRadius: 5}} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
+                    <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('ListProducts')} background={TouchableNativeFeedback.Ripple('black')}>
+                      <View style={{width: '64%', height: 90, backgroundColor: 'white', borderRadius: 5}}>
+                        <Text>{this.state.addressHandler}</Text>
+                        <Text>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
+                      </View>
+                    </TouchableNativeFeedback>
                   </View>
                 </TouchableNativeFeedback>
               </View>
@@ -226,6 +279,10 @@ class ListMarket extends Component {
     )
   }
 }
+
+// <Text style={{color: 'white', fontSize: 22}}>Toko {i+1}</Text>
+// <Text style={{color: 'white'}}>latitude: {this.state.region.latitude}</Text>
+// <Text style={{color: 'white'}}>longitude: {this.state.region.longitude}</Text>
 
 // <View style={{height: 200}}>
   // <Swiper
