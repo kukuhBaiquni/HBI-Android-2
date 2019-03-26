@@ -9,7 +9,7 @@ let initialState = {
 export default function listMarket(state = initialState, action) {
   switch (action.type) {
 
-    case 'GET_MARKET_SUCCESS':
+    case 'GET_MEMBER_LOCATION_SUCCESS':
     return Object.assign({}, state, {
       status: {
         success: true, error: false
@@ -17,7 +17,7 @@ export default function listMarket(state = initialState, action) {
       data: action.data
     });
 
-    case 'GET_MARKET_FAILED':
+    case 'GET_MEMBER_LOCATION_FAILED':
     return Object.assign({}, state, {
       status: {
         success: false, error: true

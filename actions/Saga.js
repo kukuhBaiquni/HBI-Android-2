@@ -41,8 +41,8 @@ import { watcherNotificationController } from './Notification_Controller';
 import { watcherUpdateListNotifications } from './Update_List_Notifications';
 import { watcherSendForm } from './Send_Call_Us';
 import { watcherLoadSingleTransaction } from './Load_Single_Transaction';
-import { watcherGetMarket } from './Get_Market';
 import { watcherSetTargetMember } from './Set_Target_Member';
+import { watcherGetMemberLocation } from './Get_Member_Location';
 
 export default function* rootSaga() {
   yield all([
@@ -88,7 +88,7 @@ export default function* rootSaga() {
     watcherUpdateListNotifications(),
     watcherSendForm(),
     watcherLoadSingleTransaction(),
-    watcherGetMarket(),
-    watcherSetTargetMember()
+    watcherSetTargetMember(),
+    watcherGetMemberLocation()
   ]);
 };

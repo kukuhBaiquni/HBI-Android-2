@@ -8,11 +8,11 @@ import { getAllProducts } from '../../actions/Get_All_Products';
 import { fetchUser } from '../../actions/Get_User_Data';
 import { setPlayerId } from '../../actions/Set_Player_Id';
 import { setInitialToken } from '../../actions/Set_Initial_Token';
-import { getMarket } from '../../actions/Get_Market';
 import { setTargetMember } from '../../actions/Set_Target_Member';
 import MapView, { Polyline, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import MapViewDirections from 'react-native-maps-directions';
+import { getMemberLocation } from '../../actions/Get_Member_Location';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -21,6 +21,7 @@ class ListMarket extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            token: '',
             myPosition: null,
             destination: null,
             distance: null,
@@ -42,69 +43,7 @@ class ListMarket extends Component {
                 heading: 1,
                 altitude: 0,
                 zoom: 13
-            },
-            member: [
-                {
-                    center: {
-                        latitude: -6.919689366190346,
-                        longitude: 107.59468043223023
-                    },
-                    pitch: 1,
-                    heading: 1,
-                    altitude: 1,
-                    zoom: 13
-                },
-                {
-                    center: {
-                        latitude: -6.94248461157722,
-                        longitude: 107.57586942985654
-                    },
-                    pitch: 1,
-                    heading: 1,
-                    altitude: 1,
-                    zoom: 13
-                },
-                {
-                    center: {
-                        latitude: -6.98863485873917,
-                        longitude: 107.57206605747342
-                    },
-                    pitch: 1,
-                    heading: 1,
-                    altitude: 1,
-                    zoom: 13
-                },
-                {
-                    center: {
-                        latitude: -7.033653849522472,
-                        longitude: 107.5832569040358
-                    },
-                    pitch: 1,
-                    heading: 1,
-                    altitude: 1,
-                    zoom: 13
-                },
-                {
-                    center: {
-                        latitude: -7.025569213896901,
-                        longitude: 107.64357374981046
-                    },
-                    pitch: 1,
-                    heading: 1,
-                    altitude: 1,
-                    zoom: 13
-                },
-                {
-                    center: {
-                        latitude: -6.977922716807315,
-                        longitude: 107.68835322931409
-                    },
-                    pitch: 1,
-                    heading: 1,
-                    altitude: 1,
-                    zoom: 13
-                }
-            ]
+            }
         }
     }
 
@@ -115,8 +54,10 @@ class ListMarket extends Component {
             if (id !== null && token !== null) {
                 const ids = JSON.parse(id)
                 const tokens = JSON.parse(token)
+                this.setState({token: tokens})
                 if (this.props.token === '') {
                     this.props.dispatch(setInitialToken(tokens))
+                    this.props.dispatch(getMemberLocation(tokens))
                 }
                 if (this.props.userData.playerID !== ids) {
                     this.props.dispatch(setPlayerId({ids, token: tokens}))
@@ -127,9 +68,6 @@ class ListMarket extends Component {
             }
             if (this.props.listProducts.length === 0) {
                 this.props.dispatch(getAllProducts());
-            }
-            if (this.props.listMarket.data.length === 0) {
-                this.props.dispatch(getMarket())
             }
         }catch(error) {
         }
@@ -168,44 +106,71 @@ class ListMarket extends Component {
         );
     }
 
-    test(i) {
-        const latitude = this.state.member[i].center.latitude;
-        const longitude = this.state.member[i].center.longitude;
+    trailRoute(i) {
+        const latitude = this.props.listMarket.data[i].address.geolocation.latitude;
+        const longitude = this.props.listMarket.data[i].address.geolocation.longitude;
         const APIKEY =  'AIzaSyCIMNrAZbX3gmDtNVYVhJVEIV3btZesLVU'
         const origin = this.state.myPosition;
         const destination = {
             latitude, longitude
-        }
+        };
         this.setState({indexHandler: i, destination})
-        const urlAddress = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${APIKEY}`
+        console.log([this.state.myPosition, destination]);
+        // this.map.fitToSuppliedMarkers([this.state.myPosition, destination], true)
         this.map.animateCamera({
             center: {
-                latitude: latitude,
-                longitude: longitude
+                latitude, longitude
             },
             pitch: 1,
             heading: 1,
             altitude: 1,
             zoom: 13
-        })
-        fetch(urlAddress)
-        .then(res => res.json())
-        .then(resJson => {
-            this.setState({addressHandler: resJson.results[0].formatted_address})
-        })
-        .catch((err) => {
-            console.log(err);
-        })
-    }
+        });
+    };
 
     markerPress(x, i) {
         const prev = this.state.indexHandler;
         let target = i - prev;
         this.swiper.scrollBy(target, true)
+    };
+
+    delayMove = () => {
+        setTimeout(() => {this.props.navigation.navigate('ListProducts')}, 100)
+    };
+
+    _renderListMember = () => {
+        const { listMarket } = this.props;
+        if (listMarket.data.length !== 0) {
+            return(
+                listMarket.data.map((x, i) =>
+                    <Marker
+                        key={i}
+                        onPress={(r, z) => this.markerPress(x, i)}
+                        coordinate={x.address.geolocation}
+                        title='Member'
+                        description='Jualan Daging'
+                        />
+                )
+            )
+        }
+    };
+
+    _renderRoute = () => {
+        return(
+            this.state.myPosition !== null &&
+            <MapViewDirections
+                origin={this.state.myPosition}
+                destination={this.state.destination}
+                apikey='AIzaSyCIMNrAZbX3gmDtNVYVhJVEIV3btZesLVU'
+                strokeWidth={3}
+                strokeColor='#7c0c10'
+                onReady={(x) => this.setState({distance: x.distance})}
+                />
+        )
     }
 
     render() {
-        const { navigation } = this.props;
+        const { navigation, listMarket } = this.props;
         return(
             <View style={{flex: 1}}>
                 <StatusBar
@@ -222,30 +187,10 @@ class ListMarket extends Component {
                     onRegionChangeComplete={(x) => this.setState({region: x})}
                     showsUserLocation={true}
                     >
-                    {
-                        this.state.member.map((x, i) =>
-                        <Marker
-                            key={i}
-                            onPress={(r, z) => this.markerPress(x, i)}
-                            coordinate={x.center}
-                            title='Member'
-                            description='Jualan Daging'
-                            />
-                        )
-                    }
-                    {
-                        this.state.myPosition !== null &&
-                        <MapViewDirections
-                            origin={this.state.myPosition}
-                            destination={this.state.destination}
-                            apikey='AIzaSyCIMNrAZbX3gmDtNVYVhJVEIV3btZesLVU'
-                            strokeWidth={3}
-                            strokeColor='hotpink'
-                            onReady={(x) => this.setState({distance: x.distance})}
-                            />
-                    }
+                    {this._renderListMember()}
+                    {this._renderRoute()}
                 </MapView>
-                <View style={{position: 'absolute', bottom: 0, right: 0, width: SCREEN_WIDTH, alignItems: 'center'}}>
+                <View style={styles.swiperEld}>
                     <Swiper
                         horizontal={true}
                         autoplay={false}
@@ -253,19 +198,26 @@ class ListMarket extends Component {
                         showsPagination={false}
                         ref={swiper => this.swiper = swiper}
                         activeDotColor='#7c0c10'
-                        onIndexChanged={(x) => this.test(x)}
-                        style={{backgroundColor: 'transparent', width: SCREEN_WIDTH, height: 120}}
+                        onIndexChanged={(x) => this.trailRoute(x)}
+                        style={styles.swiperStyle}
                         >
                         {
-                            this.state.member.map((x, i) =>
-                            <View key={i} style={{width: '100%', height: '100%', alignItems: 'center', justifyContent: 'center'}}>
-                                <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('darkred')}>
-                                    <View style={{width: SCREEN_WIDTH*0.95, height: 100, backgroundColor: 'white', elevation: 3, borderRadius: 5, justifyContent: 'space-around',flexDirection: 'row', alignItems: 'center'}}>
-                                        <Image style={{height: 90, width: '30%', borderRadius: 5}} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
-                                        <TouchableNativeFeedback onPress={() => this.props.navigation.navigate('ListProducts')} background={TouchableNativeFeedback.Ripple('black')}>
-                                            <View style={{width: '64%', height: 90, backgroundColor: 'white', borderRadius: 5}}>
-                                                <Text>{this.state.addressHandler}</Text>
-                                                <Text>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
+                            listMarket.data.map((x, i) =>
+                            <View key={i} style={styles.swiperTop}>
+                                <TouchableNativeFeedback
+                                    background={TouchableNativeFeedback.Ripple('darkred')}
+                                    >
+                                    <View style={styles.swiperWrapper}>
+                                        <Image style={styles.imageLocation} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
+                                        <TouchableNativeFeedback
+                                            onPress={this.delayMove}
+                                            background={TouchableNativeFeedback.Ripple('black')}
+                                            >
+                                            <View style={styles.swiperDetails}>
+                                                <Text>{x.address.nama_toko}</Text>
+                                                <Text>Jl.{x.address.street} No.{x.address.no}</Text>
+                                                <Text>Kec.{x.address.district} Kel.{x.address.village}</Text>
+                                                <Text style={styles.distanceText}>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
                                             </View>
                                         </TouchableNativeFeedback>
                                     </View>
@@ -278,8 +230,7 @@ class ListMarket extends Component {
             </View>
         )
     }
-}
-
+};
 
 function mapDispatchToProps(dispatch) {
     return dispatch
@@ -321,5 +272,49 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#7c0c10',
         elevation: 5
+    },
+    swiperEld: {
+        position: 'absolute',
+        bottom: 0,
+        right: 0,
+        width: SCREEN_WIDTH,
+        alignItems: 'center'
+    },
+    swiperStyle: {
+        backgroundColor: 'transparent',
+        width: SCREEN_WIDTH,
+        height: 120
+    },
+    swiperTop: {
+        width: '100%',
+        height: '100%',
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+    swiperWrapper: {
+        width: SCREEN_WIDTH*0.95,
+        height: 100,
+        backgroundColor: 'white',
+        elevation: 3,
+        borderRadius: 5,
+        justifyContent: 'space-around',
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    swiperDetails: {
+        width: '64%',
+        height: 90,
+        backgroundColor: 'white',
+        borderRadius: 5
+    },
+    imageLocation: {
+        height: 90,
+        width: '30%',
+        borderRadius: 5
+    },
+    distanceText: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0
     }
 })
