@@ -22,3 +22,10 @@ export function addressParser(street) {
         return data
     }
 }
+
+export const _FONTS = {
+    AbelRegular: 'Abel-Regular',
+    AsapCondensedRegular: 'AsapCondensed-Regular',
+    AsapCondensedBold: 'AsapCondensed-Bold',
+    AsapCondensedItalic: 'AsapCondensed-Italic',    
+}

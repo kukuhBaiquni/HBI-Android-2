@@ -13,6 +13,7 @@ import MapView, { Polyline, Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import MapViewDirections from 'react-native-maps-directions';
 import { getMemberLocation } from '../../actions/Get_Member_Location';
+import { _FONTS } from '../../config';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -116,16 +117,26 @@ class ListMarket extends Component {
         };
         this.setState({indexHandler: i, destination})
         console.log([this.state.myPosition, destination]);
-        // this.map.fitToSuppliedMarkers([this.state.myPosition, destination], true)
-        this.map.animateCamera({
-            center: {
-                latitude, longitude
-            },
-            pitch: 1,
-            heading: 1,
-            altitude: 1,
-            zoom: 13
-        });
+        this.map.fitToCoordinates([
+            this.state.myPosition,
+            destination
+        ], {
+            edgePadding: {
+                top: 10,
+                right: 40,
+                bottom: 500,
+                left: 40
+            }, animated: true
+        })
+        // this.map.animateCamera({
+        //     center: {
+        //         latitude, longitude
+        //     },
+        //     pitch: 1,
+        //     heading: 1,
+        //     altitude: 1,
+        //     zoom: 13
+        // });
     };
 
     markerPress(x, i) {
@@ -149,7 +160,9 @@ class ListMarket extends Component {
                         coordinate={x.address.geolocation}
                         title='Member'
                         description='Jualan Daging'
-                        />
+                    >
+                        <Image style={styles.pinImage} source={require('../../android/app/src/main/assets/custom/drawerdefault.png')} />
+                    </Marker>
                 )
             )
         }
@@ -204,6 +217,12 @@ class ListMarket extends Component {
                         {
                             listMarket.data.map((x, i) =>
                             <View key={i} style={styles.swiperTop}>
+                                <View style={styles.ongkirWrapper}>
+                                    <View style={styles.ongkirBox}>
+                                        <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
+                                        <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>Rp. {ongkirCalculation(this.state.distance).toLocaleString('IT-it')}</Text>
+                                    </View>
+                                </View>
                                 <TouchableNativeFeedback
                                     background={TouchableNativeFeedback.Ripple('darkred')}
                                     >
@@ -214,9 +233,9 @@ class ListMarket extends Component {
                                             background={TouchableNativeFeedback.Ripple('black')}
                                             >
                                             <View style={styles.swiperDetails}>
-                                                <Text>{x.address.nama_toko}</Text>
-                                                <Text>Jl.{x.address.street} No.{x.address.no}</Text>
-                                                <Text>Kec.{x.address.district} Kel.{x.address.village}</Text>
+                                                <Text style={styles.shopNameText}>{x.address.nama_toko}</Text>
+                                                <Text style={styles.addressText}>Jl.{x.address.street} No.{x.address.no}</Text>
+                                                <Text style={styles.addressText}>Kec.{x.address.district} Kel.{x.address.village}</Text>
                                                 <Text style={styles.distanceText}>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
                                             </View>
                                         </TouchableNativeFeedback>
@@ -231,6 +250,14 @@ class ListMarket extends Component {
         )
     }
 };
+
+const ongkirCalculation = (distance) => {
+    if (Number(distance) > 10) {
+        return Math.ceil(distance*3300)
+    }else{
+        return Math.ceil(distance*2200)
+    }
+}
 
 function mapDispatchToProps(dispatch) {
     return dispatch
@@ -278,12 +305,12 @@ const styles = StyleSheet.create({
         bottom: 0,
         right: 0,
         width: SCREEN_WIDTH,
-        alignItems: 'center'
+        alignItems: 'center',
     },
     swiperStyle: {
         backgroundColor: 'transparent',
         width: SCREEN_WIDTH,
-        height: 120
+        height: 150
     },
     swiperTop: {
         width: '100%',
@@ -316,5 +343,33 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 0,
         left: 0
+    },
+    shopNameText: {
+        fontFamily: _FONTS.AsapCondensedBold,
+        letterSpacing: 0.5,
+        fontSize: 15
+    },
+    addressText: {
+        fontFamily: _FONTS.AsapCondensedRegular,
+        letterSpacing: 0.4
+    },
+    ongkirWrapper: {
+        width: SCREEN_WIDTH * 0.95,
+        height: 35,
+    },
+    ongkirBox: {
+        width: '100%',
+        height: 30,
+        backgroundColor: 'white',
+        borderRadius: 3,
+        elevation: 3,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center'
+    },
+    pinImage: {
+        height: 20,
+        width: 20,
+        borderRadius: 10
     }
 })
