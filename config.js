@@ -1,6 +1,6 @@
-// export const SERVER_URL = 'http://halalbeef.co.id/';
-// export const SERVER_URL = 'http://192.168.100.5/';
-export const SERVER_URL = 'http://192.168.100.21/';
+export const SERVER_URL = 'http://halalbeef.co.id/';
+// export const SERVER_URL = 'http://192.168.43.69/';
+// export const SERVER_URL = 'http://192.168.100.21/';
 
 export const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
 
@@ -11,21 +11,31 @@ export function idrFormat(angka) {
     return 'Rp '+rupiah.split('',rupiah.length-1).reverse().join('');
 }
 
-export function addressParser(street) {
-    if (street) {
-        const data = {
-            jalan: street.split(' ').filter(x => !x.includes('No') && !x.includes('Rt') && !x.includes('Rw') && !x.includes('Jl')).join(' '),
-            no: street.split(' ').filter(x => x.includes('No'))[0].replace('No.',''),
-            rt: street.split(' ').filter(x => x.includes('Rt'))[0].replace('Rt.0',''),
-            rw: street.split(' ').filter(x => x.includes('Rw'))[0].replace('Rw.0','')
-        }
-        return data
-    }
-}
-
 export const _FONTS = {
     AbelRegular: 'Abel-Regular',
     AsapCondensedRegular: 'AsapCondensed-Regular',
     AsapCondensedBold: 'AsapCondensed-Bold',
-    AsapCondensedItalic: 'AsapCondensed-Italic',    
+    AsapCondensedItalic: 'AsapCondensed-Italic',
+}
+
+function distance(lat1, lng1, lat2, lng2, unit) {
+    var radlat1 = Math.PI * lat1/180
+    var radlat2 = Math.PI * lat2/180
+    var theta = lng1-lng2
+    var radtheta = Math.PI * theta/180
+    var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+    dist = Math.acos(dist)
+    dist = dist * 180/Math.PI
+    dist = dist * 60 * 1.1515
+    if (unit=="K") { dist = dist * 1.609344 }
+    if (unit=="M") { dist = dist * 0.8684 }
+    return dist
+}
+
+function sortDistance(a, b) {
+    if (a.last_nom < b.last_nom)
+        return -1;
+    if (a.last_nom > b.last_nom)
+        return 1;
+    return 0;
 }

@@ -11,7 +11,6 @@ import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-
 import { saveAddress } from '../../actions/Save_Address';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
-import { addressParser } from '../../config';
 import { forceResetSA } from '../../actions/Save_Address';
 
 class EditAddress extends Component {

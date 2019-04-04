@@ -11,7 +11,7 @@ import { loadVillages } from '../../actions/Load_Villages';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { editProfile, forceResetEP, editBannerSuccess, editPhotoSuccess } from '../../actions/Edit_Profile';
-import { addressParser, SERVER_URL } from '../../config';
+import { SERVER_URL } from '../../config';
 import moment from 'moment';
 import LinearGradient from 'react-native-linear-gradient';
 import ImagePicker from 'react-native-image-picker';

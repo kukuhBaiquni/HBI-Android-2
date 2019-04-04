@@ -154,8 +154,81 @@ class ProductDetails extends Component {
         }catch(error) {}
     }
 
+    _renderModal = () => {
+        const { navigation } = this.props;
+        return(
+            <Modal
+                isVisible={this.state.showModal}
+                style={{alignItems: 'center'}}
+                onBackdropPress={() => this.setState({showModal: false})}
+                onBackButtonPress={() => this.setState({showModal: false})}
+                onModalShow={() => this.setState({showModalContent: true})}
+                onModalHide={() => this.setState({showModalContent: false})}
+                hideModalContentWhileAnimating={true}
+                useNativeDriver
+                >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalHeader}>
+                        <Text style={styles.modalHeaderTitle}>Pilihan Anda</Text>
+                        <TouchableOpacity style={styles.closeButtonHeader}>
+                            <Icon name='clear' color='#919191' size={22} onPress={() => this.setState({showModal: false})}/>
+                        </TouchableOpacity>
+                    </View>
+                    {
+                        this.state.showModalContent &&
+                        <View>
+                            <View style={{flexDirection: 'row'}}>
+                                <View style={styles.imageModalContainer}>
+                                    <Image
+                                        resizeMode='contain'
+                                        style={styles.imageStyle}
+                                        source={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
+                                        />
+                                </View>
+                                <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
+                                    <Text style={styles.productnameText}>{navigation.state.params.productname}</Text>
+                                    {
+                                        this.state.loading
+                                        ?
+                                        <View style={styles.loadingContainer}>
+                                            <BarIndicator count={5} size={15} color='#919191' />
+                                        </View>
+                                        :
+                                        <Text style={styles.priceTextModal}>{idrFormat(this.state.itemCount === 1 ? navigation.state.params.enduserprice : this.props.resultCounting)}</Text>
+                                    }
+                                    {/*Increment Button*/}
+                                    <View style={styles.interactionButtonContainer}>
+                                        <TouchableNativeFeedback onPress={(x) => this.changeCount('dec')}>
+                                            <View style={styles.pmButton}>
+                                                <Text style={styles.pmButtonText}>-</Text>
+                                            </View>
+                                        </TouchableNativeFeedback>
+                                        <View style={styles.counterText}>
+                                            <Text>{this.state.itemCount}</Text>
+                                        </View>
+                                        <TouchableNativeFeedback onPress={(x) => this.changeCount('inc')}>
+                                            <View style={styles.pmButton}>
+                                                <Text style={styles.pmButtonText}>+</Text>
+                                            </View>
+                                        </TouchableNativeFeedback>
+                                    </View>
+                                </View>
+                            </View>
+                            <View style={styles.buttonAddToCartModal}>
+                                <TouchableOpacity onPress={(x) => this.addToCart(navigation.state.params)}>
+                                    <View style={styles.buttonAddTocartExe}>
+                                        <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    }
+                </View>
+            </Modal>
+        )
+    }
+
     render() {
-        console.log(this.props.navigation.state.params);
         const { navigation, isFocused } = this.props;
         if (isFocused) {
             return(
@@ -177,34 +250,43 @@ class ProductDetails extends Component {
                         backgroundImageScale={2}
                         renderNavBar={() => (
                             <View style={styles.fixedNavbar}>
-                                <TouchableOpacity onPress={() => navigation.goBack()} style={{position: 'absolute', left: 0, marginLeft: 10}}>
-                                    <Image resizeMode='contain' style={{height: 19, width: 19}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
+                                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navigationArrowBack}>
+                                    <Image
+                                        resizeMode='contain'
+                                        style={{height: 19, width: 19}}
+                                        source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
+                                        />
                                 </TouchableOpacity>
-                                <TouchableOpacity style={{position: 'absolute', right: 17, borderRadius: 50, height: 30, width: 30, justifyContent: 'center'}}>
+                                <TouchableOpacity style={styles.cartIconContainer}>
                                     <CartIcon navigation={navigation} bcolor='#7c0c10'/>
                                 </TouchableOpacity>
                             </View>
                         )}
                         renderBackButton={() => (
-                            <Image onPress={() => navigation.goBack()} resizeMode='contain' style={{height: 19, width: 19}} source={require('../../android/app/src/main/assets/custom/BackDarkred.png')} />
+                            <Image
+                                onPress={() => navigation.goBack()}
+                                resizeMode='contain'
+                                style={{height: 19, width: 19}}
+                                source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
+                                />
                         )}
                         renderCartIcon={() => (
                             <CartIcon navigation={navigation} bcolor='#7c0c10'/>
                         )}
                         renderContent={() => (
                             <ScrollView style={{backgroundColor: '#f4f4f4', marginTop: -10}}>
-                                <View style={[styles.viewContainer, {marginBottom: 30, flexDirection: 'row', justifyContent: 'space-between', elevation: 3}]}>
+                                <View style={[styles.viewContainer, styles.viewBackgroundStyle]}>
                                     <View style={{width: '35%'}}>
-                                        <Text style={{fontSize: 15, color: '#666666', fontWeight: 'bold'}}>Harga Normal</Text>
-                                        <Text style={{fontSize: 15, color: '#666666', fontWeight: 'bold'}}>{idrFormat(navigation.state.params.enduserprice)}</Text>
+                                        <Text style={styles.normalPriceText}>Harga Normal</Text>
+                                        <Text style={styles.normalPriceText}>{idrFormat(navigation.state.params.enduserprice)}</Text>
                                     </View>
                                     <View style={{width: '35%'}}>
-                                        <Text style={{fontSize: 15, color: 'red', fontWeight: 'bold'}}>Harga Member</Text>
-                                        <Text style={{fontSize: 15, color: 'red', fontWeight: 'bold'}}>{idrFormat(navigation.state.params.resellerprice)}</Text>
+                                        <Text style={styles.memberPriceText}>Harga Member</Text>
+                                        <Text style={styles.memberPriceText}>{idrFormat(navigation.state.params.resellerprice)}</Text>
                                     </View>
                                     <View style={{width: '20%'}}>
                                         <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
-                                        <View style={{borderWidth: 1, borderColor: 'red', backgroundColor: '#ffc4c4', justifyContent: 'center', alignItems: 'center', borderRadius: 10, marginTop: 3}}>
+                                        <View style={styles.discountEllipse}>
                                             <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
                                         </View>
                                     </View>
@@ -228,74 +310,7 @@ class ProductDetails extends Component {
                             </TouchableOpacity>
                         </View>
                     </TouchableNativeFeedback>
-                    <Modal
-                        isVisible={this.state.showModal}
-                        style={{alignItems: 'center'}}
-                        onBackdropPress={() => this.setState({showModal: false})}
-                        onBackButtonPress={() => this.setState({showModal: false})}
-                        onModalShow={() => this.setState({showModalContent: true})}
-                        onModalHide={() => this.setState({showModalContent: false})}
-                        hideModalContentWhileAnimating={true}
-                        useNativeDriver
-                        >
-                        <View style={{ backgroundColor: 'white', width: 300, height: 250, borderRadius: 4}}>
-                            <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
-                                <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Pilihan Anda</Text>
-                                <TouchableOpacity style={{position: 'absolute', right: 10, top: 15}}>
-                                    <Icon name='clear' color='#919191' size={22} onPress={() => this.setState({showModal: false})}/>
-                                </TouchableOpacity>
-                            </View>
-                            {
-                                this.state.showModalContent &&
-                                <ScrollView>
-                                    <View style={{flexDirection: 'row'}}>
-                                        <View style={{elevation: 1, width: 120, height: 120, marginTop: 10, marginLeft: 20}}>
-                                            <Image
-                                                resizeMode='contain'
-                                                style={{width: 120, height: 120, borderColor: '#e2e2e2', borderWidth: 1}}
-                                                source={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
-                                                />
-                                        </View>
-                                        <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
-                                            <Text style={{fontSize: 16, width: 140, textAlign: 'left', color: '#919191'}}>{navigation.state.params.productname}</Text>
-                                            {
-                                                this.state.loading
-                                                ?
-                                                <View style={{height: 24, width: 80, paddingTop: 7, alignItems: 'center'}}>
-                                                    <BarIndicator count={5} size={15} color='#919191' />
-                                                </View>
-                                                :
-                                                <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(this.state.itemCount === 1 ? navigation.state.params.enduserprice : this.props.resultCounting)}</Text>
-                                            }
-                                            {/*Increment Button*/}
-                                            <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
-                                                <TouchableNativeFeedback onPress={(x) => this.changeCount('dec')}>
-                                                    <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                                                        <Text style={{color: 'white', fontSize: 22}}>-</Text>
-                                                    </View>
-                                                </TouchableNativeFeedback>
-                                                <View style={{width: 40, height: 30, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3}}>
-                                                    <Text>{this.state.itemCount}</Text>
-                                                </View>
-                                                <TouchableNativeFeedback onPress={(x) => this.changeCount('inc')}>
-                                                    <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                                                        <Text style={{color: 'white', fontSize: 18}}>+</Text>
-                                                    </View>
-                                                </TouchableNativeFeedback>
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <View style={{alignItems: 'center', marginTop: 10, marginBottom:20}}>
-                                        <TouchableOpacity onPress={(x) => this.addToCart(navigation.state.params)}>
-                                            <View style={{height: 45, width: 260, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                                                <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                </ScrollView>
-                            }
-                        </View>
-                    </Modal>
+                    {this._renderModal()}
                     <FlashMessage
                         position='top'
                         floating={true}
@@ -307,7 +322,9 @@ class ProductDetails extends Component {
             )
         }else{
             return(
-                <View></View>
+                <View style={{justifyContent: 'center', alignItems: 'center'}}>
+                    <Text>Loading...</Text>
+                </View>
             )
         }
     }
@@ -394,5 +411,136 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         width: '47%',
-        height: 40}
-    });
+        height: 40
+    },
+    modalContainer: {
+        backgroundColor: 'white',
+        width: 300,
+        height: 250,
+        borderRadius: 4
+    },
+    modalHeader: {
+        borderBottomColor: '#e0e0e0',
+        borderBottomWidth: 1,
+        width: '100%'
+    },
+    modalHeaderTitle: {
+        textAlign: 'left',
+        padding: 15,
+        color: '#919191',
+        fontSize: 16
+    },
+    closeButtonHeader: {
+        position: 'absolute',
+        right: 10,
+        top: 15
+    },
+    imageModalContainer: {
+        elevation: 1,
+        width: 120,
+        height: 120,
+        marginTop: 10,
+        marginLeft: 20
+    },
+    imageStyle: {
+        width: 120,
+        height: 120,
+        borderColor: '#e2e2e2',
+        borderWidth: 1
+    },
+    productnameText: {
+        fontSize: 16,
+        width: 140,
+        textAlign: 'left',
+        color: '#919191'
+    },
+    loadingContainer: {
+        height: 24,
+        width: 80,
+        paddingTop: 7,
+        alignItems: 'center'
+    },
+    priceTextModal: {
+        fontWeight: 'bold',
+        marginTop: 5
+    },
+    interactionButtonContainer: {
+        flexDirection: 'row',
+        width: 110,
+        height: 40,
+        marginTop: 20,
+        justifyContent: 'space-between'
+    },
+    pmButton: {
+        height: 30,
+        width: 30,
+        backgroundColor: '#7c0c10',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 3
+    },
+    pmButtonText: {
+        color: 'white',
+        fontSize: 22
+    },
+    counterText: {
+        width: 40,
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+        borderColor: '#e2e2e2',
+        borderRadius: 3
+    },
+    buttonAddToCartModal: {
+        alignItems: 'center',
+        marginTop: 10,
+        marginBottom:20
+    },
+    buttonAddTocartExe: {
+        height: 45,
+        width: 260,
+        backgroundColor: '#7c0c10',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 3
+    },
+    navigationArrowBack: {
+        position: 'absolute',
+        left: 0,
+        marginLeft: 10
+    },
+    cartIconContainer: {
+        position: 'absolute',
+        right: 17,
+        borderRadius: 50,
+        height: 30,
+        width: 30,
+        justifyContent: 'center'
+    },
+    viewBackgroundStyle: {
+        marginBottom: 30,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        elevation: 3
+    },
+    normalPriceText: {
+        fontSize: 15,
+        color: '#666666',
+        fontWeight: 'bold'
+    },
+    memberPriceText: {
+        fontSize: 15,
+        color: 'red',
+        fontWeight: 'bold'
+    },
+    discountEllipse: {
+        borderWidth: 1,
+        borderColor: 'red',
+        backgroundColor: '#ffc4c4',
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderRadius: 10,
+        marginTop: 3
+    }
+});
