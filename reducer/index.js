@@ -18,7 +18,8 @@ import transactionTypeSuccess from './Transaction_Success';
 import customContent from './Custom_Content';
 import badge from './Badge';
 import listMarket from './List_Market';
-import targetMember from './Target_Member'
+import targetMember from './Target_Member';
+import forgetPassword from './Forget_Password_Status';
 
 const rootReducer = combineReducers({
   listProducts,
@@ -40,7 +41,8 @@ const rootReducer = combineReducers({
   customContent,
   badge,
   listMarket,
-  targetMember
+  targetMember,
+  forgetPassword
 });
 
 export default rootReducer

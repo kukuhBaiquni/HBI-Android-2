@@ -43,6 +43,8 @@ import { watcherSendForm } from './Send_Call_Us';
 import { watcherLoadSingleTransaction } from './Load_Single_Transaction';
 import { watcherSetTargetMember } from './Set_Target_Member';
 import { watcherGetMemberLocation } from './Get_Member_Location';
+import { watcherSendEmail } from './Forget_Password_Send_Email';
+import { watcherChangePassword } from './Change_Password';
 
 export default function* rootSaga() {
   yield all([
@@ -89,6 +91,8 @@ export default function* rootSaga() {
     watcherSendForm(),
     watcherLoadSingleTransaction(),
     watcherSetTargetMember(),
-    watcherGetMemberLocation()
+    watcherGetMemberLocation(),
+    watcherSendEmail(),
+    watcherChangePassword()
   ]);
 };

@@ -48,6 +48,8 @@ import Join from './drawer/Join';
 import Profit from './drawer/Profit';
 import Animate from './stack/Animate';
 import ListMarket from './stack/List_Market';
+import ForgetPassword from './stack/Forget_Password';
+import ChangePassword from './stack/Change_Password';
 import { SERVER_URL } from '../config';
 import BadgeNotification from './Badge_Notification';
 import { connect } from 'react-redux';
@@ -682,6 +684,30 @@ const RootStack = createStackNavigator({
             header: null
         })
     },
+    ForgetPassword: {
+        screen: ForgetPassword,
+        navigationOptions: ({navigation}) => ({
+            title: 'Lupa Password',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
+        })
+    },
+    ChangePassword: {
+        screen: ChangePassword,
+        navigationOptions: ({navigation}) => ({
+            title: 'Ganti Password',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={require(BDR)} /> )
+        })
+    }
 }, {
     initialRouteName: 'MainTabs'
 })
