@@ -30,7 +30,7 @@ function* workerSaveAddress(form) {
   try {
     var response = yield call(() => {
       return request
-      .post(`${SERVER_URL}android/save-address`)
+      .post(`${SERVER_URL}non-member/save-address`)
       .send({phone: form.data.phone})
       .send({street: form.data.street})
       .send({city: form.data.city})

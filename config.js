@@ -1,5 +1,5 @@
 export const SERVER_URL = 'http://halalbeef.co.id/';
-// export const SERVER_URL = 'http://192.168.43.69/';
+// export const SERVER_URL = 'http://192.168.43.24/';
 // export const SERVER_URL = 'http://192.168.0.106/';
 
 export const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];

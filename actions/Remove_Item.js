@@ -38,8 +38,8 @@ function* workerRemoveItem(form) {
   try {
     var response = yield call(() => {
       return request
-      .post(`${SERVER_URL}remove-item/${form.data.id}`)
-      .send({token: form.data.token})
+      .get(`${SERVER_URL}non-member/remove-item/${form.data.id}`)
+      .set('Authorization', form.data.token)
       .then((res) => {
         return res;
       })

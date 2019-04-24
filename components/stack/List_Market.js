@@ -30,7 +30,6 @@ class ListMarket extends Component {
             myPosition: null,
             destination: null,
             distance: null,
-            ongkir: null,
             addressHandler: '',
             indexHandler: 0,
             region: {
@@ -135,16 +134,21 @@ class ListMarket extends Component {
                 showLocationDialog: true
             }
         );
-    }
+    };
 
-    setMemberToReducer(x) {
-        this.props.dispatch(setTargetMember(x))
-        setTimeout(() => {
-            this.props.navigation.navigate('ListProducts')
-        }, 100)
-    }
+    _setMemberToReducer(x) {
+        if (this.state.distance !== null) {
+            const ongkir = ongkirCalculation(this.state.distance)
+            this.props.dispatch(setTargetMember(x, ongkir))
+            setTimeout(() => {
+                this.props.navigation.navigate('ListProducts')
+            }, 100);
+        }
+    };
 
     _drawRoute = (i) => {
+        // const latitude = parseFloat(this.props.listMarket.data[i].address.geolocation[0]);
+        // const longitude = parseFloat(this.props.listMarket.data[i].address.geolocation[1]);
         const latitude = this.props.listMarket.data[i].address.geolocation.latitude;
         const longitude = this.props.listMarket.data[i].address.geolocation.longitude;
         let origin = null;
@@ -193,227 +197,232 @@ class ListMarket extends Component {
         if (listMarket.data.length !== 0) {
             return(
                 listMarket.data.map((x, i) =>
-                <Marker
-                    key={i}
-                    onPress={(r, z) => this.markerPress(x, i)}
-                    coordinate={x.address.geolocation}
-                    title='Member Halal Beef Indonesia'
-                    description={x.nama_toko}
-                    >
-                    <Image style={this.state.activeMemberIndex === i ? styles.pinImage : [styles.pinImage, {opacity: 0.5}]} source={require('../../android/app/src/main/assets/custom/drawerdefault.png')} />
-                </Marker>
+                    <Marker
+                        key={i}
+                        onPress={(r, z) => this.markerPress(x, i)}
+                        // coordinate={{latitude: parseFloat(x.address.geolocation[0]), longitude: parseFloat(x.address.geolocation[1])}}
+                        coordinate={{latitude: x.address.geolocation.latitude, longitude: x.address.geolocation.longitude}}
+                        title='Member Halal Beef Indonesia'
+                        description={x.nama_toko}
+                        >
+                        <Image style={this.state.activeMemberIndex === i ? styles.pinImage : [styles.pinImage, {opacity: 0.5}]} source={require('../../android/app/src/main/assets/custom/drawerdefault.png')} />
+                    </Marker>
+                )
             )
-        )
-    }
-};
+        }
+    };
 
-_renderRoute = () => {
-    const { myPosition, fakePosition, destination, apikey } = this.state;
-    if (fakePosition !== null) {
-        return(
-            <MapViewDirections
-                origin={fakePosition}
-                destination={destination}
-                apikey={apikey}
-                strokeWidth={2}
-                strokeColor='#7c0c10'
-                onReady={(x) => this.setState({distance: x.distance})}
-                />
-        )
-    }else{
-        return(
-            <MapViewDirections
-                origin={myPosition}
-                destination={destination}
-                apikey={apikey}
-                strokeWidth={2}
-                strokeColor='#7c0c10'
-                onReady={(x) => this.setState({distance: x.distance})}
-                />
-        )
+    _renderRoute = () => {
+        const { myPosition, fakePosition, destination, apikey } = this.state;
+        if (fakePosition !== null) {
+            return(
+                <MapViewDirections
+                    origin={fakePosition}
+                    destination={destination}
+                    apikey={apikey}
+                    mode='walking'
+                    strokeWidth={2}
+                    strokeColor='#7c0c10'
+                    onReady={(x) => this.setState({distance: x.distance})}
+                    onError={(error) => console.log(error)}
+                    />
+            )
+        }else{
+            return(
+                <MapViewDirections
+                    origin={myPosition}
+                    destination={destination}
+                    apikey={apikey}
+                    mode='walking'
+                    strokeWidth={2}
+                    strokeColor='#7c0c10'
+                    onReady={(x) => this.setState({distance: x.distance})}
+                    onError={(error) => console.log(error)}
+                    />
+            )
+        }
     }
-}
 
-_replacer = () => {
-    return(
-        <View style={styles.swiperWrapper}>
-            <Icon name='chevron-thin-left' color='#7c0c10' size={29} />
-            <View>
-                <Text style={styles.swipeText}>Geser Disini</Text>
-                <Text style={{fontSize: 13}}>Untuk mencari toko pilihan Anda.</Text>
+    _replacer = () => {
+        return(
+            <View style={styles.swiperWrapper}>
+                <Icon name='chevron-thin-left' color='#7c0c10' size={29} />
+                <View>
+                    <Text style={styles.swipeText}>Geser Disini</Text>
+                    <Text style={{fontSize: 13}}>Untuk mencari toko pilihan Anda.</Text>
+                </View>
+                <Icon name='chevron-thin-right' color='#7c0c10' size={29} />
             </View>
-            <Icon name='chevron-thin-right' color='#7c0c10' size={29} />
-        </View>
-    )
-}
+        )
+    }
 
-_markerPosition(position) {
-    this.setState({
-        fakePosition: position
-    })
-    fetch(googleApis + position.latitude + `,` + position.longitude + `&key=${this.state.apikey}`)
-    .then(res => res.json())
-    .then(resJson => {
+    _markerPosition(position) {
         this.setState({
-            addressHandler: resJson.results[0].formatted_address
+            fakePosition: position
         })
-    })
-    .catch((err) => {
-        console.log(err);
-    })
-};
-
-_renderManualPosition = () => {
-    return(
-        <Marker
-            coordinate={this.state.fakePosition}
-            title='Posisi Saya'
-            description={this.state.addressHandler}
-            >
-            <Icon name='man' size={20} color='darkred' />
-        </Marker>
-    )
-};
-
-_focusMyLocation = () => {
-    const { myPosition } = this.state;
-    if (myPosition !== null) {
-        this.map.animateCamera({
-            center: {
-                latitude: myPosition.latitude,
-                longitude: myPosition.longitude
-            },
-            pitch: 1,
-            heading: 1,
-            altitude: 1,
-            zoom: 14
+        fetch(googleApis + position.latitude + `,` + position.longitude + `&key=${this.state.apikey}`)
+        .then(res => res.json())
+        .then(resJson => {
+            this.setState({
+                addressHandler: resJson.results[0].formatted_address
+            })
         })
-    }
-}
+        .catch((err) => {
+            console.log(err);
+        })
+    };
 
-_renderMyLocationButton = () => {
-    return(
-        <TouchableOpacity onPress={this._focusMyLocation} style={styles.turnOnGps}>
-            <MaterialIcons name='gps-fixed' size={23} color='white' />
-        </TouchableOpacity>
-    )
-}
-
-_renderInfoLocation = () => {
-    if (this.state.locationDenied) {
+    _renderManualPosition = () => {
         return(
-            <TouchableOpacity style={styles.infoLocation} onPress={this._getPosition}>
-                <Text style={styles.textInfoLocation}>Aktifkan GPS untuk mendapatkan lokasi member terdekat.</Text>
-            </TouchableOpacity>
-        )
-    }
-}
-
-_renderRemovePin = () => {
-    if (this.state.fakePosition !== null) {
-        return(
-            <TouchableOpacity style={styles.removePin} onPress={this._removePin}>
-                <Icon name='cross' size={23} color='white'/>
-            </TouchableOpacity>
-        )
-    }
-}
-
-_removePin = () => {
-    if (this.state.fakePosition !== null) {
-        this.setState({fakePosition: null})
-    }
-}
-
-// componentDidUpdate(prevProps, prevState) {
-//     const { listMarket } = this.props;
-//     const { myPosition } = this.state;
-//     if (prevState.myPosition !== this.state.myPosition) {
-//         listMarket.data.sort((x, z) => console.log(x, z))
-//     }
-// }
-
-render() {
-    const { navigation, listMarket } = this.props;
-    return(
-        <View style={{flex: 1}}>
-            <StatusBar
-                backgroundColor='#7c0c10'
-                barStyle='light-content'
-                />
-            <NavigationEvents
-                onWillFocus={() => this.beforeRender()}
-                onDidFocus={() => this._afterRender()}
-                />
-            {this._renderMyLocationButton()}
-            {this._renderRemovePin()}
-            {this._renderInfoLocation()}
-            <MapView
-                ref={map => this.map = map}
-                style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}
-                initialRegion={this.state.region}
-                onRegionChangeComplete={(x) => this.setState({region: x})}
-                showsUserLocation={true}
-                showsMyLocationButton={false}
-                showsCompass={false}
-                onPress={(e) => this._markerPosition(e.nativeEvent.coordinate)}
+            <Marker
+                coordinate={this.state.fakePosition}
+                title='Posisi Saya'
+                description={this.state.addressHandler}
                 >
-                {this._renderListMember()}
-                {this._renderRoute()}
-                {this.state.fakePosition !== null && this._renderManualPosition()}
-            </MapView>
-            <View style={styles.swiperEld}>
-                <Swiper
-                    horizontal={true}
-                    autoplay={false}
-                    loop={true}
-                    index={0}
-                    showsPagination={false}
-                    ref={swiper => this.swiper = swiper}
-                    activeDotColor='#7c0c10'
-                    onIndexChanged={this._drawRoute}
-                    style={styles.swiperStyle}
+                <Icon name='man' size={20} color='darkred' />
+            </Marker>
+        )
+    };
+
+    _focusMyLocation = () => {
+        const { myPosition } = this.state;
+        if (myPosition !== null) {
+            this.map.animateCamera({
+                center: {
+                    latitude: myPosition.latitude,
+                    longitude: myPosition.longitude
+                },
+                pitch: 1,
+                heading: 1,
+                altitude: 1,
+                zoom: 14
+            })
+        }
+    }
+
+    _renderMyLocationButton = () => {
+        return(
+            <TouchableOpacity onPress={this._focusMyLocation} style={styles.turnOnGps}>
+                <MaterialIcons name='gps-fixed' size={23} color='white' />
+            </TouchableOpacity>
+        )
+    }
+
+    _renderInfoLocation = () => {
+        if (this.state.locationDenied) {
+            return(
+                <TouchableOpacity style={styles.infoLocation} onPress={this._getPosition}>
+                    <Text style={styles.textInfoLocation}>Aktifkan GPS untuk mendapatkan lokasi member terdekat.</Text>
+                </TouchableOpacity>
+            )
+        }
+    }
+
+    _renderRemovePin = () => {
+        if (this.state.fakePosition !== null) {
+            return(
+                <TouchableOpacity style={styles.removePin} onPress={this._removePin}>
+                    <Icon name='cross' size={23} color='white'/>
+                </TouchableOpacity>
+            )
+        }
+    }
+
+    _removePin = () => {
+        if (this.state.fakePosition !== null) {
+            this.setState({fakePosition: null})
+        }
+    }
+
+    // componentDidUpdate(prevProps, prevState) {
+    //     const { listMarket } = this.props;
+    //     const { myPosition } = this.state;
+    //     if (prevState.myPosition !== this.state.myPosition) {
+    //         listMarket.data.sort((x, z) => console.log(x, z))
+    //     }
+    // }
+
+    render() {
+        const { navigation, listMarket } = this.props;
+        return(
+            <View style={{flex: 1}}>
+                <StatusBar
+                    backgroundColor='#7c0c10'
+                    barStyle='light-content'
+                    />
+                <NavigationEvents
+                    onWillFocus={() => this.beforeRender()}
+                    onDidFocus={() => this._afterRender()}
+                    />
+                {this._renderMyLocationButton()}
+                {this._renderRemovePin()}
+                {this._renderInfoLocation()}
+                <MapView
+                    ref={map => this.map = map}
+                    style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}
+                    initialRegion={this.state.region}
+                    onRegionChangeComplete={(x) => this.setState({region: x})}
+                    showsUserLocation={true}
+                    showsMyLocationButton={false}
+                    showsCompass={false}
+                    onPress={(e) => this._markerPosition(e.nativeEvent.coordinate)}
                     >
-                    {
-                        listMarket.data.map((x, i) =>
-                        <View key={i} style={styles.swiperTop}>
-                            <View style={styles.ongkirWrapper}>
-                                {
-                                    this.state.distance !== null &&
-                                    <View style={styles.leftAlign}>
-                                        <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
-                                        <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>
-                                            {idrFormat(ongkirCalculation(this.state.distance))}
-                                        </Text>
+                    {this._renderListMember()}
+                    {this._renderRoute()}
+                    {this.state.fakePosition !== null && this._renderManualPosition()}
+                </MapView>
+                <View style={styles.swiperEld}>
+                    <Swiper
+                        horizontal={true}
+                        autoplay={false}
+                        loop={true}
+                        index={0}
+                        showsPagination={false}
+                        ref={swiper => this.swiper = swiper}
+                        activeDotColor='#7c0c10'
+                        onIndexChanged={this._drawRoute}
+                        style={styles.swiperStyle}
+                        >
+                        {
+                            listMarket.data.map((x, i) =>
+                                <View key={i} style={styles.swiperTop}>
+                                    <View style={styles.ongkirWrapper}>
+                                        {
+                                            this.state.distance !== null &&
+                                            <View style={styles.leftAlign}>
+                                                <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
+                                                <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>
+                                                    {idrFormat(ongkirCalculation(this.state.distance))}
+                                                </Text>
+                                            </View>
+                                        }
                                     </View>
-                                }
-                            </View>
-                            <TouchableNativeFeedback
-                                background={TouchableNativeFeedback.Ripple('darkred')}
-                                >
-                                <View style={styles.swiperWrapper}>
-                                    <Image style={styles.imageLocation} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
                                     <TouchableNativeFeedback
-                                        onPress={() => this.setMemberToReducer(x)}
-                                        background={TouchableNativeFeedback.Ripple('black')}
+                                        background={TouchableNativeFeedback.Ripple('darkred')}
                                         >
-                                        <View style={styles.swiperDetails}>
-                                            <Text style={styles.shopNameText}>{x.address.nama_toko}</Text>
-                                            <Text style={styles.addressText}>Jl.{x.address.street} No.{x.address.no}</Text>
-                                            <Text style={styles.addressText}>{x.address.district} {x.address.village}</Text>
-                                            <Text style={styles.distanceText}>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
+                                        <View style={styles.swiperWrapper}>
+                                            <Image style={styles.imageLocation} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
+                                            <TouchableNativeFeedback
+                                                onPress={() => this._setMemberToReducer(x)}
+                                                background={TouchableNativeFeedback.Ripple('black')}
+                                                >
+                                                <View style={styles.swiperDetails}>
+                                                    <Text style={styles.shopNameText}>{x.address.nama_toko}</Text>
+                                                    <Text style={styles.addressText}>Jl.{x.address.street} No.{x.address.no}</Text>
+                                                    <Text style={styles.addressText}>{x.address.district} {x.address.village}</Text>
+                                                    <Text style={styles.distanceText}>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
+                                                </View>
+                                            </TouchableNativeFeedback>
                                         </View>
                                     </TouchableNativeFeedback>
                                 </View>
-                            </TouchableNativeFeedback>
-                        </View>
-                    )
-                }
-            </Swiper>
-        </View>
-    </View>
-)
-}
+                            )
+                        }
+                    </Swiper>
+                </View>
+            </View>
+        )
+    }
 };
 
 const ongkirCalculation = (distance) => {

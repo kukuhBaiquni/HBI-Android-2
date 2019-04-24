@@ -18,9 +18,10 @@ function* workerSetPlayerId(form) {
   try {
     var response = yield call(() => {
       return request
-      .get(`${SERVER_URL}set-player-id/${form.data.ids}/${form.data.token}`)
+      .get(`${SERVER_URL}non-member/set-player-id/${form.data.ids}`)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
+      .set('Authorization', form.data.token)
       .then((res) => {
         return res;
       })

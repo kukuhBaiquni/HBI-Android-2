@@ -34,8 +34,8 @@ function* workerAddtoCart(product) {
   try {
     var response = yield call(() => {
       return request
-      .post(`${SERVER_URL}android/add-to-cart/${product.data.id}`)
-      .send({token: product.data.token})
+      .post(`${SERVER_URL}non-member/add-to-cart/${product.data.id}`)
+      .set('Authorization', product.data.token)
       .send({qty: product.data.qty})
       .then((res) => {
         return res;

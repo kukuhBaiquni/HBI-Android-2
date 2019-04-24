@@ -11,7 +11,6 @@ import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { directPurchase } from '../../actions/Direct_Purchase';
-import { checkOngkir } from '../../actions/Check_Ongkir';
 import moment from 'moment';
 import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
 import { countItem } from '../../actions/Counting_Items';
@@ -41,10 +40,6 @@ class DirectPayment extends Component {
     beforeRender = async () => {
         this.props.dispatch(resetTransactionState())
         this.props.dispatch(forceResetRoot())
-        if (this.props.navigation.state.params !== undefined) {
-            const village = this.props.navigation.state.params.village;
-            this.props.dispatch(checkOngkir(village))
-        }
         try {
             const token = await AsyncStorage.getItem('access_token');
             if (token !== null) {
@@ -69,18 +64,12 @@ class DirectPayment extends Component {
                     this.setState({isAddressValid: true})
                 }
             }
-            if (this.props.userData.address.village !== '' && this.props.navigation.state.params === undefined) {
-                this.setState({ongkir: this.props.userData.ongkir})
-            }
         }
         if (prevProps.transaction !== this.props.transaction) {
             if (this.state.transactionLoading) {
                 this.setState({transactionLoading: false})
                 this.props.dispatch(loadTransactionTypePending(this.state.token))
             }
-        }
-        if (prevProps.ongkir !== this.props.ongkir) {
-            this.setState({ongkir: this.props.ongkir})
         }
         if (prevProps.status.transaction.error !== this.props.status.transaction.error) {
             if (this.state.transactionLoading) {
@@ -109,6 +98,7 @@ class DirectPayment extends Component {
                     id: this.state.data.id,
                     qty: this.state.qty,
                     targetMember: this.props.targetMember.id,
+                    ongkir: Number(this.props.targetMember.ongkir)
                 }
             }else{
                 data = {
@@ -125,6 +115,7 @@ class DirectPayment extends Component {
                     id: this.state.data.id,
                     qty: this.state.qty,
                     targetMember: this.props.targetMember.id,
+                    ongkir: Number(this.props.targetMember.ongkir)
                 }
             }
             this.setState({loading: true, changeAmount: false, transactionContent: true})
@@ -174,18 +165,18 @@ class DirectPayment extends Component {
             count ++
             this.setState({qty: count, loadingCount: true})
             if (this.state.data.packing * count > 23) {
-                this.setState({isFreeOngkir: true, ongkir: 0})
+                this.setState({isFreeOngkir: true})
             }else{
-                this.setState({isFreeOngkir: false, ongkir: this.props.userData.ongkir})
+                this.setState({isFreeOngkir: false})
             }
         }else{
             if (count > 1) {
                 count --
                 this.setState({qty: count, loadingCount: true})
                 if (this.state.data.packing * count > 23) {
-                    this.setState({isFreeOngkir: true, ongkir: 0})
+                    this.setState({isFreeOngkir: true})
                 }else{
-                    this.setState({isFreeOngkir: false, ongkir: this.props.userData.ongkir})
+                    this.setState({isFreeOngkir: false})
                 }
             }
         }
@@ -451,7 +442,7 @@ class DirectPayment extends Component {
                                         <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10}} source={require('../../android/app/src/main/assets/custom/FreeOngkir.png')}/>
                                         :
                                         <Text style={{fontSize: 15, position: 'absolute', right: 10, fontWeight: 'bold', textAlign: 'right'}}>
-                                            {idrFormat(Number(this.state.ongkir))}
+                                            {idrFormat(Number(this.props.targetMember.ongkir))}
                                         </Text>
                                     }
                                 </View>
@@ -466,8 +457,8 @@ class DirectPayment extends Component {
                                     <Text style={{fontSize: 17, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
                                         {
                                             this.props.userData.status === 'Non Member'
-                                            ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)) + this.state.ongkir)
-                                            : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)) + this.state.ongkir)
+                                            ? (this.state.isFreeOngkir ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty)) : idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)) + Number(this.props.targetMember.ongkir)))
+                                            : (this.state.isFreeOngkir ? idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty)) : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)) + Number(this.props.targetMember.ongkir)))
                                         }
                                     </Text>
                                 </View>
