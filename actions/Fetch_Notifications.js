@@ -26,9 +26,8 @@ function* workerFetchNotifications(form) {
   try {
     var response = yield call(() => {
       return request
-      .post(`${SERVER_URL}android/request/notifications`)
-      .send({token: form.data.token})
-      .send({tag: form.data.tag})
+      .get(`${SERVER_URL}android/request/notifications`)
+      .set('Authorization', form.data.token)
       .then((res) => {
         return res;
       })

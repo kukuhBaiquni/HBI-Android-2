@@ -3,43 +3,43 @@ import request from 'superagent';
 import { SERVER_URL } from '../config';
 
 export const loadTransactionTypeSuccess = (data) => {
-  return { type: 'LOAD_TRANSACTION_TYPE_SUCCESS', data };
+    return { type: 'LOAD_TRANSACTION_TYPE_SUCCESS', data };
 };
 
 const loadTransactionTypeSuccessSuccess = (data) => {
-  return { type: 'LOAD_TRANSACTION_TYPE_SUCCESS_SUCCESS', data };
+    return { type: 'LOAD_TRANSACTION_TYPE_SUCCESS_SUCCESS', data };
 };
 
 const loadTransactionTypeSuccessFailed = () => {
-  return { type: 'LOAD_TRANSACTION_TYPE_SUCCESS_FAILED' };
+    return { type: 'LOAD_TRANSACTION_TYPE_SUCCESS_FAILED' };
 };
 
 const InternalServerError = () => {
-  return { type: 'INTERNAL_SERVER_ERROR' }
+    return { type: 'INTERNAL_SERVER_ERROR' }
 };
 
 export function* watcherLoadTransactionTypeSuccess(data) {
-  yield takeEvery('LOAD_TRANSACTION_TYPE_SUCCESS', workerLoadTransactionTypeSuccess );
+    yield takeEvery('LOAD_TRANSACTION_TYPE_SUCCESS', workerLoadTransactionTypeSuccess );
 };
 
 function* workerLoadTransactionTypeSuccess(form) {
-  try {
-    var response = yield call(() => {
-      return request
-      .post(`${SERVER_URL}profile/android/user-transaction/success`)
-      .send({token: form.data})
-      .then((res) => {
-        return res;
-      })
-    })
-    var raw = JSON.parse(response.xhr._response);
-    var data = raw;
-    if (data.success) {
-      yield put(loadTransactionTypeSuccessSuccess(data.data));
-    }else{
-      yield put(loadTransactionTypeSuccessFailed())
+    try {
+        var response = yield call(() => {
+            return request
+            .get(`${SERVER_URL}profile/android/user-transaction/success`)
+            .set('Authorization', form.data)
+            .then((res) => {
+                return res;
+            })
+        })
+        var raw = JSON.parse(response.xhr._response);
+        var data = raw;
+        if (data.success) {
+            yield put(loadTransactionTypeSuccessSuccess(data.data));
+        }else{
+            yield put(loadTransactionTypeSuccessFailed())
+        }
+    }catch (error) {
+        yield put(InternalServerError());
     }
-  }catch (error) {
-    yield put(InternalServerError());
-  }
 }
