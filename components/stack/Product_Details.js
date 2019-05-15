@@ -242,6 +242,7 @@ class ProductDetails extends Component {
     render() {
         const { navigation, isFocused } = this.props;
         if (isFocused) {
+            console.log(this.state.isVisibleMain);
             return(
                 <View style={{flex: 1}}>
                     <NavigationEvents
@@ -257,7 +258,7 @@ class ProductDetails extends Component {
                             navbarColor='white'
                             scrollEventThrottle={5}
                             title={navigation.state.params.productname}
-                            backgroundColor='#e2e2e2'
+                            backgroundColor='#f4f4f4'
                             titleStyle={styles.productName}
                             backgroundImage={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
                             backgroundImageScale={2}
@@ -287,7 +288,7 @@ class ProductDetails extends Component {
                                 <CartIcon navigation={navigation} bcolor='#7c0c10'/>
                             )}
                             renderContent={() => (
-                                <ScrollView style={{backgroundColor: '#f4f4f4', marginTop: -10}}>
+                                <ScrollView style={{backgroundColor: '#e2e2e2', marginTop: -10}}>
                                     <View style={[styles.viewContainer, styles.viewBackgroundStyle]}>
                                         <View style={{width: '35%'}}>
                                             <Text style={styles.normalPriceText}>Harga Normal</Text>
@@ -336,9 +337,7 @@ class ProductDetails extends Component {
             )
         }else{
             return(
-                <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                    <Text>Loading...</Text>
-                </View>
+                <View></View>
             )
         }
     }

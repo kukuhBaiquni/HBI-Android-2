@@ -18,6 +18,7 @@ export default class ProductsTab extends Component {
                         iterationCount={1}
                         delay={500}
                         direction='alternate'
+                        onAnimationEnd={this.props.onAnimationEnd}
                         >
                         {
                             products.sort((a, b) => a.id - b.id).map((x, i) =>

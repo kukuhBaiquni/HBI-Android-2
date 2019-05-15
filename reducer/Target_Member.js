@@ -22,7 +22,6 @@ export default function targetMember(state = initialState, action) {
     switch (action.type) {
 
         case 'SET_TARGET_MEMBER_SUCCESS':
-        console.log(action);
         return Object.assign({}, state, {
             ...action.data, ongkir: action.ongkir, id: action.data._id
         })

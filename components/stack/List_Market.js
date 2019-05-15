@@ -8,7 +8,6 @@ import { getAllProducts } from '../../actions/Get_All_Products';
 import { fetchUser } from '../../actions/Get_User_Data';
 import { setPlayerId } from '../../actions/Set_Player_Id';
 import { setInitialToken } from '../../actions/Set_Initial_Token';
-import { setTargetMember } from '../../actions/Set_Target_Member';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import MapViewDirections from 'react-native-maps-directions';
@@ -51,9 +50,11 @@ class ListMarket extends Component {
             },
             locationDenied: null,
             activeMemberIndex: 0,
-            fakePosition: null
+            fakePosition: null,
+            isSwiperVisible: false,
+            isMemberVisible: false
         }
-    }
+    };
 
     beforeRender = async () => {
         this.props.dispatch(getMemberLocation())
@@ -78,8 +79,9 @@ class ListMarket extends Component {
                 this.props.dispatch(getAllProducts());
             }
         }catch(error) {
-        }
-    }
+            ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
+        };
+    };
 
     _afterRender = async () => {
         try {
@@ -95,15 +97,25 @@ class ListMarket extends Component {
                 },
             );
             if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-                ToastAndroid.show('Anda juga dapat menandai peta untuk menentukan posisi.', ToastAndroid.LONG, ToastAndroid.BOTTOM)
-                this._getPosition()
+                ToastAndroid.show('Anda juga dapat menandai peta untuk menentukan posisi.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
+                this._getPosition();
             } else {
                 console.log('Camera permission denied');
             }
         } catch (err) {
             console.log(err);
         }
-    }
+        this._toggleVisibility()
+    };
+
+    _toggleVisibility = () => {
+        setTimeout(() => {
+            this.setState({
+                isMemberVisible: true,
+                isSwiperVisible: true
+            });
+        }, 10);
+    };
 
     _getPosition = () => {
         Geolocation.getCurrentPosition(
@@ -140,8 +152,7 @@ class ListMarket extends Component {
     _setMemberToReducer(x) {
         if (this.state.distance !== null) {
             const ongkir = ongkirCalculation(this.state.distance);
-            this.props.dispatch(setTargetMember(x, ongkir));
-            this.props.navigation.navigate('ListProducts');
+            this.props.navigation.navigate('ListProducts', {member: x, ongkir});
         }
     };
 
@@ -368,54 +379,57 @@ class ListMarket extends Component {
                         showsCompass={false}
                         onPress={(e) => this._markerPosition(e.nativeEvent.coordinate)}
                         >
-                        {this._renderListMember()}
+                        {this.state.isMemberVisible && this._renderListMember()}
                         {this._renderRoute()}
                         {this.state.fakePosition !== null && this._renderManualPosition()}
                     </MapView>
-                    <View style={styles.swiperEld}>
-                        <Swiper
-                            horizontal={true}
-                            autoplay={false}
-                            loop={true}
-                            index={0}
-                            showsPagination={false}
-                            ref={swiper => this.swiper = swiper}
-                            activeDotColor='#7c0c10'
-                            onIndexChanged={this._drawRoute}
-                            style={styles.swiperStyle}
-                            >
-                            {
-                                listMarket.data.map((x, i) =>
-                                    <View key={i} style={styles.swiperTop}>
-                                        <View style={styles.ongkirWrapper}>
-                                            {
-                                                this.state.distance !== null &&
-                                                <View style={styles.leftAlign}>
-                                                    <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
-                                                    <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>
-                                                        {idrFormat(ongkirCalculation(this.state.distance))}
-                                                    </Text>
-                                                </View>
-                                            }
-                                        </View>
-                                        <TouchableOpacity
-                                            onPress={() => this._setMemberToReducer(x)}
-                                            >
-                                            <View style={styles.swiperWrapper}>
-                                                <Image style={styles.imageLocation} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
-                                                <View style={styles.swiperDetails}>
-                                                    <Text style={styles.shopNameText}>{x.address.nama_toko}</Text>
-                                                    <Text style={styles.addressText}>Jl.{x.address.street} No.{x.address.no}</Text>
-                                                    <Text style={styles.addressText}>{x.address.district} {x.address.village}</Text>
-                                                    <Text style={styles.distanceText}>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
-                                                </View>
+                    {
+                        this.state.isSwiperVisible &&
+                        <View style={styles.swiperEld}>
+                            <Swiper
+                                horizontal={true}
+                                autoplay={false}
+                                loop={true}
+                                index={0}
+                                showsPagination={false}
+                                ref={swiper => this.swiper = swiper}
+                                activeDotColor='#7c0c10'
+                                onIndexChanged={this._drawRoute}
+                                style={styles.swiperStyle}
+                                >
+                                {
+                                    listMarket.data.map((x, i) =>
+                                        <View key={i} style={styles.swiperTop}>
+                                            <View style={styles.ongkirWrapper}>
+                                                {
+                                                    this.state.distance !== null &&
+                                                    <View style={styles.leftAlign}>
+                                                        <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
+                                                        <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>
+                                                            {idrFormat(ongkirCalculation(this.state.distance))}
+                                                        </Text>
+                                                    </View>
+                                                }
                                             </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                )
-                            }
-                        </Swiper>
-                    </View>
+                                            <TouchableOpacity
+                                                onPress={() => this._setMemberToReducer(x)}
+                                                >
+                                                <View style={styles.swiperWrapper}>
+                                                    <Image style={styles.imageLocation} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
+                                                    <View style={styles.swiperDetails}>
+                                                        <Text style={styles.shopNameText}>{x.address.nama_toko}</Text>
+                                                        <Text style={styles.addressText}>Jl.{x.address.street} No.{x.address.no}</Text>
+                                                        <Text style={styles.addressText}>{x.address.district} {x.address.village}</Text>
+                                                        <Text style={styles.distanceText}>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
+                                                    </View>
+                                                </View>
+                                            </TouchableOpacity>
+                                        </View>
+                                    )
+                                }
+                            </Swiper>
+                        </View>
+                    }
                 </View>
             )
         }else{

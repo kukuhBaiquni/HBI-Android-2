@@ -6,13 +6,35 @@ import ProductsTab from '../Products_Tab';
 import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
 import CartIcon from '../Cart_Icon';
+import { setTargetMember } from '../../actions/Set_Target_Member';
+import Modal from "react-native-modal";
+import { DotIndicator } from 'react-native-indicators';
 
 class ShopPage extends Component {
+    constructor(props) {
+        super(props)
+        this.state = {
+            isProductsVisible: false,
+            loading: true
+        }
+    };
+
+    _afterRender = () => {
+        const { navigation, targetMember } = this.props;
+        this.props.dispatch(setTargetMember(navigation.state.params.member, navigation.state.params.ongkir));
+    };
+
+    _onAnimationEnd = () => {
+        this.setState({ isProductsVisible: true });
+    };
 
     render() {
-        let { listProducts, navigation, targetMember } = this.props;
+        const { navigation, targetMember } = this.props;
         return(
             <Container>
+                <NavigationEvents
+                    onDidFocus={this._afterRender}
+                    />
                 <Header style={styles.headerColor}>
                     <Item style={{borderBottomColor: '#7c0c10'}}>
                         <TouchableNativeFeedback onPress={() => navigation.navigate('SearchAutocomplete')}>
@@ -30,20 +52,38 @@ class ShopPage extends Component {
                         </Button>
                     </Right>
                 </Header>
-                <Tabs tabBarUnderlineStyle={{backgroundColor: '#7c0c10'}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
-                    <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
-                        <ProductsTab navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'sapi') } />
-                    </Tab>
-                    <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
-                        <ProductsTab navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ayam') } />
-                    </Tab>
-                    <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
-                        <ProductsTab navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ikan') } />
-                    </Tab>
-                    <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
-                        <ProductsTab navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'olahan') } />
-                    </Tab>
-                </Tabs>
+                {
+                    this.state.isProductsVisible ?
+                    <Tabs tabBarUnderlineStyle={{backgroundColor: '#7c0c10'}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'sapi') } />
+                        </Tab>
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ayam') } />
+                        </Tab>
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ikan') } />
+                        </Tab>
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'olahan') } />
+                        </Tab>
+                    </Tabs>
+                    :
+                    <Modal
+                        isVisible={this.state.loading}
+                        style={{alignItems: 'center'}}
+                        hideModalContentWhileAnimating={true}
+                        useNativeDriver
+                        >
+                        <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
+                            <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
+                            <DotIndicator
+                                color='#7c0c10'
+                                size={8}
+                                />
+                        </View>
+                    </Modal>
+                }
                 <StatusBar
                     backgroundColor='#7c0c10'
                     barStyle='light-content'
