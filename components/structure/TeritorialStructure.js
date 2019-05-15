@@ -13,17 +13,32 @@ export default class TeritorialStructure extends Component {
         return(
             <View style={styles.container}>
                 <View style={styles.whiteBoxWrapper}>
-                    <Text style={styles.titleText}>Informasi Pribadi</Text>
+                    <Text style={styles.titleText}>Informasi Alamat</Text>
                     <Form>
+                        <Label style={styles.titleField}>Provinsi</Label>
+                        <Item picker style={styles.picker}>
+                            <Picker
+                                mode="dropdown"
+                                iosIcon={<Icon name="ios-arrow-down-outline" />}
+                                selectedValue={this.props.provinceHandler}
+                                enabled={false}
+                                >
+                                <Picker.Item label={this.props.provinceHandler} value={this.props.provinceHandler} />
+                            </Picker>
+                        </Item>
                         <Label style={styles.titleField}>Kota / Kabupaten</Label>
                         <Item picker style={styles.picker}>
                             <Picker
                                 mode="dropdown"
                                 iosIcon={<Icon name="ios-arrow-down-outline" />}
                                 selectedValue={this.props.cityHandler}
-                                enabled={false}
+                                onValueChange={this.props.onChangeCity}
                                 >
-                                <Picker.Item label={this.props.cityHandler} value={this.props.cityHandler} />
+                                {
+                                    this.props.listCities.map((x, i) =>
+                                        <Picker.Item key={i} label={capital(x.nama_kota)} value={x.nama_kota} />
+                                    )
+                                }
                             </Picker>
                         </Item>
                         <Label style={styles.titleField}>Kecamatan</Label>
@@ -36,7 +51,7 @@ export default class TeritorialStructure extends Component {
                                 >
                                 {
                                     this.props.listDistricts.map((x, i) =>
-                                        <Picker.Item key={i} label={x.nama_kecamatan} value={x.nama_kecamatan} />
+                                        <Picker.Item key={i} label={capital(x.nama_kecamatan)} value={x.nama_kecamatan} />
                                     )
                                 }
                             </Picker>
@@ -51,7 +66,7 @@ export default class TeritorialStructure extends Component {
                                 >
                                 {
                                     this.props.listVillages.map((x, i) =>
-                                        <Picker.Item key={i} label={x.nama_kelurahan} value={x.nama_kelurahan} />
+                                        <Picker.Item key={i} label={capital(x.nama_kelurahan)} value={x.nama_kelurahan} />
                                     )
                                 }
                             </Picker>
@@ -97,6 +112,16 @@ export default class TeritorialStructure extends Component {
             </View>
         )
     }
+}
+
+function capital(x) {
+    var cs = x.split(' ')
+    var as = cs.map(r => r.toLowerCase())
+    var result = []
+    for (var i = 0; i < as.length; i++) {
+        result.push(as[i].charAt(0).toUpperCase() + as[i].slice(1))
+    }
+    return result.join(' ')
 }
 
 TeritorialStructure.propTypes = {

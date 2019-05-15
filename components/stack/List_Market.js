@@ -16,6 +16,7 @@ import { getMemberLocation } from '../../actions/Get_Member_Location';
 import Icon from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { WaveIndicator  } from 'react-native-indicators';
+import { withNavigationFocus } from 'react-navigation';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -138,11 +139,9 @@ class ListMarket extends Component {
 
     _setMemberToReducer(x) {
         if (this.state.distance !== null) {
-            const ongkir = ongkirCalculation(this.state.distance)
-            this.props.dispatch(setTargetMember(x, ongkir))
-            setTimeout(() => {
-                this.props.navigation.navigate('ListProducts')
-            }, 100);
+            const ongkir = ongkirCalculation(this.state.distance);
+            this.props.dispatch(setTargetMember(x, ongkir));
+            this.props.navigation.navigate('ListProducts');
         }
     };
 
@@ -202,10 +201,11 @@ class ListMarket extends Component {
                         onPress={(r, z) => this.markerPress(x, i)}
                         // coordinate={{latitude: parseFloat(x.address.geolocation[0]), longitude: parseFloat(x.address.geolocation[1])}}
                         coordinate={{latitude: x.address.geolocation.latitude, longitude: x.address.geolocation.longitude}}
-                        title='Member Halal Beef Indonesia'
-                        description={x.nama_toko}
+                        title={x.address.nama_toko || 'Member Halalbeef Indonesia'}
+                        description={x.address.nama_toko}
+                        tracksViewChanges={false}
                         >
-                        <Image style={this.state.activeMemberIndex === i ? styles.pinImage : [styles.pinImage, {opacity: 0.5}]} source={require('../../android/app/src/main/assets/custom/drawerdefault.png')} />
+                        <Image style={styles.pinImage} source={require('../../android/app/src/main/assets/custom/drawerdefault.png')} />
                     </Marker>
                 )
             )
@@ -298,7 +298,7 @@ class ListMarket extends Component {
                 zoom: 14
             })
         }
-    }
+    };
 
     _renderMyLocationButton = () => {
         return(
@@ -306,7 +306,7 @@ class ListMarket extends Component {
                 <MaterialIcons name='gps-fixed' size={23} color='white' />
             </TouchableOpacity>
         )
-    }
+    };
 
     _renderInfoLocation = () => {
         if (this.state.locationDenied) {
@@ -316,7 +316,7 @@ class ListMarket extends Component {
                 </TouchableOpacity>
             )
         }
-    }
+    };
 
     _renderRemovePin = () => {
         if (this.state.fakePosition !== null) {
@@ -326,13 +326,13 @@ class ListMarket extends Component {
                 </TouchableOpacity>
             )
         }
-    }
+    };
 
     _removePin = () => {
         if (this.state.fakePosition !== null) {
             this.setState({fakePosition: null})
         }
-    }
+    };
 
     // componentDidUpdate(prevProps, prevState) {
     //     const { listMarket } = this.props;
@@ -344,84 +344,85 @@ class ListMarket extends Component {
 
     render() {
         const { navigation, listMarket } = this.props;
-        return(
-            <View style={{flex: 1}}>
-                <StatusBar
-                    backgroundColor='#7c0c10'
-                    barStyle='light-content'
-                    />
-                <NavigationEvents
-                    onWillFocus={() => this.beforeRender()}
-                    onDidFocus={() => this._afterRender()}
-                    />
-                {this._renderMyLocationButton()}
-                {this._renderRemovePin()}
-                {this._renderInfoLocation()}
-                <MapView
-                    ref={map => this.map = map}
-                    style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}
-                    initialRegion={this.state.region}
-                    onRegionChangeComplete={(x) => this.setState({region: x})}
-                    showsUserLocation={true}
-                    showsMyLocationButton={false}
-                    showsCompass={false}
-                    onPress={(e) => this._markerPosition(e.nativeEvent.coordinate)}
-                    >
-                    {this._renderListMember()}
-                    {this._renderRoute()}
-                    {this.state.fakePosition !== null && this._renderManualPosition()}
-                </MapView>
-                <View style={styles.swiperEld}>
-                    <Swiper
-                        horizontal={true}
-                        autoplay={false}
-                        loop={true}
-                        index={0}
-                        showsPagination={false}
-                        ref={swiper => this.swiper = swiper}
-                        activeDotColor='#7c0c10'
-                        onIndexChanged={this._drawRoute}
-                        style={styles.swiperStyle}
+        if (navigation.isFocused) {
+            return(
+                <View style={{flex: 1}}>
+                    <StatusBar
+                        backgroundColor='#7c0c10'
+                        barStyle='light-content'
+                        />
+                    <NavigationEvents
+                        onWillFocus={() => this.beforeRender()}
+                        onDidFocus={() => this._afterRender()}
+                        />
+                    {this._renderMyLocationButton()}
+                    {this._renderRemovePin()}
+                    {this._renderInfoLocation()}
+                    <MapView
+                        ref={map => this.map = map}
+                        style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}
+                        initialRegion={this.state.region}
+                        onRegionChangeComplete={(x) => this.setState({region: x})}
+                        showsUserLocation={true}
+                        showsMyLocationButton={false}
+                        showsCompass={false}
+                        onPress={(e) => this._markerPosition(e.nativeEvent.coordinate)}
                         >
-                        {
-                            listMarket.data.map((x, i) =>
-                                <View key={i} style={styles.swiperTop}>
-                                    <View style={styles.ongkirWrapper}>
-                                        {
-                                            this.state.distance !== null &&
-                                            <View style={styles.leftAlign}>
-                                                <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
-                                                <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>
-                                                    {idrFormat(ongkirCalculation(this.state.distance))}
-                                                </Text>
-                                            </View>
-                                        }
-                                    </View>
-                                    <TouchableNativeFeedback
-                                        background={TouchableNativeFeedback.Ripple('darkred')}
-                                        >
-                                        <View style={styles.swiperWrapper}>
-                                            <Image style={styles.imageLocation} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
-                                            <TouchableNativeFeedback
-                                                onPress={() => this._setMemberToReducer(x)}
-                                                background={TouchableNativeFeedback.Ripple('black')}
-                                                >
+                        {this._renderListMember()}
+                        {this._renderRoute()}
+                        {this.state.fakePosition !== null && this._renderManualPosition()}
+                    </MapView>
+                    <View style={styles.swiperEld}>
+                        <Swiper
+                            horizontal={true}
+                            autoplay={false}
+                            loop={true}
+                            index={0}
+                            showsPagination={false}
+                            ref={swiper => this.swiper = swiper}
+                            activeDotColor='#7c0c10'
+                            onIndexChanged={this._drawRoute}
+                            style={styles.swiperStyle}
+                            >
+                            {
+                                listMarket.data.map((x, i) =>
+                                    <View key={i} style={styles.swiperTop}>
+                                        <View style={styles.ongkirWrapper}>
+                                            {
+                                                this.state.distance !== null &&
+                                                <View style={styles.leftAlign}>
+                                                    <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
+                                                    <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>
+                                                        {idrFormat(ongkirCalculation(this.state.distance))}
+                                                    </Text>
+                                                </View>
+                                            }
+                                        </View>
+                                        <TouchableOpacity
+                                            onPress={() => this._setMemberToReducer(x)}
+                                            >
+                                            <View style={styles.swiperWrapper}>
+                                                <Image style={styles.imageLocation} source={require('../../android/app/src/main/assets/custom/Contoh2.png')} />
                                                 <View style={styles.swiperDetails}>
                                                     <Text style={styles.shopNameText}>{x.address.nama_toko}</Text>
                                                     <Text style={styles.addressText}>Jl.{x.address.street} No.{x.address.no}</Text>
                                                     <Text style={styles.addressText}>{x.address.district} {x.address.village}</Text>
                                                     <Text style={styles.distanceText}>Jarak {this.state.distance !== null ? <Text style={{fontWeight: 'bold'}}>{Math.round(this.state.distance * 100) / 100} km</Text> : '-'}</Text>
                                                 </View>
-                                            </TouchableNativeFeedback>
-                                        </View>
-                                    </TouchableNativeFeedback>
-                                </View>
-                            )
-                        }
-                    </Swiper>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                )
+                            }
+                        </Swiper>
+                    </View>
                 </View>
-            </View>
-        )
+            )
+        }else{
+            return(
+                <View></View>
+            )
+        }
     }
 };
 

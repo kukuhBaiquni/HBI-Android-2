@@ -21,7 +21,6 @@ export default class FormStructure extends Component {
                             <Input
                                 onChangeText={this.props.onChangeName}
                                 value={this.props.inputNameHandler}
-                                autoFocus
                                 />
                         </Item>
                         <Item stackedLabel style={styles.inputWrapper}>

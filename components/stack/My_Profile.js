@@ -17,7 +17,6 @@ class MyProfile extends Component {
         }else{
             gender = 'Wanita'
         }
-        console.log(this.props);
         return(
             <ScrollView>
                 <NavigationEvents
@@ -43,13 +42,23 @@ class MyProfile extends Component {
                 </View>
                 <View style={{backgroundColor: 'white', padding: 10}}>
                     <Text style={styles.dataUser}>Jl.{userData.address.street} No.{userData.address.no} Rt.{userData.address.rt} Rw.{userData.address.rw}</Text>
-                    <Text style={styles.dataUser}>Kecamatan {userData.address.district}</Text>
-                    <Text style={styles.dataUser}>Kelurahan {userData.address.village}</Text>
-                    <Text style={styles.dataUser}>{userData.address.city}</Text>
+                    <Text style={styles.dataUser}>Kecamatan {capital(userData.address.district)}</Text>
+                    <Text style={styles.dataUser}>Kelurahan {capital(userData.address.village)}</Text>
+                    <Text style={styles.dataUser}>{capital(userData.address.city)}</Text>
                 </View>
             </ScrollView>
         )
     }
+}
+
+function capital(x) {
+    var cs = x.split(' ')
+    var as = cs.map(r => r.toLowerCase())
+    var result = []
+    for (var i = 0; i < as.length; i++) {
+        result.push(as[i].charAt(0).toUpperCase() + as[i].slice(1))
+    }
+    return result.join(' ')
 }
 
 const styles = StyleSheet.create({

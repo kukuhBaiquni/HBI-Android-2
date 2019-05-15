@@ -34,6 +34,7 @@ function* workerLoadTransactionTypePending(form) {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
+        console.log(data);
         if (data.success) {
             yield put(loadTransactionTypePendingSuccess(data.data));
         }else{

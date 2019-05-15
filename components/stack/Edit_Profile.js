@@ -38,7 +38,8 @@ class EditProfile extends Component {
             nameHandler: '',
             phoneHandler: '',
             gender: 'male',
-            cityHandler: 'KOTA BANDUNG',
+            provinceHandler: 'Jawa Barat',
+            cityHandler: '',
             districtHandler: '',
             villageHandler: '',
             streetHandler: '',
@@ -56,7 +57,8 @@ class EditProfile extends Component {
             coverHandler: '',
             fpHandler: '',
             territorialHandler: {
-                cities: 'KOTA BANDUNG',
+                provinces: 'Jawa Barat',
+                cities: [],
                 districts: [],
                 villages: []
             },
@@ -97,8 +99,8 @@ class EditProfile extends Component {
             ttlHandler,
             ttl: this.props.userData.ttl
         });
-        // this.props.dispatch(loadCities())
-        this.props.dispatch(loadDistricts(3273))
+        this.props.dispatch(loadCities())
+        // this.props.dispatch(loadDistricts(3273))
     }
 
     citySelected(x, i) {
@@ -121,47 +123,42 @@ class EditProfile extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { territorial, status, userData, dispatch } = this.props;
         const { territorialHandler } = this.state;
-        // if (prevProps.territorial.cities !== territorial.cities) {
-        //     if (this.state.cityHandler === '') {
-        //         const index = territorial.cities.map(x => x.nama_kota).indexOf(userData.address.city);
-        //         let code = null
-        //         if (index !== -1) {
-        //             code = territorial.cities[index].kode_kota;
-        //         }
-        //         let clone = [...this.state.territorialHandler];
-        //         clone.cities = this.props.territorial.cities;
-        //         this.setState({
-        //             cityHandler: userData.address.city,
-        //             territorialHandler: clone
-        //         })
-        //     }
-        // }
-        if (prevProps.territorial.districts !== territorial.districts) {
-            if (this.state.districtHandler === '') {
-                const index = territorial.districts.map(x => x.nama_kecamatan).indexOf(userData.address.district);
-                let code = null;
-                if (index !== -1) {
-                    code = territorial.districts[index].kode_kecamatan
-                    dispatch(loadVillages(code))
-                }
-                let clone = Object.assign({}, this.state.territorialHandler)
-                clone.districts = this.props.territorial.districts;
-                this.setState({
-                    districtHandler: userData.address.district,
-                    territorialHandler: clone
-                })
+        if (prevProps.territorial.cities !== territorial.cities) {
+            const index = territorial.cities.map(x => x.nama_kota).indexOf(userData.address.city);
+            let code = null
+            if (index !== -1) {
+                code = territorial.cities[index].kode_kota;
+                dispatch(loadDistricts(code))
             }
+            let clone = Object.assign({}, this.state.territorialHandler);
+            clone.cities = this.props.territorial.cities;
+            this.setState({
+                cityHandler: userData.address.city,
+                territorialHandler: clone
+            })
+        }
+        if (prevProps.territorial.districts !== territorial.districts) {
+            const index = territorial.districts.map(x => x.nama_kecamatan).indexOf(userData.address.district);
+            let code = null;
+            if (index !== -1) {
+                code = territorial.districts[index].kode_kecamatan
+                dispatch(loadVillages(code))
+            }
+            let clone = Object.assign({}, this.state.territorialHandler);
+            clone.districts = this.props.territorial.districts;
+            this.setState({
+                districtHandler: userData.address.district,
+                territorialHandler: clone
+            })
         }
         if (prevProps.territorial.villages !== territorial.villages) {
-            if (this.state.villageHandler === '') {
-                const index = territorial.villages.map(x => x.nama_kota).indexOf(userData.address.village);
-                let clone = Object.assign({}, this.state.territorialHandler);
-                clone.villages = this.props.territorial.villages;
-                this.setState({
-                    villageHandler: userData.address.village,
-                    territorialHandler: clone
-                })
-            }
+            const index = territorial.villages.map(x => x.nama_kota).indexOf(userData.address.village);
+            let clone = Object.assign({}, this.state.territorialHandler);
+            clone.villages = this.props.territorial.villages;
+            this.setState({
+                villageHandler: userData.address.village,
+                territorialHandler: clone
+            })
         }
         if (userData.address.city !== '') {
             const { cityHandler, districtHandler, villageHandler } = this.state
@@ -467,7 +464,10 @@ class EditProfile extends Component {
                             onChangePhone={(text) => this.setState({phoneHandler: text})}
                             />
                         <TeritorialStructure
+                            provinceHandler={this.state.provinceHandler}
                             cityHandler={this.state.cityHandler}
+                            onChangeCity={(x, i) => this.citySelected(x, i)}
+                            listCities={this.state.territorialHandler.cities}
                             districtHandler={this.state.districtHandler}
                             onChangeDistrict={(x, i) => this.districtSelected(x, i)}
                             listDistricts={this.state.territorialHandler.districts}

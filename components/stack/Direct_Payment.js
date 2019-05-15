@@ -36,7 +36,8 @@ class DirectPayment extends Component {
             productPrice: 0,
             showModalContent: false
         }
-    }
+    };
+
     beforeRender = async () => {
         this.props.dispatch(resetTransactionState())
         this.props.dispatch(forceResetRoot())
@@ -50,7 +51,7 @@ class DirectPayment extends Component {
         }catch (error) {
 
         }
-    }
+    };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.resultCounting !== this.props.resultCounting) {
@@ -77,11 +78,11 @@ class DirectPayment extends Component {
                 this.props.dispatch(resetTransactionState())
             }
         }
-    }
+    };
 
     submitTransaction() {
         const { navigation, userData } = this.props;
-        let data = {}
+        let data = {};
         if (this.state.isAddressValid) {
             if (navigation.state.params === undefined) {
                 data = {
@@ -99,7 +100,7 @@ class DirectPayment extends Component {
                     qty: this.state.qty,
                     targetMember: this.props.targetMember.id,
                     ongkir: Number(this.props.targetMember.ongkir)
-                }
+                };
             }else{
                 data = {
                     name: navigation.state.params.name,
@@ -116,7 +117,7 @@ class DirectPayment extends Component {
                     qty: this.state.qty,
                     targetMember: this.props.targetMember.id,
                     ongkir: Number(this.props.targetMember.ongkir)
-                }
+                };
             }
             this.setState({loading: true, changeAmount: false, transactionContent: true})
             this.props.dispatch(directPurchase(data))
@@ -130,13 +131,13 @@ class DirectPayment extends Component {
                 { cancelable: false }
             );
         }
-    }
+    };
 
     loadData = async () => {
         try {
             const data = await AsyncStorage.getItem('direct_purchase');
             if (data !== null) {
-                const parsed = JSON.parse(data)
+                const parsed = JSON.parse(data);
                 let realPrice = 0;
                 if (this.props.userData.status === 'Non Member') {
                     realPrice = parsed.enduserprice;
@@ -157,7 +158,7 @@ class DirectPayment extends Component {
         }catch (error) {
             Alert.alert('Kesalahan', 'Gagal memuat data', [{text: 'OK'} ], { cancelable: false });
         }
-    }
+    };
 
     changeCount(x) {
         let count = this.state.qty;
@@ -165,18 +166,18 @@ class DirectPayment extends Component {
             count ++
             this.setState({qty: count, loadingCount: true})
             if (this.state.data.packing * count > 23) {
-                this.setState({isFreeOngkir: true})
+                this.setState({isFreeOngkir: true});
             }else{
-                this.setState({isFreeOngkir: false})
+                this.setState({isFreeOngkir: false});
             }
         }else{
             if (count > 1) {
                 count --
                 this.setState({qty: count, loadingCount: true})
                 if (this.state.data.packing * count > 23) {
-                    this.setState({isFreeOngkir: true})
+                    this.setState({isFreeOngkir: true});
                 }else{
-                    this.setState({isFreeOngkir: false})
+                    this.setState({isFreeOngkir: false});
                 }
             }
         }
@@ -184,27 +185,27 @@ class DirectPayment extends Component {
             token: this.state.token,
             id: this.state.data.id,
             qty: count
-        }
-        this.props.dispatch(countItem(data))
-    }
+        };
+        this.props.dispatch(countItem(data));
+    };
 
     onSave() {
-        this.setState({loading: false})
-    }
+        this.setState({loading: false});
+    };
 
     queueRouting() {
         this.props.navigation.popToTop();
         this.props.navigation.navigate('MyTransaction');
-    }
+    };
 
     checkIsFreeOngkir(x) {
-        this.setState({qty: Number(x)})
+        this.setState({qty: Number(x)});
 
-    }
+    ;}
 
     showInfo() {
         Alert.alert('Gratis Ongkir', 'Mininum pembelian diatas 12kg.', [{text: 'OK'}], { cancelable: true });
-    }
+    };
 
     render() {
         let params = {}
@@ -225,7 +226,7 @@ class DirectPayment extends Component {
                 }
             }
         }
-        const newParams = Object.assign({}, params, {token: this.state.token})
+        const newParams = Object.assign({}, params, {token: this.state.token});
         if (this.state.data === Object.assign({})) {
             return(
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -361,9 +362,9 @@ class DirectPayment extends Component {
                                         <Text style={{fontSize: 13}}>
                                             Jl.{this.props.userData.address.street} No.{this.props.userData.address.no} Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
                                         </Text>
-                                        <Text style={{fontSize: 13}}>Kecamatan {this.props.userData.address.district}</Text>
-                                        <Text style={{fontSize: 13}}>Kelurahan {this.props.userData.address.village}</Text>
-                                        <Text style={{fontSize: 13}}>{this.props.userData.address.city}</Text>
+                                        <Text style={{fontSize: 13}}>Kecamatan {capital(this.props.userData.address.district)}</Text>
+                                        <Text style={{fontSize: 13}}>Kelurahan {capital(this.props.userData.address.village)}</Text>
+                                        <Text style={{fontSize: 13}}>{capital(this.props.userData.address.city)}</Text>
                                     </View>
                                     :
                                     <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
@@ -377,9 +378,9 @@ class DirectPayment extends Component {
                                         <Text style={{fontSize: 13}}>
                                             Jl.{this.props.userData.address.street} No.{this.props.navigation.state.params.no} Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
                                         </Text>
-                                        <Text style={{fontSize: 13}}>Kecamatan {this.props.navigation.state.params.district}</Text>
-                                        <Text style={{fontSize: 13}}>Kelurahan {this.props.navigation.state.params.village}</Text>
-                                        <Text style={{fontSize: 13}}>{this.props.navigation.state.params.city}</Text>
+                                        <Text style={{fontSize: 13}}>Kecamatan {capital(this.props.navigation.state.params.district)}</Text>
+                                        <Text style={{fontSize: 13}}>Kelurahan {capital(this.props.navigation.state.params.village)}</Text>
+                                        <Text style={{fontSize: 13}}>{capital(this.props.navigation.state.params.city)}</Text>
                                     </View>
                                 }
                             </View>
@@ -474,6 +475,16 @@ class DirectPayment extends Component {
             )
         }
     }
+}
+
+function capital(x) {
+    var cs = x.split(' ')
+    var as = cs.map(r => r.toLowerCase())
+    var result = []
+    for (var i = 0; i < as.length; i++) {
+        result.push(as[i].charAt(0).toUpperCase() + as[i].slice(1))
+    }
+    return result.join(' ')
 }
 
 const styles = StyleSheet.create({

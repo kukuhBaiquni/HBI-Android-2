@@ -16,6 +16,7 @@ import { NavigationEvents } from 'react-navigation';
 import { countItem } from '../../actions/Counting_Items';
 import { addToCart, forceResetATC } from '../../actions/Add_To_Cart';
 import { withNavigationFocus } from 'react-navigation';
+import * as Animatable from 'react-native-animatable';
 
 class ProductDetails extends Component {
     constructor(props) {
@@ -27,7 +28,8 @@ class ProductDetails extends Component {
             token: '',
             showModalContent: false,
             itemCount: 1, // data
-            renderItems: []
+            renderItems: [],
+            isVisibleMain: false
         }
     }
 
@@ -39,10 +41,19 @@ class ProductDetails extends Component {
             var random = Math.floor(Math.random()*this.props.listProducts.length);
             if(arr.indexOf(random) > -1 || random == exception) continue;
             arr[arr.length] = random;
-            list.push(this.props.listProducts[random])
-        }
-        this.setState({renderItems: list})
-    }
+            list.push(this.props.listProducts[random]);
+        };
+        this._showMain(list);
+    };
+
+    _showMain = (list) => {
+        setTimeout(() => {
+            this.setState({
+                isVisibleMain: true,
+                renderItems: list
+            })
+        }, 10);
+    };
 
     changeCount(x) {
         let count = this.state.itemCount
@@ -61,7 +72,7 @@ class ProductDetails extends Component {
             qty: count
         }
         this.props.dispatch(countItem(data))
-    }
+    };
 
     addToCart(v) {
         this.setState({showModal: false})
@@ -71,7 +82,7 @@ class ProductDetails extends Component {
             qty: this.state.itemCount
         }
         this.props.dispatch(addToCart(item));
-    }
+    };
 
     showModal() {
         if (this.state.isLoggedIn) {
@@ -89,7 +100,7 @@ class ProductDetails extends Component {
                 { cancelable: false }
             );
         }
-    }
+    };
 
     checkToken = async () => {
         try {
@@ -102,7 +113,7 @@ class ProductDetails extends Component {
         } catch (error) {
             this.setState({isLoggedIn: false})
         }
-    }
+    };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.resultCounting !== this.props.resultCounting) {
@@ -126,7 +137,7 @@ class ProductDetails extends Component {
                 this.props.dispatch(forceResetATC())
             }
         }
-    }
+    };
 
     directPurchase = async () => {
         try{
@@ -146,13 +157,13 @@ class ProductDetails extends Component {
                 );
             }
         }catch(error) {}
-    }
+    };
 
     removeStorage = async () => {
         try{
             await AsyncStorage.removeItem('direct_purchase');
         }catch(error) {}
-    }
+    };
 
     _renderModal = () => {
         const { navigation } = this.props;
@@ -226,7 +237,7 @@ class ProductDetails extends Component {
                 </View>
             </Modal>
         )
-    }
+    };
 
     render() {
         const { navigation, isFocused } = this.props;
@@ -237,69 +248,72 @@ class ProductDetails extends Component {
                         onDidFocus={() => this.checkToken()}
                         onWillFocus={() => this.removeStorage()}
                         />
-                    <RNParallax
-                        headerMinHeight={55}
-                        headerMaxHeight={260}
-                        extraScrollHeight={20}
-                        navbarColor='white'
-                        scrollEventThrottle={5}
-                        title={navigation.state.params.productname}
-                        backgroundColor='#e2e2e2'
-                        titleStyle={styles.productName}
-                        backgroundImage={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
-                        backgroundImageScale={2}
-                        renderNavBar={() => (
-                            <View style={styles.fixedNavbar}>
-                                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navigationArrowBack}>
-                                    <Image
-                                        resizeMode='contain'
-                                        style={{height: 19, width: 19}}
-                                        source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
-                                        />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.cartIconContainer}>
-                                    <CartIcon navigation={navigation} bcolor='#7c0c10'/>
-                                </TouchableOpacity>
-                            </View>
-                        )}
-                        renderBackButton={() => (
-                            <Image
-                                onPress={() => navigation.goBack()}
-                                resizeMode='contain'
-                                style={{height: 19, width: 19}}
-                                source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
-                                />
-                        )}
-                        renderCartIcon={() => (
-                            <CartIcon navigation={navigation} bcolor='#7c0c10'/>
-                        )}
-                        renderContent={() => (
-                            <ScrollView style={{backgroundColor: '#f4f4f4', marginTop: -10}}>
-                                <View style={[styles.viewContainer, styles.viewBackgroundStyle]}>
-                                    <View style={{width: '35%'}}>
-                                        <Text style={styles.normalPriceText}>Harga Normal</Text>
-                                        <Text style={styles.normalPriceText}>{idrFormat(navigation.state.params.enduserprice)}</Text>
-                                    </View>
-                                    <View style={{width: '35%'}}>
-                                        <Text style={styles.memberPriceText}>Harga Member</Text>
-                                        <Text style={styles.memberPriceText}>{idrFormat(navigation.state.params.resellerprice)}</Text>
-                                    </View>
-                                    <View style={{width: '20%'}}>
-                                        <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
-                                        <View style={styles.discountEllipse}>
-                                            <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
+                    {
+                        this.state.isVisibleMain &&
+                        <RNParallax
+                            headerMinHeight={55}
+                            headerMaxHeight={260}
+                            extraScrollHeight={20}
+                            navbarColor='white'
+                            scrollEventThrottle={5}
+                            title={navigation.state.params.productname}
+                            backgroundColor='#e2e2e2'
+                            titleStyle={styles.productName}
+                            backgroundImage={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
+                            backgroundImageScale={2}
+                            renderNavBar={() => (
+                                <View style={styles.fixedNavbar}>
+                                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navigationArrowBack}>
+                                        <Image
+                                            resizeMode='contain'
+                                            style={{height: 19, width: 19}}
+                                            source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
+                                            />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.cartIconContainer}>
+                                        <CartIcon navigation={navigation} bcolor='#7c0c10'/>
+                                    </TouchableOpacity>
+                                </View>
+                            )}
+                            renderBackButton={() => (
+                                <Image
+                                    onPress={() => navigation.goBack()}
+                                    resizeMode='contain'
+                                    style={{height: 19, width: 19}}
+                                    source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
+                                    />
+                            )}
+                            renderCartIcon={() => (
+                                <CartIcon navigation={navigation} bcolor='#7c0c10'/>
+                            )}
+                            renderContent={() => (
+                                <ScrollView style={{backgroundColor: '#f4f4f4', marginTop: -10}}>
+                                    <View style={[styles.viewContainer, styles.viewBackgroundStyle]}>
+                                        <View style={{width: '35%'}}>
+                                            <Text style={styles.normalPriceText}>Harga Normal</Text>
+                                            <Text style={styles.normalPriceText}>{idrFormat(navigation.state.params.enduserprice)}</Text>
+                                        </View>
+                                        <View style={{width: '35%'}}>
+                                            <Text style={styles.memberPriceText}>Harga Member</Text>
+                                            <Text style={styles.memberPriceText}>{idrFormat(navigation.state.params.resellerprice)}</Text>
+                                        </View>
+                                        <View style={{width: '20%'}}>
+                                            <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
+                                            <View style={styles.discountEllipse}>
+                                                <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
+                                            </View>
                                         </View>
                                     </View>
-                                </View>
-                                <View style={styles.viewContainer}>
-                                    <Text style={styles.subtitle}>Deskripsi Produk</Text>
-                                    <Text style={styles.text}>{navigation.state.params.description}</Text>
-                                </View>
-                                <Swipable renderItems={this.state.renderItems} navigation={ navigation } />
-                                <View style={{height: 50}} />
-                            </ScrollView>
-                        )}
+                                    <View style={styles.viewContainer}>
+                                        <Text style={styles.subtitle}>Deskripsi Produk</Text>
+                                        <Text style={styles.text}>{navigation.state.params.description}</Text>
+                                    </View>
+                                    <Swipable renderItems={this.state.renderItems} navigation={ navigation } />
+                                    <View style={{height: 50}} />
+                                </ScrollView>
+                            )}
                         />
+                    }
                     <TouchableNativeFeedback>
                         <View style={styles.footerWrapper}>
                             <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
