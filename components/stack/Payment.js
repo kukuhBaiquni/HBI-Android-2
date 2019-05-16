@@ -27,7 +27,6 @@ class Payment extends Component {
         }
     }
     beforeRender = async () => {
-        console.log(this.props);
         this.props.dispatch(resetTransactionState())
         let acu = 0;
         this.props.cart.map(x => acu += x.freeOngkirConsideration)

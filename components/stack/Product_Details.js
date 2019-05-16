@@ -242,7 +242,6 @@ class ProductDetails extends Component {
     render() {
         const { navigation, isFocused } = this.props;
         if (isFocused) {
-            console.log(this.state.isVisibleMain);
             return(
                 <View style={{flex: 1}}>
                     <NavigationEvents

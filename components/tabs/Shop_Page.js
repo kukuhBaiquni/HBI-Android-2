@@ -22,10 +22,15 @@ class ShopPage extends Component {
     _afterRender = () => {
         const { navigation, targetMember } = this.props;
         this.props.dispatch(setTargetMember(navigation.state.params.member, navigation.state.params.ongkir));
-    };
+        setTimeout(() => {
+            this.setState({
+                isProductsVisible: true
+            });
+        });
+    };;
 
     _onAnimationEnd = () => {
-        this.setState({ isProductsVisible: true });
+        this.setState({ loading: false });
     };
 
     render() {
@@ -53,7 +58,7 @@ class ShopPage extends Component {
                     </Right>
                 </Header>
                 {
-                    this.state.isProductsVisible ?
+                    this.state.isProductsVisible &&
                     <Tabs tabBarUnderlineStyle={{backgroundColor: '#7c0c10'}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'sapi') } />
@@ -68,7 +73,9 @@ class ShopPage extends Component {
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'olahan') } />
                         </Tab>
                     </Tabs>
-                    :
+                }
+                {
+                    this.state.loading &&
                     <Modal
                         isVisible={this.state.loading}
                         style={{alignItems: 'center'}}
@@ -91,15 +98,15 @@ class ShopPage extends Component {
             </Container>
         )
     }
-}
+};
 
 function mapDispatchToProps(dispatch) {
     return dispatch
-}
+};
 
 export default connect(
     mapDispatchToProps
-)(ShopPage)
+)(ShopPage);
 
 const styles = StyleSheet.create({
     input : {
@@ -128,4 +135,4 @@ const styles = StyleSheet.create({
         fontSize: 14,
         fontWeight: 'bold'
     }
-})
+});

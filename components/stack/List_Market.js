@@ -16,6 +16,8 @@ import Icon from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { WaveIndicator  } from 'react-native-indicators';
 import { withNavigationFocus } from 'react-navigation';
+import Modal from 'react-native-modal';
+import {DotIndicator} from 'react-native-indicators';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -366,6 +368,20 @@ class ListMarket extends Component {
                         onWillFocus={() => this.beforeRender()}
                         onDidFocus={() => this._afterRender()}
                         />
+                        <Modal
+                            isVisible={!this.state.isMemberVisible}
+                            style={{alignItems: 'center'}}
+                            hideModalContentWhileAnimating={true}
+                            useNativeDriver
+                            >
+                            <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
+                                <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Memuat Peta</Text>
+                                <DotIndicator
+                                    color='#7c0c10'
+                                    size={8}
+                                    />
+                            </View>
+                        </Modal>
                     {this._renderMyLocationButton()}
                     {this._renderRemovePin()}
                     {this._renderInfoLocation()}
