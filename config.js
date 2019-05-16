@@ -5,7 +5,7 @@ export const SERVER_URL = 'http://halalbeef.co.id/';
 export const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
 
 export function idrFormat(angka) {
-    if (isNan(angka)) {
+    if (isNaN(angka)) {
         return 'loading..'
     }else{
         var rupiah = '';
