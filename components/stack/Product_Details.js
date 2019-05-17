@@ -17,6 +17,7 @@ import { countItem } from '../../actions/Counting_Items';
 import { addToCart, forceResetATC } from '../../actions/Add_To_Cart';
 import { withNavigationFocus } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
+import { WaveIndicator } from 'react-native-indicators';
 
 class ProductDetails extends Component {
     constructor(props) {
@@ -102,17 +103,19 @@ class ProductDetails extends Component {
         }
     };
 
-    checkToken = async () => {
-        try {
-            const val = await AsyncStorage.getItem('access_token');
-            if (val !== null) {
-                this.setState({isLoggedIn: true, token: JSON.parse(val)})
-            }else{
-                this.setState({isLoggedIn: false})
+    checkToken = () => {
+        setTimeout( async () => {
+            try {
+                const val = await AsyncStorage.getItem('access_token');
+                if (val !== null) {
+                    this.setState({isLoggedIn: true, token: JSON.parse(val)});
+                }else{
+                    this.setState({isLoggedIn: false});
+                }
+            } catch (error) {
+                this.setState({isLoggedIn: false});
             }
-        } catch (error) {
-            this.setState({isLoggedIn: false})
-        }
+        }, 10);
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -241,104 +244,115 @@ class ProductDetails extends Component {
 
     render() {
         const { navigation, isFocused } = this.props;
-        if (isFocused) {
-            return(
-                <View style={{flex: 1}}>
-                    <NavigationEvents
-                        onDidFocus={() => this.checkToken()}
-                        onWillFocus={() => this.removeStorage()}
-                        />
-                    {
-                        this.state.isVisibleMain &&
-                        <RNParallax
-                            headerMinHeight={55}
-                            headerMaxHeight={260}
-                            extraScrollHeight={20}
-                            navbarColor='white'
-                            scrollEventThrottle={5}
-                            title={navigation.state.params.productname}
-                            backgroundColor='#f4f4f4'
-                            titleStyle={styles.productName}
-                            backgroundImage={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
-                            backgroundImageScale={2}
-                            renderNavBar={() => (
-                                <View style={styles.fixedNavbar}>
-                                    <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navigationArrowBack}>
-                                        <Image
-                                            resizeMode='contain'
-                                            style={{height: 19, width: 19}}
-                                            source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
-                                            />
-                                    </TouchableOpacity>
-                                    <TouchableOpacity style={styles.cartIconContainer}>
-                                        <CartIcon navigation={navigation} bcolor='#7c0c10'/>
-                                    </TouchableOpacity>
-                                </View>
-                            )}
-                            renderBackButton={() => (
-                                <Image
-                                    onPress={() => navigation.goBack()}
-                                    resizeMode='contain'
-                                    style={{height: 19, width: 19}}
-                                    source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
-                                    />
-                            )}
-                            renderCartIcon={() => (
-                                <CartIcon navigation={navigation} bcolor='#7c0c10'/>
-                            )}
-                            renderContent={() => (
-                                <ScrollView style={{backgroundColor: '#e2e2e2', marginTop: -10}}>
-                                    <View style={[styles.viewContainer, styles.viewBackgroundStyle]}>
-                                        <View style={{width: '35%'}}>
-                                            <Text style={styles.normalPriceText}>Harga Normal</Text>
-                                            <Text style={styles.normalPriceText}>{idrFormat(navigation.state.params.enduserprice)}</Text>
-                                        </View>
-                                        <View style={{width: '35%'}}>
-                                            <Text style={styles.memberPriceText}>Harga Member</Text>
-                                            <Text style={styles.memberPriceText}>{idrFormat(navigation.state.params.resellerprice)}</Text>
-                                        </View>
-                                        <View style={{width: '20%'}}>
-                                            <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
-                                            <View style={styles.discountEllipse}>
-                                                <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                    <View style={styles.viewContainer}>
-                                        <Text style={styles.subtitle}>Deskripsi Produk</Text>
-                                        <Text style={styles.text}>{navigation.state.params.description}</Text>
-                                    </View>
-                                    <Swipable renderItems={this.state.renderItems} navigation={ navigation } />
-                                    <View style={{height: 50}} />
-                                </ScrollView>
-                            )}
-                        />
-                    }
-                    <TouchableNativeFeedback>
-                        <View style={styles.footerWrapper}>
-                            <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
-                                <Text style={{color: '#7c0c10'}}>Beli Sekarang</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10', backgroundColor: '#7c0c10'}]} onPress={() => this.showModal()}>
-                                <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
-                            </TouchableOpacity>
+        return(
+            <View style={{flex: 1}}>
+                <NavigationEvents
+                    onDidFocus={() => this.checkToken()}
+                    onWillFocus={() => this.removeStorage()}
+                    />
+                    <Modal
+                        isVisible={!this.state.isVisibleMain}
+                        style={{alignItems: 'center'}}
+                        hideModalContentWhileAnimating={true}
+                        useNativeDriver
+                        backdropColor='white'
+                        backdropOpacity={0.5}
+                        animationIn='fadeIn'
+                        animationOut='fadeOut'
+                        >
+                        <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
+                            <Text style={{textAlign: 'center', marginTop: 10}}>Sedang mempersiapkan data..</Text>
+                            <WaveIndicator
+                                color='#4f4f4f'
+                                />
                         </View>
-                    </TouchableNativeFeedback>
-                    {this._renderModal()}
-                    <FlashMessage
-                        position='top'
-                        floating={true}
-                        duration={3000}
-                        ref='suc'
-                        icon={this.state.isLoggedIn ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
-                        />
-                </View>
-            )
-        }else{
-            return(
-                <View></View>
-            )
-        }
+                    </Modal>
+                {
+                    this.state.isVisibleMain &&
+                    <RNParallax
+                        headerMinHeight={55}
+                        headerMaxHeight={260}
+                        extraScrollHeight={20}
+                        navbarColor='white'
+                        scrollEventThrottle={5}
+                        title={navigation.state.params.productname}
+                        backgroundColor='#f4f4f4'
+                        titleStyle={styles.productName}
+                        backgroundImage={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
+                        backgroundImageScale={2}
+                        renderNavBar={() => (
+                            <View style={styles.fixedNavbar}>
+                                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.navigationArrowBack}>
+                                    <Image
+                                        resizeMode='contain'
+                                        style={{height: 19, width: 19}}
+                                        source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
+                                        />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={styles.cartIconContainer}>
+                                    <CartIcon navigation={navigation} bcolor='#7c0c10'/>
+                                </TouchableOpacity>
+                            </View>
+                        )}
+                        renderBackButton={() => (
+                            <Image
+                                onPress={() => navigation.goBack()}
+                                resizeMode='contain'
+                                style={{height: 19, width: 19}}
+                                source={require('../../android/app/src/main/assets/custom/BackDarkred.png')}
+                                />
+                        )}
+                        renderCartIcon={() => (
+                            <CartIcon navigation={navigation} bcolor='#7c0c10'/>
+                        )}
+                        renderContent={() => (
+                            <ScrollView style={{backgroundColor: '#e2e2e2', marginTop: -10}}>
+                                <View style={[styles.viewContainer, styles.viewBackgroundStyle]}>
+                                    <View style={{width: '35%'}}>
+                                        <Text style={styles.normalPriceText}>Harga Normal</Text>
+                                        <Text style={styles.normalPriceText}>{idrFormat(navigation.state.params.enduserprice)}</Text>
+                                    </View>
+                                    <View style={{width: '35%'}}>
+                                        <Text style={styles.memberPriceText}>Harga Member</Text>
+                                        <Text style={styles.memberPriceText}>{idrFormat(navigation.state.params.resellerprice)}</Text>
+                                    </View>
+                                    <View style={{width: '20%'}}>
+                                        <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
+                                        <View style={styles.discountEllipse}>
+                                            <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
+                                        </View>
+                                    </View>
+                                </View>
+                                <View style={styles.viewContainer}>
+                                    <Text style={styles.subtitle}>Deskripsi Produk</Text>
+                                    <Text style={styles.text}>{navigation.state.params.description}</Text>
+                                </View>
+                                <Swipable renderItems={this.state.renderItems} navigation={ navigation } />
+                                <View style={{height: 50}} />
+                            </ScrollView>
+                        )}
+                    />
+                }
+                <TouchableNativeFeedback>
+                    <View style={styles.footerWrapper}>
+                        <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
+                            <Text style={{color: '#7c0c10'}}>Beli Sekarang</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10', backgroundColor: '#7c0c10'}]} onPress={() => this.showModal()}>
+                            <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
+                        </TouchableOpacity>
+                    </View>
+                </TouchableNativeFeedback>
+                {this._renderModal()}
+                <FlashMessage
+                    position='top'
+                    floating={true}
+                    duration={3000}
+                    ref='suc'
+                    icon={this.state.isLoggedIn ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
+                    />
+            </View>
+        )
     }
 };
 

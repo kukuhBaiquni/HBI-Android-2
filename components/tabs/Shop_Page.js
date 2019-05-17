@@ -8,7 +8,7 @@ import { NavigationEvents } from 'react-navigation';
 import CartIcon from '../Cart_Icon';
 import { setTargetMember } from '../../actions/Set_Target_Member';
 import Modal from "react-native-modal";
-import { DotIndicator } from 'react-native-indicators';
+import { WaveIndicator } from 'react-native-indicators';
 
 class ShopPage extends Component {
     constructor(props) {
@@ -74,23 +74,23 @@ class ShopPage extends Component {
                         </Tab>
                     </Tabs>
                 }
-                {
-                    this.state.loading &&
-                    <Modal
-                        isVisible={this.state.loading}
-                        style={{alignItems: 'center'}}
-                        hideModalContentWhileAnimating={true}
-                        useNativeDriver
-                        >
-                        <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                            <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
-                            <DotIndicator
-                                color='#7c0c10'
-                                size={8}
-                                />
-                        </View>
-                    </Modal>
-                }
+                <Modal
+                    isVisible={this.state.loading}
+                    style={{alignItems: 'center'}}
+                    hideModalContentWhileAnimating={true}
+                    useNativeDriver
+                    backdropColor='white'
+                    backdropOpacity={0.5}
+                    animationIn='fadeIn'
+                    animationOut='fadeOut'
+                    >
+                    <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
+                        <Text style={{textAlign: 'center', marginTop: 10, color: '#4f4f4f'}}>Memuat Produk..</Text>
+                        <WaveIndicator
+                            color='#4f4f4f'
+                            />
+                    </View>
+                </Modal>
                 <StatusBar
                     backgroundColor='#7c0c10'
                     barStyle='light-content'

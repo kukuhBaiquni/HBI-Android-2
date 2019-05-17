@@ -64,22 +64,14 @@ class ListMarket extends Component {
             const id = await AsyncStorage.getItem('PlayerID')
             const token = await AsyncStorage.getItem('access_token');
             if (id !== null && token !== null) {
-                const ids = JSON.parse(id)
-                const tokens = JSON.parse(token)
-                this.setState({token: tokens})
-                if (this.props.token === '') {
-                    this.props.dispatch(setInitialToken(tokens))
-                }
-                if (this.props.userData.playerID !== ids) {
-                    this.props.dispatch(setPlayerId({ids, token: tokens}))
-                }
-                if (this.props.userData.name === '') {
-                    this.props.dispatch(fetchUser(tokens))
-                }
+                const ids = JSON.parse(id);
+                const tokens = JSON.parse(token);
+                this.setState({token: tokens});
+                if (this.props.token === '') this.props.dispatch(setInitialToken(tokens));
+                if (this.props.userData.playerID !== ids) this.props.dispatch(setPlayerId({ids, token: tokens}));
+                if (this.props.userData.name === '') this.props.dispatch(fetchUser(tokens));
             }
-            if (this.props.listProducts.length === 0) {
-                this.props.dispatch(getAllProducts());
-            }
+            if (this.props.listProducts.length === 0) this.props.dispatch(getAllProducts());
         }catch(error) {
             ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
         };
@@ -107,7 +99,7 @@ class ListMarket extends Component {
         } catch (err) {
             console.log(err);
         }
-        this._toggleVisibility()
+        this._toggleVisibility();
     };
 
     _toggleVisibility = () => {
@@ -159,8 +151,6 @@ class ListMarket extends Component {
     };
 
     _drawRoute = (i) => {
-        // const latitude = parseFloat(this.props.listMarket.data[i].address.geolocation[0]);
-        // const longitude = parseFloat(this.props.listMarket.data[i].address.geolocation[1]);
         const latitude = this.props.listMarket.data[i].address.geolocation.latitude;
         const longitude = this.props.listMarket.data[i].address.geolocation.longitude;
         let origin = null;
@@ -194,14 +184,14 @@ class ListMarket extends Component {
                     bottom: 500,
                     left: 40
                 }, animated: true
-            })
+            });
         }
     };
 
     markerPress(x, i) {
         const prev = this.state.indexHandler;
         let target = i - prev;
-        this.swiper.scrollBy(target, true)
+        this.swiper.scrollBy(target, true);
     };
 
     _renderListMember = () => {
@@ -270,9 +260,7 @@ class ListMarket extends Component {
     }
 
     _markerPosition(position) {
-        this.setState({
-            fakePosition: position
-        })
+        this.setState({ fakePosition: position});
         fetch(googleApis + position.latitude + `,` + position.longitude + `&key=${this.state.apikey}`)
         .then(res => res.json())
         .then(resJson => {
@@ -309,7 +297,7 @@ class ListMarket extends Component {
                 heading: 1,
                 altitude: 1,
                 zoom: 14
-            })
+            });
         }
     };
 
@@ -346,14 +334,6 @@ class ListMarket extends Component {
             this.setState({fakePosition: null})
         }
     };
-
-    // componentDidUpdate(prevProps, prevState) {
-    //     const { listMarket } = this.props;
-    //     const { myPosition } = this.state;
-    //     if (prevState.myPosition !== this.state.myPosition) {
-    //         listMarket.data.sort((x, z) => console.log(x, z))
-    //     }
-    // }
 
     render() {
         const { navigation, listMarket } = this.props;
@@ -460,27 +440,27 @@ const ongkirCalculation = (distance) => {
     if (Number(distance) > 10) {
         let raw = Math.ceil(distance*3300).toString();
         if (Number(raw) > 10000) {
-            return raw.charAt(0) + raw.charAt(1) + '000'
+            return raw.charAt(0) + raw.charAt(1) + '000';
         }else{
-            return raw.charAt(0) + '000'
+            return raw.charAt(0) + '000';
         }
     }else{
         let raw = Math.ceil(distance*2200).toString();
         if (Number(raw) > 10000) {
-            return raw.charAt(0) + raw.charAt(1) + '000'
+            return raw.charAt(0) + raw.charAt(1) + '000';
         }else{
-            return raw.charAt(0) + '000'
+            return raw.charAt(0) + '000';
         }
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
-}
+    return dispatch;
+};
 
 export default connect(
     mapDispatchToProps
-)(ListMarket)
+)(ListMarket);
 
 const styles = StyleSheet.create({
     slide: {
@@ -636,4 +616,4 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center'
     }
-})
+});
