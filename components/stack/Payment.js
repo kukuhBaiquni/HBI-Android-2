@@ -8,7 +8,7 @@ import { SERVER_URL } from '../../config';
 import { idrFormat } from '../../config';
 import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
-import { DotIndicator } from 'react-native-indicators';
+import { DotIndicator, WaveIndicator } from 'react-native-indicators';
 import { confirmTransaction } from '../../actions/Confirm_Transaction';
 import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
 import { resetTransactionState } from '../../actions/Direct_Purchase';
@@ -23,7 +23,8 @@ class Payment extends Component {
             ongkir: 0,
             loading: false,
             transactionLoading: true,
-            isFreeOngkir: false
+            isFreeOngkir: false,
+            showContent: false
         }
     }
     beforeRender = async () => {
@@ -47,35 +48,41 @@ class Payment extends Component {
         }catch (error) {
 
         }
-    }
+    };
+
+    _afterRender = () => {
+        setTimeout(() => {
+            this.setState({showContent: true});
+        }, 10);
+    };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.userData !== this.props.userData) {
             if (this.props.userData.address.street !== '') {
-                this.setState({isAddressValid: true})
+                this.setState({isAddressValid: true});
             }else{
                 if (this.props.navigation.state.params !== undefined) {
-                    this.setState({isAddressValid: true})
+                    this.setState({isAddressValid: true});
                 }
             }
         }
         if (prevProps.transaction !== this.props.transaction) {
             if (this.state.transactionLoading) {
-                this.setState({transactionLoading: false})
-                this.props.dispatch(loadTransactionTypePending(this.state.token))
+                this.setState({transactionLoading: false});
+                this.props.dispatch(loadTransactionTypePending(this.state.token));
             }
         }
         if (prevProps.status.transaction.error !== this.props.status.transaction.error) {
             if (this.state.transactionLoading) {
-                this.setState({transactionLoading: false})
-                this.props.dispatch(resetTransactionState())
+                this.setState({transactionLoading: false});
+                this.props.dispatch(resetTransactionState());
             }
         }
-    }
+    };
 
     submitTransaction() {
         const { navigation, userData } = this.props;
-        let data = {}
+        let data = {};
         if (this.state.isAddressValid) {
             if (navigation.state.params === undefined) {
                 data = {
@@ -108,8 +115,8 @@ class Payment extends Component {
                     ongkir: Number(this.props.targetMember.ongkir)
                 }
             }
-            this.setState({loading: true})
-            this.props.dispatch(confirmTransaction(data))
+            this.setState({loading: true});
+            this.props.dispatch(confirmTransaction(data));
         }else{
             Alert.alert(
                 'Kesalahan',
@@ -132,12 +139,12 @@ class Payment extends Component {
     }
 
     render() {
-        const listData = this.props.cart.filter(x => x.status === true)
+        const listData = this.props.cart.filter(x => x.status === true);
         let total = 0;
-        const loop = this.props.cart.map(x => total += x.subtotal)
-        let params = {}
+        const loop = this.props.cart.map(x => total += x.subtotal);
+        let params = {};
         if (this.props.navigation.state.params === undefined) {
-            params = this.props.userData
+            params = this.props.userData;
         }else{
             params = {
                 name: this.props.navigation.state.params.name,
@@ -151,13 +158,14 @@ class Payment extends Component {
                     rt: this.props.navigation.state.params.rt,
                     rw: this.props.navigation.state.params.rw
                 }
-            }
+            };
         }
-        const newParams = Object.assign({}, params, {token: this.state.token})
+        const newParams = Object.assign({}, params, {token: this.state.token});
         return(
             <View style={{flex: 1}}>
                 <NavigationEvents
                     onWillFocus={() => this.beforeRender()}
+                    onDidFocus={() => this._afterRender()}
                     />
                 <Modal
                     isVisible={this.state.loading}
@@ -202,142 +210,161 @@ class Payment extends Component {
                         </View>
                     }
                 </Modal>
-                <ScrollView>
-                    <View style={{alignItems: 'center', marginTop: 15}}>
-                        <View style={{backgroundColor: 'white', padding: 10, width: '95%', elevation: 3, borderRadius: 3}}>
+                {
+                    this.state.showContent &&
+                    <ScrollView>
+                        <View style={{alignItems: 'center', marginTop: 15}}>
+                            <View style={{backgroundColor: 'white', padding: 10, width: '95%', elevation: 3, borderRadius: 3}}>
+                                <View>
+                                    <Text style={{fontSize: 16, fontWeight: 'bold', color: '#7c0c10', marginBottom: 10}}>Informasi Pembeli</Text>
+                                    <TouchableOpacity style={{position: 'absolute', right: 10, top: 0}} onPress={() => this.props.navigation.navigate('EditAddress', newParams)}>
+                                        <Text style={{color: '#7c0c10', fontSize: 15}}>Ubah</Text>
+                                    </TouchableOpacity>
+                                </View>
+                                {
+                                    this.props.navigation.state.params === undefined
+                                    ?
+                                    <View>
+                                        <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
+                                        <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.userData.name}</Text>
+                                        <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
+                                        <Text style={{marginBottom: 5, fontSize: 13}}>0{this.props.userData.phone}</Text>
+                                        <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
+                                        {
+                                            this.state.isAddressValid
+                                            ?
+                                            <View>
+                                                <Text style={{fontSize: 13}}>
+                                                    Jl.{this.props.userData.address.street} No.{this.props.userData.address.no}
+                                                    Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
+                                                </Text>
+                                                <Text style={{fontSize: 13}}>Kecamatan {this.props.userData.address.district}</Text>
+                                                <Text style={{fontSize: 13}}>Kelurahan {this.props.userData.address.village}</Text>
+                                                <Text style={{fontSize: 13}}>{this.props.userData.address.city}</Text>
+                                            </View>
+                                            :
+                                            <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
+                                        }
+                                    </View>
+                                    :
+                                    <View>
+                                        <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
+                                        <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.name}</Text>
+                                        <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
+                                        <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.phone}</Text>
+                                        <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
+                                        {
+                                            this.state.isAddressValid
+                                            ?
+                                            <View>
+                                                <Text style={{fontSize: 13}}>
+                                                    Jl.{this.props.navigation.state.params.street} No.{this.props.navigation.state.params.no}
+                                                    Rt.{this.props.navigation.state.params.rt} Rw.{this.props.navigation.state.params.rw}
+                                                </Text>
+                                                <Text style={{fontSize: 13}}>Kecamatan {this.props.navigation.state.params.district}</Text>
+                                                <Text style={{fontSize: 13}}>Kelurahan {this.props.navigation.state.params.village}</Text>
+                                                <Text style={{fontSize: 13}}>{this.props.navigation.state.params.city}</Text>
+                                            </View>
+                                            :
+                                            <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
+                                        }
+                                    </View>
+                                }
+                            </View>
+                        </View>
+                        <View style={{alignItems: 'center'}}>
+                            <View style={{backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 3}}>
                             <View>
-                                <Text style={{fontSize: 16, fontWeight: 'bold', color: '#7c0c10', marginBottom: 10}}>Informasi Pembeli</Text>
-                                <TouchableOpacity style={{position: 'absolute', right: 10, top: 0}} onPress={() => this.props.navigation.navigate('EditAddress', newParams)}>
-                                    <Text style={{color: '#7c0c10', fontSize: 15}}>Ubah</Text>
-                                </TouchableOpacity>
+                                <Text style={{fontSize: 20, padding: 10, fontWeight: 'bold', color: '#7c0c10'}}>Detail Pesanan</Text>
                             </View>
                             {
-                                this.props.navigation.state.params === undefined
+                                listData.map((x, i) =>
+                                <View key={i}>
+                                    <Text style={{marginLeft: 12, fontWeight: 'bold', fontSize: 16, marginBottom: 5, marginTop: 12}}>{x.product_name}</Text>
+                                    <View style={styles.productDetails}>
+                                        <Image
+                                            resizeMode='contain'
+                                            style={{width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1}}
+                                            source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
+                                            />
+                                        <View style={{marginBottom: 5, width: '25%'}}>
+                                            <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Harga</Text>
+                                            <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Kuantitas</Text>
+                                            <Text style={{marginLeft: 10, color: '#a3a3a3', position: 'absolute', bottom: 3}}>Subtotal</Text>
+                                        </View>
+                                        <View style={{marginBottom: 5, width: '45%'}}>
+                                            <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{idrFormat(x.price)}</Text>
+                                            <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{x.qty}</Text>
+                                            <Text style={{textAlign: 'right', position: 'absolute', bottom: 3, right: 0}}>
+                                                {idrFormat(x.subtotal)}
+                                            </Text>
+                                        </View>
+                                    </View>
+                                    <View style={{alignItems: 'center'}}>
+                                        <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                                    </View>
+                                </View>
+                            )
+                        }
+                        <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10}}>
+                            <Text style={{fontWeight: 'bold', fontSize: 15}}>Total Belanja</Text>
+                            <Text style={{fontSize: 15, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                                {idrFormat(total)}
+                            </Text>
+                        </View>
+                        <View style={{paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
+                            <Text style={{fontWeight: 'bold', fontSize: 15}}>Ongkir</Text>
+                            <TouchableOpacity onPress={() => this.showInfo()} style={{position: 'absolute', left: 60, top: 4, borderWidth: 2, borderColor: 'red', borderRadius: 10, width: 16, height: 16, justifyContent: 'center', alignItems: 'center'}}>
+                                <Text style={{color: 'red', fontWeight: 'bold', fontSize: 11}}>i</Text>
+                            </TouchableOpacity>
+                            {
+                                this.state.isFreeOngkir
                                 ?
-                                <View>
-                                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
-                                    <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.userData.name}</Text>
-                                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
-                                    <Text style={{marginBottom: 5, fontSize: 13}}>0{this.props.userData.phone}</Text>
-                                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
-                                    {
-                                        this.state.isAddressValid
-                                        ?
-                                        <View>
-                                            <Text style={{fontSize: 13}}>
-                                                Jl.{this.props.userData.address.street} No.{this.props.userData.address.no}
-                                                Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
-                                            </Text>
-                                            <Text style={{fontSize: 13}}>Kecamatan {this.props.userData.address.district}</Text>
-                                            <Text style={{fontSize: 13}}>Kelurahan {this.props.userData.address.village}</Text>
-                                            <Text style={{fontSize: 13}}>{this.props.userData.address.city}</Text>
-                                        </View>
-                                        :
-                                        <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
-                                    }
-                                </View>
+                                <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10}} source={require('../../android/app/src/main/assets/custom/FreeOngkir.png')}/>
                                 :
-                                <View>
-                                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
-                                    <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.name}</Text>
-                                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
-                                    <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.phone}</Text>
-                                    <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
-                                    {
-                                        this.state.isAddressValid
-                                        ?
-                                        <View>
-                                            <Text style={{fontSize: 13}}>
-                                                Jl.{this.props.navigation.state.params.street} No.{this.props.navigation.state.params.no}
-                                                Rt.{this.props.navigation.state.params.rt} Rw.{this.props.navigation.state.params.rw}
-                                            </Text>
-                                            <Text style={{fontSize: 13}}>Kecamatan {this.props.navigation.state.params.district}</Text>
-                                            <Text style={{fontSize: 13}}>Kelurahan {this.props.navigation.state.params.village}</Text>
-                                            <Text style={{fontSize: 13}}>{this.props.navigation.state.params.city}</Text>
-                                        </View>
-                                        :
-                                        <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
-                                    }
-                                </View>
+                                <Text style={{fontSize: 15, position: 'absolute', right: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                                    {idrFormat(Number(this.props.targetMember.ongkir))}
+                                </Text>
                             }
                         </View>
-                    </View>
-                    <View style={{alignItems: 'center'}}>
-                        <View style={{backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 3}}>
-                        <View>
-                            <Text style={{fontSize: 20, padding: 10, fontWeight: 'bold', color: '#7c0c10'}}>Detail Pesanan</Text>
+                        <View style={{alignItems: 'center'}}>
+                            <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
                         </View>
-                        {
-                            listData.map((x, i) =>
-                            <View key={i}>
-                                <Text style={{marginLeft: 12, fontWeight: 'bold', fontSize: 16, marginBottom: 5, marginTop: 12}}>{x.product_name}</Text>
-                                <View style={styles.productDetails}>
-                                    <Image
-                                        resizeMode='contain'
-                                        style={{width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1}}
-                                        source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
-                                        />
-                                    <View style={{marginBottom: 5, width: '25%'}}>
-                                        <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Harga</Text>
-                                        <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Kuantitas</Text>
-                                        <Text style={{marginLeft: 10, color: '#a3a3a3', position: 'absolute', bottom: 3}}>Subtotal</Text>
-                                    </View>
-                                    <View style={{marginBottom: 5, width: '45%'}}>
-                                        <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{idrFormat(x.price)}</Text>
-                                        <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{x.qty}</Text>
-                                        <Text style={{textAlign: 'right', position: 'absolute', bottom: 3, right: 0}}>
-                                            {idrFormat(x.subtotal)}
-                                        </Text>
-                                    </View>
-                                </View>
-                                <View style={{alignItems: 'center'}}>
-                                    <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
-                                </View>
-                            </View>
-                        )
-                    }
-                    <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10}}>
-                        <Text style={{fontWeight: 'bold', fontSize: 15}}>Total Belanja</Text>
-                        <Text style={{fontSize: 15, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
-                            {idrFormat(total)}
-                        </Text>
-                    </View>
-                    <View style={{paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
-                        <Text style={{fontWeight: 'bold', fontSize: 15}}>Ongkir</Text>
-                        <TouchableOpacity onPress={() => this.showInfo()} style={{position: 'absolute', left: 60, top: 4, borderWidth: 2, borderColor: 'red', borderRadius: 10, width: 16, height: 16, justifyContent: 'center', alignItems: 'center'}}>
-                            <Text style={{color: 'red', fontWeight: 'bold', fontSize: 11}}>i</Text>
-                        </TouchableOpacity>
-                        {
-                            this.state.isFreeOngkir
-                            ?
-                            <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10}} source={require('../../android/app/src/main/assets/custom/FreeOngkir.png')}/>
-                            :
-                            <Text style={{fontSize: 15, position: 'absolute', right: 10, fontWeight: 'bold', textAlign: 'right'}}>
-                                {idrFormat(Number(this.props.targetMember.ongkir))}
+                        <View style={{alignItems: 'center', marginTop: 3}}>
+                            <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                        </View>
+                        <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
+                            <Text style={{fontWeight: 'bold', fontSize: 17}}>Total Bayar</Text>
+                            <Text style={{fontSize: 17, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
+                                {this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + Number(this.props.targetMember.ongkir))}
                             </Text>
-                        }
+                        </View>
                     </View>
-                    <View style={{alignItems: 'center'}}>
-                        <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                        {/**/}
                     </View>
-                    <View style={{alignItems: 'center', marginTop: 3}}>
-                        <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                    <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
+                        <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
+                            <Text style={{color: 'white', fontSize: 16}}>Konfirmasi Pemesanan</Text>
+                        </TouchableOpacity>
                     </View>
-                    <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
-                        <Text style={{fontWeight: 'bold', fontSize: 17}}>Total Bayar</Text>
-                        <Text style={{fontSize: 17, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
-                            {this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + Number(this.props.targetMember.ongkir))}
-                        </Text>
-                    </View>
+                </ScrollView>
+                }
+            <Modal
+                isVisible={!this.state.showContent}
+                style={{alignItems: 'center'}}
+                hideModalContentWhileAnimating={true}
+                useNativeDriver
+                backdropColor='white'
+                backdropOpacity={0.5}
+                animationIn='fadeIn'
+                animationOut='fadeOut'
+                >
+                <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
+                    <WaveIndicator
+                        color='#4f4f4f'
+                        />
                 </View>
-                    {/**/}
-                </View>
-                <View style={{justifyContent: 'center', alignItems: 'center', marginBottom: 10}}>
-                    <TouchableOpacity onPress={() => this.submitTransaction()} style={{marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'}}>
-                        <Text style={{color: 'white', fontSize: 16}}>Konfirmasi Pemesanan</Text>
-                    </TouchableOpacity>
-                </View>
-            </ScrollView>
+            </Modal>
         </View>
         )
     }

@@ -350,23 +350,6 @@ class DirectPayment extends Component {
                         }
                     </Modal>
                     {
-                        !this.state.showContent &&
-                        <View style={{alignItems: 'center', marginTop: 15}}>
-                            <View style={styles.userInformation}>
-                                <View style={[styles.baseSkeleton, {width: '45%'}]} />
-                                <View style={[styles.baseSkeleton, {width: '10%'}]} />
-                                <View style={[styles.baseSkeleton, {width: '25%', height: 8}]} />
-                                <View style={[styles.baseSkeleton, {width: '28%'}]} />
-                                <View style={[styles.baseSkeleton, {width: '28%', height: 8}]} />
-                                <View style={[styles.baseSkeleton, {width: '31%'}]} />
-                                <View style={[styles.baseSkeleton, {width: '38%', height: 8}]} />
-                                <View style={[styles.baseSkeleton, {width: '50%', height: 8}]} />
-                                <View style={[styles.baseSkeleton, {width: '45%', height: 8}]} />
-                                <View style={[styles.baseSkeleton, {width: '20%', height: 8}]} />
-                            </View>
-                        </View>
-                    }
-                    {
                         this.state.showContent &&
                         <ScrollView>
                             <View style={{alignItems: 'center', marginTop: 15}}>
@@ -512,7 +495,6 @@ class DirectPayment extends Component {
                         animationOut='fadeOut'
                         >
                         <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                            <Text style={{textAlign: 'center', marginTop: 10, color: '#4f4f4f'}}>Menyiapkan pembayaran..</Text>
                             <WaveIndicator
                                 color='#4f4f4f'
                                 />
@@ -766,7 +748,7 @@ const styles = StyleSheet.create({
     mab10foz18: {marginBottom: 10, fontSize: 18},
     tacColba: {textAlign: 'center', color:'#bababa'},
     mabFoz20: {fontSize: 20, marginBottom: 20},
-    baseSkeleton: {height: 10, backgroundColor: '#b2b2b2', opacity: 0.2, borderRadius: 5, marginBottom: 11},
+    baseSkeleton: {height: 10, backgroundColor: '#6d6d6d', opacity: 0.4, borderRadius: 5, marginBottom: 12},
 });
 
 function mapDispatchToProps(dispatch) {

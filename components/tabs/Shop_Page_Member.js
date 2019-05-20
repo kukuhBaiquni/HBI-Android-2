@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { StatusBar, StyleSheet, TextInput, View, TouchableOpacity, ScrollView, TouchableNativeFeedback, AsyncStorage } from 'react-native';
+import { StatusBar, StyleSheet, TextInput, View, TouchableOpacity, ScrollView, TouchableNativeFeedback, AsyncStorage, ToastAndroid } from 'react-native';
 import { Container, Header, Item, Text, Right, Button, Content, Tab, Tabs, ScrollableTab } from 'native-base';
 import { Icon } from 'react-native-elements';
 import ProductsTab from '../Products_Tab';
@@ -9,24 +9,52 @@ import CartIcon from '../Cart_Icon';
 import { setTargetMember } from '../../actions/Set_Target_Member';
 import Modal from "react-native-modal";
 import { WaveIndicator } from 'react-native-indicators';
+import { getAllProducts } from '../../actions/Get_All_Products';
+import { fetchUser } from '../../actions/Get_User_Data';
+import { setPlayerId } from '../../actions/Set_Player_Id';
+import { setInitialToken } from '../../actions/Set_Initial_Token';
+import { withNavigationFocus } from 'react-navigation';
 
-class ShopPage extends Component {
+class ShopPageMember extends Component {
     constructor(props) {
         super(props)
         this.state = {
             isProductsVisible: false,
-            loading: true
+            loading: true,
+            isFocused: false
         }
     };
 
     _afterRender = () => {
-        const { navigation, targetMember } = this.props;
-        this.props.dispatch(setTargetMember(navigation.state.params.member, navigation.state.params.ongkir));
-        setTimeout(() => {
+        console.log('did blur');
+        this.setState({isFocused: true})
+        const { navigation } = this.props;
+        this.props.dispatch(getAllProducts());
+        setTimeout(async () => {
             this.setState({
                 isProductsVisible: true
             });
+            try{
+                const id = await AsyncStorage.getItem('PlayerID')
+                const token = await AsyncStorage.getItem('access_token');
+                if (id !== null && token !== null) {
+                    const ids = JSON.parse(id);
+                    const tokens = JSON.parse(token);
+                    this.setState({token: tokens});
+                    if (this.props.token === '') this.props.dispatch(setInitialToken(tokens));
+                    if (this.props.userData.playerID !== ids) this.props.dispatch(setPlayerId({ids, token: tokens}));
+                    if (this.props.userData.name === '') this.props.dispatch(fetchUser(tokens));
+                }
+                if (this.props.listProducts.length === 0) this.props.dispatch(getAllProducts());
+            }catch(error) {
+                ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
+            };
         });
+    };
+
+    _beforeBlur = () => {
+        console.log('will blur');
+        this.setState({isFocused: false})
     };
 
     _onAnimationEnd = () => {
@@ -34,11 +62,12 @@ class ShopPage extends Component {
     };
 
     render() {
-        const { navigation, targetMember } = this.props;
+        const { navigation, listProducts } = this.props;
         return(
             <Container>
                 <NavigationEvents
                     onDidFocus={this._afterRender}
+                    onWillBlur={this._beforeBlur}
                     />
                 <Header style={styles.headerColor}>
                     <Item style={{borderBottomColor: '#7c0c10'}}>
@@ -58,19 +87,19 @@ class ShopPage extends Component {
                     </Right>
                 </Header>
                 {
-                    this.state.isProductsVisible &&
-                    <Tabs tabBarUnderlineStyle={{backgroundColor: '#7c0c10'}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
+                    this.state.isProductsVisible && this.state.isFocused &&
+                    <Tabs onChangeTab={(x) => console.log(x)} tabBarUnderlineStyle={{backgroundColor: '#7c0c10'}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'sapi') } />
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'sapi') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ayam') } />
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'ayam') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ikan') } />
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'ikan') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'olahan') } />
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'olahan') } />
                         </Tab>
                     </Tabs>
                 }
@@ -106,7 +135,7 @@ function mapDispatchToProps(dispatch) {
 
 export default connect(
     mapDispatchToProps
-)(ShopPage);
+)(ShopPageMember);
 
 const styles = StyleSheet.create({
     input : {

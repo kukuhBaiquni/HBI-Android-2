@@ -208,7 +208,7 @@ class ProductDetails extends Component {
                                             <BarIndicator count={5} size={15} color='#919191' />
                                         </View>
                                         :
-                                        <Text style={styles.priceTextModal}>{idrFormat(this.state.itemCount === 1 ? navigation.state.params.enduserprice : this.props.resultCounting)}</Text>
+                                        <Text style={styles.priceTextModal}>{idrFormat(this.state.itemCount === 1 ? (this.props.userData.status === 'Non Member' ? navigation.state.params.enduserprice : navigation.state.params.resellerprice) : this.props.resultCounting)}</Text>
                                     }
                                     {/*Increment Button*/}
                                     <View style={styles.interactionButtonContainer}>
@@ -261,7 +261,7 @@ class ProductDetails extends Component {
                         animationOut='fadeOut'
                         >
                         <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                            <Text style={{textAlign: 'center', marginTop: 10}}>Sedang mempersiapkan data..</Text>
+                            <Text style={{textAlign: 'center', marginTop: 10}}>Sedang mempersiapkan produk..</Text>
                             <WaveIndicator
                                 color='#4f4f4f'
                                 />

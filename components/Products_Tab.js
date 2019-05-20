@@ -22,18 +22,21 @@ export default class ProductsTab extends Component {
                         >
                         {
                             products.sort((a, b) => a.id - b.id).map((x, i) =>
-                            <TouchableOpacity key={i} onPress={() => navigation.navigate('ProductDetails', x)}>
+                            <TouchableOpacity style={styles.itemContainer} key={i} onPress={() => navigation.navigate('ProductDetails', x)}>
                                 <View>
                                     <Image
                                         resizeMode='contain'
-                                        style={{width: 160, height: 160}}
+                                        style={{width: 160, height: 160, marginBottom: 10}}
                                         source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
                                         />
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={styles.title}>{x.productname}</Text>
                                     </View>
                                     <Text style={styles.price}>{idrFormat(x.enduserprice)}/{x.unit}</Text>
-                                    <Text style={styles.price}>Stock: {x.amount}</Text>
+                                    {
+                                        this.props.status === 'Non Member' &&
+                                        <Text style={styles.price}>Stock: {x.amount}</Text>
+                                    }
                                 </View>
                             </TouchableOpacity>
                             )
@@ -63,5 +66,8 @@ var styles = StyleSheet.create({
     price: {
         fontSize: 14,
         textAlign: 'center'
+    },
+    itemContainer: {
+        marginTop: 20
     }
 })

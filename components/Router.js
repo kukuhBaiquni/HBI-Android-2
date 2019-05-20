@@ -5,6 +5,7 @@ import { Icon } from 'react-native-elements';
 import SearchAutocomplete from './stack/Search_Autocomplete';
 import Example from './Static_Example';
 import ShopPage from './tabs/Shop_Page';
+import Switcher from './tabs/Switcher';
 import ProductDetails from './stack/Product_Details';
 import Mail from './tabs/Mail';
 import Cart from './stack/Cart';
@@ -191,7 +192,7 @@ const Tabs = createMaterialTopTabNavigator({
         }
     },
     Shopping: {
-        screen: ListMarket,
+        screen: Switcher,
         navigationOptions: {
             title: 'Belanja',
             headerTintColor: '#7c0c10',
