@@ -4,10 +4,7 @@ import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { SERVER_URL, idrFormat, _FONTS } from '../../../config';
 import { NavigationEvents } from 'react-navigation';
-import { getAllProducts } from '../../actions/Get_All_Products';
-import { fetchUser } from '../../actions/Get_User_Data';
-import { setPlayerId } from '../../actions/Set_Player_Id';
-import { setInitialToken } from '../../actions/Set_Initial_Token';
+
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import MapViewDirections from 'react-native-maps-directions';
@@ -60,26 +57,8 @@ class ListMarket extends Component {
         }
     };
 
-    beforeRender = async () => {
-        this.props.dispatch(getMemberLocation())
-        try{
-            const id = await AsyncStorage.getItem('PlayerID')
-            const token = await AsyncStorage.getItem('access_token');
-            if (id !== null && token !== null) {
-                const ids = JSON.parse(id);
-                const tokens = JSON.parse(token);
-                this.setState({token: tokens});
-                if (this.props.token === '') this.props.dispatch(setInitialToken(tokens));
-                if (this.props.userData.playerID !== ids) this.props.dispatch(setPlayerId({ids, token: tokens}));
-                if (this.props.userData.name === '') this.props.dispatch(fetchUser(tokens));
-            }
-            if (this.props.listProducts.length === 0) this.props.dispatch(getAllProducts());
-        }catch(error) {
-            ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
-        };
-    };
-
     _afterRender = async () => {
+        this.props.dispatch(getMemberLocation())
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
@@ -125,14 +104,14 @@ class ListMarket extends Component {
                     heading: 1,
                     altitude: 1,
                     zoom: 14
-                })
+                });
                 this.setState({
                     locationDenied: false,
                     myPosition: {
                         latitude: position.coords.latitude,
                         longitude: position.coords.longitude
                     }
-                })
+                });
             },
             (error) => {
                 this.setState({locationDenied: true})
@@ -160,9 +139,9 @@ class ListMarket extends Component {
             latitude, longitude
         };
         if (this.state.fakePosition === null) {
-            origin = this.state.myPosition
+            origin = this.state.myPosition;
         }else{
-            origin = this.state.fakePosition
+            origin = this.state.fakePosition;
         }
         this.setState({indexHandler: i, destination, activeMemberIndex: i})
         if (this.state.myPosition === null && this.state.fakePosition === null) {
@@ -347,7 +326,6 @@ class ListMarket extends Component {
                         barStyle='light-content'
                         />
                     <NavigationEvents
-                        onWillFocus={() => this.beforeRender()}
                         onDidFocus={() => this._afterRender()}
                         />
                     <Modal

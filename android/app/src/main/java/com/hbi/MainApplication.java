@@ -20,55 +20,57 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.soloader.SoLoader;
+import com.reactnativecommunity.netinfo.NetInfoPackage;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class MainApplication extends Application implements ReactApplication {
 
-  private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
+    private static CallbackManager mCallbackManager = CallbackManager.Factory.create();
 
-  protected static CallbackManager getCallbackManager() {
-    return mCallbackManager;
-  }
-
-  private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
-    @Override
-    public boolean getUseDeveloperSupport() {
-      return BuildConfig.DEBUG;
+    protected static CallbackManager getCallbackManager() {
+        return mCallbackManager;
     }
 
-    @Override
-    protected List<ReactPackage> getPackages() {
-      return Arrays.<ReactPackage>asList(
-          new MainReactPackage(),
+    private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+        @Override
+        public boolean getUseDeveloperSupport() {
+            return BuildConfig.DEBUG;
+        }
+
+        @Override
+        protected List<ReactPackage> getPackages() {
+            return Arrays.<ReactPackage>asList(
+            new MainReactPackage(),
             new SplashScreenReactPackage(),
             new ReactNativeOneSignalPackage(),
             new RNGoogleSignInPackage(),
             new LinearGradientPackage(),
-          new ImagePickerPackage(),
-          new VectorIconsPackage(),
-          new FBSDKPackage(mCallbackManager),
-          new RNSendIntentPackage(),
-          new MapsPackage(),
-          new RNFusedLocationPackage()
-      );
+            new ImagePickerPackage(),
+            new VectorIconsPackage(),
+            new FBSDKPackage(mCallbackManager),
+            new RNSendIntentPackage(),
+            new MapsPackage(),
+            new RNFusedLocationPackage(),
+            new NetInfoPackage()
+            );
+        }
+
+        @Override
+        protected String getJSMainModuleName() {
+            return "index";
+        }
+    };
+
+    @Override
+    public ReactNativeHost getReactNativeHost() {
+        return mReactNativeHost;
     }
 
     @Override
-    protected String getJSMainModuleName() {
-      return "index";
+    public void onCreate() {
+        super.onCreate();
+        SoLoader.init(this, /* native exopackage */ false);
     }
-  };
-
-  @Override
-  public ReactNativeHost getReactNativeHost() {
-    return mReactNativeHost;
-  }
-
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    SoLoader.init(this, /* native exopackage */ false);
-  }
 }

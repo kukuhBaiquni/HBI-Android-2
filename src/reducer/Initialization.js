@@ -1,6 +1,6 @@
 let initialState = false;
 
-export default function transaction(state = initialState, action) {
+export default function initialization(state = initialState, action) {
     switch (action.type) {
 
         case 'INITIALIZATION_OK':
