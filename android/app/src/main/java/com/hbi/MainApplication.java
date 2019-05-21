@@ -21,6 +21,7 @@ import com.facebook.react.shell.MainReactPackage;
 import com.facebook.reactnative.androidsdk.FBSDKPackage;
 import com.facebook.soloader.SoLoader;
 import com.reactnativecommunity.netinfo.NetInfoPackage;
+import com.github.wumke.RNExitApp.RNExitAppPackage;
 
 import java.util.Arrays;
 import java.util.List;
@@ -53,7 +54,8 @@ public class MainApplication extends Application implements ReactApplication {
             new RNSendIntentPackage(),
             new MapsPackage(),
             new RNFusedLocationPackage(),
-            new NetInfoPackage()
+            new NetInfoPackage(),
+            new RNExitAppPackage()
             );
         }
 

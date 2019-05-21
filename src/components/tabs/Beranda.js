@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, ScrollView, Text, Image, AsyncStorage, ToastAndroid } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ScrollView, Text, Image, AsyncStorage, ToastAndroid, Alert, StatusBar } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 
@@ -16,6 +16,18 @@ class Beranda extends Component {
         NetInfo.fetch().then(state => {
             console.log("Connection type", state.type);
             console.log("Is connected?", state.isConnected);
+            if (state.isConnected) {
+                this._afterRender();
+            }else{
+                Alert.alert(
+                    'Tidak ada Jaringan',
+                    'Silahkan periksa kembali koneksi internet Anda',
+                    [
+                        {text: 'OK'}
+                    ],
+                    { cancelable: false }
+                );
+            }
         });
 
     };
@@ -49,7 +61,11 @@ class Beranda extends Component {
             <View>
                 <NavigationEvents
                     onWillFocus={this._beforeRender}
-                    onDidFocus={this._afterRender}
+                    />
+                <StatusBar
+                    barStyle='light-content'
+                    backgroundColor='#7c0c10'
+                    animated
                     />
 
             </View>
