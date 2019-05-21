@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground, AsyncStorage, Alert, Dimensions } from 'react-native';
+import { Text, View, TouchableOpacity, ScrollView, StyleSheet, ImageBackground, AsyncStorage, Alert, Dimensions, Image } from 'react-native';
 import { Container, Header, Content, Input, Item } from 'native-base';
 import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
@@ -17,10 +17,28 @@ import FBSDK, { LoginManager } from 'react-native-fbsdk';
 import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
 import { checkEmail } from '../../actions/Check_Email';
 import GoogleSignIn from 'react-native-google-sign-in';
+import { BACKDARKRED } from '../../images';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 class Login extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Login',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerTitleStyle: {
+                color: '#7c0c10',
+                fontSize: 16,
+                fontWeight: 'normal'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+        }
+    };
+
     constructor(props) {
         super(props)
         this.state = {
@@ -35,7 +53,7 @@ class Login extends Component {
             oauthData: {},
             error: ''
         }
-    }
+    };
 
     facebookLogin() {
         LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
@@ -88,7 +106,7 @@ class Login extends Component {
                 { cancelable: false }
             );
         }
-    }
+    };
 
     emailCheck() {
         setTimeout( async () => {
@@ -121,7 +139,7 @@ class Login extends Component {
                 color: '#00630e'
             })
         }
-    }
+    };
 
     submitForm() {
         let email = this.state.emailHandler;
@@ -135,7 +153,7 @@ class Login extends Component {
         }else{
             this.setState({isFormEmpty: true})
         }
-    }
+    };
 
     componentDidUpdate(prevProps, prevState) {
         let data = this.state.oauthData;
@@ -193,7 +211,7 @@ class Login extends Component {
                 { cancelable: false }
             );
         }
-    }
+    };
 
     googleLogin = async () => {
         try {
@@ -299,7 +317,7 @@ class Login extends Component {
                                     {
                                         this.state.secure
                                         ? <Icon onPress={() => this.setState({secure: false})} name='visibility' color='#919191' size={20}/>
-                                    : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={20}/>
+                                        : <Icon onPress={() => this.setState({secure: true})} name='visibility-off' color='#919191' size={20}/>
                                     }
                                 </TouchableOpacity>
                             </Item>

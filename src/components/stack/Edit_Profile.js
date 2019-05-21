@@ -18,6 +18,7 @@ import ImagePicker from 'react-native-image-picker';
 import futch from '../../actions/Fetch';
 import FormStructure from '../structure/FormStructure';
 import TeritorialStructure from '../structure/TeritorialStructure';
+import { BACKDARKRED } from '../../images';
 
 const options = {
     title: 'Pilihan',
@@ -31,6 +32,18 @@ const options = {
 };
 
 class EditProfile extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Perbarui Profil',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+        }
+    };
+
     constructor(props) {
         super(props)
 

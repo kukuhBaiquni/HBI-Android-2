@@ -16,9 +16,26 @@ import { cartCheckPartial, forceResetCP } from '../../actions/Cart_Check_Partial
 import { cartCheckAll, forceResetCA } from '../../actions/Cart_Check_All';
 import { removeItem, forceResetRI } from '../../actions/Remove_Item';
 import { withNavigationFocus } from 'react-navigation';
-import { EMPTY_CART } from '../../images';
+import { EMPTY_CART, BACKDARKRED } from '../../images';
 
 class Cart extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Keranjang Belanja',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerTitleStyle: {
+                color: '#7c0c10',
+                fontSize: 16,
+                fontWeight: 'normal'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+        };
+    }
+
     constructor(props) {
         super(props)
 

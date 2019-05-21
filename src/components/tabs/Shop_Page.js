@@ -11,12 +11,18 @@ import Modal from "react-native-modal";
 import { WaveIndicator } from 'react-native-indicators';
 
 class ShopPage extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            header: null
+        };
+    };
+
     constructor(props) {
         super(props)
         this.state = {
             isProductsVisible: false,
             loading: true
-        }
+        };
     };
 
     _afterRender = () => {
@@ -101,7 +107,7 @@ class ShopPage extends Component {
 };
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
+    return dispatch;
 };
 
 export default connect(

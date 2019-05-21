@@ -6,8 +6,11 @@ import MailPartials from './Mail_Partials';
 import io from 'socket.io-client';
 import { SERVER_URL } from '../../../config';
 import { connect } from 'react-redux';
+import { NOTIFIKASI_C, NOTIFIKASI } from '../../images';
+import BadgeNotification from '../Badge_Notification';
 
 class Mail extends Component {
+
     constructor(props) {
         super(props)
 

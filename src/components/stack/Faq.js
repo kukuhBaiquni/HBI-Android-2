@@ -4,6 +4,12 @@ import { Icon } from 'react-native-elements';
 import { DrawerActions } from 'react-navigation-drawer';
 
 export default class Faq extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            header: null
+        };
+    };
+
     render() {
         return(
             <View style={{flex: 1}}>
@@ -20,7 +26,7 @@ export default class Faq extends Component {
             </View>
         )
     }
-}
+};
 
 const styles = StyleSheet.create({
     header: {
@@ -36,4 +42,4 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: '#7c0c10'
     }
-})
+});

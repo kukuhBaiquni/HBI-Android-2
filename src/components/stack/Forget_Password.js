@@ -6,10 +6,23 @@ import Modal from 'react-native-modal';
 import { DotIndicator } from 'react-native-indicators';
 import { sendEmail, resetSendEmailState } from '../../actions/Forget_Password_Send_Email';
 import validator from 'validator';
+import { BACKDARKRED } from '../../images';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 class ForgetPassword extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Lupa Password',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+        };
+    };
+
     constructor(props) {
         super(props)
         this.state = {
@@ -17,17 +30,17 @@ class ForgetPassword extends Component {
             isEmailValid: true,
             loading: false,
             emailNotFound: false
-        }
+        };
     };
 
     sendEmail = () => {
         this.props.dispatch(resetSendEmailState());
         const email = this.state.emailHandler;
         if (validator.isEmail(email)) {
-            this.setState({isEmailValid: true, loading: true})
+            this.setState({isEmailValid: true, loading: true});
             this.props.dispatch(sendEmail(this.state.emailHandler));
         }else{
-            this.setState({isEmailValid: false})
+            this.setState({isEmailValid: false});
         }
     };
 
@@ -99,10 +112,10 @@ class ForgetPassword extends Component {
             </View>
         )
     }
-}
+};
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
+    return dispatch;
 };
 
 export default connect(
@@ -158,4 +171,4 @@ const styles = StyleSheet.create({
         fontSize: 14,
         padding: 5
     }
-})
+});

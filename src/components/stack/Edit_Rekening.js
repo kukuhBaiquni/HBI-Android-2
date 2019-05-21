@@ -9,8 +9,21 @@ import { loadBank } from '../../actions/Load_Bank';
 import { NavigationEvents } from 'react-navigation';
 import { editRekening, forceResetER } from '../../actions/Edit_Rekening';
 import { forceResetLB } from '../../actions/Load_Bank';
+import { CHECKLIST_DARKRED } from '../../images';
 
 class EditRekening extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Edit Rekening',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 16, width: 16}} source={CHECKLIST_DARKRED} /> )
+        }
+    };
+
     constructor(props) {
         super(props)
         this.state = {
@@ -18,46 +31,46 @@ class EditRekening extends Component {
             naRek: '',
             loading: false
         }
-    }
+    };
 
     beforeRender() {
-        this.setState({noRek: this.props.userData.no_rekening})
-        this.props.dispatch(loadBank())
-    }
+        this.setState({noRek: this.props.userData.no_rekening});
+        this.props.dispatch(loadBank());
+    };
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.bank !== this.props.bank) {
             const index = this.props.bank.map(x => x.name).indexOf(this.props.userData.nama_rekening);
             if (index !== -1) {
-                this.setState({naRek: this.props.bank[index].name})
+                this.setState({naRek: this.props.bank[index].name});
             }
         }
         if (prevProps.status.editRekening.success !== this.props.status.editRekening.success) {
             if (this.props.status.editRekening.success) {
-                this.setState({loading: false})
+                this.setState({loading: false});
                 this.props.dispatch(forceResetER());
                 ToastAndroid.show('Perubahan berhasil disimpan', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
             }
         }else{
             if (this.props.status.editRekening.success) {
                 if (this.state.loading) {
-                    this.props.dispatch(forceResetER())
-                    this.setState({loading: false})
+                    this.props.dispatch(forceResetER());
+                    this.setState({loading: false});
                     ToastAndroid.show('Perubahan berhasil disimpan', ToastAndroid.SHORT, ToastAndroid.BOTTOM);
                 }
             }
         }
-    }
+    };
 
     onSave() {
         const data = {
             token: this.props.navigation.state.params.token,
             noRek: this.state.noRek,
             naRek: this.state.naRek
-        }
-        this.setState({loading: true})
-        this.props.dispatch(editRekening(data))
-    }
+        };
+        this.setState({loading: true});
+        this.props.dispatch(editRekening(data));
+    };
 
     render() {
         const { navigation } = this.props;
@@ -93,31 +106,31 @@ class EditRekening extends Component {
                                     >
                                     {
                                         this.props.bank.map((x, i) =>
-                                        <Picker key={i} label={x.name} value={x.name} />
-                                    )
-                                }
-                            </Picker>
-                        </Item>
-                        <Item stackedLabel style={{width: 315, borderBottomColor: '#a8a8a8'}}>
-                            <Label style={{color: '#a8a8a8'}}>Nomor Rekening</Label>
-                            <Input
-                                keyboardType='numeric'
-                                onChangeText={(x) => this.setState({noRek: x})}
-                                value={this.state.noRek}
-                                />
-                        </Item>
-                    </Form>
-                    <View style={{alignItems: 'center', marginTop: 20, marginBottom: 10}}>
-                        <TouchableOpacity onPress={() => this.onSave()} style={{borderRadius: 3, width: '95%', height: 50, backgroundColor: '#7c0c10', alignItems: 'center', justifyContent: 'center'}}>
-                            <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Simpan</Text>
-                        </TouchableOpacity>
+                                            <Picker key={i} label={x.name} value={x.name} />
+                                        )
+                                    }
+                                </Picker>
+                            </Item>
+                            <Item stackedLabel style={{width: 315, borderBottomColor: '#a8a8a8'}}>
+                                <Label style={{color: '#a8a8a8'}}>Nomor Rekening</Label>
+                                <Input
+                                    keyboardType='numeric'
+                                    onChangeText={(x) => this.setState({noRek: x})}
+                                    value={this.state.noRek}
+                                    />
+                            </Item>
+                        </Form>
+                        <View style={{alignItems: 'center', marginTop: 20, marginBottom: 10}}>
+                            <TouchableOpacity onPress={() => this.onSave()} style={{borderRadius: 3, width: '95%', height: 50, backgroundColor: '#7c0c10', alignItems: 'center', justifyContent: 'center'}}>
+                                <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Simpan</Text>
+                            </TouchableOpacity>
+                        </View>
                     </View>
                 </View>
             </View>
-        </View>
-    )
-}
-}
+        )
+    }
+};
 
 const styles = StyleSheet.create({
     header: {
@@ -133,7 +146,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
         color: 'white'
     }
-})
+});
 
 
 function mapDispatchToProps(dispatch) {

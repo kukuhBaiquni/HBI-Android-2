@@ -6,9 +6,21 @@ import { NavigationEvents } from 'react-navigation';
 import { SERVER_URL, idrFormat, locale } from '../../../config';
 import moment from 'moment';
 import { loadSingleTransaction } from '../../actions/Load_Single_Transaction';
-import { FREE_ONGKIR } from '../../images';
+import { FREE_ONGKIR, CHECKLIST_DARKRED } from '../../images';
 
 class TransactionDetails extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Detail Transaksi',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 16, width: 16}} source={CHECKLIST_DARKRED} /> )
+        };
+    };
+
     constructor(props) {
         super(props)
         this.state = {

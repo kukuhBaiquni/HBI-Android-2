@@ -7,8 +7,21 @@ import { SERVER_URL } from '../../../config';
 import LinearGradient from 'react-native-linear-gradient';
 import { fetchUser } from '../../actions/Get_User_Data';
 import moment from 'moment';
+import { BACKDARKRED } from '../../images';
 
 class MyProfile extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Profil Saya',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+        }
+    };
+
     render() {
         const userData = this.props.userData;
         let gender = userData.gender;

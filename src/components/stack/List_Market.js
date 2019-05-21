@@ -17,13 +17,15 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { withNavigationFocus } from 'react-navigation';
 import Modal from 'react-native-modal';
 import {WaveIndicator} from 'react-native-indicators';
-import { DRAWER_DEFAULT, CONTOH_2 } from '../../images';
+import { DRAWER_DEFAULT, CONTOH_2, BELANJA, BELANJA_C, BACKDARKRED } from '../../images';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const googleApis = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
 
+
 class ListMarket extends Component {
+
     constructor(props) {
         super(props)
         this.state = {
@@ -359,7 +361,7 @@ class ListMarket extends Component {
                         animationOut='fadeOut'
                         >
                         <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                            <Text style={{textAlign: 'center', marginTop: 10, color: '#4f4f4f'}}>Memuat Produk..</Text>
+                            <Text style={{textAlign: 'center', marginTop: 10, color: '#4f4f4f'}}>Memuat Peta..</Text>
                             <WaveIndicator
                                 color='#4f4f4f'
                                 />

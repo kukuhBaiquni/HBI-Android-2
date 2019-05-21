@@ -6,10 +6,23 @@ import { Icon } from 'react-native-elements';
 import { changePassword, resetChangePassword } from '../../actions/Change_Password';
 import Modal from 'react-native-modal';
 import { DotIndicator } from 'react-native-indicators';
+import { BACKDARKRED } from '../../images';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
 class ChangePassword extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Ganti Password',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+        };
+    };
+
     constructor(props) {
         super(props)
         this.state = {
@@ -22,21 +35,21 @@ class ChangePassword extends Component {
             loading: false,
             success: false,
             error: false
-        }
+        };
     };
 
     _submitForm = () => {
         this.props.dispatch(resetChangePassword())
         if (this.state.newPassword === this.state.repeatNewPassword) {
-            this.setState({loading: true})
+            this.setState({loading: true});
             const data = {
                 email: this.props.navigation.state.params.email,
                 newPassword: this.state.newPassword,
                 confirmationCode: this.state.confirmationCode
             };
-            this.props.dispatch(changePassword(data))
+            this.props.dispatch(changePassword(data));
         }else{
-            this.setState({isPasswordMatch: false})
+            this.setState({isPasswordMatch: false});
         }
     };
 
@@ -160,10 +173,10 @@ class ChangePassword extends Component {
             </View>
         )
     }
-}
+};
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
+    return dispatch;
 };
 
 export default connect(
@@ -248,4 +261,4 @@ const styles = StyleSheet.create({
         top: 15,
         marginTop: 5
     }
-})
+});

@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import SearchAutocomplete from './stack/Search_Autocomplete';
 import Example from './Static_Example';
 import ShopPage from './tabs/Shop_Page';
-import Switcher from './tabs/Switcher';
+import ShopPageMember from './tabs/Shop_Page_Member';
 import ProductDetails from './stack/Product_Details';
 import Mail from './tabs/Mail';
 import Cart from './stack/Cart';
@@ -47,11 +47,36 @@ import BadgeNotification from './Badge_Notification';
 import { connect } from 'react-redux';
 import { BACKDARKRED, BACKWHITE, CHECKLIST_DARKRED, CANCEL_DARKRED, BERANDA, BERITA_C, BERITA, BELANJA, BELANJA_C, NOTIFIKASI, NOTIFIKASI_C, AKUN, AKUN_C } from '../images';
 
-const rectangle = {height: 19, width: 19};
-const xrectangle = {height: 16, width: 16};
+const config = {
+    lazy: true,
+    initialRouteName: 'Beranda',
+    tabBarPosition: 'bottom',
+    swipeEnabled: false,
+    animationEnabled: true,
+    tabBarOptions: {
+        upperCaseLabel: false,
+        showIcon: true,
+        showLabel: true,
+        activeTintColor: '#7c0c10',
+        inactiveTintColor: '#8c8c8c',
+        labelStyle: {
+            fontSize: 9,
+        },
+        tabStyle: {
+            backgroundColor: 'white',
+        },
+        style: {
+            height: 58,
+            backgroundColor: 'white'
+        },
+        indicatorStyle: {
+            backgroundColor: 'white'
+        }
+    }
+};
 
 const Tabs = createMaterialTopTabNavigator({
-    Home: {
+    Beranda: {
         screen: Beranda,
         navigationOptions: {
             title: 'Beranda',
@@ -72,7 +97,7 @@ const Tabs = createMaterialTopTabNavigator({
         }
     },
     Shopping: {
-        screen: Switcher,
+        screen: ListMarket,
         navigationOptions: {
             title: 'Belanja',
             headerTintColor: '#7c0c10',
@@ -80,7 +105,7 @@ const Tabs = createMaterialTopTabNavigator({
                 backgroundColor: 'white',
                 borderBottomColor: 'black'
             },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> ),
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> ),
             tabBarIcon: ({focused}) => (
                 focused
                 ?
@@ -144,391 +169,44 @@ const Tabs = createMaterialTopTabNavigator({
             }
         }
     }
-    },{
-        lazy: true,
-        initialRouteName: 'Shopping',
-        tabBarPosition: 'bottom',
-        swipeEnabled: false,
-        animationEnabled: true,
-        tabBarOptions: {
-            upperCaseLabel: false,
-            showIcon: true,
-            showLabel: true,
-            activeTintColor: '#7c0c10',
-            inactiveTintColor: '#8c8c8c',
-            labelStyle: {
-                fontSize: 9,
-            },
-            tabStyle: {
-                backgroundColor: 'white',
-            },
-            style: {
-                height: 58,
-                backgroundColor: 'white'
-            },
-            indicatorStyle: {
-                backgroundColor: 'white'
-            }
-        }
-    }
+}, config
 );
 
 const RootStack = createStackNavigator({
-    MainTabs: {
-        screen: Tabs,
-        navigationOptions: ({navigation}) => ({
-            header: null
-        })
-    },
-    ProductDetails: {
-        screen: ProductDetails,
-        navigationOptions: ({navigation}) => ({
-            header: null
-            // title: `${navigation.state.params.productname}`,
-            // headerTintColor: '#7c0c10',
-            // headerStyle: {
-            //   backgroundColor: 'white',
-            //   borderBottomColor: 'black'
-            // }
-        })
-    },
-    Cart: {
-        screen: Cart,
-        navigationOptions: ({navigation}) => ({
-            title: 'Keranjang Belanja',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    SearchAutocomplete: {
-        screen: SearchAutocomplete,
-        navigationOptions: ({navigation}) => ({
-            header: null
-        })
-    },
-    Login: {
-        screen: Login,
-        navigationOptions: ({navigation}) => ({
-            title: 'Login',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    Register: {
-        screen: Register,
-        navigationOptions: ({navigation}) => ({
-            title: 'Register',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    ProfilePrevention: {
-        screen: ProfilePrevention,
-        navigationOptions: ({navigation}) => ({
-            title: '',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    DeepLinkHandler: {
-        screen: DeepLinkHandler,
-        navigationOptions: ({navigation}) => ({
-            header: null
-        })
-    },
-    AfterDeeplink: {
-        screen: AfterDeeplink,
-        path: 'account_verification/android/:hash',
-        navigationOptions: ({navigation}) => ({
-            header: null
-        })
-    },
-    Payment: {
-        screen: Payment,
-        navigationOptions: ({navigation}) => ({
-            title: 'Pembayaran',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    EditAddress: {
-        screen: EditAddress,
-        navigationOptions: ({navigation}) => ({
-            title: 'Ubah Alamat',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    EditAddressDP: {
-        screen: EditAddressDP,
-        navigationOptions: ({navigation}) => ({
-            title: 'Ubah Alamat',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    DirectPayment: {
-        screen: DirectPayment,
-        navigationOptions: ({navigation}) => ({
-            title: 'Pembayaran',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    EditProfile: {
-        screen: EditProfile,
-        navigationOptions: ({navigation}) => ({
-            title: 'Perbarui Profil',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    MyProfile: {
-        screen: MyProfile,
-        navigationOptions: ({navigation}) => ({
-            title: 'Profil Saya',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    EditRekening: {
-        screen: EditRekening,
-        navigationOptions: ({navigation}) => ({
-            title: 'Edit Rekening',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    MyRekening: {
-        screen: MyRekening,
-        navigationOptions: ({navigation}) => ({
-            title: 'Rekening Bank',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    TransactionRecords: {
-        screen: TransactionRecords,
-        navigationOptions: ({navigation}) => ({
-            title: 'Riwayat Transaksi',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    TransactionDetails: {
-        screen: TransactionDetails,
-        navigationOptions: ({navigation}) => ({
-            title: 'Detail Transaksi',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    Faq: {
-        screen: Faq,
-        navigationOptions: ({navigation}) => ({
-            header: null
-        })
-    },
-    MyTransaction: {
-        screen: MyActiveTransaction,
-        navigationOptions: ({navigation}) => ({
-            title: 'Transaksi Saya',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    Tracking: {
-        screen: Tracking,
-        navigationOptions: ({navigation}) => ({
-            header: null
-        })
-    },
-    TransactionList: {
-        screen: TransactionList,
-        navigationOptions: ({navigation}) => ({
-            title: 'Telusuri Transaksi',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    Settings: {
-        screen: Settings,
-        navigationOptions: ({navigation}) => ({
-            title: 'Pengaturan',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    SettingNotifications: {
-        screen: SettingNotifications,
-        navigationOptions: ({navigation}) => ({
-            title: 'Pengaturan Notifikasi',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    SettingResetPassword: {
-        screen: SettingResetPassword,
-        navigationOptions: ({navigation}) => ({
-            title: 'Ubah Password',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    ListContent: {
-        screen: ListContent,
-        navigationOptions: ({navigation}) => ({
-            title: 'Telusuri Berita',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    ContentDetails: {
-        screen: ContentDetails,
-        navigationOptions: ({navigation}) => ({
-            title: 'Detail Content',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    NotificationDetails: {
-        screen: NotificationDetails,
-        navigationOptions: ({navigation}) => ({
-            title: 'Detail Notifikasi',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={xrectangle} source={CHECKLIST_DARKRED} /> )
-        })
-    },
-    ListNotifications: {
-        screen: ListNotifications,
-        navigationOptions: ({navigation}) => ({
-            title: 'Telusuri Notifikasi',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    ListProducts: {
-        screen: ShopPage,
-        navigationOptions: ({navigation}) => ({
-            header: null
-        })
-    },
-    ForgetPassword: {
-        screen: ForgetPassword,
-        navigationOptions: ({navigation}) => ({
-            title: 'Lupa Password',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    },
-    ChangePassword: {
-        screen: ChangePassword,
-        navigationOptions: ({navigation}) => ({
-            title: 'Ganti Password',
-            headerTintColor: '#7c0c10',
-            headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
-            },
-            headerBackImage: ( <Image resizeMode='contain' style={rectangle} source={BACKDARKRED} /> )
-        })
-    }
+    MainTabs:                   { screen: Tabs, navigationOptions: ({navigation}) => ({ header: null }) },
+    ProductDetails:             { screen: ProductDetails },
+    Cart:                       { screen: Cart },
+    SearchAutocomplete:         { screen: SearchAutocomplete },
+    Login:                      { screen: Login },
+    Register:                   { screen: Register },
+    ProfilePrevention:          { screen: ProfilePrevention },
+    DeepLinkHandler:            { screen: DeepLinkHandler },
+    AfterDeeplink:              { screen: AfterDeeplink, path: 'account_verification/android/:hash' },
+    Payment:                    { screen: Payment },
+    EditAddress:                { screen: EditAddress },
+    EditAddressDP:              { screen: EditAddressDP },
+    DirectPayment:              { screen: DirectPayment },
+    EditProfile:                { screen: EditProfile },
+    MyProfile:                  { screen: MyProfile },
+    EditRekening:               { screen: EditRekening },
+    MyRekening:                 { screen: MyRekening },
+    TransactionRecords:         { screen: TransactionRecords },
+    TransactionDetails:         { screen: TransactionDetails },
+    Faq:                        { screen: Faq },
+    MyTransaction:              { screen: MyActiveTransaction },
+    Tracking:                   { screen: Tracking },
+    TransactionList:            { screen: TransactionList },
+    Settings:                   { screen: Settings },
+    SettingNotifications:       { screen: SettingNotifications },
+    SettingResetPassword:       { screen: SettingResetPassword },
+    ListContent:                { screen: ListContent },
+    ContentDetails:             { screen: ContentDetails },
+    NotificationDetails:        { screen: NotificationDetails },
+    ListNotifications:          { screen: ListNotifications },
+    ListProducts:               { screen: ShopPage },
+    ForgetPassword:             { screen: ForgetPassword },
+    ChangePassword:             { screen: ChangePassword },
+    ShopPageMember:             { screen: ShopPageMember }
 }, {
     initialRouteName: 'MainTabs'
 })

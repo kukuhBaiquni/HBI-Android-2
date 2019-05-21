@@ -13,9 +13,21 @@ import { confirmTransaction } from '../../actions/Confirm_Transaction';
 import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
 import { resetTransactionState } from '../../actions/Direct_Purchase';
 import moment from 'moment';
-import { FREE_ONGKIR } from '../../images';
+import { FREE_ONGKIR, BACKDARKRED } from '../../images';
 
 class Payment extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Pembayaran',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+        }
+    };
+
     constructor(props) {
         super(props)
         this.state = {

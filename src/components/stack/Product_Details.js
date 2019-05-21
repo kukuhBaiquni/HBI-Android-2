@@ -18,8 +18,15 @@ import { addToCart, forceResetATC } from '../../actions/Add_To_Cart';
 import { withNavigationFocus } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
 import { WaveIndicator } from 'react-native-indicators';
+import { BACKDARKRED } from '../../images';
 
 class ProductDetails extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            header: null
+        }
+    };
+
     constructor(props) {
         super(props)
         this.state = {

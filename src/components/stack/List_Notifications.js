@@ -4,58 +4,71 @@ import { connect } from 'react-redux';
 import { locale } from '../../../config';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { BACKDARKRED } from '../../images';
 
 const { width: SCREEN_WIDTH} = Dimensions.get('window');
 
 class ListNotifications extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            title: 'Telusuri Notifikasi',
+            headerTintColor: '#7c0c10',
+            headerStyle: {
+                backgroundColor: 'white',
+                borderBottomColor: 'black'
+            },
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+        };
+    };
+
     constructor(props) {
         super(props)
         this.state = {
             showPannel: false,
             markMode: false,
             listData: [],
-        }
-    }
+        };
+    };
 
     componentWillMount() {
-        this._clearMark()
-    }
+        this._clearMark();
+    };
 
     _clearMark() {
         const { navigation, userData } = this.props;
         const fetchinx = ['', 'order', 'system', 'inbox'];
-        const data = userData.notifications[fetchinx[navigation.state.params.type]].map(x => Object.assign({}, x, {marked: false}))
+        const data = userData.notifications[fetchinx[navigation.state.params.type]].map(x => Object.assign({}, x, {marked: false}));
         this.setState({
             listData: data,
             markMode: false,
             showPannel: false
-        })
-    }
+        });
+    };
 
     _longPress(i) {
         let clone = [...this.state.listData];
         clone[i].marked = true;
-        this.setState({showPannel: true, markMode: true, listData: clone})
-    }
+        this.setState({showPannel: true, markMode: true, listData: clone});
+    };
 
     _marking(i) {
         let clone = [...this.state.listData];
         clone[i].marked = !clone[i].marked;
-        this.setState({listData: clone})
-    }
+        this.setState({listData: clone});
+    };
 
     _toDetail(x, type, index) {
-        if (!this.state.markMode) this.props.navigation.navigate('NotificationDetails', {data: x, type})
-        this._marking(index)
-    }
+        if (!this.state.markMode) this.props.navigation.navigate('NotificationDetails', {data: x, type});
+        this._marking(index);
+    };
 
     render() {
         const { navigation, userData } = this.props;
         const { listData, markMode } = this.state;
         const display = ['', 'Order', 'Sistem', 'Inbox'];
         const fetchinx = ['', 'order', 'system', 'inbox'];
-        const tracking = ['', 'Menunggu Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
-        const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e']
+        const tracking = ['', 'Menunggu Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai'];
+        const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e'];
         const data = userData.notifications[fetchinx[navigation.state.params.type]];
         const type = fetchinx[navigation.state.params.type];
         return(
@@ -97,7 +110,7 @@ class ListNotifications extends Component {
                                         <Text>Nomor Transaksi</Text>
                                         <Text style={styles.trxText}>{x.trx}</Text>
                                         <Text style={styles.dateText}>
-                                        {locale[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}
+                                            {locale[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}
                                         </Text>
                                         <Text style={{color: color[x.tracking]}}>{tracking[x.tracking]}</Text>
                                     </TouchableOpacity>
@@ -110,15 +123,15 @@ class ListNotifications extends Component {
             </View>
         )
     }
-}
+};
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
-}
+    return dispatch;
+};
 
 export default connect(
     mapDispatchToProps
-)(ListNotifications)
+)(ListNotifications);
 
 const styles = StyleSheet.create({
     header: {
