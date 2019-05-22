@@ -7,7 +7,7 @@ import moment from 'moment';
 import { readingNotification } from '../../actions/Reading_Notification';
 import { NavigationEvents } from 'react-navigation';
 import { modifyNotification } from '../../actions/Notification_Controller';
-import { CHECKLIST_DARKRED } from '../../images';
+import { BACKDARKRED } from '../../images';
 
 class NotificationDetails extends Component {
     static navigationOptions = ({navigation}) => {
@@ -18,7 +18,7 @@ class NotificationDetails extends Component {
                 backgroundColor: 'white',
                 borderBottomColor: 'black'
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 16, width: 16}} source={CHECKLIST_DARKRED} /> )
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 16, width: 16}} source={BACKDARKRED} /> )
         };
     };
 

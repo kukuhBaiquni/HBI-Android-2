@@ -41,22 +41,23 @@ class Payment extends Component {
         }
     }
     beforeRender = async () => {
-        this.props.dispatch(resetTransactionState())
+        const { dispatch, cart, navigation } = this.props;
+        dispatch(resetTransactionState())
         let acu = 0;
-        this.props.cart.map(x => acu += x.freeOngkirConsideration)
+        cart.map(x => acu += x.freeOngkirConsideration)
         if (acu > 23) {
             this.setState({isFreeOngkir: true})
         }
-        this.props.dispatch(forceResetRoot())
-        if (this.props.navigation.state.params !== undefined) {
-            const village = this.props.navigation.state.params.village;
+        dispatch(forceResetRoot())
+        if (navigation.state.params !== undefined) {
+            const village = navigation.state.params.village;
         }
         try {
             const token = await AsyncStorage.getItem('access_token');
             if (token !== null) {
                 const raw = JSON.parse(token)
                 this.setState({token: raw})
-                this.props.dispatch(fetchUser(raw))
+                dispatch(fetchUser(raw))
             }
         }catch (error) {
 
@@ -71,7 +72,7 @@ class Payment extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.userData !== this.props.userData) {
-            if (this.props.userData.address.street !== '') {
+            if (this.props.userData.data.address.street !== '') {
                 this.setState({isAddressValid: true});
             }else{
                 if (this.props.navigation.state.params !== undefined) {
@@ -94,23 +95,23 @@ class Payment extends Component {
     };
 
     submitTransaction() {
-        const { navigation, userData } = this.props;
+        const { navigation, userData, targetMember, dispatch } = this.props;
         let data = {};
         if (this.state.isAddressValid) {
             if (navigation.state.params === undefined) {
                 data = {
-                    name: userData.name,
-                    phone: userData.phone,
-                    street: userData.address.street,
-                    city: userData.address.city,
-                    district: userData.address.district,
-                    village: userData.address.village,
+                    name: userData.data.name,
+                    phone: userData.data.phone,
+                    street: userData.data.address.street,
+                    city: userData.data.address.city,
+                    district: userData.data.address.district,
+                    village: userData.data.address.village,
                     token: this.state.token,
-                    no: userData.address.no,
-                    rt: userData.address.rt,
-                    rw: userData.address.rw,
-                    targetMember: this.props.targetMember.id,
-                    ongkir: Number(this.props.targetMember.ongkir)
+                    no: userData.data.address.no,
+                    rt: userData.data.address.rt,
+                    rw: userData.data.address.rw,
+                    targetMember: targetMember.id,
+                    ongkir: Number(targetMember.ongkir)
                 }
             }else{
                 data = {
@@ -124,12 +125,12 @@ class Payment extends Component {
                     no: navigation.state.params.address.no,
                     rt: navigation.state.params.address.rt,
                     rw: navigation.state.params.address.rw,
-                    targetMember: this.props.targetMember.id,
-                    ongkir: Number(this.props.targetMember.ongkir)
+                    targetMember: targetMember.id,
+                    ongkir: Number(targetMember.ongkir)
                 }
             }
             this.setState({loading: true});
-            this.props.dispatch(confirmTransaction(data));
+            dispatch(confirmTransaction(data));
         }else{
             Alert.alert(
                 'Kesalahan',
@@ -140,16 +141,16 @@ class Payment extends Component {
                 { cancelable: false }
             );
         }
-    }
+    };
 
     queueRouting() {
         this.props.navigation.popToTop();
         this.props.navigation.navigate('MyTransaction');
-    }
+    };
 
     showInfo() {
         Alert.alert('Gratis Ongkir', 'Mininum pembelian diatas 12kg.', [{text: 'OK'}], { cancelable: true });
-    }
+    };
 
     render() {
         const listData = this.props.cart.filter(x => x.status === true);
@@ -172,7 +173,7 @@ class Payment extends Component {
                     rw: this.props.navigation.state.params.rw
                 }
             };
-        }
+        };
         const newParams = Object.assign({}, params, {token: this.state.token});
         return(
             <View style={{flex: 1}}>
@@ -189,32 +190,32 @@ class Payment extends Component {
                     {
                         this.state.transactionLoading
                         ?
-                        <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                            <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
+                        <View style={styles.modalContainer}>
+                            <Text style={styles.modalWaitText}>Mohon Tunggu</Text>
                             <DotIndicator
                                 color='#7c0c10'
                                 size={8}
                                 />
                         </View>
                         :
-                        <View style={{backgroundColor: '#cce8c2', borderRadius: 5, width: 300}}>
-                            <View style={{borderBottomColor: '#98c189', borderBottomWidth: 1, height: 50, justifyContent: 'center', alignItems: 'center'}}>
-                                <Text style={{fontSize: 18, color: '#228200'}}>Konfirmasi Sukses</Text>
+                        <View style={styles.successTicket.main}>
+                            <View style={styles.successTicket.header}>
+                                <Text style={styles.successTicket.text}>Konfirmasi Sukses</Text>
                             </View>
-                            <ScrollView style={{backgroundColor: '#f7fff4', padding: 20, height: 400}}>
-                                <View style={{alignItems: 'center'}}>
-                                    <Text style={{color: '#bababa', marginBottom: 2}}>Kode Transaksi</Text>
-                                    <Text style={{fontSize: 20, marginBottom: 10}}>{this.props.transaction.trx}</Text>
-                                    <Text style={{color: '#bababa'}}>Jumlah Tagiahan Anda</Text>
-                                    <Text style={{marginBottom: 10, fontSize: 18}}>{idrFormat(this.props.transaction.total_price)}</Text>
-                                    <Text style={{color: '#bababa', marginBottom: 5}}>Metode Pembayaran</Text>
+                            <ScrollView style={styles.successTicket.scrollable}>
+                                <View style={styles.centeringItems}>
+                                    <Text style={styles.successTicket.transactionCodeText}>Kode Transaksi</Text>
+                                    <Text style={styles.successTicket.transactionCodeValue}>{this.props.transaction.trx}</Text>
+                                    <Text style={styles.colorText}>Jumlah Tagiahan Anda</Text>
+                                    <Text style={styles.successTicket.transactionTotalPriceValue}>{idrFormat(this.props.transaction.total_price)}</Text>
+                                    <Text style={[{marginBottom: 5}, styles.colorText]}>Metode Pembayaran</Text>
                                     <Text>Transfer ke rekening BCA</Text>
-                                    <Text style={{fontSize: 17, marginBottom: 10}}>2820260417</Text>
-                                    <Text style={{textAlign: 'center', color:'#bababa'}}>Jumlah transfer pembayaran harus sesuai</Text>
-                                    <Text style={{textAlign: 'center', color:'#bababa'}}>dengan jumlah tagihan (hingga 3 digit terakhir)</Text>
-                                    <Text style={{textAlign: 'center', color:'#bababa', marginBottom: 10}}>Isi Nomor Transaksi pada kolom Detail Transfer</Text>
-                                    <Text style={{color: '#bababa', marginBottom: 10}}>Lakukan pembayaran sebelum</Text>
-                                    <Text style={{fontSize: 20, marginBottom: 20}}>{moment(this.props.transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
+                                    <Text style={styles.successTicket.trxText}>2820260417</Text>
+                                    <Text style={[styles.colorText, styles.centeringItems]}>Jumlah transfer pembayaran harus sesuai</Text>
+                                    <Text style={[styles.colorText, styles.centeringItems]}>dengan jumlah tagihan (hingga 3 digit terakhir)</Text>
+                                    <Text style={[styles.colorText, styles.centeringItems, {marginBottom: 10}]}>Isi Nomor Transaksi pada kolom Detail Transfer</Text>
+                                    <Text style={[{marginBottom: 10}, styles.colorText]}>Lakukan pembayaran sebelum</Text>
+                                    <Text style={styles.successTicket.dateText}>{moment(this.props.transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
                                     <Text style={{color: '#228200'}}>Lihat</Text>
@@ -381,7 +382,15 @@ class Payment extends Component {
         </View>
         )
     }
-}
+};
+
+function mapDispatchToProps(dispatch) {
+    return dispatch
+};
+
+export default connect(
+    mapDispatchToProps
+)(Payment);
 
 const styles = StyleSheet.create({
     header: {
@@ -430,13 +439,20 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         justifyContent: 'center',
         alignItems: 'center'
-    }
-})
-
-function mapDispatchToProps(dispatch) {
-    return dispatch
-};
-
-export default connect(
-    mapDispatchToProps
-)(Payment);
+    },
+    modalContainer: { backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'},
+    modalWaitText: {fontWeight: 'bold', top: 15, marginTop: 5},
+    successTicket: {
+        main: {backgroundColor: '#cce8c2', borderRadius: 5, width: 300},
+        header: {borderBottomColor: '#98c189', borderBottomWidth: 1, height: 50, justifyContent: 'center', alignItems: 'center'},
+        text: {fontSize: 18, color: '#228200'},
+        scrollable: {backgroundColor: '#f7fff4', padding: 20, height: 400},
+        transactionCodeText: {color: '#bababa', marginBottom: 2},
+        transactionCodeValue: {fontSize: 20, marginBottom: 10},
+        transactionTotalPriceValue: {marginBottom: 10, fontSize: 18},
+        trxText: {fontSize: 17, marginBottom: 10},
+        dateText: {fontSize: 20, marginBottom: 20}
+    },
+    colorText: {color: '#bababa'},
+    centeringItems: {textAlign: 'center'}
+});

@@ -33,3 +33,6 @@ export const ERROR_TYPE = (statusCode) => {
         return 'Kami tidak dapat memproses permintaan Anda'
     }
 };
+
+export const TRACKING_MESSAGE_STATUS = ['', 'Menunggu Pembayaran', 'Pembayaran Sudah Dikonfirmasi', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai'];
+export const TRACKING_COLOR_STATUS = ['', '#ffbf00', '#4d2e9b', '#01adbc', '#0038bc', '#00b71e'];

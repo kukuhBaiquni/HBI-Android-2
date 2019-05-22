@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Image, TouchableNativeFeedback, Dimensions, Animated } from 'react-native';
 import { connect } from 'react-redux';
-import { locale } from '../../../config';
+import { locale, TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../../../config';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BACKDARKRED } from '../../images';
@@ -37,9 +37,9 @@ class ListNotifications extends Component {
     _clearMark() {
         const { navigation, userData } = this.props;
         const fetchinx = ['', 'order', 'system', 'inbox'];
-        const data = userData.notifications[fetchinx[navigation.state.params.type]].map(x => Object.assign({}, x, {marked: false}));
+        const data = userData.data.notifications[fetchinx[navigation.state.params.type]].map(x => Object.assign({}, x, {marked: false}));
         this.setState({
-            listData: data,
+            listData: data.reverse(),
             markMode: false,
             showPannel: false
         });
@@ -67,9 +67,7 @@ class ListNotifications extends Component {
         const { listData, markMode } = this.state;
         const display = ['', 'Order', 'Sistem', 'Inbox'];
         const fetchinx = ['', 'order', 'system', 'inbox'];
-        const tracking = ['', 'Menunggu Pembayaran', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai'];
-        const color = ['', '#ffbf00', '#01adbc', '#0038bc', '#00b71e'];
-        const data = userData.notifications[fetchinx[navigation.state.params.type]];
+        const data = userData.data.notifications[fetchinx[navigation.state.params.type]];
         const type = fetchinx[navigation.state.params.type];
         return(
             <View style={{flex: 1}}>
@@ -112,7 +110,7 @@ class ListNotifications extends Component {
                                         <Text style={styles.dateText}>
                                             {locale[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}
                                         </Text>
-                                        <Text style={{color: color[x.tracking]}}>{tracking[x.tracking]}</Text>
+                                        <Text style={{color: TRACKING_COLOR_STATUS[x.tracking]}}>{TRACKING_MESSAGE_STATUS[x.tracking]}</Text>
                                     </TouchableOpacity>
                                 </View>
                             )

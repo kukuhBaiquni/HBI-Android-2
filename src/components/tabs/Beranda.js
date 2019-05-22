@@ -34,22 +34,20 @@ class Beranda extends Component {
 
     _beforeRender = async () => {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-        this._afterRender();
-        // NetInfo.fetch().then(state => {
-        //     console.log("Connection type", state.type);
-        //     console.log("Is connected?", state.isConnected);
-        //     if (state.isConnected) {
-        //     }else{
-        //         Alert.alert(
-        //             'Tidak ada Jaringan',
-        //             'Silahkan periksa kembali koneksi internet Anda',
-        //             [
-        //                 {text: 'OK', onPress: () => RNExitApp.exitApp()}
-        //             ],
-        //             { cancelable: false }
-        //         );
-        //     }
-        // });
+        NetInfo.fetch().then(state => {
+            if (state.isConnected) {
+                this._afterRender();
+            }else{
+                Alert.alert(
+                    'Tidak ada Jaringan',
+                    'Silahkan periksa kembali koneksi internet Anda',
+                    [
+                        {text: 'OK', onPress: () => RNExitApp.exitApp()}
+                    ],
+                    { cancelable: false }
+                );
+            }
+        });
     };
 
     _afterRender = async () => {

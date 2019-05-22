@@ -1,49 +1,34 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, Image, TouchableOpacity, StyleSheet } from 'react-native';
-import { fetchNotifications } from '../../actions/Fetch_Notifications';
-import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
 import moment from 'moment';
-import { locale } from '../../../config';
+import { locale, TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../../../config';
 
-class MailPartials extends Component {
-
-    beforeRender() {
-        const token = this.props.token;
-        const type = this.props.type;
-        this.props.dispatch(fetchNotifications({token, tag: type}))
-    }
+export default class MailPartials extends Component {
 
     render() {
+        console.log(this.props);
         const { userData, type, navigation } = this.props;
-        const tracking = ['', 'Menunggu Pembayaran', 'Pembayaran Sudah Dikonfirmasi', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
-        const color = ['', '#ffbf00', '#4d2e9b', '#01adbc', '#0038bc', '#00b71e']
-        const data = userData.notifications[type].slice(0, 3);
-        if (userData.notifications[type].length === 0) {
+        const data = userData.data.notifications[type].slice(0, 3).reverse();
+        if (userData.data.notifications[type].length === 0) {
             return(
                 <View style={{paddingTop: 15, paddingBottom: 15}}>
-                    <NavigationEvents
-                        onWillFocus={() => this.beforeRender()}
-                        />
-                    <Text style={{fontStyle: 'italic', color: '#a3a3a3', textAlign: 'center'}}>Belum ada notifikasi</Text>
+                    <Text style={styles.emptyNotifText}>Belum ada notifikasi</Text>
                 </View>
             )
         }else{
             return(
                 <View style={{alignItems: 'center'}}>
-                    <NavigationEvents
-                        onWillFocus={() => this.beforeRender()}
-                        />
                     {
                         data.map((x, i) =>
                             <TouchableOpacity onPress={() => navigation.navigate('NotificationDetails', {data: x, type})} key={i} style={x.status ? [styles.listItem, {backgroundColor: '#eaeaea'}] : [styles.listItem, {backgroundColor: 'white'}]}>
                                 <Text>Nomor Transaksi</Text>
                                 <Text style={{position: 'absolute', right: 10, top: 7, fontWeight: 'bold'}}>{x.trx}</Text>
                                 <Text style={{fontSize: 12, color: '#a3a3a3'}}>{locale[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}</Text>
-                                <Text style={{color: color[x.tracking]}}>{tracking[x.tracking]}</Text>
+                                <Text style={{color: TRACKING_COLOR_STATUS[x.tracking]}}>{TRACKING_MESSAGE_STATUS[x.tracking]}</Text>
                                 {
                                     !x.status &&
-                                    <Text style={{position: 'absolute', right: 10, bottom: 5, fontSize: 13, fontWeight: 'bold', color: '#36ce00'}}>BARU</Text>
+                                    <Text style={styles.newNotifText}>BARU</Text>
                                 }
                             </TouchableOpacity>
                         )
@@ -52,15 +37,7 @@ class MailPartials extends Component {
             )
         }
     }
-}
-
-function mapDispatchToProps(dispatch) {
-    return dispatch
-}
-
-export default connect(
-    mapDispatchToProps
-)(MailPartials);
+};
 
 const styles = StyleSheet.create({
     listItem: {
@@ -71,5 +48,18 @@ const styles = StyleSheet.create({
         paddingTop: 5,
         paddingLeft: 15,
         elevation: 3
+    },
+    newNotifText: {
+        position: 'absolute',
+        right: 10,
+        bottom: 5,
+        fontSize: 13,
+        fontWeight: 'bold',
+        color: '#36ce00'
+    },
+    emptyNotifText: {
+        fontStyle: 'italic',
+        color: '#a3a3a3',
+        textAlign: 'center'
     }
 })
