@@ -7,7 +7,7 @@ export const updateListNotifications = (data) => {
 };
 
 const newData = (data) => {
-  return { type: 'NEW_DATA', data };
+  return { type: 'INCOMING_NOTIFICATIONS', data };
 };
 
 export function* watcherUpdateListNotifications(data) {

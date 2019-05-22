@@ -1,124 +1,147 @@
 let initialState = {
-    id: '',
-    name: '',
-    status: '',
-    photo: '',
-    gender: '',
-    phone: 0,
-    address: {
-        city: '',
-        district: '',
-        village: '',
-        street: '',
-        no: null,
-        rt: null,
-        rw: null
+    data: {},
+    success: false,
+    error: {
+        status: false,
+        message: ''
     },
-    ongkir: 0,
-    ttl: 0,
-    join: '',
-    email: '',
-    nama_rekening: '',
-    no_rekening: 0,
-    banner: '',
-    playerID: '',
-    notifications: {
-        order: [],
-        system: [],
-        inbox: []
-    }
+    updated: false
 };
 
 export default function userData(state = initialState, action) {
     switch (action.type) {
 
         case 'FETCH_USER_SUCCESS':
-        return action.data;
+        return Object.assign({}, state, {
+            success: true,
+            data: action.data,
+            error: {
+                status: false,
+                messsage: ''
+            },
+            updated: false
+        });
+
+        case 'FETCH_USER_FAILED':
+        return Object.assign({}, state, {
+            success: false,
+            error: {
+                status: true,
+                message: action.message
+            },
+            updated: false
+        });
 
         case 'EDIT_PROFILE_WITH_DATA_SUCCESS':
         return Object.assign({}, state, {
-            name: action.data.name,
-            gender: action.data.gender,
-            phone: action.data.phone,
-            address: {
-                ...state.address,
-                city: action.data.address.city,
-                district: action.data.address.district,
-                village: action.data.address.village,
-                street: action.data.address.street
+            data: action.data,
+            updated: true,
+            success: true,
+            error: {
+                status: false,
+                messsage: ''
             },
-            ttl: action.data.ttl,
-            ongkir: action.data.ongkir
         });
 
         case 'EDIT_REKENING_WITH_DATA_SUCCESS':
         return Object.assign({}, state, {
-            nama_rekening: action.data.nama_rekening,
-            no_rekening: action.data.no_rekening
+            data: {
+                ...state.data,
+                nama_rekening: action.data.nama_rekening,
+                no_rekening: action.data.no_rekening
+            },
+            success: true,
+            updated: true,
+            error: {
+                status: false,
+                messsage: ''
+            },
         });
 
         case 'EDIT_BANNER':
         return Object.assign({}, state, {
-            banner: action.data
+            data: {
+                ...state.data,
+                banner: action.data
+            },
+            success: true,
+            updated: true,
+            error: {
+                status: false,
+                messsage: ''
+            },
         });
 
         case 'EDIT_PHOTO':
         return Object.assign({}, state, {
-            photo: action.data
+            data: {
+                ...state.data,
+                photo: action.data
+            },
+            success: true,
+            updated: true,
+            error: {
+                status: false,
+                messsage: ''
+            },
         });
 
         case 'FETCH_NOTIFICATIONS_SUCCESS':
         const key = action.data.type;
+        console.log(key);
         return Object.assign({}, state, {
-            notifications: {
-                ...state.notifications, [key]: [...action.data.data[key]]
-            }
+            data: {
+                ...state.data,
+                notifications: {
+                    ...state.data.notifications, [key]: [...action.data.data[key]]
+                }
+            },
+            success: true,
+            updated: true,
+            error: {
+                status: false,
+                messsage: ''
+            },
         });
 
         case 'READING_NOTIFICATION_SUCCESS':
         const type = action.data.type;
         return Object.assign({}, state, {
-            notifications: {
-                ...state.notifications, [type]: [...action.data.data[type]]
-            }
-        })
+            data: {
+                ...state.data,
+                notifications: {
+                    ...state.data.notifications, [type]: [...action.data.data[type]]
+                }
+            },
+            success: true,
+            updated: true,
+            error: {
+                status: false,
+                messsage: ''
+            },
+        });
 
-        case 'NEW_DATA':
+        case 'INCOMING_NOTIFICATIONS':
         console.log(action.data);
         return Object.assign({}, state, {
-            notifications: {
-                ...state.notifications, order: [action.data, ...state.notifications.order]
+            data: {
+                ...state.data,
+                notifications: {
+                    ...state.data.notifications, order: [action.data, ...state.data.notifications.order]
+                }
             }
-        })
+        });
 
         case 'LOGOUT_SUCCESS':
-        return {
-            id: '',
-            name: '',
-            status: '',
-            photo: '',
-            gender: '',
-            phone: 0,
-            address: {
-                city: '',
-                district: '',
-                village: '',
-                street: ''
+        return Object.assign({}, state, {
+            data: {},
+            success: false,
+            error: {
+                status: false,
+                messsage: ''
             },
-            ongkir: 0,
-            ttl: 0,
-            join: '',
-            email: '',
-            nama_rekening: '',
-            no_rekening: 0,
-            banner: '',
-            playerID: '',
-            notifications: {
-                order: [],
-                system: [],
-                inbox: []
-            }
-        };
+            updated: false
+        });
 
         default:
         return state;

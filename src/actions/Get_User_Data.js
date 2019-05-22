@@ -1,6 +1,6 @@
 import { put, call, takeEvery } from 'redux-saga/effects';
 import request from 'superagent';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL, ERROR_TYPE } from '../../config';
 
 export const fetchUser = (token) => {
     return { type: 'FETCH_USER_DATA', token }
@@ -10,8 +10,8 @@ const fetchUserSuccess = (data) => {
     return { type: 'FETCH_USER_SUCCESS', data }
 };
 
-const InternalServerError = () => {
-    return { type: 'INTERNAL_SERVER_ERROR' }
+const fetchUserFailed = (message) => {
+    return { type: 'FETCH_USER_FAILED', message };
 };
 
 export const logOutRequest = () => {
@@ -28,6 +28,10 @@ function* workerFetchUserData(data) {
             return request
             .get(`${SERVER_URL}profile/get_user`)
             .set('Authorization', data.token)
+            .timeout({
+                response: 5000,  // Wait 5 seconds for the server to start sending,
+                deadline: 60000, // but allow 1 minute for the file to finish loading.
+            })
             .then((res) => {
                 return res;
             })
@@ -38,6 +42,7 @@ function* workerFetchUserData(data) {
             yield put(fetchUserSuccess(data.data));
         }
     }catch (error) {
-        yield put(InternalServerError());
+        const message = ERROR_TYPE(error.status);
+        yield put(fetchUserFailed(message));
     }
-}
+};

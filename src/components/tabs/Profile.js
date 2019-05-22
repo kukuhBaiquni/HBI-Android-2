@@ -16,27 +16,10 @@ class Profile extends Component {
         };
     };
 
-    beforeRender = async () => {
-        try {
-            const val = await AsyncStorage.getItem('access_token');
-            if (val !== null) {
-                const raw = JSON.parse(val);
-                this.setState({token: raw});
-                this.props.dispatch(fetchUser(raw));
-            }
-        } catch (error) {
-            this.props.navigation.goBack();
-            this.props.navigation.navigate('ProfilePrevention');
-        }
-    };
-
     render() {
         const { userData, navigation } = this.props;
         return(
             <ScrollView style={{flex:1}}>
-                <NavigationEvents
-                    onDidFocus={() => this.beforeRender()}
-                    />
                 <View style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}>
                     {
                         userData.banner === '' || userData.banner === undefined

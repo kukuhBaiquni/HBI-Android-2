@@ -1,6 +1,6 @@
 export const SERVER_URL = 'http://halalbeef.co.id/';
 // export const SERVER_URL = 'http://192.168.43.24/';
-// export const SERVER_URL = 'http://192.168.0.102/';``
+// export const SERVER_URL = 'http://192.168.0.113:1728/';``
 
 export const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
 
@@ -20,4 +20,16 @@ export const _FONTS = {
     AsapCondensedRegular: 'AsapCondensed-Regular',
     AsapCondensedBold: 'AsapCondensed-Bold',
     AsapCondensedItalic: 'AsapCondensed-Italic',
+};
+
+export const ERROR_TYPE = (statusCode) => {
+    if (statusCode === 404) {
+        return 'tidak ditemukan.'
+    }else if(statusCode === 502) {
+        return 'Server tidak merespon, coba beberapa saat lagi.'
+    }else if (statusCode === 401) {
+        return 'Anda tidak mempunyai izin akses.'
+    }else{
+        return 'Kami tidak dapat memproses permintaan Anda'
+    }
 };

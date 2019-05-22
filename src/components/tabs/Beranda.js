@@ -30,29 +30,30 @@ class Beranda extends Component {
 
     _beforeBlur = () => {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
-    };
+    }
 
     _beforeRender = async () => {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-        NetInfo.fetch().then(state => {
-            console.log("Connection type", state.type);
-            console.log("Is connected?", state.isConnected);
-            if (state.isConnected) {
-                this._afterRender();
-            }else{
-                Alert.alert(
-                    'Tidak ada Jaringan',
-                    'Silahkan periksa kembali koneksi internet Anda',
-                    [
-                        {text: 'OK', onPress: () => RNExitApp.exitApp()}
-                    ],
-                    { cancelable: false }
-                );
-            }
-        });
+        this._afterRender();
+        // NetInfo.fetch().then(state => {
+        //     console.log("Connection type", state.type);
+        //     console.log("Is connected?", state.isConnected);
+        //     if (state.isConnected) {
+        //     }else{
+        //         Alert.alert(
+        //             'Tidak ada Jaringan',
+        //             'Silahkan periksa kembali koneksi internet Anda',
+        //             [
+        //                 {text: 'OK', onPress: () => RNExitApp.exitApp()}
+        //             ],
+        //             { cancelable: false }
+        //         );
+        //     }
+        // });
     };
 
     _afterRender = async () => {
+        const { token, userData, dispatch, listProducts } = this.props;
         try{
             const id = await AsyncStorage.getItem('PlayerID')
             const token = await AsyncStorage.getItem('access_token');
@@ -60,19 +61,20 @@ class Beranda extends Component {
                 const ids = JSON.parse(id);
                 const tokens = JSON.parse(token);
                 this.setState({token: tokens});
-                if (this.props.token === '') this.props.dispatch(setInitialToken(tokens));
-                if (this.props.userData.playerID !== ids) this.props.dispatch(setPlayerId({ids, token: tokens}));
-                if (this.props.userData.name === '') this.props.dispatch(fetchUser(tokens));
+                if (token === '') dispatch(setInitialToken(tokens));
+                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens}));
+                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser(tokens));
             }
-            if (this.props.listProducts.length === 0) this.props.dispatch(getAllProducts());
+            if (listProducts.length === 0) dispatch(getAllProducts());
         }catch(error) {
             ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
         };
     };
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.userData !== this.props.userData) {
-            ToastAndroid.show(`Selamat datang ${this.props.userData.name}`, ToastAndroid.LONG, ToastAndroid.BOTTOM);
+        const { userData } = this.props;
+        if (prevProps.userData.success !== userData.success) {
+            ToastAndroid.show(`Selamat datang ${userData.data.name}`, ToastAndroid.LONG, ToastAndroid.BOTTOM);
         }
     };
 
