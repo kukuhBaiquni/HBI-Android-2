@@ -7,7 +7,6 @@ import { locale, TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../../..
 export default class MailPartials extends Component {
 
     render() {
-        console.log(this.props);
         const { userData, type, navigation } = this.props;
         const data = userData.data.notifications[type].slice(0, 3).reverse();
         if (userData.data.notifications[type].length === 0) {

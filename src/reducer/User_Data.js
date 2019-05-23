@@ -88,7 +88,6 @@ export default function userData(state = initialState, action) {
 
         case 'FETCH_NOTIFICATIONS_SUCCESS':
         const key = action.data.type;
-        console.log(key);
         return Object.assign({}, state, {
             data: {
                 ...state.data,
@@ -122,7 +121,6 @@ export default function userData(state = initialState, action) {
         });
 
         case 'INCOMING_NOTIFICATIONS':
-        console.log(action.data);
         return Object.assign({}, state, {
             data: {
                 ...state.data,

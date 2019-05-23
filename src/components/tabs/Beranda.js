@@ -59,7 +59,7 @@ class Beranda extends Component {
                 const ids = JSON.parse(id);
                 const tokens = JSON.parse(token);
                 this.setState({token: tokens});
-                if (token === '') dispatch(setInitialToken(tokens));
+                dispatch(setInitialToken(tokens));
                 if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens}));
                 if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser(tokens));
             }

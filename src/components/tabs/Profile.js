@@ -22,7 +22,7 @@ class Profile extends Component {
             <ScrollView style={{flex:1}}>
                 <View style={{position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}>
                     {
-                        userData.banner === '' || userData.banner === undefined
+                        userData.data.banner === '' || userData.data.banner === undefined
                         ?
                         <LinearGradient
                             colors={['transparent', 'black']}
@@ -34,8 +34,8 @@ class Profile extends Component {
                         :
                         <View>
                             <Image
-                                source={{uri: `${SERVER_URL}images/dummy/${userData.banner}`}}
-                                style={{height: 170, position: 'absolute', top: 0, bottom: 0, left: 0, right: 0}}
+                                source={{uri: `${SERVER_URL}images/dummy/${userData.data.banner}`}}
+                                style={styles.bannerStyle}
                                 >
                             </Image>
                             <LinearGradient
@@ -48,14 +48,14 @@ class Profile extends Component {
                         </View>
                     }
                 </View>
-                <View style={{flexDirection: 'row', marginTop: 100, marginLeft: 20}}>
+                <View style={styles.headerContainer}>
                     <Image
-                        source={{uri: `${SERVER_URL}images/dummy/${userData.photo}`}}
+                        source={{uri: `${SERVER_URL}images/dummy/${userData.data.photo}`}}
                         style={{height: 70, width: 70, borderRadius: 35, borderWidth: 2, borderColor: 'white', marginTop: 25}}>
                     </Image>
                     <View style={{marginLeft: 12, marginTop: 26}}>
-                        <Text style={{color: 'white', fontSize: 17}}>{userData.name}</Text>
-                        <Text style={{color: '#e2e2e2', fontSize: 12}}>Bergabung sejak {userData.join}</Text>
+                        <Text style={{color: 'white', fontSize: 17}}>{userData.data.name}</Text>
+                        <Text style={{color: '#e2e2e2', fontSize: 12}}>Bergabung sejak {userData.data.join}</Text>
                     </View>
                 </View>
                 {/*LIST MENU*/}
@@ -137,11 +137,24 @@ const styles = StyleSheet.create({
         paddingLeft: 8,
         backgroundColor: '#bfbfbf',
         marginTop: 10
+    },
+    bannerStyle: {
+        height: 170,
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        left: 0,
+        right: 0
+    },
+    headerContainer: {
+        flexDirection: 'row',
+        marginTop: 100,
+        marginLeft: 20
     }
-})
+});
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
+    return dispatch;
 };
 
 export default connect(

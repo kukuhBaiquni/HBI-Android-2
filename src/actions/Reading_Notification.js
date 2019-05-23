@@ -23,7 +23,6 @@ export function* watcherReadingNotification(data) {
 };
 
 function* workerReadingNotification(form) {
-    console.log(form);
     try {
         var response = yield call(() => {
             return request
@@ -37,6 +36,7 @@ function* workerReadingNotification(form) {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw.data;
+        console.log(data);
         if (data.success) {
             yield put(readingNotificationSuccess(data));
         }else{

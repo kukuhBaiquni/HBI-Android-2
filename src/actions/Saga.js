@@ -37,8 +37,6 @@ import { watcherFetchNotifications } from './Fetch_Notifications';
 import { watcherSetInitialToken } from './Set_Initial_Token';
 import { watcherReadingNotification } from './Reading_Notification';
 import { watcherLoadBadge } from './Load_Badge';
-import { watcherNotificationController } from './Notification_Controller';
-import { watcherUpdateListNotifications } from './Update_List_Notifications';
 import { watcherSendForm } from './Send_Call_Us';
 import { watcherLoadSingleTransaction } from './Load_Single_Transaction';
 import { watcherSetTargetMember } from './Set_Target_Member';
@@ -86,8 +84,6 @@ export default function* rootSaga() {
     watcherSetInitialToken(),
     watcherReadingNotification(),
     watcherLoadBadge(),
-    watcherNotificationController(),
-    watcherUpdateListNotifications(),
     watcherSendForm(),
     watcherLoadSingleTransaction(),
     watcherSetTargetMember(),

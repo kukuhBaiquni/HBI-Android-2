@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView, Image } from 'react-native';
-import { NavigationEvents } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { SERVER_URL } from '../../../config';
@@ -23,8 +22,8 @@ class MyProfile extends Component {
     };
 
     render() {
-        const userData = this.props.userData;
-        let gender = userData.gender;
+        const { userData, dispatch, navigation } = this.props;
+        let gender = userData.data.gender;
         if (gender === 'male') {
             gender = 'Pria'
         }else{
@@ -32,32 +31,29 @@ class MyProfile extends Component {
         }
         return(
             <ScrollView>
-                <NavigationEvents
-                    onWillFocus={() => this.props.dispatch(fetchUser(this.props.navigation.state.params.token))}
-                    />
                 <View style={{height: 50, backgroundColor: '#f4f4f4', marginTop: 10, justifyContent: 'center', paddingLeft: 10}}>
                     <Text style={{fontSize: 17}}>Informasi Pribadi</Text>
                 </View>
                 <View style={{backgroundColor: 'white', height: 245, padding: 10}}>
                     <Text style={{fontWeight: 'bold'}}>Nama Lengkap</Text>
-                    <Text style={styles.dataUser}>{userData.name}</Text>
-                    <Text style={{fontWeight: 'bold', marginTop: 10}}>Jenis Kelamin</Text>
-                    <Text style={styles.dataUser}>{userData.gender === undefined ? 'Belum diatur' : gender}</Text>
-                    <Text style={{fontWeight: 'bold', marginTop: 10}}>Tanggal Lahir</Text>
-                    <Text style={styles.dataUser}>{userData.ttl === undefined ? 'Belum diatur' : moment(userData.ttl).format('DD MMM YYYY')}</Text>
-                    <Text style={{fontWeight: 'bold', marginTop: 10}}>Nomor Ponsel</Text>
-                    <Text style={styles.dataUser}>{userData.phone === '' || userData.phone === undefined ? 'Belum diatur' : '0' + userData.phone}</Text>
-                    <Text style={{fontWeight: 'bold', marginTop: 10}}>Email</Text>
-                    <Text style={styles.dataUser}>{userData.email}</Text>
+                    <Text style={styles.dataUser}>{userData.data.name}</Text>
+                    <Text style={styles.propertyName}>Jenis Kelamin</Text>
+                    <Text style={styles.dataUser}>{userData.data.gender === undefined ? 'Belum diatur' : gender}</Text>
+                    <Text style={styles.propertyName}>Tanggal Lahir</Text>
+                    <Text style={styles.dataUser}>{userData.data.ttl === undefined ? 'Belum diatur' : moment(userData.data.ttl).format('DD MMM YYYY')}</Text>
+                    <Text style={styles.propertyName}>Nomor Ponsel</Text>
+                    <Text style={styles.dataUser}>{userData.data.phone === '' || userData.data.phone === undefined ? 'Belum diatur' : '0' + userData.data.phone}</Text>
+                    <Text style={styles.propertyName}>Email</Text>
+                    <Text style={styles.dataUser}>{userData.data.email}</Text>
                 </View>
-                <View style={{height: 50, backgroundColor: '#f4f4f4', marginTop: 10, justifyContent: 'center', paddingLeft: 10}}>
+                <View style={styles.addressContainer}>
                     <Text style={{fontSize: 17}}>Informasi Alamat</Text>
                 </View>
                 <View style={{backgroundColor: 'white', padding: 10}}>
-                    <Text style={styles.dataUser}>Jl.{userData.address.street} No.{userData.address.no} Rt.{userData.address.rt} Rw.{userData.address.rw}</Text>
-                    <Text style={styles.dataUser}>Kecamatan {capital(userData.address.district)}</Text>
-                    <Text style={styles.dataUser}>Kelurahan {capital(userData.address.village)}</Text>
-                    <Text style={styles.dataUser}>{capital(userData.address.city)}</Text>
+                    <Text style={styles.dataUser}>Jl.{userData.data.address.street} No.{userData.data.address.no} Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}</Text>
+                    <Text style={styles.dataUser}>Kecamatan {capital(userData.data.address.district)}</Text>
+                    <Text style={styles.dataUser}>Kelurahan {capital(userData.data.address.village)}</Text>
+                    <Text style={styles.dataUser}>{capital(userData.data.address.city)}</Text>
                 </View>
             </ScrollView>
         )
@@ -107,12 +103,23 @@ const styles = StyleSheet.create({
     },
     dataUser: {
         color: '#9e9e9e'
+    },
+    propertyName: {
+        fontWeight: 'bold',
+        marginTop: 10
+    },
+    addressContainer: {
+        height: 50,
+        backgroundColor: '#f4f4f4',
+        marginTop: 10,
+        justifyContent: 'center',
+        paddingLeft: 10
     }
-})
+});
 
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
+    return dispatch;
 };
 
 export default connect(

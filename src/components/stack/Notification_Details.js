@@ -2,11 +2,10 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
-import { locale, idrFormat } from '../../../config';
+import { locale, idrFormat, TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../../../config';
 import moment from 'moment';
 import { readingNotification } from '../../actions/Reading_Notification';
 import { NavigationEvents } from 'react-navigation';
-import { modifyNotification } from '../../actions/Notification_Controller';
 import { BACKDARKRED } from '../../images';
 
 class NotificationDetails extends Component {
@@ -27,7 +26,6 @@ class NotificationDetails extends Component {
         const type = this.props.navigation.state.params.type;
         const data = this.props.navigation.state.params.data;
         if (!data.status) {
-            this.props.dispatch(modifyNotification('min'));
             this.props.dispatch(readingNotification({token, type, id: data._id}));
         }
     };
@@ -35,8 +33,6 @@ class NotificationDetails extends Component {
     render() {
         const { navigation,  } = this.props;
         const data = navigation.state.params.data;
-        const tracking = ['', 'Menunggu Pembayaran', 'Pembayaran Berhasil Dikonfirmasi', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai']
-        const color = ['', '#ffbf00', '#4d2e9b', '#01adbc', '#0038bc', '#00b71e']
         const header2 = ['', 'Pesanan Anda sedang dalam antrian.', 'Pembayaran pesanan anda berhasil dikonfirmasi.', 'Proses pengiriman pesanan anda sedang dilakukan.', 'Telah berbelanja di Halal Beef Indonesia.'];
         return(
             <View style={{flex: 1}}>
@@ -81,7 +77,8 @@ class NotificationDetails extends Component {
                                 data.tracking !== 1 &&
                                 <View>
                                     <Text style={{color: '#a3a3a3', marginBottom: 10}}>Status</Text>
-                                    <Text style={{position: 'absolute', right: 0, color: color[data.tracking], fontWeight: 'bold'}}>{tracking[data.tracking]}</Text>
+                                    <Text style={{position: 'absolute', right: 0, color: TRACKING_COLOR_STATUS[data.tracking], fontWeight: 'bold'}}>{TRACKING_MESSAGE_STATUS[data.tracking]}</Text>
+
                                 </View>
                             }
                         </View>

@@ -39,7 +39,8 @@ class Payment extends Component {
             isFreeOngkir: false,
             showContent: false
         }
-    }
+    };
+    
     beforeRender = async () => {
         const { dispatch, cart, navigation } = this.props;
         dispatch(resetTransactionState())
@@ -71,8 +72,9 @@ class Payment extends Component {
     };
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.userData !== this.props.userData) {
-            if (this.props.userData.data.address.street !== '') {
+        const { userData, dispatch, status } = this.props;
+        if (prevProps.userData.data !== userData.data) {
+            if (userData.data.address.street !== '') {
                 this.setState({isAddressValid: true});
             }else{
                 if (this.props.navigation.state.params !== undefined) {
@@ -83,13 +85,13 @@ class Payment extends Component {
         if (prevProps.transaction !== this.props.transaction) {
             if (this.state.transactionLoading) {
                 this.setState({transactionLoading: false});
-                this.props.dispatch(loadTransactionTypePending(this.state.token));
+                dispatch(loadTransactionTypePending(this.state.token));
             }
         }
-        if (prevProps.status.transaction.error !== this.props.status.transaction.error) {
+        if (prevProps.status.transaction.error !== status.transaction.error) {
             if (this.state.transactionLoading) {
                 this.setState({transactionLoading: false});
-                this.props.dispatch(resetTransactionState());
+                dispatch(resetTransactionState());
             }
         }
     };
@@ -153,24 +155,25 @@ class Payment extends Component {
     };
 
     render() {
-        const listData = this.props.cart.filter(x => x.status === true);
+        const { userData, navigation, cart, transaction, targetMember } = this.props;
+        const listData = cart.filter(x => x.status === true);
         let total = 0;
-        const loop = this.props.cart.map(x => total += x.subtotal);
+        const loop = cart.map(x => total += x.subtotal);
         let params = {};
-        if (this.props.navigation.state.params === undefined) {
-            params = this.props.userData;
+        if (navigation.state.params === undefined) {
+            params = userData.data;
         }else{
             params = {
-                name: this.props.navigation.state.params.name,
-                phone: this.props.navigation.state.params.phone,
+                name: navigation.state.params.name,
+                phone: navigation.state.params.phone,
                 address: {
-                    street: this.props.navigation.state.params.street,
-                    city: this.props.navigation.state.params.city,
-                    district: this.props.navigation.state.params.district,
-                    village: this.props.navigation.state.params.village,
-                    no: this.props.navigation.state.params.no,
-                    rt: this.props.navigation.state.params.rt,
-                    rw: this.props.navigation.state.params.rw
+                    street: navigation.state.params.street,
+                    city: navigation.state.params.city,
+                    district: navigation.state.params.district,
+                    village: navigation.state.params.village,
+                    no: navigation.state.params.no,
+                    rt: navigation.state.params.rt,
+                    rw: navigation.state.params.rw
                 }
             };
         };
@@ -198,24 +201,24 @@ class Payment extends Component {
                                 />
                         </View>
                         :
-                        <View style={styles.successTicket.main}>
-                            <View style={styles.successTicket.header}>
-                                <Text style={styles.successTicket.text}>Konfirmasi Sukses</Text>
+                        <View style={styles.STmain}>
+                            <View style={styles.STheader}>
+                                <Text style={styles.STtext}>Konfirmasi Sukses</Text>
                             </View>
-                            <ScrollView style={styles.successTicket.scrollable}>
-                                <View style={styles.centeringItems}>
-                                    <Text style={styles.successTicket.transactionCodeText}>Kode Transaksi</Text>
-                                    <Text style={styles.successTicket.transactionCodeValue}>{this.props.transaction.trx}</Text>
+                            <ScrollView style={styles.STscrollable}>
+                                <View style={styles.alignCenter}>
+                                    <Text style={styles.STtransactionCodeText}>Kode Transaksi</Text>
+                                    <Text style={styles.STtransactionCodeValue}>{transaction.trx}</Text>
                                     <Text style={styles.colorText}>Jumlah Tagiahan Anda</Text>
-                                    <Text style={styles.successTicket.transactionTotalPriceValue}>{idrFormat(this.props.transaction.total_price)}</Text>
+                                    <Text style={styles.STtransactionTotalPriceValue}>{idrFormat(transaction.total_price)}</Text>
                                     <Text style={[{marginBottom: 5}, styles.colorText]}>Metode Pembayaran</Text>
                                     <Text>Transfer ke rekening BCA</Text>
-                                    <Text style={styles.successTicket.trxText}>2820260417</Text>
+                                    <Text style={styles.STtrxText}>2820260417</Text>
                                     <Text style={[styles.colorText, styles.centeringItems]}>Jumlah transfer pembayaran harus sesuai</Text>
                                     <Text style={[styles.colorText, styles.centeringItems]}>dengan jumlah tagihan (hingga 3 digit terakhir)</Text>
                                     <Text style={[styles.colorText, styles.centeringItems, {marginBottom: 10}]}>Isi Nomor Transaksi pada kolom Detail Transfer</Text>
                                     <Text style={[{marginBottom: 10}, styles.colorText]}>Lakukan pembayaran sebelum</Text>
-                                    <Text style={styles.successTicket.dateText}>{moment(this.props.transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
+                                    <Text style={styles.STdateText}>{moment(transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
                                     <Text style={{color: '#228200'}}>Lihat</Text>
@@ -231,30 +234,30 @@ class Payment extends Component {
                             <View style={{backgroundColor: 'white', padding: 10, width: '95%', elevation: 3, borderRadius: 3}}>
                                 <View>
                                     <Text style={{fontSize: 16, fontWeight: 'bold', color: '#7c0c10', marginBottom: 10}}>Informasi Pembeli</Text>
-                                    <TouchableOpacity style={{position: 'absolute', right: 10, top: 0}} onPress={() => this.props.navigation.navigate('EditAddress', newParams)}>
+                                    <TouchableOpacity style={{position: 'absolute', right: 10, top: 0}} onPress={() => navigation.navigate('EditAddress', newParams)}>
                                         <Text style={{color: '#7c0c10', fontSize: 15}}>Ubah</Text>
                                     </TouchableOpacity>
                                 </View>
                                 {
-                                    this.props.navigation.state.params === undefined
+                                    navigation.state.params === undefined
                                     ?
                                     <View>
                                         <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
-                                        <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.userData.name}</Text>
+                                        <Text style={{marginBottom: 5, fontSize: 13}}>{userData.data.name}</Text>
                                         <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
-                                        <Text style={{marginBottom: 5, fontSize: 13}}>0{this.props.userData.phone}</Text>
+                                        <Text style={{marginBottom: 5, fontSize: 13}}>0{userData.data.phone}</Text>
                                         <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
                                         {
                                             this.state.isAddressValid
                                             ?
                                             <View>
                                                 <Text style={{fontSize: 13}}>
-                                                    Jl.{this.props.userData.address.street} No.{this.props.userData.address.no}
-                                                    Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
+                                                    Jl.{userData.data.address.street} No.{userData.data.address.no}
+                                                    Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}
                                                 </Text>
-                                                <Text style={{fontSize: 13}}>Kecamatan {this.props.userData.address.district}</Text>
-                                                <Text style={{fontSize: 13}}>Kelurahan {this.props.userData.address.village}</Text>
-                                                <Text style={{fontSize: 13}}>{this.props.userData.address.city}</Text>
+                                                <Text style={{fontSize: 13}}>Kecamatan {userData.data.address.district}</Text>
+                                                <Text style={{fontSize: 13}}>Kelurahan {userData.data.address.village}</Text>
+                                                <Text style={{fontSize: 13}}>{userData.data.address.city}</Text>
                                             </View>
                                             :
                                             <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
@@ -263,21 +266,21 @@ class Payment extends Component {
                                     :
                                     <View>
                                         <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nama</Text>
-                                        <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.name}</Text>
+                                        <Text style={{marginBottom: 5, fontSize: 13}}>{navigation.state.params.name}</Text>
                                         <Text style={{fontSize: 13, fontWeight: 'bold'}}>Nomor Telepon</Text>
-                                        <Text style={{marginBottom: 5, fontSize: 13}}>{this.props.navigation.state.params.phone}</Text>
+                                        <Text style={{marginBottom: 5, fontSize: 13}}>{navigation.state.params.phone}</Text>
                                         <Text style={{fontSize: 13, fontWeight: 'bold'}}>Alamat Pengiriman</Text>
                                         {
                                             this.state.isAddressValid
                                             ?
                                             <View>
                                                 <Text style={{fontSize: 13}}>
-                                                    Jl.{this.props.navigation.state.params.street} No.{this.props.navigation.state.params.no}
-                                                    Rt.{this.props.navigation.state.params.rt} Rw.{this.props.navigation.state.params.rw}
+                                                    Jl.{navigation.state.params.street} No.{navigation.state.params.no}
+                                                    Rt.{navigation.state.params.rt} Rw.{navigation.state.params.rw}
                                                 </Text>
-                                                <Text style={{fontSize: 13}}>Kecamatan {this.props.navigation.state.params.district}</Text>
-                                                <Text style={{fontSize: 13}}>Kelurahan {this.props.navigation.state.params.village}</Text>
-                                                <Text style={{fontSize: 13}}>{this.props.navigation.state.params.city}</Text>
+                                                <Text style={{fontSize: 13}}>Kecamatan {navigation.state.params.district}</Text>
+                                                <Text style={{fontSize: 13}}>Kelurahan {navigation.state.params.village}</Text>
+                                                <Text style={{fontSize: 13}}>{navigation.state.params.city}</Text>
                                             </View>
                                             :
                                             <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
@@ -337,7 +340,7 @@ class Payment extends Component {
                                 <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10}} source={FREE_ONGKIR}/>
                                 :
                                 <Text style={{fontSize: 15, position: 'absolute', right: 10, fontWeight: 'bold', textAlign: 'right'}}>
-                                    {idrFormat(Number(this.props.targetMember.ongkir))}
+                                    {idrFormat(Number(targetMember.ongkir))}
                                 </Text>
                             }
                         </View>
@@ -350,7 +353,7 @@ class Payment extends Component {
                         <View style={{paddingTop: 10, paddingLeft: 10, paddingRight: 10, marginBottom: 10}}>
                             <Text style={{fontWeight: 'bold', fontSize: 17}}>Total Bayar</Text>
                             <Text style={{fontSize: 17, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'}}>
-                                {this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + Number(this.props.targetMember.ongkir))}
+                                {this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + Number(targetMember.ongkir))}
                             </Text>
                         </View>
                     </View>
@@ -442,17 +445,16 @@ const styles = StyleSheet.create({
     },
     modalContainer: { backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'},
     modalWaitText: {fontWeight: 'bold', top: 15, marginTop: 5},
-    successTicket: {
-        main: {backgroundColor: '#cce8c2', borderRadius: 5, width: 300},
-        header: {borderBottomColor: '#98c189', borderBottomWidth: 1, height: 50, justifyContent: 'center', alignItems: 'center'},
-        text: {fontSize: 18, color: '#228200'},
-        scrollable: {backgroundColor: '#f7fff4', padding: 20, height: 400},
-        transactionCodeText: {color: '#bababa', marginBottom: 2},
-        transactionCodeValue: {fontSize: 20, marginBottom: 10},
-        transactionTotalPriceValue: {marginBottom: 10, fontSize: 18},
-        trxText: {fontSize: 17, marginBottom: 10},
-        dateText: {fontSize: 20, marginBottom: 20}
-    },
+    STmain: {backgroundColor: '#cce8c2', borderRadius: 5, width: 300},
+    STheader: {borderBottomColor: '#98c189', borderBottomWidth: 1, height: 50, justifyContent: 'center', alignItems: 'center'},
+    STtext: {fontSize: 18, color: '#228200'},
+    STscrollable: {backgroundColor: '#f7fff4', padding: 20, height: 400},
+    STtransactionCodeText: {color: '#bababa', marginBottom: 2},
+    STtransactionCodeValue: {fontSize: 20, marginBottom: 10},
+    STtransactionTotalPriceValue: {marginBottom: 10, fontSize: 18},
+    STtrxText: {fontSize: 17, marginBottom: 10},
+    STdateText: {fontSize: 20, marginBottom: 20},
     colorText: {color: '#bababa'},
-    centeringItems: {textAlign: 'center'}
+    centeringItems: {textAlign: 'center'},
+    alignCenter: {alignItems: 'center'}
 });

@@ -13,5 +13,5 @@ export function* watcherSetInitialToken(data) {
 };
 
 function* workerSetInitialToken(form) {
-  yield put(setTokenToReducer(form.data))
-}
+  yield put(setTokenToReducer(form.data));
+};

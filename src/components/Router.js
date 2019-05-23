@@ -209,7 +209,7 @@ const RootStack = createStackNavigator({
     ShopPageMember:             { screen: ShopPageMember }
 }, {
     initialRouteName: 'MainTabs'
-})
+});
 
 const styles = StyleSheet.create({
     customIcon: {
@@ -228,29 +228,22 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 });
-import { modifyNotification } from '../actions/Notification_Controller';
-import { updateListNotifications } from '../actions/Update_List_Notifications';
+// 
+// import { modifyNotification } from '../actions/Notification_Controller';
+// import { updateListNotifications } from '../actions/Update_List_Notifications';
 
 class RouterTabs extends Component {
-
-    componentDidUpdate(prevProps, prevState) {
-        if (prevProps.dataNotif !== this.props.dataNotif) {
-            this.props.dispatch(modifyNotification('inc'))
-            this.props.dispatch(updateListNotifications(this.props.dataNotif))
-        }
-    }
-
     render() {
         return(
             <RootStack uriPrefix={ SERVER_URL }/>
         )
     }
-}
+};
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
-}
+    return dispatch;
+};
 
 export default connect(
     mapDispatchToProps
-)(RouterTabs)
+)(RouterTabs);
