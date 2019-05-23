@@ -66,52 +66,53 @@ class DirectPayment extends Component {
     };
 
     componentDidUpdate(prevProps, prevState) {
-        if (prevProps.resultCounting !== this.props.resultCounting) {
-            this.setState({loadingCount: false, subtotal: this.props.resultCounting})
+        const { userData, resultCounting, dispatch, navigation, transaction, status } = this.props;
+        if (prevProps.resultCounting !== resultCounting) {
+            this.setState({loadingCount: false, subtotal: resultCounting})
         }
-        if (prevProps.userData !== this.props.userData) {
-            if (this.props.userData.address.street !== '') {
+        if (prevProps.userData !== userData) {
+            if (userData.data.address.street !== '') {
                 this.setState({isAddressValid: true})
             }else{
-                if (this.props.navigation.state.params !== undefined) {
+                if (navigation.state.params !== undefined) {
                     this.setState({isAddressValid: true})
                 }
             }
         }
-        if (prevProps.transaction !== this.props.transaction) {
+        if (prevProps.transaction !== transaction) {
             if (this.state.transactionLoading) {
                 this.setState({transactionLoading: false})
-                this.props.dispatch(loadTransactionTypePending(this.state.token))
+                dispatch(loadTransactionTypePending(this.state.token))
             }
         }
-        if (prevProps.status.transaction.error !== this.props.status.transaction.error) {
+        if (prevProps.status.transaction.error !== status.transaction.error) {
             if (this.state.transactionLoading) {
                 this.setState({transactionLoading: false})
-                this.props.dispatch(resetTransactionState())
+                dispatch(resetTransactionState())
             }
         }
     };
 
     submitTransaction() {
-        const { navigation, userData } = this.props;
+        const { navigation, userData, targetMember, dispatch } = this.props;
         let data = {};
         if (this.state.isAddressValid) {
             if (navigation.state.params === undefined) {
                 data = {
-                    name: userData.name,
-                    phone: userData.phone,
-                    street: userData.address.street,
-                    city: userData.address.city,
-                    district: userData.address.district,
-                    village: userData.address.village,
-                    no: userData.address.no,
-                    rt: userData.address.rt,
-                    rw: userData.address.rw,
+                    name: userData.data.name,
+                    phone: userData.data.phone,
+                    street: userData.data.address.street,
+                    city: userData.data.address.city,
+                    district: userData.data.address.district,
+                    village: userData.data.address.village,
+                    no: userData.data.address.no,
+                    rt: userData.data.address.rt,
+                    rw: userData.data.address.rw,
                     token: this.state.token,
                     id: this.state.data.id,
                     qty: this.state.qty,
-                    targetMember: this.props.targetMember.id,
-                    ongkir: Number(this.props.targetMember.ongkir)
+                    targetMember: targetMember.id,
+                    ongkir: Number(targetMember.ongkir)
                 };
             }else{
                 data = {
@@ -127,12 +128,12 @@ class DirectPayment extends Component {
                     token: this.state.token,
                     id: this.state.data.id,
                     qty: this.state.qty,
-                    targetMember: this.props.targetMember.id,
-                    ongkir: Number(this.props.targetMember.ongkir)
+                    targetMember: targetMember.id,
+                    ongkir: Number(targetMember.ongkir)
                 };
             }
             this.setState({loading: true, changeAmount: false, transactionContent: true})
-            this.props.dispatch(directPurchase(data))
+            dispatch(directPurchase(data))
         }else{
             Alert.alert(
                 'Kesalahan',
@@ -146,12 +147,13 @@ class DirectPayment extends Component {
     };
 
     loadData = async () => {
+        const { userData } = this.props;
         try {
             const data = await AsyncStorage.getItem('direct_purchase');
             if (data !== null) {
                 const parsed = JSON.parse(data);
                 let realPrice = 0;
-                if (this.props.userData.status === 'Non Member') {
+                if (userData.data.status === 'Non Member') {
                     realPrice = parsed.enduserprice;
                 }else{
                     realPrice = parsed.resellerprice;
@@ -256,7 +258,7 @@ class DirectPayment extends Component {
     render() {
         let params = {}
         if (this.props.navigation.state.params === undefined) {
-            params = this.props.userData
+            params = this.props.userData.data
         }else{
             params = {
                 name: this.props.navigation.state.params.name,
@@ -273,6 +275,7 @@ class DirectPayment extends Component {
             }
         }
         const newParams = Object.assign({}, params, {token: this.state.token});
+        const { userData, resultCounting, navigation, targetMember } = this.props;
         if (this.state.data === Object.assign({})) {
             return(
                 <View style={{justifyContent: 'center', alignItems: 'center'}}>
@@ -331,7 +334,7 @@ class DirectPayment extends Component {
                                                     <BarIndicator count={5} size={15} color='#919191' />
                                                 </View>
                                                 :
-                                                <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(this.state.qty === 1 ? Number(this.state.productPrice) : Number(this.props.resultCounting))}</Text>
+                                                <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(this.state.qty === 1 ? Number(this.state.productPrice) : Number(resultCounting))}</Text>
                                             }
                                             {/*Increment Button*/}
                                             <View style={styles.modificatorModalModifier}>
@@ -369,43 +372,43 @@ class DirectPayment extends Component {
                                 <View style={styles.userInformation}>
                                     <View>
                                         <Text style={styles.titleUserInformation}>Informasi Pembeli</Text>
-                                        <TouchableOpacity style={styles.editAddress} onPress={() => this.props.navigation.navigate('EditAddressDP', newParams)}>
+                                        <TouchableOpacity style={styles.editAddress} onPress={() => navigation.navigate('EditAddressDP', newParams)}>
                                             <Text style={{color: '#7c0c10', fontSize: 15}}>Ubah</Text>
                                         </TouchableOpacity>
                                     </View>
                                     {
-                                        this.props.navigation.state.params === undefined
+                                        navigation.state.params === undefined
                                         ?
                                         this.state.isAddressValid
                                         ?
                                         <View>
                                             <Text style={styles.nameProp}>Nama</Text>
-                                            <Text style={styles.nameVal}>{this.props.userData.name}</Text>
+                                            <Text style={styles.nameVal}>{userData.data.name}</Text>
                                             <Text style={styles.nameProp}>Nomor Telepon</Text>
-                                            <Text style={styles.nameVal}>0{this.props.userData.phone}</Text>
+                                            <Text style={styles.nameVal}>0{userData.data.phone}</Text>
                                             <Text style={styles.nameProp}>Alamat Pengiriman</Text>
                                             <Text style={styles.f13}>
-                                                Jl.{this.props.userData.address.street} No.{this.props.userData.address.no} Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
+                                                Jl.{userData.data.address.street} No.{userData.data.address.no} Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}
                                             </Text>
-                                            <Text style={styles.f13}>Kecamatan {capital(this.props.userData.address.district)}</Text>
-                                            <Text style={styles.f13}>Kelurahan {capital(this.props.userData.address.village)}</Text>
-                                            <Text style={styles.f13}>{capital(this.props.userData.address.city)}</Text>
+                                            <Text style={styles.f13}>Kecamatan {capital(userData.data.address.district)}</Text>
+                                            <Text style={styles.f13}>Kelurahan {capital(userData.data.address.village)}</Text>
+                                            <Text style={styles.f13}>{capital(userData.data.address.city)}</Text>
                                         </View>
                                         :
                                         <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
                                         :
                                         <View>
                                             <Text style={styles.nameProp}>Nama</Text>
-                                            <Text style={styles.nameVal}>{this.props.navigation.state.params.name}</Text>
+                                            <Text style={styles.nameVal}>{navigation.state.params.name}</Text>
                                             <Text style={styles.nameProp}>Nomor Telepon</Text>
-                                            <Text style={styles.nameVal}>{this.props.navigation.state.params.phone}</Text>
+                                            <Text style={styles.nameVal}>{navigation.state.params.phone}</Text>
                                             <Text style={styles.nameProp}>Alamat Pengiriman</Text>
                                             <Text style={styles.f13}>
-                                                Jl.{this.props.userData.address.street} No.{this.props.navigation.state.params.no} Rt.{this.props.userData.address.rt} Rw.{this.props.userData.address.rw}
+                                                Jl.{userData.data.address.street} No.{navigation.state.params.no} Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}
                                             </Text>
-                                            <Text style={styles.f13}>Kecamatan {capital(this.props.navigation.state.params.district)}</Text>
-                                            <Text style={styles.f13}>Kelurahan {capital(this.props.navigation.state.params.village)}</Text>
-                                            <Text style={styles.f13}>{capital(this.props.navigation.state.params.city)}</Text>
+                                            <Text style={styles.f13}>Kecamatan {capital(navigation.state.params.district)}</Text>
+                                            <Text style={styles.f13}>Kelurahan {capital(navigation.state.params.village)}</Text>
+                                            <Text style={styles.f13}>{capital(navigation.state.params.city)}</Text>
                                         </View>
                                     }
                                 </View>
@@ -432,11 +435,11 @@ class DirectPayment extends Component {
                                                 <Text style={styles.totalText}>Total</Text>
                                             </View>
                                             <View style={styles.mb5w45perc}>
-                                                <Text style={styles.tarCol9b}>{this.props.userData.status === 'Non Member' ? idrFormat(Number(this.state.data.enduserprice)) : idrFormat(Number(this.state.data.resellerprice))}</Text>
+                                                <Text style={styles.tarCol9b}>{userData.data.status === 'Non Member' ? idrFormat(Number(this.state.data.enduserprice)) : idrFormat(Number(this.state.data.resellerprice))}</Text>
                                                 <Text style={styles.tarCol9b}>{this.state.qty} {this.state.data.unit}</Text>
                                                 <Text style={styles.priceDisplay}>
                                                     {
-                                                        this.props.userData.status === 'Non Member'
+                                                        userData.data.status === 'Non Member'
                                                         ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty))
                                                         : idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty))
                                                     }
@@ -451,7 +454,7 @@ class DirectPayment extends Component {
                                         <Text style={styles.lastChapter}>Total Belanja</Text>
                                         <Text style={styles.priceDisplay2}>
                                             {
-                                                this.props.userData.status === 'Non Member'
+                                                userData.data.status === 'Non Member'
                                                 ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)))
                                                 : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)))
                                             }
@@ -468,7 +471,7 @@ class DirectPayment extends Component {
                                             <Image resizeMode='contain' style={styles.infoIcon} source={FREE_ONGKIR}/>
                                             :
                                             <Text style={styles.ongkirText}>
-                                                {idrFormat(Number(this.props.targetMember.ongkir))}
+                                                {idrFormat(Number(targetMember.ongkir))}
                                             </Text>
                                         }
                                     </View>
@@ -482,7 +485,7 @@ class DirectPayment extends Component {
                                         <Text style={styles.toBa}>Total Bayar</Text>
                                         <Text style={styles.totalText2}>
                                             {
-                                                this.props.userData.status === 'Non Member'
+                                                userData.data.status === 'Non Member'
                                                 ? (this.state.isFreeOngkir ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty)) : idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)) + Number(this.props.targetMember.ongkir)))
                                                 : (this.state.isFreeOngkir ? idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty)) : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)) + Number(this.props.targetMember.ongkir)))
                                             }

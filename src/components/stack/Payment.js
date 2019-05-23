@@ -296,95 +296,95 @@ class Payment extends Component {
                                 </View>
                                 {
                                     listData.map((x, i) =>
-                                    <View key={i}>
-                                        <Text style={itemDetails.productName}>{x.product_name}</Text>
-                                        <View style={itemDetails.productDetails}>
-                                            <Image
-                                                resizeMode='contain'
-                                                style={itemDetails.imageStyle}
-                                                source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
-                                                />
-                                            <View style={itemDetails.orderInfo}>
-                                                <Text style={itemDetails.propertyText}>Harga</Text>
-                                                <Text style={itemDetails.propertyText}>Kuantitas</Text>
-                                                <Text style={itemDetails.subtotalText}>Subtotal</Text>
+                                        <View key={i}>
+                                            <Text style={itemDetails.productName}>{x.product_name}</Text>
+                                            <View style={itemDetails.productDetails}>
+                                                <Image
+                                                    resizeMode='contain'
+                                                    style={itemDetails.imageStyle}
+                                                    source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
+                                                    />
+                                                <View style={itemDetails.orderInfo}>
+                                                    <Text style={itemDetails.propertyText}>Harga</Text>
+                                                    <Text style={itemDetails.propertyText}>Kuantitas</Text>
+                                                    <Text style={itemDetails.subtotalText}>Subtotal</Text>
+                                                </View>
+                                                <View style={{marginBottom: 5, width: '45%'}}>
+                                                    <Text style={itemDetails.valueText}>{idrFormat(x.price)}</Text>
+                                                    <Text style={itemDetails.valueText}>{x.qty}</Text>
+                                                    <Text style={itemDetails.subtotalValue}>
+                                                        {idrFormat(x.subtotal)}
+                                                    </Text>
+                                                </View>
                                             </View>
-                                            <View style={{marginBottom: 5, width: '45%'}}>
-                                                <Text style={itemDetails.valueText}>{idrFormat(x.price)}</Text>
-                                                <Text style={itemDetails.valueText}>{x.qty}</Text>
-                                                <Text style={itemDetails.subtotalValue}>
-                                                    {idrFormat(x.subtotal)}
-                                                </Text>
+                                            <View style={{alignItems: 'center'}}>
+                                                <View style={styles.separator} />
                                             </View>
                                         </View>
-                                        <View style={{alignItems: 'center'}}>
-                                            <View style={styles.separator} />
-                                        </View>
-                                    </View>
-                                )
-                            }
-                            <View style={result.totalPrice}>
-                                <Text style={result.propText}>Total Belanja</Text>
-                                <Text style={result.rightTotalPrice}>
-                                    {idrFormat(total)}
-                                </Text>
-                            </View>
-                            <View style={result.ongkirContainer}>
-                                <Text style={result.propText}>Ongkir</Text>
-                                <TouchableOpacity onPress={() => this.showInfo()} style={result.infoFreeOngkir}>
-                                    <Text style={result.fakeIconInfo}>i</Text>
-                                </TouchableOpacity>
-                                {
-                                    this.state.isFreeOngkir
-                                    ?
-                                    <Image resizeMode='contain' style={result.freeOngkirImage} source={FREE_ONGKIR}/>
-                                    :
-                                    <Text style={result.ongkirPrice}>
-                                        {idrFormat(Number(targetMember.ongkir))}
-                                    </Text>
+                                    )
                                 }
+                                <View style={result.totalPrice}>
+                                    <Text style={result.propText}>Total Belanja</Text>
+                                    <Text style={result.rightTotalPrice}>
+                                        {idrFormat(total)}
+                                    </Text>
+                                </View>
+                                <View style={result.ongkirContainer}>
+                                    <Text style={result.propText}>Ongkir</Text>
+                                    <TouchableOpacity onPress={() => this.showInfo()} style={result.infoFreeOngkir}>
+                                        <Text style={result.fakeIconInfo}>i</Text>
+                                    </TouchableOpacity>
+                                    {
+                                        this.state.isFreeOngkir
+                                        ?
+                                        <Image resizeMode='contain' style={result.freeOngkirImage} source={FREE_ONGKIR}/>
+                                        :
+                                        <Text style={result.ongkirPrice}>
+                                            {idrFormat(Number(targetMember.ongkir))}
+                                        </Text>
+                                    }
+                                </View>
+                                <View style={{alignItems: 'center'}}>
+                                    <View style={styles.separator} />
+                                </View>
+                                <View style={{alignItems: 'center', marginTop: 3}}>
+                                    <View style={styles.separator} />
+                                </View>
+                                <View style={result.footerContainer}>
+                                    <Text style={result.totalPricePropText}>Total Bayar</Text>
+                                    <Text style={result.totalPriceValue}>
+                                        {this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + Number(targetMember.ongkir))}
+                                    </Text>
+                                </View>
                             </View>
-                            <View style={{alignItems: 'center'}}>
-                                <View style={styles.separator} />
-                            </View>
-                            <View style={{alignItems: 'center', marginTop: 3}}>
-                                <View style={styles.separator} />
-                            </View>
-                            <View style={result.footerContainer}>
-                                <Text style={result.totalPricePropText}>Total Bayar</Text>
-                                <Text style={result.totalPriceValue}>
-                                    {this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + Number(targetMember.ongkir))}
-                                </Text>
-                            </View>
+                            {/**/}
                         </View>
-                        {/**/}
+                        <View style={result.confirmationButtonContainer}>
+                            <TouchableOpacity onPress={() => this.submitTransaction()} style={result.confirmationTouchableArea}>
+                                <Text style={result.confirmationButtonText}>Konfirmasi Pemesanan</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </ScrollView>
+                }
+                <Modal
+                    isVisible={!this.state.showContent}
+                    style={{alignItems: 'center'}}
+                    hideModalContentWhileAnimating={true}
+                    useNativeDriver
+                    backdropColor='white'
+                    backdropOpacity={0.5}
+                    animationIn='fadeIn'
+                    animationOut='fadeOut'
+                    >
+                    <View style={styles.modalBase}>
+                        <WaveIndicator
+                            color='#4f4f4f'
+                            />
                     </View>
-                    <View style={result.confirmationButtonContainer}>
-                        <TouchableOpacity onPress={() => this.submitTransaction()} style={result.confirmationTouchableArea}>
-                            <Text style={result.confirmationButtonText}>Konfirmasi Pemesanan</Text>
-                        </TouchableOpacity>
-                    </View>
-                </ScrollView>
-            }
-            <Modal
-                isVisible={!this.state.showContent}
-                style={{alignItems: 'center'}}
-                hideModalContentWhileAnimating={true}
-                useNativeDriver
-                backdropColor='white'
-                backdropOpacity={0.5}
-                animationIn='fadeIn'
-                animationOut='fadeOut'
-                >
-                <View style={styles.modalBase}>
-                    <WaveIndicator
-                        color='#4f4f4f'
-                        />
-                </View>
-            </Modal>
-        </View>
-    )
-}
+                </Modal>
+            </View>
+        )
+    }
 };
 
 function mapDispatchToProps(dispatch) {
