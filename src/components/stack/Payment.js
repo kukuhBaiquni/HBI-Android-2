@@ -14,6 +14,7 @@ import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_
 import { resetTransactionState } from '../../actions/Direct_Purchase';
 import moment from 'moment';
 import { FREE_ONGKIR, BACKDARKRED } from '../../images';
+import { SUCCESS_DIALOG } from '../basic/successDialog';
 
 class Payment extends Component {
     static navigationOptions = ({navigation}) => {
@@ -145,7 +146,7 @@ class Payment extends Component {
         }
     };
 
-    queueRouting() {
+    _queueRouting = () => {
         this.props.navigation.popToTop();
         this.props.navigation.navigate('MyTransaction');
     };
@@ -201,30 +202,7 @@ class Payment extends Component {
                                 />
                         </View>
                         :
-                        <View style={styles.STmain}>
-                            <View style={styles.STheader}>
-                                <Text style={styles.STtext}>Konfirmasi Sukses</Text>
-                            </View>
-                            <ScrollView style={styles.STscrollable}>
-                                <View style={styles.alignCenter}>
-                                    <Text style={styles.STtransactionCodeText}>Kode Transaksi</Text>
-                                    <Text style={styles.STtransactionCodeValue}>{transaction.trx}</Text>
-                                    <Text style={styles.colorText}>Jumlah Tagiahan Anda</Text>
-                                    <Text style={styles.STtransactionTotalPriceValue}>{IDR_FORMAT(transaction.total_price)}</Text>
-                                    <Text style={[{marginBottom: 5}, styles.colorText]}>Metode Pembayaran</Text>
-                                    <Text>Transfer ke rekening BCA</Text>
-                                    <Text style={styles.STtrxText}>2820260417</Text>
-                                    <Text style={[styles.colorText, styles.centeringItems]}>Jumlah transfer pembayaran harus sesuai</Text>
-                                    <Text style={[styles.colorText, styles.centeringItems]}>dengan jumlah tagihan (hingga 3 digit terakhir)</Text>
-                                    <Text style={[styles.colorText, styles.centeringItems, {marginBottom: 10}]}>Isi Nomor Transaksi pada kolom Detail Transfer</Text>
-                                    <Text style={[{marginBottom: 10}, styles.colorText]}>Lakukan pembayaran sebelum</Text>
-                                    <Text style={styles.STdateText}>{moment(transaction.due_date).format('DD MMM YYYY HH:mm')}</Text>
-                                </View>
-                                <TouchableOpacity onPress={() => this.queueRouting()} style={styles.button}>
-                                    <Text style={{color: '#228200'}}>Lihat</Text>
-                                </TouchableOpacity>
-                            </ScrollView>
-                        </View>
+                        <SUCCESS_DIALOG toDetail={this._queueRouting} data={transaction} />
                     }
                 </Modal>
                 {
