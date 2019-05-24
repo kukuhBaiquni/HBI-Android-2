@@ -9,7 +9,7 @@ import {
   View,
   Image
 } from 'react-native';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL } from '../components/basic/supportFunction';
 
 const HEADER_EXPANDED_HEIGHT = 220;
 const HEADER_COLLAPSED_HEIGHT = 60;

@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_Pending';
 import moment from 'moment';
-import { idrFormat, locale } from '../../../config';
+import { IDR_FORMAT, LOCALE_DAY }from '../basic/supportFunction';
 import { BACKDARKRED } from '../../images';
 
 class MyActiveTransaction extends Component {
@@ -74,7 +74,7 @@ class MyActiveTransaction extends Component {
                                 </View>
                                 <View style={{position: 'absolute', right: 10, padding: 6, paddingTop: 15}}>
                                     <Text style={{color: '#bababa', textAlign: 'right'}}>Total Belanja</Text>
-                                    <Text style={{textAlign: 'right'}}>{idrFormat(x.total_price)}</Text>
+                                    <Text style={{textAlign: 'right'}}>{IDR_FORMAT(x.total_price)}</Text>
                                 </View>
                             </View>
                         </TouchableNativeFeedback>
@@ -105,7 +105,7 @@ class MyActiveTransaction extends Component {
                             </View>
                             <View style={{position: 'absolute', right: 10, padding: 6, paddingTop: 15}}>
                                 <Text style={{color: '#bababa', textAlign: 'right'}}>Total Belanja</Text>
-                                <Text style={{textAlign: 'right'}}>{idrFormat(x.total_price)}</Text>
+                                <Text style={{textAlign: 'right'}}>{IDR_FORMAT(x.total_price)}</Text>
                             </View>
                         </View>
                     </TouchableNativeFeedback>
@@ -136,7 +136,7 @@ class MyActiveTransaction extends Component {
                         </View>
                         <View style={{position: 'absolute', right: 10, padding: 6, paddingTop: 15}}>
                             <Text style={{color: '#bababa', textAlign: 'right'}}>Total Belanja</Text>
-                            <Text style={{textAlign: 'right'}}>{idrFormat(x.total_price)}</Text>
+                            <Text style={{textAlign: 'right'}}>{IDR_FORMAT(x.total_price)}</Text>
                         </View>
                     </View>
                 </TouchableNativeFeedback>
@@ -167,7 +167,7 @@ class MyActiveTransaction extends Component {
                     </View>
                     <View style={{position: 'absolute', right: 10, padding: 6, paddingTop: 15}}>
                         <Text style={{color: '#bababa', textAlign: 'right'}}>Total Belanja</Text>
-                        <Text style={{textAlign: 'right'}}>{idrFormat(x.total_price)}</Text>
+                        <Text style={{textAlign: 'right'}}>{IDR_FORMAT(x.total_price)}</Text>
                     </View>
                 </View>
             </TouchableNativeFeedback>

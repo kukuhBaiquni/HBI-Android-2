@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, StatusBar, Image } from 'react-native';
 import { Spinner } from 'native-base';
 import { BarIndicator } from 'react-native-indicators';
 import * as Animatable from 'react-native-animatable';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL } from '../components/basic/supportFunction';
 
 export default class Splash extends Component {
   constructor(props) {

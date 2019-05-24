@@ -2,9 +2,9 @@ export const SERVER_URL = 'http://halalbeef.co.id/';
 // export const SERVER_URL = 'http://192.168.43.24/';
 // export const SERVER_URL = 'http://192.168.0.113:1728/';``
 
-export const locale = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
+export const LOCALE_DAY = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
 
-export function idrFormat(angka) {
+export const IDR_FORMAT = (angka) => {
     if (isNaN(angka)) {
         return 'loading..'
     }else{
@@ -13,13 +13,6 @@ export function idrFormat(angka) {
         for(var i = 0; i < angkarev.length; i++) if(i%3 == 0) rupiah += angkarev.substr(i,3)+'.';
         return 'Rp '+rupiah.split('',rupiah.length-1).reverse().join('');
     }
-};
-
-export const _FONTS = {
-    AbelRegular: 'Abel-Regular',
-    AsapCondensedRegular: 'AsapCondensed-Regular',
-    AsapCondensedBold: 'AsapCondensed-Bold',
-    AsapCondensedItalic: 'AsapCondensed-Italic',
 };
 
 export const ERROR_TYPE = (statusCode) => {

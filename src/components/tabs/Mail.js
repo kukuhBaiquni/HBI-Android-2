@@ -3,7 +3,7 @@ import { View, Text, Image, ScrollView, StyleSheet, StatusBar, TouchableOpacity,
 import { Right, Button, Body, Header, Title, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
 import MailPartials from './Mail_Partials';
-import { SERVER_URL } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
 import { connect } from 'react-redux';
 import { NOTIFIKASI_C, NOTIFIKASI } from '../../images';
 import BadgeNotification from '../Badge_Notification';

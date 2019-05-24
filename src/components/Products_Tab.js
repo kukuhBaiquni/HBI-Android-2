@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Spinner } from 'native-base';
-import { SERVER_URL } from '../../config';
-import { idrFormat } from '../../config';
+import { SERVER_URL } from '../components/basic/supportFunction';
+import { IDR_FORMAT } from '../components/basic/supportFunction';
 import * as Animatable from 'react-native-animatable';
 
 export default class ProductsTab extends Component {
@@ -32,7 +32,7 @@ export default class ProductsTab extends Component {
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={styles.title}>{x.productname}</Text>
                                     </View>
-                                    <Text style={styles.price}>{idrFormat(x.enduserprice)}/{x.unit}</Text>
+                                    <Text style={styles.price}>{IDR_FORMAT(x.enduserprice)}/{x.unit}</Text>
                                     {
                                         this.props.status === 'Non Member' &&
                                         <Text style={styles.price}>Stock: {x.amount}</Text>

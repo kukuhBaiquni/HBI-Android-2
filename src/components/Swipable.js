@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { SERVER_URL, idrFormat } from '../../config';
+import { SERVER_URL, IDR_FORMAT } from '../components/basic/supportFunction';
 
 export default class Swipable extends Component {
   render() {
@@ -35,8 +35,8 @@ export default class Swipable extends Component {
                     <Text style={{fontWeight: 'bold', fontSize: 12, color: 'red'}}>Harga Member</Text>
                   </View>
                   <View>
-                    <Text style={{fontWeight: 'bold', fontSize: 12, textAlign: 'right'}}>{idrFormat(x.enduserprice)}</Text>
-                    <Text style={{fontWeight: 'bold', fontSize: 12, textAlign: 'right', color: 'red'}}>{idrFormat(x.resellerprice)}</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 12, textAlign: 'right'}}>{IDR_FORMAT(x.enduserprice)}</Text>
+                    <Text style={{fontWeight: 'bold', fontSize: 12, textAlign: 'right', color: 'red'}}>{IDR_FORMAT(x.resellerprice)}</Text>
                   </View>
                 </View>
                 </View>

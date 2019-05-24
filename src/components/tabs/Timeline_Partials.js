@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { loadCustomContent } from '../../actions/Load_Custom_Content';
 import { connect } from 'react-redux';
-import { SERVER_URL } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
 
 class TimelinePartials extends Component {
 

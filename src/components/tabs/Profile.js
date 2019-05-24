@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, ScrollView, Text, AsyncStorage, Alert, TouchableOpacity, Image, StyleSheet, TouchableNativeFeedback, ToastAndroid } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { fetchUser } from '../../actions/Get_User_Data';
-import { SERVER_URL } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
 import LinearGradient from 'react-native-linear-gradient';
 import { Icon } from 'react-native-elements';
 

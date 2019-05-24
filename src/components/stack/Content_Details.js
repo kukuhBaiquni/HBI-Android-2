@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, ScrollView, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { Icon } from 'react-native-elements';
-import { SERVER_URL, locale } from '../../../config';
+import { SERVER_URL, LOCALE_DAY }from '../basic/supportFunction';
 import moment from 'moment';
 import { BACKDARKRED } from '../../images';
 
@@ -33,7 +33,7 @@ export default class ContentDetails extends Component {
                                 style={{width: '100%', height: 200}}
                                 />
                             <Text style={{fontSize: 18, textAlign: 'center', fontWeight: 'bold', padding: 10}}>{data.title}</Text>
-                            <Text style={{color: '#a3a3a3'}}>Diterbitkan: {locale[new Date(data.created).getDay()] + ', ' + moment(data.created).format('DD MMM YYYY')}</Text>
+                            <Text style={{color: '#a3a3a3'}}>Diterbitkan: {LOCALE_DAY[new Date(data.created).getDay()] + ', ' + moment(data.created).format('DD MMM YYYY')}</Text>
                             {
                                 data.start_date !== 0 && data.end_date !== 0 &&
                                 <View>

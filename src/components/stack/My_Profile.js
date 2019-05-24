@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { SERVER_URL } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
 import LinearGradient from 'react-native-linear-gradient';
 import { fetchUser } from '../../actions/Get_User_Data';
 import moment from 'moment';

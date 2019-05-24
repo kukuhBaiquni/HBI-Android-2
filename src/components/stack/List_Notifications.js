@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, ScrollView, StyleSheet, Image, TouchableNativeFeedback, Dimensions, Animated } from 'react-native';
 import { connect } from 'react-redux';
-import { locale, TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../../../config';
+import { LOCALE_DAY,TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../basic/supportFunction';
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BACKDARKRED } from '../../images';
@@ -108,7 +108,7 @@ class ListNotifications extends Component {
                                         <Text>Nomor Transaksi</Text>
                                         <Text style={styles.trxText}>{x.trx}</Text>
                                         <Text style={styles.dateText}>
-                                            {locale[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}
+                                            {LOCALE_DAY[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}
                                         </Text>
                                         <Text style={{color: TRACKING_COLOR_STATUS[x.tracking]}}>{TRACKING_MESSAGE_STATUS[x.tracking]}</Text>
                                     </TouchableOpacity>

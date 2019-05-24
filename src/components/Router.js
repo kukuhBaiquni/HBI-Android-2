@@ -42,7 +42,7 @@ import Beranda from './tabs/Beranda';
 import ListMarket from './stack/List_Market';
 import ForgetPassword from './stack/Forget_Password';
 import ChangePassword from './stack/Change_Password';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL } from '../components/basic/supportFunction';
 import BadgeNotification from './Badge_Notification';
 import { connect } from 'react-redux';
 import { BACKDARKRED, BACKWHITE, CHECKLIST_DARKRED, CANCEL_DARKRED, BERANDA, BERITA_C, BERITA, BELANJA, BELANJA_C, NOTIFIKASI, NOTIFIKASI_C, AKUN, AKUN_C } from '../images';

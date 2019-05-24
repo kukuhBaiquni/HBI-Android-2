@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, StyleSheet, ScrollView, Text, Image, AsyncStorage, ToastAndroid, Alert, StatusBar, BackHandler, Platform } from 'react-native';
+import { View, TouchableOpacity, StyleSheet, ScrollView, Text, Image, AsyncStorage, ToastAndroid, Alert, StatusBar, BackHandler, Platform, Dimensions } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 
@@ -10,6 +10,8 @@ import { setInitialToken } from '../../actions/Set_Initial_Token';
 
 import NetInfo from "@react-native-community/netinfo";
 import RNExitApp from 'react-native-exit-app';
+
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 class Beranda extends Component {
 
@@ -88,7 +90,14 @@ class Beranda extends Component {
                     backgroundColor='#7c0c10'
                     animated
                     />
-
+                <View style={styles.innerContainer}>
+                    <TouchableOpacity style={styles.cardContainer}>
+                        <Text>GABON</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.cardContainer}>
+                        <Text>GABON</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
@@ -101,3 +110,23 @@ function mapDispatchToProps(dispatch) {
 export default connect(
     mapDispatchToProps
 )(Beranda);
+
+const styles = StyleSheet.create({
+    innerContainer: {
+        alignItems: 'center',
+        width: '100%',
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center'
+    },
+    cardContainer: {
+        marginTop: 10,
+        margin: '2%',
+        backgroundColor: 'white',
+        width: '40%',
+        height: SCREEN_HEIGHT * 0.25,
+        borderColor: '#d2d2d2',
+        borderWidth: 1,
+        borderRadius: 4
+    }
+})

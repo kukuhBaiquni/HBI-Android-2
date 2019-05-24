@@ -1,6 +1,6 @@
 import { put, call, takeEvery } from 'redux-saga/effects';
 import request from 'superagent';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL } from '../components/basic/supportFunction';
 
 export const submitFormLogin = (data) => {
   return { type: 'SUBMIT_FORM_LOGIN', data };

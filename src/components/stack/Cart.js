@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, Button, Alert, StyleSheet, AsyncStorage, ScrollView, TouchableOpacity, Image, Picker, TouchableNativeFeedback } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
-import { SERVER_URL } from '../../../config';
-import { idrFormat } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
+import { IDR_FORMAT } from '../basic/supportFunction';
 import Modal from "react-native-modal";
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import { countItem } from '../../actions/Counting_Items';
@@ -281,7 +281,7 @@ class Cart extends Component {
                                                 <BarIndicator count={5} size={15} color='#919191' />
                                             </View>
                                             :
-                                            <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(this.state.qty === 1 ? this.state.productPrice : this.state.subtotal)}</Text>
+                                            <Text style={{fontWeight: 'bold', marginTop: 5}}>{IDR_FORMAT(this.state.qty === 1 ? this.state.productPrice : this.state.subtotal)}</Text>
                                         }
                                         {/*Increment Button*/}
                                         <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
@@ -339,11 +339,11 @@ class Cart extends Component {
                                                             <Text style={{marginLeft: 10, color: '#a3a3a3', position: 'absolute', bottom: 3}}>Subtotal</Text>
                                                         </View>
                                                         <View style={{marginBottom: 5, width: '45%'}}>
-                                                            <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{idrFormat(Number(x.price))}</Text>
+                                                            <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{IDR_FORMAT(Number(x.price))}</Text>
                                                             <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{x.qty}</Text>
                                                             <Text onPress={(x) => this.showSpecificModal(i)} style={{textAlign: 'right', fontWeight: 'bold', marginTop: 13, color: '#7c0c10'}}>Ubah Rincian</Text>
                                                             <Text style={{textAlign: 'right', right: 0, position: 'absolute', bottom: 3, fontWeight: 'bold'}}>
-                                                                {idrFormat(Number(x.price) * Number(x.qty))}
+                                                                {IDR_FORMAT(Number(x.price) * Number(x.qty))}
                                                             </Text>
                                                         </View>
                                                     </View>
@@ -360,7 +360,7 @@ class Cart extends Component {
                         <View style={[styles.productHeader, {height: 60, paddingLeft: 20, position: 'absolute', bottom: 0}]}>
                             <View>
                                 <Text style={{fontSize: 14}}>Total Harga</Text>
-                                <Text style={{color: '#7c0c10', fontSize: 20}}>{idrFormat(total)}</Text>
+                                <Text style={{color: '#7c0c10', fontSize: 20}}>{IDR_FORMAT(total)}</Text>
                             </View>
                             {
                                 this.state.number !== 0 &&

@@ -1,6 +1,6 @@
 import { put, call, takeEvery } from 'redux-saga/effects';
 import request from 'superagent';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL } from '../components/basic/supportFunction';
 
 export const addToCart = (data) => {
   return { type: 'ADD_TO_CART', data };

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
-import { locale, idrFormat, TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../../../config';
+import { LOCALE_DAY,IDR_FORMAT, TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../basic/supportFunction';
 import moment from 'moment';
 import { readingNotification } from '../../actions/Reading_Notification';
 import { NavigationEvents } from 'react-navigation';
@@ -43,14 +43,14 @@ class NotificationDetails extends Component {
                     <View style={styles.container}>
                         <Text style={{fontWeight: 'bold', fontSize: 20}}>Terima Kasih!</Text>
                         <Text>{header2[data.tracking]}</Text>
-                        <Text style={{color: '#a3a3a3', fontSize: 13}}>{locale[new Date(data.date).getDay()] +', '+ moment(data.date).format('DD MMM YYYY') + ' '+ moment(data.date).format('HH:mm')}</Text>
+                        <Text style={{color: '#a3a3a3', fontSize: 13}}>{LOCALE_DAY[new Date(data.date).getDay()] +', '+ moment(data.date).format('DD MMM YYYY') + ' '+ moment(data.date).format('HH:mm')}</Text>
                         <View style={{height: 40}} />
                         {
                             data.tracking === 1 &&
                             <View>
                                 <View style={{alignItems: 'center', borderBottomColor: '#a3a3a3', borderBottomWidth: 1, marginBottom: 25}}>
                                     <Text style={{color: '#a3a3a3'}}>Dan segera lakukan pembayaran sebelum:</Text>
-                                    <Text style={{fontSize: 20, marginBottom: 5, color: '#a3a3a3'}}>{locale[new Date(data.content.due_date).getDay()] +', '+ moment(data.content.due_date).format('DD MMM YYYY') + ' '+ moment(data.content.due_date).format('HH:mm')}</Text>
+                                    <Text style={{fontSize: 20, marginBottom: 5, color: '#a3a3a3'}}>{LOCALE_DAY[new Date(data.content.due_date).getDay()] +', '+ moment(data.content.due_date).format('DD MMM YYYY') + ' '+ moment(data.content.due_date).format('HH:mm')}</Text>
                                 </View>
                                 <View style={{alignItems: 'center', borderBottomColor: '#a3a3a3', borderBottomWidth: 1, marginBottom: 25}}>
                                     <Text style={{color: '#a3a3a3'}}>Metode Pembayaran:</Text>
@@ -70,7 +70,7 @@ class NotificationDetails extends Component {
                                 data.tracking === 1 &&
                                 <View>
                                     <Text style={{color: '#a3a3a3', marginBottom: 10}}>Jumlah Tagihan</Text>
-                                    <Text style={{position: 'absolute', right: 0, fontWeight: 'bold'}}>{idrFormat(data.content.amount)}</Text>
+                                    <Text style={{position: 'absolute', right: 0, fontWeight: 'bold'}}>{IDR_FORMAT(data.content.amount)}</Text>
                                 </View>
                             }
                             {

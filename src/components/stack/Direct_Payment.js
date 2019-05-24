@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollVi
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { fetchUser } from '../../actions/Get_User_Data';
-import { SERVER_URL } from '../../../config';
-import { idrFormat } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
+import { IDR_FORMAT } from '../basic/supportFunction';
 import { BarIndicator, DotIndicator, WaveIndicator } from 'react-native-indicators';
 import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
@@ -237,7 +237,7 @@ class DirectPayment extends Component {
                         <Text style={styles.transactionCodeText}>Kode Transaksi</Text>
                         <Text style={styles.transactionCodeVal}>{this.props.transaction.trx}</Text>
                         <Text style={{color: '#bababa'}}>Jumlah Tagiahan Anda</Text>
-                        <Text style={styles.mab10foz18}>{this.props.transaction.total_price === undefined ? '' : idrFormat(this.props.transaction.total_price)}</Text>
+                        <Text style={styles.mab10foz18}>{this.props.transaction.total_price === undefined ? '' : IDR_FORMAT(this.props.transaction.total_price)}</Text>
                         <Text style={{color: '#bababa', marginBottom: 5}}>Metode Pembayaran</Text>
                         <Text>Transfer ke rekening BCA</Text>
                         <Text style={styles.mab10foz18}>2820260417</Text>
@@ -334,7 +334,7 @@ class DirectPayment extends Component {
                                                     <BarIndicator count={5} size={15} color='#919191' />
                                                 </View>
                                                 :
-                                                <Text style={{fontWeight: 'bold', marginTop: 5}}>{idrFormat(this.state.qty === 1 ? Number(this.state.productPrice) : Number(resultCounting))}</Text>
+                                                <Text style={{fontWeight: 'bold', marginTop: 5}}>{IDR_FORMAT(this.state.qty === 1 ? Number(this.state.productPrice) : Number(resultCounting))}</Text>
                                             }
                                             {/*Increment Button*/}
                                             <View style={styles.modificatorModalModifier}>
@@ -435,13 +435,13 @@ class DirectPayment extends Component {
                                                 <Text style={styles.totalText}>Total</Text>
                                             </View>
                                             <View style={styles.mb5w45perc}>
-                                                <Text style={styles.tarCol9b}>{userData.data.status === 'Non Member' ? idrFormat(Number(this.state.data.enduserprice)) : idrFormat(Number(this.state.data.resellerprice))}</Text>
+                                                <Text style={styles.tarCol9b}>{userData.data.status === 'Non Member' ? IDR_FORMAT(Number(this.state.data.enduserprice)) : IDR_FORMAT(Number(this.state.data.resellerprice))}</Text>
                                                 <Text style={styles.tarCol9b}>{this.state.qty} {this.state.data.unit}</Text>
                                                 <Text style={styles.priceDisplay}>
                                                     {
                                                         userData.data.status === 'Non Member'
-                                                        ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty))
-                                                        : idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty))
+                                                        ? IDR_FORMAT(Number(this.state.data.enduserprice) * Number(this.state.qty))
+                                                        : IDR_FORMAT(Number(this.state.data.resellerprice) * Number(this.state.qty))
                                                     }
                                                 </Text>
                                             </View>
@@ -455,8 +455,8 @@ class DirectPayment extends Component {
                                         <Text style={styles.priceDisplay2}>
                                             {
                                                 userData.data.status === 'Non Member'
-                                                ? idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)))
-                                                : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)))
+                                                ? IDR_FORMAT((Number(this.state.data.enduserprice) * Number(this.state.qty)))
+                                                : IDR_FORMAT((Number(this.state.data.resellerprice) * Number(this.state.qty)))
                                             }
                                         </Text>
                                     </View>
@@ -471,7 +471,7 @@ class DirectPayment extends Component {
                                             <Image resizeMode='contain' style={styles.infoIcon} source={FREE_ONGKIR}/>
                                             :
                                             <Text style={styles.ongkirText}>
-                                                {idrFormat(Number(targetMember.ongkir))}
+                                                {IDR_FORMAT(Number(targetMember.ongkir))}
                                             </Text>
                                         }
                                     </View>
@@ -486,8 +486,8 @@ class DirectPayment extends Component {
                                         <Text style={styles.totalText2}>
                                             {
                                                 userData.data.status === 'Non Member'
-                                                ? (this.state.isFreeOngkir ? idrFormat(Number(this.state.data.enduserprice) * Number(this.state.qty)) : idrFormat((Number(this.state.data.enduserprice) * Number(this.state.qty)) + Number(this.props.targetMember.ongkir)))
-                                                : (this.state.isFreeOngkir ? idrFormat(Number(this.state.data.resellerprice) * Number(this.state.qty)) : idrFormat((Number(this.state.data.resellerprice) * Number(this.state.qty)) + Number(this.props.targetMember.ongkir)))
+                                                ? (this.state.isFreeOngkir ? IDR_FORMAT(Number(this.state.data.enduserprice) * Number(this.state.qty)) : IDR_FORMAT((Number(this.state.data.enduserprice) * Number(this.state.qty)) + Number(this.props.targetMember.ongkir)))
+                                                : (this.state.isFreeOngkir ? IDR_FORMAT(Number(this.state.data.resellerprice) * Number(this.state.qty)) : IDR_FORMAT((Number(this.state.data.resellerprice) * Number(this.state.qty)) + Number(this.props.targetMember.ongkir)))
                                             }
                                         </Text>
                                     </View>

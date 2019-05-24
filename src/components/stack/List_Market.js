@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TouchableNativeFeedback, StatusBar, AsyncStorage, Dimensions, ToastAndroid, PermissionsAndroid } from 'react-native';
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper';
-import { SERVER_URL, idrFormat, _FONTS } from '../../../config';
+import { SERVER_URL, IDR_FORMAT, _FONTS } from '../basic/supportFunction';
 import { NavigationEvents } from 'react-navigation';
 
 import MapView, { Marker } from 'react-native-maps';
@@ -385,7 +385,7 @@ class ListMarket extends Component {
                                                     <View style={styles.leftAlign}>
                                                         <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
                                                         <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>
-                                                            {idrFormat(ongkirCalculation(this.state.distance))}
+                                                            {IDR_FORMAT(ongkirCalculation(this.state.distance))}
                                                         </Text>
                                                     </View>
                                                 }

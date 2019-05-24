@@ -4,7 +4,7 @@ import { Icon } from 'react-native-elements';
 import { forceResetCE } from '../../actions/Check_Email';
 import { forceResetRG } from '../../actions/Register';
 import { connect } from 'react-redux';
-import { SERVER_URL } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
 import { BACKDARKRED } from '../../images';
 
 class ProfilePrevention extends Component {

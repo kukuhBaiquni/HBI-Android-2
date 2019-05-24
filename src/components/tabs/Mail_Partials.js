@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Text, View, ScrollView, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import moment from 'moment';
-import { locale, TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../../../config';
+import { LOCALE_DAY,TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../basic/supportFunction';
 
 export default class MailPartials extends Component {
 
@@ -23,7 +23,7 @@ export default class MailPartials extends Component {
                             <TouchableOpacity onPress={() => navigation.navigate('NotificationDetails', {data: x, type})} key={i} style={x.status ? [styles.listItem, {backgroundColor: '#eaeaea'}] : [styles.listItem, {backgroundColor: 'white'}]}>
                                 <Text>Nomor Transaksi</Text>
                                 <Text style={{position: 'absolute', right: 10, top: 7, fontWeight: 'bold'}}>{x.trx}</Text>
-                                <Text style={{fontSize: 12, color: '#a3a3a3'}}>{locale[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}</Text>
+                                <Text style={{fontSize: 12, color: '#a3a3a3'}}>{LOCALE_DAY[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}</Text>
                                 <Text style={{color: TRACKING_COLOR_STATUS[x.tracking]}}>{TRACKING_MESSAGE_STATUS[x.tracking]}</Text>
                                 {
                                     !x.status &&

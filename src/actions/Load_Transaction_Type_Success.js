@@ -1,6 +1,6 @@
 import { put, call, takeEvery } from 'redux-saga/effects';
 import request from 'superagent';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL } from '../components/basic/supportFunction';
 
 export const loadTransactionTypeSuccess = (data) => {
     return { type: 'LOAD_TRANSACTION_TYPE_SUCCESS', data };

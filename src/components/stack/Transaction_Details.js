@@ -3,7 +3,7 @@ import { View, Text, ScrollView, StyleSheet, TouchableOpacity, Image } from 'rea
 import { connect } from 'react-redux';
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
-import { SERVER_URL, idrFormat, locale } from '../../../config';
+import { SERVER_URL, IDR_FORMAT, LOCALE_DAY }from '../basic/supportFunction';
 import moment from 'moment';
 import { loadSingleTransaction } from '../../actions/Load_Single_Transaction';
 import { FREE_ONGKIR, BACKDARKRED } from '../../images';
@@ -64,7 +64,7 @@ class TransactionDetails extends Component {
                                 </View>
                                 <View style={styles.container}>
                                     <Text style={[styles.subTitle]}>Waktu Pemesanan</Text>
-                                    <Text style={{color: '#a5a5a5'}}>{locale[new Date(data.start_date).getDay()] + ', ' + moment(data.start_date).format('DD MMM YYYY') + ' - ' + moment(data.start_date).format('HH:mm')}</Text>
+                                    <Text style={{color: '#a5a5a5'}}>{LOCALE_DAY[new Date(data.start_date).getDay()] + ', ' + moment(data.start_date).format('DD MMM YYYY') + ' - ' + moment(data.start_date).format('HH:mm')}</Text>
                                 </View>
                                 <View style={styles.container}>
                                     <Text style={[styles.subTitle, {marginBottom: 5}]}>Alamat Pengiriman</Text>
@@ -82,7 +82,7 @@ class TransactionDetails extends Component {
                                         ?
                                         data.tracking_history.map((x, i) =>
                                             <View key={i} style={{marginTop: 10}}>
-                                                <Text style={{color: '#a5a5a5'}}>{locale[new Date(x.time).getDay()] + ', ' + moment(x.time).format('DD MMM YYYY') + ' - ' + moment(x.time).format('HH:mm')}</Text>
+                                                <Text style={{color: '#a5a5a5'}}>{LOCALE_DAY[new Date(x.time).getDay()] + ', ' + moment(x.time).format('DD MMM YYYY') + ' - ' + moment(x.time).format('HH:mm')}</Text>
                                                 <Text style={{color: color[x.tracking_type]}}>{trackingTitle[x.tracking_type]}</Text>
                                             </View>
                                         )
@@ -106,7 +106,7 @@ class TransactionDetails extends Component {
                                                     <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 16, color: '#7c0c10'}}>{x.product_name}</Text>
                                                     <View style={{flexDirection: 'row'}}>
                                                         <Text>Harga: </Text>
-                                                        <Text style={{color: '#a5a5a5', textAlign: 'right', position: 'absolute', right: 10}}>{idrFormat(x.price)}</Text>
+                                                        <Text style={{color: '#a5a5a5', textAlign: 'right', position: 'absolute', right: 10}}>{IDR_FORMAT(x.price)}</Text>
                                                     </View>
                                                     <View style={{flexDirection: 'row'}}>
                                                         <Text>Kuantitas: </Text>
@@ -122,7 +122,7 @@ class TransactionDetails extends Component {
                                             <View style={{width: '100%', flexDirection: 'row'}}>
                                                 <Text style={{marginTop: 5, marginLeft: 80, fontWeight: 'bold', color: '#7c0c10'}}>Subtotal </Text>
                                                 <View style={{width: '100%', position: 'absolute'}}>
-                                                    <Text style={{marginTop: 5, textAlign: 'right'}}>{idrFormat(x.price * x.qty)}</Text>
+                                                    <Text style={{marginTop: 5, textAlign: 'right'}}>{IDR_FORMAT(x.price * x.qty)}</Text>
                                                 </View>
                                             </View>
                                         </View>
@@ -133,7 +133,7 @@ class TransactionDetails extends Component {
                                 <View style={styles.footer}>
                                     <Text style={[styles.subTitle, {padding: 10, fontSize: 15, marginLeft: 83}]}>Total Belanja</Text>
                                     <View style={{width: '100%', position: 'absolute'}}>
-                                        <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{idrFormat(data.total_price - data.ongkir)}</Text>
+                                        <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{IDR_FORMAT(data.total_price - data.ongkir)}</Text>
                                     </View>
                                 </View>
                                 <View style={styles.footer}>
@@ -144,14 +144,14 @@ class TransactionDetails extends Component {
                                             ?
                                             <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10, top: 5}} source={FREE_ONGKIR}/>
                                             :
-                                            <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{idrFormat(data.ongkir)}</Text>
+                                            <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{IDR_FORMAT(data.ongkir)}</Text>
                                         }
                                     </View>
                                 </View>
                                 <View style={[styles.footer, {backgroundColor: '#fff9fa'}]}>
                                     <Text style={[styles.subTitle, {padding: 10, fontSize: 15, marginLeft: 83}]}>Total Pembayaran</Text>
                                     <View style={{width: '100%', position: 'absolute'}}>
-                                        <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{idrFormat(data.total_price)}</Text>
+                                        <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{IDR_FORMAT(data.total_price)}</Text>
                                     </View>
                                 </View>
                             </View>

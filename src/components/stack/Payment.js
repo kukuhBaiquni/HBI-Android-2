@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollVi
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { fetchUser } from '../../actions/Get_User_Data';
-import { SERVER_URL } from '../../../config';
-import { idrFormat } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
+import { IDR_FORMAT } from '../basic/supportFunction';
 import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
 import { DotIndicator, WaveIndicator } from 'react-native-indicators';
@@ -210,7 +210,7 @@ class Payment extends Component {
                                     <Text style={styles.STtransactionCodeText}>Kode Transaksi</Text>
                                     <Text style={styles.STtransactionCodeValue}>{transaction.trx}</Text>
                                     <Text style={styles.colorText}>Jumlah Tagiahan Anda</Text>
-                                    <Text style={styles.STtransactionTotalPriceValue}>{idrFormat(transaction.total_price)}</Text>
+                                    <Text style={styles.STtransactionTotalPriceValue}>{IDR_FORMAT(transaction.total_price)}</Text>
                                     <Text style={[{marginBottom: 5}, styles.colorText]}>Metode Pembayaran</Text>
                                     <Text>Transfer ke rekening BCA</Text>
                                     <Text style={styles.STtrxText}>2820260417</Text>
@@ -310,10 +310,10 @@ class Payment extends Component {
                                                     <Text style={itemDetails.subtotalText}>Subtotal</Text>
                                                 </View>
                                                 <View style={{marginBottom: 5, width: '45%'}}>
-                                                    <Text style={itemDetails.valueText}>{idrFormat(x.price)}</Text>
+                                                    <Text style={itemDetails.valueText}>{IDR_FORMAT(x.price)}</Text>
                                                     <Text style={itemDetails.valueText}>{x.qty}</Text>
                                                     <Text style={itemDetails.subtotalValue}>
-                                                        {idrFormat(x.subtotal)}
+                                                        {IDR_FORMAT(x.subtotal)}
                                                     </Text>
                                                 </View>
                                             </View>
@@ -326,7 +326,7 @@ class Payment extends Component {
                                 <View style={result.totalPrice}>
                                     <Text style={result.propText}>Total Belanja</Text>
                                     <Text style={result.rightTotalPrice}>
-                                        {idrFormat(total)}
+                                        {IDR_FORMAT(total)}
                                     </Text>
                                 </View>
                                 <View style={result.ongkirContainer}>
@@ -340,7 +340,7 @@ class Payment extends Component {
                                         <Image resizeMode='contain' style={result.freeOngkirImage} source={FREE_ONGKIR}/>
                                         :
                                         <Text style={result.ongkirPrice}>
-                                            {idrFormat(Number(targetMember.ongkir))}
+                                            {IDR_FORMAT(Number(targetMember.ongkir))}
                                         </Text>
                                     }
                                 </View>
@@ -353,7 +353,7 @@ class Payment extends Component {
                                 <View style={result.footerContainer}>
                                     <Text style={result.totalPricePropText}>Total Bayar</Text>
                                     <Text style={result.totalPriceValue}>
-                                        {this.state.isFreeOngkir ? idrFormat(total) : idrFormat(total + Number(targetMember.ongkir))}
+                                        {this.state.isFreeOngkir ? IDR_FORMAT(total) : IDR_FORMAT(total + Number(targetMember.ongkir))}
                                     </Text>
                                 </View>
                             </View>

@@ -1,6 +1,6 @@
 import { put, call, takeEvery } from 'redux-saga/effects';
 import request from 'superagent';
-import { SERVER_URL } from '../../config';
+import { SERVER_URL } from '../components/basic/supportFunction';
 
 export const confirmTransaction = (data) => {
     return { type: 'CONFIRM_TRANSACTION', data };
@@ -49,6 +49,7 @@ function* workerConfirmTransaction(form) {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
+        console.log(data);
         if (data.success) {
             yield put(confirmTransactionSuccess());
             yield put(transactionData(data.data))

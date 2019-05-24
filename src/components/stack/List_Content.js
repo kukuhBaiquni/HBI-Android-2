@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { loadListContent } from '../../actions/Load_List_Content';
 import moment from 'moment';
-import { SERVER_URL } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
 import { CHECKLIST_DARKRED } from '../../images';
 
 class ListContent extends Component {

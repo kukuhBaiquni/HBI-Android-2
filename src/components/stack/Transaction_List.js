@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableNativeFeedback, ScrollView, StyleSheet, TouchableOpacity, FlatList, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import moment from 'moment';
-import { idrFormat, locale } from '../../../config';
+import { IDR_FORMAT, LOCALE_DAY }from '../basic/supportFunction';
 import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
 import { loadTransactionTypeSuccess } from '../../actions/Load_Transaction_Type_Success';
@@ -76,7 +76,7 @@ class TransactionList extends Component {
                                 </View>
                                 <View style={{position: 'absolute', right: 10, padding: 6, paddingTop: 15}}>
                                     <Text style={{color: '#bababa', textAlign: 'right'}}>Total Belanja</Text>
-                                    <Text style={{textAlign: 'right'}}>{idrFormat(item.total_price)}</Text>
+                                    <Text style={{textAlign: 'right'}}>{IDR_FORMAT(item.total_price)}</Text>
                                 </View>
                             </View>
                         </TouchableNativeFeedback>

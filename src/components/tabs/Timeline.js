@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image, ScrollView, TouchableNativeFeedback, TouchableOpacity, RefreshControl } from 'react-native';
 import { NavigationEvents } from 'react-navigation';
 import { Icon } from 'react-native-elements';
-import { SERVER_URL } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
 import { connect } from 'react-redux';
 import { loadCategory, startProcess } from '../../actions/Load_Category';
 import TimelinePartials from './Timeline_Partials';

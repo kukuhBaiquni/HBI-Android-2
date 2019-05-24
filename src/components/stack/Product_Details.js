@@ -3,8 +3,8 @@ import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, Tou
 import { connect } from 'react-redux';
 import { Right, Button, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
-import { SERVER_URL } from '../../../config';
-import { idrFormat } from '../../../config';
+import { SERVER_URL } from '../basic/supportFunction';
+import { IDR_FORMAT } from '../basic/supportFunction';
 import { BarIndicator } from 'react-native-indicators';
 import Swipable from '../Swipable';
 import RNParallax from '../Parallax_Header';
@@ -215,7 +215,7 @@ class ProductDetails extends Component {
                                             <BarIndicator count={5} size={15} color='#919191' />
                                         </View>
                                         :
-                                        <Text style={styles.priceTextModal}>{idrFormat(this.state.itemCount === 1 ? (this.props.userData.status === 'Non Member' ? navigation.state.params.enduserprice : navigation.state.params.resellerprice) : this.props.resultCounting)}</Text>
+                                        <Text style={styles.priceTextModal}>{IDR_FORMAT(this.state.itemCount === 1 ? (this.props.userData.status === 'Non Member' ? navigation.state.params.enduserprice : navigation.state.params.resellerprice) : this.props.resultCounting)}</Text>
                                     }
                                     {/*Increment Button*/}
                                     <View style={styles.interactionButtonContainer}>
@@ -317,11 +317,11 @@ class ProductDetails extends Component {
                                 <View style={[styles.viewContainer, styles.viewBackgroundStyle]}>
                                     <View style={{width: '35%'}}>
                                         <Text style={styles.normalPriceText}>Harga Normal</Text>
-                                        <Text style={styles.normalPriceText}>{idrFormat(navigation.state.params.enduserprice)}</Text>
+                                        <Text style={styles.normalPriceText}>{IDR_FORMAT(navigation.state.params.enduserprice)}</Text>
                                     </View>
                                     <View style={{width: '35%'}}>
                                         <Text style={styles.memberPriceText}>Harga Member</Text>
-                                        <Text style={styles.memberPriceText}>{idrFormat(navigation.state.params.resellerprice)}</Text>
+                                        <Text style={styles.memberPriceText}>{IDR_FORMAT(navigation.state.params.resellerprice)}</Text>
                                     </View>
                                     <View style={{width: '20%'}}>
                                         <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
