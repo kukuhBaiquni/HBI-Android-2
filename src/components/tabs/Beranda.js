@@ -8,6 +8,8 @@ import { fetchUser } from '../../actions/Get_User_Data';
 import { setPlayerId } from '../../actions/Set_Player_Id';
 import { setInitialToken } from '../../actions/Set_Initial_Token';
 
+import { FONT_TYPE } from '../basic/Fonts';
+
 import NetInfo from "@react-native-community/netinfo";
 import RNExitApp from 'react-native-exit-app';
 
@@ -26,13 +28,13 @@ class Beranda extends Component {
             }, ], {
                 cancelable: false
             }
-        )
+        );
         return true;
     };
 
     _beforeBlur = () => {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
-    }
+    };
 
     _beforeRender = async () => {
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
@@ -92,10 +94,10 @@ class Beranda extends Component {
                     />
                 <View style={styles.innerContainer}>
                     <TouchableOpacity style={styles.cardContainer}>
-                        <Text>GABON</Text>
+                        <Text style={{...FONT_TYPE.regular}}>GABON</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.cardContainer}>
-                        <Text>GABON</Text>
+                        <Text style={{...FONT_TYPE.medium}}>GABON</Text>
                     </TouchableOpacity>
                 </View>
             </View>
@@ -129,4 +131,4 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 4
     }
-})
+});

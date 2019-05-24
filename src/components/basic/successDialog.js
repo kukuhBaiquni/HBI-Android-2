@@ -27,6 +27,7 @@ export const SUCCESS_DIALOG = (props) => {
                     <Text style={styles.instruction}> {STRINGS.instruction2} </Text>
                     <Text style={styles.instruction3}> {STRINGS.instruction3} </Text>
                     <Text style={styles.instruction4}> {STRINGS.instruction4} </Text>
+                    <Text style={[styles.instruction4, {...FONT_TYPE.medium}]}> {STRINGS.instruction4} </Text>
                     <Text style={styles.STdateText}>{moment(data.due_date).format('DD MMM YYYY HH:mm')}</Text>
                 </View>
                 <TouchableOpacity style={styles.button}>
@@ -71,5 +72,5 @@ const styles = StyleSheet.create({
     button                          : {marginBottom: 40, width: 250, height: 45, backgroundColor: COLORS.GREEN_FADE, borderColor: COLORS.GREEN_DARK, borderRadius: 3, borderWidth: 1, justifyContent: 'center', alignItems: 'center' },
     instruction                     : {color: COLORS.GRAY_FADE, textAlign: 'center'},
     instruction3                    : {color: COLORS.GRAY_FADE, marginBottom: 10, textAlign: 'center'},
-    instruction4                    : {color: COLORS.GRAY_FADE, marginBottom: 10, fontFamily: FONT_TYPE.lightItalic}
+    instruction4                    : {color: COLORS.GRAY_FADE, marginBottom: 10, ...FONT_TYPE.regular}
 });
