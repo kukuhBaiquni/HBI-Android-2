@@ -29,3 +29,13 @@ export const ERROR_TYPE = (statusCode) => {
 
 export const TRACKING_MESSAGE_STATUS = ['', 'Menunggu Pembayaran', 'Pembayaran Sudah Dikonfirmasi', 'Pesanan Sedang Diproses', 'Pesanan Sedang Dikirim', 'Pesanan Sudah Sampai'];
 export const TRACKING_COLOR_STATUS = ['', '#ffbf00', '#4d2e9b', '#01adbc', '#0038bc', '#00b71e'];
+
+export const UNIT_CONVERTER = (input) => {
+    if (input === 1) {
+        return '500gr'
+    }else if (input === 2) {
+        return '1000gr'
+    }else{
+        return 'Invalid Input'
+    };
+};

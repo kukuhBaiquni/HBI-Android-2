@@ -9,6 +9,7 @@ import CartIcon from '../Cart_Icon';
 import { setTargetMember } from '../../actions/Set_Target_Member';
 import Modal from "react-native-modal";
 import { WaveIndicator } from 'react-native-indicators';
+import { MODAL } from '../basic/loading';
 
 class ShopPage extends Component {
     static navigationOptions = ({navigation}) => {
@@ -80,23 +81,7 @@ class ShopPage extends Component {
                         </Tab>
                     </Tabs>
                 }
-                <Modal
-                    isVisible={this.state.loading}
-                    style={{alignItems: 'center'}}
-                    hideModalContentWhileAnimating={true}
-                    useNativeDriver
-                    backdropColor='white'
-                    backdropOpacity={0.5}
-                    animationIn='fadeIn'
-                    animationOut='fadeOut'
-                    >
-                    <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                        <Text style={{textAlign: 'center', marginTop: 10, color: '#4f4f4f'}}>Memuat Produk..</Text>
-                        <WaveIndicator
-                            color='#4f4f4f'
-                            />
-                    </View>
-                </Modal>
+                <MODAL isVisible={this.state.loading} message='Memuat Produk' />
                 <StatusBar
                     backgroundColor='#7c0c10'
                     barStyle='light-content'

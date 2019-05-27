@@ -15,6 +15,7 @@ import { withNavigationFocus } from 'react-navigation';
 import Modal from 'react-native-modal';
 import {WaveIndicator} from 'react-native-indicators';
 import { DRAWER_DEFAULT, CONTOH_2, BELANJA, BELANJA_C, BACKDARKRED } from '../../images';
+import { MODAL } from '../basic/loading';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -328,23 +329,7 @@ class ListMarket extends Component {
                     <NavigationEvents
                         onDidFocus={() => this._afterRender()}
                         />
-                    <Modal
-                        isVisible={!this.state.isMemberVisible}
-                        style={{alignItems: 'center'}}
-                        hideModalContentWhileAnimating={true}
-                        useNativeDriver
-                        backdropColor='white'
-                        backdropOpacity={0.5}
-                        animationIn='fadeIn'
-                        animationOut='fadeOut'
-                        >
-                        <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                            <Text style={{textAlign: 'center', marginTop: 10, color: '#4f4f4f'}}>Memuat Peta..</Text>
-                            <WaveIndicator
-                                color='#4f4f4f'
-                                />
-                        </View>
-                    </Modal>
+                    <MODAL isVisible={!this.state.isMemberVisible} message='Memuat Peta' />
                     {this._renderMyLocationButton()}
                     {this._renderRemovePin()}
                     {this._renderInfoLocation()}

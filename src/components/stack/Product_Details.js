@@ -3,8 +3,6 @@ import { View, Text, Image, ScrollView, StyleSheet, TouchableNativeFeedback, Tou
 import { connect } from 'react-redux';
 import { Right, Button, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
-import { SERVER_URL } from '../basic/supportFunction';
-import { IDR_FORMAT } from '../basic/supportFunction';
 import { BarIndicator } from 'react-native-indicators';
 import Swipable from '../Swipable';
 import RNParallax from '../Parallax_Header';
@@ -18,7 +16,11 @@ import { addToCart, forceResetATC } from '../../actions/Add_To_Cart';
 import { withNavigationFocus } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
 import { WaveIndicator } from 'react-native-indicators';
+import { SERVER_URL, IDR_FORMAT, UNIT_CONVERTER } from '../basic/supportFunction';
 import { BACKDARKRED } from '../../images';
+import { MODAL } from '../basic/loading';
+import { COLORS } from '../basic/colors';
+import { MODAL_QUANTITY_EDITOR } from '../basic/modalQuantityEditor';
 
 class ProductDetails extends Component {
     static navigationOptions = ({navigation}) => {
@@ -39,13 +41,17 @@ class ProductDetails extends Component {
             renderItems: [],
             isVisibleMain: false
         }
+
+        this._showModalContent = this._showModalContent.bind(this);
+        this._changeCount = this._changeCount.bind(this);
+        this._addToCart = this._addToCart.bind(this);
     }
 
     componentDidMount() {
         let list = [];
         let arr = [];
         let exception = this.props.listProducts.map(function(e) { return e.id }).indexOf(this.props.navigation.state.params.id);
-        while(list.length < 5){
+        while(list.length < 6){
             var random = Math.floor(Math.random()*this.props.listProducts.length);
             if(arr.indexOf(random) > -1 || random == exception) continue;
             arr[arr.length] = random;
@@ -63,7 +69,7 @@ class ProductDetails extends Component {
         }, 10);
     };
 
-    changeCount(x) {
+    _changeCount(x) {
         let count = this.state.itemCount
         if (x === 'inc') {
             count ++
@@ -82,7 +88,7 @@ class ProductDetails extends Component {
         this.props.dispatch(countItem(data))
     };
 
-    addToCart(v) {
+    _addToCart(v) {
         this.setState({showModal: false})
         const item = {
             token: this.state.token,
@@ -175,77 +181,64 @@ class ProductDetails extends Component {
         }catch(error) {}
     };
 
+    _showModalContent = () => {
+        this.setState({ showModalContent: true });
+    };
+
+    _hideModalContent = () => {
+        this.setState({ showModalContent: false });
+    };
+
+    _closeModal = () => {
+        this.setState({
+            showModal: false
+        });
+    };
+
     _renderModal = () => {
         const { navigation } = this.props;
         return(
-            <Modal
+            <MODAL_QUANTITY_EDITOR
+                closeModal={this._closeModal}
+                showModalContent={this._showModalContent}
+                hideModalContent={this._hideModalContent}
+                addToCart={this._addToCart}
+                onChangeValue={this._changeCount}
+
+                isContentVisible={this.state.showModalContent}
                 isVisible={this.state.showModal}
-                style={{alignItems: 'center'}}
-                onBackdropPress={() => this.setState({showModal: false})}
-                onBackButtonPress={() => this.setState({showModal: false})}
-                onModalShow={() => this.setState({showModalContent: true})}
-                onModalHide={() => this.setState({showModalContent: false})}
-                hideModalContentWhileAnimating={true}
-                useNativeDriver
-                >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalHeader}>
-                        <Text style={styles.modalHeaderTitle}>Pilihan Anda</Text>
-                        <TouchableOpacity style={styles.closeButtonHeader}>
-                            <Icon name='clear' color='#919191' size={22} onPress={() => this.setState({showModal: false})}/>
-                        </TouchableOpacity>
-                    </View>
+                loadingPrice={this.state.loading}
+                itemCount={this.state.itemCount}
+
+                data={navigation.state.params}
+                userStatus={this.props.userData.status}
+                resultCounting={this.props.resultCounting}
+                />
+        )
+    };
+
+    _renderHorizontalScoller = () => {
+        return(
+            <View style={{marginBottom: 20, paddingLeft: 10, paddingRight: 10}}>
+                <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     {
-                        this.state.showModalContent &&
-                        <View>
-                            <View style={{flexDirection: 'row'}}>
-                                <View style={styles.imageModalContainer}>
-                                    <Image
-                                        resizeMode='contain'
-                                        style={styles.imageStyle}
-                                        source={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
-                                        />
+                        this.state.renderItems.map((x, i) =>
+                            <TouchableOpacity key={i} style={{height: 230, width: 160, backgroundColor: 'white', margin: 5, borderRadius: 5, elevation: 1}}>
+                                <Image
+                                    source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
+                                    style={{height: 150, width: '100%', borderTopRightRadius: 5, borderTopLeftRadius: 5}}
+                                    resizeMode='cover'
+                                    />
+                                <View style={{padding: 5}}>
+                                    <Text>{x.productname}</Text>
+                                    <Text>{IDR_FORMAT(x.enduserprice)}</Text>
                                 </View>
-                                <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
-                                    <Text style={styles.productnameText}>{navigation.state.params.productname}</Text>
-                                    {
-                                        this.state.loading
-                                        ?
-                                        <View style={styles.loadingContainer}>
-                                            <BarIndicator count={5} size={15} color='#919191' />
-                                        </View>
-                                        :
-                                        <Text style={styles.priceTextModal}>{IDR_FORMAT(this.state.itemCount === 1 ? (this.props.userData.status === 'Non Member' ? navigation.state.params.enduserprice : navigation.state.params.resellerprice) : this.props.resultCounting)}</Text>
-                                    }
-                                    {/*Increment Button*/}
-                                    <View style={styles.interactionButtonContainer}>
-                                        <TouchableNativeFeedback onPress={(x) => this.changeCount('dec')}>
-                                            <View style={styles.pmButton}>
-                                                <Text style={styles.pmButtonText}>-</Text>
-                                            </View>
-                                        </TouchableNativeFeedback>
-                                        <View style={styles.counterText}>
-                                            <Text>{this.state.itemCount}</Text>
-                                        </View>
-                                        <TouchableNativeFeedback onPress={(x) => this.changeCount('inc')}>
-                                            <View style={styles.pmButton}>
-                                                <Text style={styles.pmButtonText}>+</Text>
-                                            </View>
-                                        </TouchableNativeFeedback>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.buttonAddToCartModal}>
-                                <TouchableOpacity onPress={(x) => this.addToCart(navigation.state.params)}>
-                                    <View style={styles.buttonAddTocartExe}>
-                                        <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
-                                    </View>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
+                            </TouchableOpacity>
+                        )
                     }
-                </View>
-            </Modal>
+                </ScrollView>
+                <Text>Master</Text>
+            </View>
         )
     };
 
@@ -257,23 +250,7 @@ class ProductDetails extends Component {
                     onDidFocus={() => this.checkToken()}
                     onWillFocus={() => this.removeStorage()}
                     />
-                    <Modal
-                        isVisible={!this.state.isVisibleMain}
-                        style={{alignItems: 'center'}}
-                        hideModalContentWhileAnimating={true}
-                        useNativeDriver
-                        backdropColor='white'
-                        backdropOpacity={0.5}
-                        animationIn='fadeIn'
-                        animationOut='fadeOut'
-                        >
-                        <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                            <Text style={{textAlign: 'center', marginTop: 10}}>Sedang mempersiapkan produk..</Text>
-                            <WaveIndicator
-                                color='#4f4f4f'
-                                />
-                        </View>
-                    </Modal>
+                <MODAL isVisible={!this.state.isVisibleMain} message='Memuat Produk' />
                 {
                     this.state.isVisibleMain &&
                     <RNParallax
@@ -313,46 +290,45 @@ class ProductDetails extends Component {
                             <CartIcon navigation={navigation} bcolor='#7c0c10'/>
                         )}
                         renderContent={() => (
-                            <ScrollView style={{backgroundColor: '#e2e2e2', marginTop: -10}}>
+                            <ScrollView style={{backgroundColor: '#e2e2e2', marginTop: -5}}>
+
                                 <View style={styles.viewContainer}>
-                                    <Text style={styles.productTitle}>{navigation.state.params.productname}</Text>
-                                    <View style={styles.viewBackgroundStyle}>
-                                        <View style={{width: '35%'}}>
-                                            <Text style={styles.normalPriceText}>Harga Normal</Text>
-                                            <Text style={styles.normalPriceText}>{IDR_FORMAT(navigation.state.params.enduserprice)}</Text>
-                                        </View>
-                                        <View style={{width: '35%'}}>
-                                            <Text style={styles.memberPriceText}>Harga Member</Text>
-                                            <Text style={styles.memberPriceText}>{IDR_FORMAT(navigation.state.params.resellerprice)}</Text>
-                                        </View>
-                                        <View style={{width: '20%'}}>
-                                            <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
-                                            <View style={styles.discountEllipse}>
-                                                <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
-                                            </View>
+                                    <Text style={styles.productNameText}>{navigation.state.params.productname}</Text>
+                                    <Text>Harga Normal {IDR_FORMAT(navigation.state.params.enduserprice)}</Text>
+                                    <View style={styles.vipRowMember}>
+                                        <Text style={{color: COLORS.PRIMARY}}>Harga Member {IDR_FORMAT(navigation.state.params.resellerprice)}</Text>
+                                        <View style={styles.badgeVip}>
+                                            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 11}}>VIP</Text>
                                         </View>
                                     </View>
                                 </View>
+
                                 <View style={styles.viewContainer}>
+                                    <Text style={styles.subtitle}>Informasi Produk</Text>
+                                    <Text>Packing {UNIT_CONVERTER(navigation.state.params.packing)}/pack</Text>
+                                    <View style={{height: 8}} />
                                     <Text style={styles.subtitle}>Deskripsi Produk</Text>
-                                    <Text style={styles.text}>{navigation.state.params.description}</Text>
+                                    <Text>{navigation.state.params.description}</Text>
                                 </View>
-                                <Swipable renderItems={this.state.renderItems} navigation={ navigation } />
-                                <View style={{height: 50}} />
+                                <View style={styles.viewContainer}>
+                                    <Text style={styles.subtitle}>Lihat Produk Lainnya</Text>
+                                </View>
+
+                                {this._renderHorizontalScoller()}
+
+                                <View style={{height: 150}} />
                             </ScrollView>
                         )}
                     />
                 }
-                <TouchableNativeFeedback>
-                    <View style={styles.footerWrapper}>
-                        <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
-                            <Text style={{color: '#7c0c10'}}>Beli Sekarang</Text>
-                        </TouchableOpacity>
-                        <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10', backgroundColor: '#7c0c10'}]} onPress={() => this.showModal()}>
-                            <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
-                        </TouchableOpacity>
-                    </View>
-                </TouchableNativeFeedback>
+                <View style={styles.footerWrapper}>
+                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
+                        <Text style={{color: '#7c0c10'}}>Beli Sekarang</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10', backgroundColor: '#7c0c10'}]} onPress={() => this.showModal()}>
+                        <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
+                    </TouchableOpacity>
+                </View>
                 {this._renderModal()}
                 <FlashMessage
                     position='top'
@@ -390,24 +366,22 @@ const styles = StyleSheet.create({
     subtitle: {
         textAlign: 'left',
         fontSize: 15,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        color: COLORS.BLACK_NORMAL
     },
     viewContainer: {
         backgroundColor: 'white',
-        padding: 25,
-        marginTop: 10,
-        marginBottom: 40,
-        elevation: 3
+        paddingTop: 10,
+        paddingBottom: 10,
+        paddingLeft: 25,
+        paddingRight: 25,
+        marginBottom: 10,
+        elevation: 1
     },
     productTitle: {
         fontSize: 24,
         fontWeight: 'bold',
         marginBottom: 20
-    },
-    text: {
-        textAlign: 'left',
-        paddingTop: 10,
-        color: '#9b9b9b'
     },
     containerWithIcon: {
         backgroundColor: 'white',
@@ -430,8 +404,7 @@ const styles = StyleSheet.create({
         zIndex: 5,
     },
     fixedNavbar: {
-        backgroundColor: 'white',
-        opacity: 0.5,
+        backgroundColor: 'transparent',
         justifyContent: 'center',
         alignItems: 'center',
         height: 55
@@ -454,98 +427,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '47%',
         height: 40
-    },
-    modalContainer: {
-        backgroundColor: 'white',
-        width: 300,
-        height: 250,
-        borderRadius: 4
-    },
-    modalHeader: {
-        borderBottomColor: '#e0e0e0',
-        borderBottomWidth: 1,
-        width: '100%'
-    },
-    modalHeaderTitle: {
-        textAlign: 'left',
-        padding: 15,
-        color: '#919191',
-        fontSize: 16
-    },
-    closeButtonHeader: {
-        position: 'absolute',
-        right: 10,
-        top: 15
-    },
-    imageModalContainer: {
-        elevation: 1,
-        width: 120,
-        height: 120,
-        marginTop: 10,
-        marginLeft: 20
-    },
-    imageStyle: {
-        width: 120,
-        height: 120,
-        borderColor: '#e2e2e2',
-        borderWidth: 1
-    },
-    productnameText: {
-        fontSize: 16,
-        width: 140,
-        textAlign: 'left',
-        color: '#919191'
-    },
-    loadingContainer: {
-        height: 24,
-        width: 80,
-        paddingTop: 7,
-        alignItems: 'center'
-    },
-    priceTextModal: {
-        fontWeight: 'bold',
-        marginTop: 5
-    },
-    interactionButtonContainer: {
-        flexDirection: 'row',
-        width: 110,
-        height: 40,
-        marginTop: 20,
-        justifyContent: 'space-between'
-    },
-    pmButton: {
-        height: 30,
-        width: 30,
-        backgroundColor: '#7c0c10',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 3
-    },
-    pmButtonText: {
-        color: 'white',
-        fontSize: 22
-    },
-    counterText: {
-        width: 40,
-        height: 30,
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#e2e2e2',
-        borderRadius: 3
-    },
-    buttonAddToCartModal: {
-        alignItems: 'center',
-        marginTop: 10,
-        marginBottom:20
-    },
-    buttonAddTocartExe: {
-        height: 45,
-        width: 260,
-        backgroundColor: '#7c0c10',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 3
     },
     navigationArrowBack: {
         position: 'absolute',
@@ -584,5 +465,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         borderRadius: 10,
         marginTop: 3
-    }
+    },
+    productNameText: {fontSize: 20, color: COLORS.BLACK_NORMAL, fontWeight: 'bold', marginBottom: 5},
+    vipRowMember: {flexDirection: 'row', alignItems: 'center', marginTop: 3},
+    badgeVip: {backgroundColor: COLORS.PRIMARY, justifyContent: 'center', alignItems: 'center', width: 30, height: 16, borderRadius: 10, marginLeft: 5}
 });
