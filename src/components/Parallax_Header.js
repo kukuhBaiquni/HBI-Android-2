@@ -172,8 +172,8 @@ class RNParallax extends Component {
   // from read to white
   titleTransition() {
     return this.state.scrollY.interpolate({
-      inputRange: [0, 200, 205],
-      outputRange: ['#7c0c10', '#7c0c10', '#7c0c10'],
+      inputRange: [0, 255, 260],
+      outputRange: ['rgba(0, 0 ,0 , 0)', 'rgba(255, 255, 255, 0)', '#7c0c10'],
       extrapolate: 'clamp'
     })
   }

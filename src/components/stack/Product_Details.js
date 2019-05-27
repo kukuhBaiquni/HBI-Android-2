@@ -314,19 +314,22 @@ class ProductDetails extends Component {
                         )}
                         renderContent={() => (
                             <ScrollView style={{backgroundColor: '#e2e2e2', marginTop: -10}}>
-                                <View style={[styles.viewContainer, styles.viewBackgroundStyle]}>
-                                    <View style={{width: '35%'}}>
-                                        <Text style={styles.normalPriceText}>Harga Normal</Text>
-                                        <Text style={styles.normalPriceText}>{IDR_FORMAT(navigation.state.params.enduserprice)}</Text>
-                                    </View>
-                                    <View style={{width: '35%'}}>
-                                        <Text style={styles.memberPriceText}>Harga Member</Text>
-                                        <Text style={styles.memberPriceText}>{IDR_FORMAT(navigation.state.params.resellerprice)}</Text>
-                                    </View>
-                                    <View style={{width: '20%'}}>
-                                        <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
-                                        <View style={styles.discountEllipse}>
-                                            <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
+                                <View style={styles.viewContainer}>
+                                    <Text style={styles.productTitle}>{navigation.state.params.productname}</Text>
+                                    <View style={styles.viewBackgroundStyle}>
+                                        <View style={{width: '35%'}}>
+                                            <Text style={styles.normalPriceText}>Harga Normal</Text>
+                                            <Text style={styles.normalPriceText}>{IDR_FORMAT(navigation.state.params.enduserprice)}</Text>
+                                        </View>
+                                        <View style={{width: '35%'}}>
+                                            <Text style={styles.memberPriceText}>Harga Member</Text>
+                                            <Text style={styles.memberPriceText}>{IDR_FORMAT(navigation.state.params.resellerprice)}</Text>
+                                        </View>
+                                        <View style={{width: '20%'}}>
+                                            <Text style={{fontSize: 10, color: 'red'}}>Discount</Text>
+                                            <View style={styles.discountEllipse}>
+                                                <Text style={{color: 'red', fontSize: 12}}>15% OFF</Text>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
@@ -396,6 +399,11 @@ const styles = StyleSheet.create({
         marginBottom: 40,
         elevation: 3
     },
+    productTitle: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        marginBottom: 20
+    },
     text: {
         textAlign: 'left',
         paddingTop: 10,
@@ -422,7 +430,8 @@ const styles = StyleSheet.create({
         zIndex: 5,
     },
     fixedNavbar: {
-        backgroundColor: 'transparent',
+        backgroundColor: 'white',
+        opacity: 0.5,
         justifyContent: 'center',
         alignItems: 'center',
         height: 55

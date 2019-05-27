@@ -22,27 +22,27 @@ import targetMember from './Target_Member';
 import forgetPassword from './Forget_Password_Status';
 
 const rootReducer = combineReducers({
-  listProducts,
-  status,
-  token,
-  userData,
-  resultCounting,
-  cart,
-  territorial,
-  transaction,
-  bank,
-  transactionRecords,
-  ongkir,
-  categoryContent,
-  transactionTypePending,
-  transactionTypeFailed,
-  transactionTypeExpired,
-  transactionTypeSuccess,
-  customContent,
-  badge,
-  listMarket,
-  targetMember,
-  forgetPassword
+    listProducts,
+    status,
+    token,
+    userData,
+    resultCounting,
+    cart,
+    territorial,
+    transaction,
+    bank,
+    transactionRecords,
+    ongkir,
+    categoryContent,
+    transactionTypePending,
+    transactionTypeFailed,
+    transactionTypeExpired,
+    transactionTypeSuccess,
+    customContent,
+    badge,
+    listMarket,
+    targetMember,
+    forgetPassword
 });
 
 export default rootReducer
