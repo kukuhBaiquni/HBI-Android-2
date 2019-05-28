@@ -16,6 +16,7 @@ import moment from 'moment';
 import { FREE_ONGKIR, BACKDARKRED } from '../../images';
 import { SUCCESS_DIALOG } from '../basic/successDialog';
 import { MODAL } from '../basic/loading';
+import { ADDRESS_INFO } from '../basic/editAddressPayment';
 
 class Payment extends Component {
     static navigationOptions = ({navigation}) => {
@@ -43,18 +44,18 @@ class Payment extends Component {
         }
     };
 
-    beforeRender = async () => {
-        // try {
-        //     const token = await AsyncStorage.getItem('access_token');
-        //     if (token !== null) {
-        //         const raw = JSON.parse(token)
-        //         this.setState({token: raw})
-        //         dispatch(fetchUser(raw))
-        //     }
-        // }catch (error) {
-        //
-        // }
-    };
+    // beforeRender = async () => {
+    //     try {
+    //         const token = await AsyncStorage.getItem('access_token');
+    //         if (token !== null) {
+    //             const raw = JSON.parse(token)
+    //             this.setState({token: raw})
+    //             dispatch(fetchUser(raw))
+    //         }
+    //     }catch (error) {
+    //
+    //     }
+    // };
 
     _afterRender = () => {
         const { dispatch, cart, navigation } = this.props;
@@ -67,7 +68,7 @@ class Payment extends Component {
         dispatch(forceResetRoot())
         if (navigation.state.params !== undefined) {
             const village = navigation.state.params.village;
-        };
+        }
         setTimeout(() => {
             this.setState({showContent: true});
         }, 10);
@@ -116,7 +117,7 @@ class Payment extends Component {
                     rw: userData.data.address.rw,
                     targetMember: targetMember.id,
                     ongkir: Number(targetMember.ongkir)
-                };
+                }
             }else{
                 data = {
                     name: navigation.state.params.name,
@@ -131,7 +132,7 @@ class Payment extends Component {
                     rw: navigation.state.params.address.rw,
                     targetMember: targetMember.id,
                     ongkir: Number(targetMember.ongkir)
-                };
+                }
             }
             this.setState({loading: true});
             dispatch(confirmTransaction(data));
@@ -211,65 +212,12 @@ class Payment extends Component {
                 {
                     this.state.showContent &&
                     <ScrollView>
-                        <View style={userInfo.container}>
-                            <View style={userInfo.papperWhite}>
-                                <View>
-                                    <Text style={userInfo.titleText}>Informasi Pembeli</Text>
-                                    <TouchableOpacity style={userInfo.changeTextPseudoButton} onPress={() => navigation.navigate('EditAddress', newParams)}>
-                                        <Text style={userInfo.changeText}>Ubah</Text>
-                                    </TouchableOpacity>
-                                </View>
-                                {
-                                    navigation.state.params === undefined
-                                    ?
-                                    <View>
-                                        <Text style={userInfo.propertyText}>Nama</Text>
-                                        <Text style={userInfo.valueText}>{userData.data.name}</Text>
-                                        <Text style={userInfo.propertyText}>Nomor Telepon</Text>
-                                        <Text style={userInfo.valueText}>0{userData.data.phone}</Text>
-                                        <Text style={userInfo.propertyText}>Alamat Pengiriman</Text>
-                                        {
-                                            this.state.isAddressValid
-                                            ?
-                                            <View>
-                                                <Text style={styles.font13}>
-                                                    Jl.{userData.data.address.street} No.{userData.data.address.no}
-                                                    Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}
-                                                </Text>
-                                                <Text style={styles.font13}>Kecamatan {userData.data.address.district}</Text>
-                                                <Text style={styles.font13}>Kelurahan {userData.data.address.village}</Text>
-                                                <Text style={styles.font13}>{userData.data.address.city}</Text>
-                                            </View>
-                                            :
-                                            <Text style={userInfo.alertUncompleteAddress}>Alamat belum lengkap</Text>
-                                        }
-                                    </View>
-                                    :
-                                    <View>
-                                        <Text style={userInfo.propertyText}>Nama</Text>
-                                        <Text style={userInfo.valueText}>{navigation.state.params.name}</Text>
-                                        <Text style={userInfo.propertyText}>Nomor Telepon</Text>
-                                        <Text style={userInfo.valueText}>{navigation.state.params.phone}</Text>
-                                        <Text style={userInfo.propertyText}>Alamat Pengiriman</Text>
-                                        {
-                                            this.state.isAddressValid
-                                            ?
-                                            <View>
-                                                <Text style={styles.font13}>
-                                                    Jl.{navigation.state.params.street} No.{navigation.state.params.no}
-                                                    Rt.{navigation.state.params.rt} Rw.{navigation.state.params.rw}
-                                                </Text>
-                                                <Text style={styles.font13}>Kecamatan {navigation.state.params.district}</Text>
-                                                <Text style={styles.font13}>Kelurahan {navigation.state.params.village}</Text>
-                                                <Text style={styles.font13}>{navigation.state.params.city}</Text>
-                                            </View>
-                                            :
-                                            <Text style={userInfo.alertUncompleteAddress}>Alamat belum lengkap</Text>
-                                        }
-                                    </View>
-                                }
-                            </View>
-                        </View>
+
+                        <ADDRESS_INFO
+                            navigation={navigation}
+                            userData={userData}                             
+                            />
+
                         <View style={{alignItems: 'center'}}>
                             <View style={itemDetails.container}>
                                 <View>
@@ -420,17 +368,6 @@ const styles = StyleSheet.create({
     font13: {fontSize: 13},
     separator: {backgroundColor: '#d7d7d7', height: 1, width: '95%'},
     modalBase: { backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}
-});
-
-const userInfo = StyleSheet.create({
-    container: {alignItems: 'center', marginTop: 15},
-    propertyText: {fontSize: 13, fontWeight: 'bold'},
-    valueText: {marginBottom: 5, fontSize: 13},
-    alertUncompleteAddress: {fontStyle: 'italic', color: '#bababa'},
-    papperWhite: {backgroundColor: 'white', padding: 10, width: '95%', elevation: 3, borderRadius: 3},
-    titleText: {fontSize: 16, fontWeight: 'bold', color: '#7c0c10', marginBottom: 10},
-    changeText: {color: '#7c0c10', fontSize: 15},
-    changeTextPseudoButton: {position: 'absolute', right: 10, top: 0}
 });
 
 const itemDetails = StyleSheet.create({

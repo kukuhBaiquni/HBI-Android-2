@@ -27,13 +27,13 @@ export const ADDRESS_INFO = (props) => {
                             this.state.isAddressValid
                             ?
                             <View>
-                                <Text style={{...TYPOGRAPHY.f13}>
+                                <Text style={{...TYPOGRAPHY.f13}}>
                                     Jl.{userData.data.address.street} No.{userData.data.address.no}
                                     Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}
                                 </Text>
-                                <Text style={{...TYPOGRAPHY.f13}>Kecamatan {userData.data.address.district}</Text>
-                                <Text style={{...TYPOGRAPHY.f13}>Kelurahan {userData.data.address.village}</Text>
-                                <Text style={{...TYPOGRAPHY.f13}>{userData.data.address.city}</Text>
+                                <Text style={{...TYPOGRAPHY.f13}}>Kecamatan {userData.data.address.district}</Text>
+                                <Text style={{...TYPOGRAPHY.f13}}>Kelurahan {userData.data.address.village}</Text>
+                                <Text style={{...TYPOGRAPHY.f13}}>{userData.data.address.city}</Text>
                             </View>
                             :
                             <Text style={userInfo.alertUncompleteAddress}>Alamat belum lengkap</Text>
@@ -50,13 +50,13 @@ export const ADDRESS_INFO = (props) => {
                             this.state.isAddressValid
                             ?
                             <View>
-                                <Text style={{...TYPOGRAPHY.f13}>
+                                <Text style={{...TYPOGRAPHY.f13}}>
                                     Jl.{navigation.state.params.street} No.{navigation.state.params.no}
                                     Rt.{navigation.state.params.rt} Rw.{navigation.state.params.rw}
                                 </Text>
-                                <Text style={{...TYPOGRAPHY.f13}>Kecamatan {navigation.state.params.district}</Text>
-                                <Text style={{...TYPOGRAPHY.f13}>Kelurahan {navigation.state.params.village}</Text>
-                                <Text style={{...TYPOGRAPHY.f13}>{navigation.state.params.city}</Text>
+                                <Text style={{...TYPOGRAPHY.f13}}>Kecamatan {navigation.state.params.district}</Text>
+                                <Text style={{...TYPOGRAPHY.f13}}>Kelurahan {navigation.state.params.village}</Text>
+                                <Text style={{...TYPOGRAPHY.f13}}>{navigation.state.params.city}</Text>
                             </View>
                             :
                             <Text style={userInfo.alertUncompleteAddress}>Alamat belum lengkap</Text>

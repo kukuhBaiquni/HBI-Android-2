@@ -13,13 +13,13 @@ let initialState = {
     }
 };
 
-export default function transactionAddress(state = initialState, action) {
-  switch (action.type) {
+export default function addressHandler(state = initialState, action) {
+    switch (action.type) {
 
-    case 'SAVE_TRANSACTION_ADDRESS_SUCCESS':
-    return action.data;
+        case 'SET_ADDRESS_TO_REDUCER':
+        return action.data;
 
-    default:
-    return state;
-  }
-}
+        default:
+        return state;
+    }
+};
