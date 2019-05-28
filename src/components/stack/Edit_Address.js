@@ -23,7 +23,7 @@ class EditAddress extends Component {
                 backgroundColor: 'white',
                 borderBottomColor: 'black'
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={CHECKLIST_DARKRED} /> )
+            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
         }
     };
 

@@ -20,7 +20,7 @@ import { SERVER_URL, IDR_FORMAT, UNIT_CONVERTER } from '../basic/supportFunction
 import { BACKDARKRED } from '../../images';
 import { MODAL } from '../basic/loading';
 import { COLORS } from '../basic/colors';
-import { MODAL_QUANTITY_EDITOR } from '../basic/modalQuantityEditor';
+import ModalQuantityEditor from '../basic/modalQuantityEditor';
 
 class ProductDetails extends Component {
     static navigationOptions = ({navigation}) => {
@@ -198,12 +198,13 @@ class ProductDetails extends Component {
     _renderModal = () => {
         const { navigation } = this.props;
         return(
-            <MODAL_QUANTITY_EDITOR
+            <ModalQuantityEditor
                 closeModal={this._closeModal}
                 showModalContent={this._showModalContent}
                 hideModalContent={this._hideModalContent}
                 addToCart={this._addToCart}
                 onChangeValue={this._changeCount}
+                onChangeValueDecrement={this._changeCount}
 
                 isContentVisible={this.state.showModalContent}
                 isVisible={this.state.showModal}

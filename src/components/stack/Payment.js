@@ -15,6 +15,7 @@ import { resetTransactionState } from '../../actions/Direct_Purchase';
 import moment from 'moment';
 import { FREE_ONGKIR, BACKDARKRED } from '../../images';
 import { SUCCESS_DIALOG } from '../basic/successDialog';
+import { MODAL } from '../basic/loading';
 
 class Payment extends Component {
     static navigationOptions = ({navigation}) => {
@@ -43,6 +44,19 @@ class Payment extends Component {
     };
 
     beforeRender = async () => {
+        // try {
+        //     const token = await AsyncStorage.getItem('access_token');
+        //     if (token !== null) {
+        //         const raw = JSON.parse(token)
+        //         this.setState({token: raw})
+        //         dispatch(fetchUser(raw))
+        //     }
+        // }catch (error) {
+        //
+        // }
+    };
+
+    _afterRender = () => {
         const { dispatch, cart, navigation } = this.props;
         dispatch(resetTransactionState())
         let acu = 0;
@@ -53,20 +67,7 @@ class Payment extends Component {
         dispatch(forceResetRoot())
         if (navigation.state.params !== undefined) {
             const village = navigation.state.params.village;
-        }
-        try {
-            const token = await AsyncStorage.getItem('access_token');
-            if (token !== null) {
-                const raw = JSON.parse(token)
-                this.setState({token: raw})
-                dispatch(fetchUser(raw))
-            }
-        }catch (error) {
-
-        }
-    };
-
-    _afterRender = () => {
+        };
         setTimeout(() => {
             this.setState({showContent: true});
         }, 10);
@@ -115,7 +116,7 @@ class Payment extends Component {
                     rw: userData.data.address.rw,
                     targetMember: targetMember.id,
                     ongkir: Number(targetMember.ongkir)
-                }
+                };
             }else{
                 data = {
                     name: navigation.state.params.name,
@@ -130,7 +131,7 @@ class Payment extends Component {
                     rw: navigation.state.params.address.rw,
                     targetMember: targetMember.id,
                     ongkir: Number(targetMember.ongkir)
-                }
+                };
             }
             this.setState({loading: true});
             dispatch(confirmTransaction(data));
@@ -189,6 +190,8 @@ class Payment extends Component {
                     isVisible={this.state.loading}
                     style={{alignItems: 'center'}}
                     hideModalContentWhileAnimating={true}
+                    animationIn='fadeIn'
+                    animationOut='fadeOut'
                     useNativeDriver
                     >
                     {
@@ -344,22 +347,7 @@ class Payment extends Component {
                         </View>
                     </ScrollView>
                 }
-                <Modal
-                    isVisible={!this.state.showContent}
-                    style={{alignItems: 'center'}}
-                    hideModalContentWhileAnimating={true}
-                    useNativeDriver
-                    backdropColor='white'
-                    backdropOpacity={0.5}
-                    animationIn='fadeIn'
-                    animationOut='fadeOut'
-                    >
-                    <View style={styles.modalBase}>
-                        <WaveIndicator
-                            color='#4f4f4f'
-                            />
-                    </View>
-                </Modal>
+                <MODAL message='Mohon Tunggu' isVisible={!this.state.showContent} />
             </View>
         )
     }

@@ -5,78 +5,104 @@ import { Icon } from 'react-native-elements';
 import { BarIndicator } from 'react-native-indicators';
 import { IDR_FORMAT, SERVER_URL } from './supportFunction';
 
-export const MODAL_QUANTITY_EDITOR = (props) => {
-    console.log(props);
-    return(
-        <Modal
-            isVisible={props.isVisible}
-            style={{alignItems: 'center'}}
-            onBackdropPress={props.closeModal}
-            onBackButtonPress={props.closeModal}
-            onModalShow={props.showModalContent}
-            onModalHide={props.hideModalContent}
-            hideModalContentWhileAnimating={true}
-            useNativeDriver
-            >
-            <View style={styles.modalContainer}>
-                <View style={styles.modalHeader}>
-                    <Text style={styles.modalHeaderTitle}>Pilihan Anda</Text>
-                    <TouchableOpacity style={styles.closeButtonHeader}>
-                        <Icon name='clear' color='#919191' size={22} onPress={props.closeModal}/>
-                    </TouchableOpacity>
-                </View>
-                {
-                    props.isContentVisible &&
-                    <View>
-                        <View style={{flexDirection: 'row'}}>
-                            <View style={styles.imageModalContainer}>
-                                <Image
-                                    resizeMode='contain'
-                                    style={styles.imageStyle}
-                                    source={{uri: `${SERVER_URL}images/products/${props.data.photo}`}}
-                                    />
-                            </View>
-                            <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
-                                <Text style={styles.productnameText}>{props.data.productname}</Text>
-                                {
-                                    props.loadingPrice
-                                    ?
-                                    <View style={styles.loadingContainer}>
-                                        <BarIndicator count={5} size={15} color='#919191' />
-                                    </View>
-                                    :
-                                    <Text style={styles.priceTextModal}>{IDR_FORMAT(props.itemCount === 1 ? (props.userStatus === 'Non Member' ? props.data.enduserprice : props.data.resellerprice) : props.resultCounting)}</Text>
-                                }
-                                {/*Increment Button*/}
-                                <View style={styles.interactionButtonContainer}>
-                                    <TouchableOpacity onPress={props.onChangeValue('dec')}>
-                                        <View style={styles.pmButton}>
-                                            <Text style={styles.pmButtonText}>-</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                    <View style={styles.counterText}>
-                                        <Text>{props.itemCount}</Text>
-                                    </View>
-                                    <TouchableOpacity onPress={props.onChangeValue('inc')}>
-                                        <View style={styles.pmButton}>
-                                            <Text style={styles.pmButtonText}>+</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </View>
-                        </View>
-                        <View style={styles.buttonAddToCartModal}>
-                            <TouchableOpacity onPress={props.addToCart(props.data)}>
-                                <View style={styles.buttonAddTocartExe}>
-                                    <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
-                                </View>
-                            </TouchableOpacity>
-                        </View>
+export default class ModalQuantityEditor extends Component {
+
+    _closeModal = () => {
+        this.props.closeModal();
+    };
+
+    _showModalContent = () => {
+        this.props.showModalContent();
+    };
+
+    _hideModalContent = () => {
+        this.props.hideModalContent();
+    };
+
+    _onChangeValue(x) {
+        if (x) {
+            this.props.onChangeValue('inc');
+        }else{
+            this.props.onChangeValue('dec')
+        }
+    };
+
+    _addToCart = () => {
+        this.props.addToCart(this.props.data);
+    };
+
+    render() {
+        return(
+            <Modal
+                isVisible={this.props.isVisible}
+                style={{alignItems: 'center'}}
+                onBackdropPress={this._closeModal}
+                onBackButtonPress={this._closeModal}
+                onModalShow={this._showModalContent}
+                onModalHide={this._hideModalContent}
+                hideModalContentWhileAnimating={true}
+                useNativeDriver
+                >
+                <View style={styles.modalContainer}>
+                    <View style={styles.modalHeader}>
+                        <Text style={styles.modalHeaderTitle}>Pilihan Anda</Text>
+                        <TouchableOpacity style={styles.closeButtonHeader}>
+                            <Icon name='clear' color='#919191' size={22} onPress={this._closeModal}/>
+                        </TouchableOpacity>
                     </View>
-                }
-            </View>
-        </Modal>
-    )
+                    {
+                        this.props.isContentVisible &&
+                        <View>
+                            <View style={{flexDirection: 'row'}}>
+                                <View style={styles.imageModalContainer}>
+                                    <Image
+                                        resizeMode='contain'
+                                        style={styles.imageStyle}
+                                        source={{uri: `${SERVER_URL}images/products/${this.props.data.photo}`}}
+                                        />
+                                </View>
+                                <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
+                                    <Text style={styles.productnameText}>{this.props.data.productname}</Text>
+                                    {
+                                        this.props.loadingPrice
+                                        ?
+                                        <View style={styles.loadingContainer}>
+                                            <BarIndicator count={5} size={15} color='#919191' />
+                                        </View>
+                                        :
+                                        <Text style={styles.priceTextModal}>{IDR_FORMAT(this.props.itemCount === 1 ? (this.props.userStatus === 'Non Member' ? this.props.data.enduserprice : this.props.data.resellerprice) : this.props.resultCounting)}</Text>
+                                    }
+                                    {/*Increment Button*/}
+                                    <View style={styles.interactionButtonContainer}>
+                                        <TouchableOpacity onPress={() => this._onChangeValue('dec')}>
+                                            <View style={styles.pmButton}>
+                                                <Text style={styles.pmButtonText}>-</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                        <View style={styles.counterText}>
+                                            <Text>{this.props.itemCount}</Text>
+                                        </View>
+                                        <TouchableOpacity onPress={() => this._onChangeValue('inc')}>
+                                            <View style={styles.pmButton}>
+                                                <Text style={styles.pmButtonText}>+</Text>
+                                            </View>
+                                        </TouchableOpacity>
+                                    </View>
+                                </View>
+                            </View>
+                            <View style={styles.buttonAddToCartModal}>
+                                <TouchableOpacity onPress={this._addToCart}>
+                                    <View style={styles.buttonAddTocartExe}>
+                                        <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    }
+                </View>
+            </Modal>
+        )
+    }
 };
 
 const styles = StyleSheet.create({

@@ -20,6 +20,7 @@ import badge from './Badge';
 import listMarket from './List_Market';
 import targetMember from './Target_Member';
 import forgetPassword from './Forget_Password_Status';
+import transactionAddress from './Address_Handler';
 
 const rootReducer = combineReducers({
     listProducts,
@@ -42,7 +43,8 @@ const rootReducer = combineReducers({
     badge,
     listMarket,
     targetMember,
-    forgetPassword
+    forgetPassword,
+    transactionAddress,
 });
 
 export default rootReducer
