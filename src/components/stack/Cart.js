@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { View, Text, Button, Alert, StyleSheet, AsyncStorage, ScrollView, TouchableOpacity, Image, Picker, TouchableNativeFeedback } from 'react-native';
 import { Icon, CheckBox } from 'react-native-elements';
-import { SERVER_URL } from '../basic/supportFunction';
-import { IDR_FORMAT } from '../basic/supportFunction';
 import Modal from "react-native-modal";
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import { countItem } from '../../actions/Counting_Items';
@@ -17,6 +15,11 @@ import { cartCheckAll, forceResetCA } from '../../actions/Cart_Check_All';
 import { removeItem, forceResetRI } from '../../actions/Remove_Item';
 import { withNavigationFocus } from 'react-navigation';
 import { EMPTY_CART, BACKDARKRED } from '../../images';
+import { SERVER_URL, IDR_FORMAT } from '../basic/supportFunction';
+import ModalQuantityEditor from '../basic/modalQuantityEditor';
+import { MODAL } from '../basic/loading';
+import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 class Cart extends Component {
     static navigationOptions = ({navigation}) => {
@@ -29,7 +32,7 @@ class Cart extends Component {
             },
             headerTitleStyle: {
                 color: '#7c0c10',
-                fontSize: 16,
+                fontSize: 17,
                 fontWeight: 'normal'
             },
             headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
@@ -148,6 +151,43 @@ class Cart extends Component {
             ],
             { cancelable: false }
         );
+    };
+
+    _showModalContent = () => {
+        this.setState({showModalContent: true});
+    };
+
+    _hideModalContent = () => {
+        this.setState({showModalContent: false});
+    };
+
+    _closeModal = () => {
+        this.setState({
+            showModal: false
+        });
+    };
+
+    _renderModal = () => {
+        const { navigation } = this.props;
+        return(
+            <ModalQuantityEditor
+                closeModal={this._closeModal}
+                showModalContent={this._showModalContent}
+                hideModalContent={this._hideModalContent}
+                addToCart={this._addToCart}
+                onChangeValue={this._changeCount}
+                onChangeValueDecrement={this._changeCount}
+
+                isContentVisible={this.state.showModalContent}
+                isVisible={this.state.showModal}
+                loadingPrice={this.state.loading}
+                itemCount={this.state.itemCount}
+
+                data={navigation.state.params}
+                userStatus={this.props.userData.status}
+                resultCounting={this.props.resultCounting}
+                />
+        )
     };
 
     componentDidUpdate(prevProps, prevState) {
