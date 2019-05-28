@@ -4,7 +4,7 @@ import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
 
 export const ADDRESS_INFO = (props) => {
-    const { data, navigation } = props;
+    const { userData, navigation } = props;
     return(
         <View style={userInfo.container}>
             <View style={userInfo.papperWhite}>
@@ -24,7 +24,7 @@ export const ADDRESS_INFO = (props) => {
                         <Text style={userInfo.valueText}>0{userData.data.phone}</Text>
                         <Text style={userInfo.propertyText}>Alamat Pengiriman</Text>
                         {
-                            this.state.isAddressValid
+                            userData.data.address.street !== '' || navigation.state.params !== undefined
                             ?
                             <View>
                                 <Text style={{...TYPOGRAPHY.f13}}>
@@ -47,7 +47,7 @@ export const ADDRESS_INFO = (props) => {
                         <Text style={userInfo.valueText}>{navigation.state.params.phone}</Text>
                         <Text style={userInfo.propertyText}>Alamat Pengiriman</Text>
                         {
-                            this.state.isAddressValid
+                            userData.data.address.street !== '' || navigation.state.params !== undefined
                             ?
                             <View>
                                 <Text style={{...TYPOGRAPHY.f13}}>

@@ -44,19 +44,6 @@ class Payment extends Component {
         }
     };
 
-    // beforeRender = async () => {
-    //     try {
-    //         const token = await AsyncStorage.getItem('access_token');
-    //         if (token !== null) {
-    //             const raw = JSON.parse(token)
-    //             this.setState({token: raw})
-    //             dispatch(fetchUser(raw))
-    //         }
-    //     }catch (error) {
-    //
-    //     }
-    // };
-
     _afterRender = () => {
         const { dispatch, cart, navigation } = this.props;
         dispatch(resetTransactionState())
@@ -184,7 +171,6 @@ class Payment extends Component {
         return(
             <View style={{flex: 1}}>
                 <NavigationEvents
-                    onWillFocus={() => this.beforeRender()}
                     onDidFocus={() => this._afterRender()}
                     />
                 <Modal
@@ -215,7 +201,7 @@ class Payment extends Component {
 
                         <ADDRESS_INFO
                             navigation={navigation}
-                            userData={userData}                             
+                            userData={userData}
                             />
 
                         <View style={{alignItems: 'center'}}>
