@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { COLORS } from '../basic/colors';
-import { TYPOGRAPHY } from '../basic/typography';
+import { COLORS } from '../colors';
+import { TYPOGRAPHY } from '../typography';
 
 export const ADDRESS_INFO = (props) => {
     const { userData, navigation } = props;

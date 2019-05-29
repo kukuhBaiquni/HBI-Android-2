@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { View, Text, ScrollView, StyleSheet, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
-import { COLORS } from './colors';
-import { TYPOGRAPHY } from './typography';
-import { IDR_FORMAT } from './supportFunction';
+import { COLORS } from '../colors';
+import { TYPOGRAPHY } from '../typography';
+import { IDR_FORMAT } from '../supportFunction';
 import moment from 'moment';
-import { FONT_TYPE } from './Fonts';
+import { FONT_TYPE } from '../Fonts';
 
 export const SUCCESS_DIALOG = (props) => {
     const { data, toDetail } = props;

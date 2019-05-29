@@ -16,26 +16,24 @@ import { removeItem, forceResetRI } from '../../actions/Remove_Item';
 import { withNavigationFocus } from 'react-navigation';
 import { EMPTY_CART, BACKDARKRED } from '../../images';
 import { SERVER_URL, IDR_FORMAT } from '../basic/supportFunction';
-import ModalQuantityEditor from '../basic/modalQuantityEditor';
-import { MODAL } from '../basic/loading';
+import ModalQuantityEditor from '../basic/template/modalQuantityEditor';
+import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
+import { PRODUCT_ORDER_DETAILS } from '../basic/template/productOrderDetails';
 
 class Cart extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Keranjang Belanja',
-            headerTintColor: '#7c0c10',
+            headerTintColor: COLORS.PURE_WHITE,
             headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
             },
             headerTitleStyle: {
-                color: '#7c0c10',
-                fontSize: 17,
-                fontWeight: 'normal'
+                ...TYPOGRAPHY.header
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
         };
     }
 
@@ -57,6 +55,8 @@ class Cart extends Component {
             productPhoto: '',
             number: 0
         }
+        this.showSpecificModal = this.showSpecificModal.bind(this);
+        this.removeSingleItem = this.removeSingleItem.bind(this);
     };
 
     checkToken = async () => {
@@ -275,7 +275,7 @@ class Cart extends Component {
 
     render() {
         const { navigation, cart, isFocused } = this.props;
-        let total = 0
+        let total = 0;
         cart.forEach(x => total += x.subtotal)
         if (isFocused) {
             return(
@@ -357,44 +357,19 @@ class Cart extends Component {
                         cart.length !== 0
                         ?
                         <View style={{flex: 1}}>
-                            <ScrollView style={{backgroundColor: '#d9d9d9'}}>
+                            <ScrollView style={{backgroundColor: COLORS.BASE_BACKGROUND}}>
                                 {
                                     cart.map((x, i) =>
-                                        <View key={i} style={{alignItems: 'center'}}>
-                                            <View style={{backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 3}}>
-                                                <View style={{marginBottom: 15}}>
-                                                    <Text style={styles.productName}>{x.product_name}</Text>
-                                                    <TouchableOpacity style={{position: 'absolute', right: 5, top: 5}} onPress={(x) => this.removeSingleItem(i)}>
-                                                        <Icon name='delete' color='#9b9b9b' />
-                                                    </TouchableOpacity>
-                                                    <View style={styles.productDetails}>
-                                                        <Image
-                                                            resizeMode='contain'
-                                                            style={{width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1}}
-                                                            source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
-                                                            />
-                                                        <View style={{marginBottom: 5, width: '25%'}}>
-                                                            <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Harga</Text>
-                                                            <Text style={{marginLeft: 10, color: '#a3a3a3'}}>Kuantitas</Text>
-                                                            <Text style={{marginLeft: 10, color: '#a3a3a3', position: 'absolute', bottom: 3}}>Subtotal</Text>
-                                                        </View>
-                                                        <View style={{marginBottom: 5, width: '45%'}}>
-                                                            <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{IDR_FORMAT(Number(x.price))}</Text>
-                                                            <Text style={{textAlign: 'right', color: '#9b9b9b'}}>{x.qty}</Text>
-                                                            <Text onPress={(x) => this.showSpecificModal(i)} style={{textAlign: 'right', fontWeight: 'bold', marginTop: 13, color: '#7c0c10'}}>Ubah Rincian</Text>
-                                                            <Text style={{textAlign: 'right', right: 0, position: 'absolute', bottom: 3, fontWeight: 'bold'}}>
-                                                                {IDR_FORMAT(Number(x.price) * Number(x.qty))}
-                                                            </Text>
-                                                        </View>
-                                                    </View>
-                                                    <View style={{alignItems: 'center'}}>
-                                                        <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
-                                                    </View>
-                                                </View>
-                                            </View>
-                                        </View>
+                                        <PRODUCT_ORDER_DETAILS
+                                            key={i}
+                                            data={x}
+                                            openModal={this.showSpecificModal}
+                                            index={i}
+                                            removeItem={this.removeSingleItem}
+                                            />
                                     )
                                 }
+
                                 <View style={{height: 70}} />
                             </ScrollView>
                         <View style={[styles.productHeader, {height: 60, paddingLeft: 20, position: 'absolute', bottom: 0}]}>
@@ -443,22 +418,6 @@ export default connect(
 )(withNavigationFocus(Cart));
 
 const styles = StyleSheet.create({
-    header: {
-        height: 50,
-        backgroundColor: '#7c0c10',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    headerTitle: {
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 19,
-        marginLeft: 0
-    },
-    productWrapper: {
-        alignItems: 'center'
-    },
     productHeader: {
         borderColor: '#eaeaea',
         height: 50,

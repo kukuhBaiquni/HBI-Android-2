@@ -46,6 +46,8 @@ import { SERVER_URL } from '../components/basic/supportFunction';
 import BadgeNotification from './Badge_Notification';
 import { connect } from 'react-redux';
 import { BACKDARKRED, BACKWHITE, CHECKLIST_DARKRED, CANCEL_DARKRED, BERANDA, BERITA_C, BERITA, BELANJA, BELANJA_C, NOTIFIKASI, NOTIFIKASI_C, AKUN, AKUN_C } from '../images';
+import { COLORS } from './basic/colors';
+import { TYPOGRAPHY } from './basic/typography';
 
 const config = {
     lazy: true,
@@ -57,7 +59,7 @@ const config = {
         upperCaseLabel: false,
         showIcon: true,
         showLabel: true,
-        activeTintColor: '#7c0c10',
+        activeTintColor: COLORS.PRIMARY,
         inactiveTintColor: '#8c8c8c',
         labelStyle: {
             fontSize: 9,
@@ -87,6 +89,15 @@ const Tabs = createMaterialTopTabNavigator({
         screen: Timeline,
         navigationOptions: {
             tabBarLabel: 'Berita',
+            title: 'Belanja',
+            headerTintColor: COLORS.PURE_WHITE,
+            headerStyle: {
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
+            },
+            headerTitleStyle: {
+                ...TYPOGRAPHY.header
+            },
             tabBarIcon: ({focused}) => (
                 focused
                 ?
@@ -100,12 +111,15 @@ const Tabs = createMaterialTopTabNavigator({
         screen: ListMarket,
         navigationOptions: {
             title: 'Belanja',
-            headerTintColor: '#7c0c10',
+            headerTintColor: COLORS.PURE_WHITE,
             headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> ),
+            headerTitleStyle: {
+                ...TYPOGRAPHY.header
+            },
+            // headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> ),
             tabBarIcon: ({focused}) => (
                 focused
                 ?
@@ -228,7 +242,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     }
 });
-// 
+//
 // import { modifyNotification } from '../actions/Notification_Controller';
 // import { updateListNotifications } from '../actions/Update_List_Notifications';
 

@@ -6,13 +6,21 @@
 
 export const COLORS = {
 
+    BASE_BACKGROUND     : '#d2c9bf',
     BLACK_NORMAL        : '#333333',
 
     GRAY_FADE           : '#bababa',
+    GRAY_ICON           : '#9b9b9b',
+    GRAY_BORDER         : '#d7d7d7',
 
     GREEN_SEMI_WHITE    : '#f7fff4',
     GREEN_FADE          : '#cce8c2',
     GREEN_DARK          : '#228200',
 
-    PRIMARY             : '#7c0c10',
+    PRIMARY             : '#6a2c2f',
+
+    PURE_BLACK          : '#000000',
+    PURE_WHITE          : '#ffffff',
+
+
 };

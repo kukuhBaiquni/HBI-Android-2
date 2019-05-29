@@ -14,9 +14,9 @@ import { loadTransactionTypePending } from '../../actions/Load_Transaction_Type_
 import { resetTransactionState } from '../../actions/Direct_Purchase';
 import moment from 'moment';
 import { FREE_ONGKIR, BACKDARKRED } from '../../images';
-import { SUCCESS_DIALOG } from '../basic/successDialog';
-import { MODAL } from '../basic/loading';
-import { ADDRESS_INFO } from '../basic/editAddressPayment';
+import { SUCCESS_DIALOG } from '../basic/template/successDialog';
+import { MODAL } from '../basic/template/loading';
+import { ADDRESS_INFO } from '../basic/template/addressInfo';
 
 class Payment extends Component {
     static navigationOptions = ({navigation}) => {

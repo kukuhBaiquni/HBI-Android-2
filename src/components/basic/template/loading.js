@@ -2,8 +2,8 @@ import { DotIndicator } from 'react-native-indicators';
 import Modal from 'react-native-modal';
 import React, { Component } from 'react';
 import { StyleSheet, View, Text} from 'react-native';
-import { COLORS } from './colors';
-import { TYPOGRAPHY } from './typography';
+import { COLORS } from '../colors';
+import { TYPOGRAPHY } from '../typography';
 
 export const MODAL = (props) => {
     return(

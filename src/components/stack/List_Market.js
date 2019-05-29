@@ -15,7 +15,8 @@ import { withNavigationFocus } from 'react-navigation';
 import Modal from 'react-native-modal';
 import {WaveIndicator} from 'react-native-indicators';
 import { DRAWER_DEFAULT, CONTOH_2, BELANJA, BELANJA_C, BACKDARKRED } from '../../images';
-import { MODAL } from '../basic/loading';
+import { MODAL } from '../basic/template/loading';
+import { COLORS } from '../basic/colors';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -207,7 +208,7 @@ class ListMarket extends Component {
                     apikey={apikey}
                     mode='walking'
                     strokeWidth={2}
-                    strokeColor='#7c0c10'
+                    strokeColor={COLORS.PRIMARY}
                     onReady={(x) => this.setState({distance: x.distance})}
                     onError={(error) => console.log(error)}
                     />
@@ -220,7 +221,7 @@ class ListMarket extends Component {
                     apikey={apikey}
                     mode='walking'
                     strokeWidth={2}
-                    strokeColor='#7c0c10'
+                    strokeColor={COLORS.PRIMARY}
                     onReady={(x) => this.setState({distance: x.distance})}
                     onError={(error) => console.log(error)}
                     />
@@ -231,12 +232,12 @@ class ListMarket extends Component {
     _replacer = () => {
         return(
             <View style={styles.swiperWrapper}>
-                <Icon name='chevron-thin-left' color='#7c0c10' size={29} />
+                <Icon name='chevron-thin-left' color={COLORS.PRIMARY} size={29} />
                 <View>
                     <Text style={styles.swipeText}>Geser Disini</Text>
                     <Text style={{fontSize: 13}}>Untuk mencari toko pilihan Anda.</Text>
                 </View>
-                <Icon name='chevron-thin-right' color='#7c0c10' size={29} />
+                <Icon name='chevron-thin-right' color={COLORS.PRIMARY} size={29} />
             </View>
         )
     }
@@ -323,7 +324,7 @@ class ListMarket extends Component {
             return(
                 <View style={{flex: 1}}>
                     <StatusBar
-                        backgroundColor='#7c0c10'
+                        backgroundColor={COLORS.PRIMARY}
                         barStyle='light-content'
                         />
                     <NavigationEvents
@@ -357,7 +358,7 @@ class ListMarket extends Component {
                                 index={0}
                                 showsPagination={false}
                                 ref={swiper => this.swiper = swiper}
-                                activeDotColor='#7c0c10'
+                                activeDotColor={COLORS.PRIMARY}
                                 onIndexChanged={this._drawRoute}
                                 style={styles.swiperStyle}
                                 >
@@ -447,7 +448,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: 'bold'
     },
-    productName: {color: '#7c0c10', fontSize: 12, fontWeight: 'bold'},
+    productName: {color: COLORS.PRIMARY, fontSize: 12, fontWeight: 'bold'},
     floatingButton: {
         position: 'absolute',
         zIndex: 3,
@@ -460,7 +461,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#eaeaea',
         borderRadius: 5,
         borderWidth: 1,
-        borderColor: '#7c0c10',
+        borderColor: COLORS.PRIMARY,
         elevation: 5
     },
     swiperEld: {
@@ -535,7 +536,7 @@ const styles = StyleSheet.create({
     swipeText: {
         fontSize: 18,
         fontWeight: 'bold',
-        color: '#7c0c10',
+        color: COLORS.PRIMARY,
         letterSpacing: 0.25,
         textAlign: 'center'
     },
@@ -543,7 +544,7 @@ const styles = StyleSheet.create({
         height: 35,
         width: 35,
         borderRadius: 20,
-        backgroundColor: '#7c0c10',
+        backgroundColor: COLORS.PRIMARY,
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',
@@ -568,7 +569,7 @@ const styles = StyleSheet.create({
         height: 35,
         width: 35,
         borderRadius: 20,
-        backgroundColor: '#7c0c10',
+        backgroundColor: COLORS.PRIMARY,
         justifyContent: 'center',
         alignItems: 'center',
         position: 'absolute',

@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { BarIndicator } from 'react-native-indicators';
-import { IDR_FORMAT, SERVER_URL } from './supportFunction';
+import { IDR_FORMAT, SERVER_URL } from '../supportFunction';
 
 export default class ModalQuantityEditor extends Component {
 

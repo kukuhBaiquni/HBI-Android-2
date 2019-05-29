@@ -5,6 +5,8 @@ import { LOCALE_DAY,TRACKING_COLOR_STATUS, TRACKING_MESSAGE_STATUS } from '../ba
 import moment from 'moment';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { BACKDARKRED } from '../../images';
+import { FONT_TYPE } from '../basic/Fonts';
+import { COLORS } from '../basic/colors';
 
 const { width: SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -12,12 +14,17 @@ class ListNotifications extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Telusuri Notifikasi',
-            headerTintColor: '#7c0c10',
+            headerTintColor: 'white',
             headerStyle: {
-                backgroundColor: 'white',
+                backgroundColor: COLORS.PRIMARY,
                 borderBottomColor: 'black'
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
+            headerTitleStyle: {
+                color: 'white',
+                ...FONT_TYPE.regular,
+                fontWeight: 'normal',
+                fontSize: 18
+            }
         };
     };
 

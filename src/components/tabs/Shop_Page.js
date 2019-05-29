@@ -9,7 +9,8 @@ import CartIcon from '../Cart_Icon';
 import { setTargetMember } from '../../actions/Set_Target_Member';
 import Modal from "react-native-modal";
 import { WaveIndicator } from 'react-native-indicators';
-import { MODAL } from '../basic/loading';
+import { MODAL } from '../basic/template/loading';
+import { COLORS } from '../basic/colors';
 
 class ShopPage extends Component {
     static navigationOptions = ({navigation}) => {
@@ -48,7 +49,7 @@ class ShopPage extends Component {
                     onDidFocus={this._afterRender}
                     />
                 <Header style={styles.headerColor}>
-                    <Item style={{borderBottomColor: '#7c0c10'}}>
+                    <Item style={{borderBottomColor: COLORS.PRIMARY}}>
                         <TouchableNativeFeedback onPress={() => navigation.navigate('SearchAutocomplete')}>
                             <View style={styles.input}>
                                 <Text style={{color: '#a2a2a2', paddingTop: 7, paddingLeft: 5, fontSize: 16}}>Cari Produk</Text>
@@ -66,24 +67,24 @@ class ShopPage extends Component {
                 </Header>
                 {
                     this.state.isProductsVisible &&
-                    <Tabs tabBarUnderlineStyle={{backgroundColor: '#7c0c10'}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
+                    <Tabs tabBarUnderlineStyle={{backgroundColor: COLORS.PRIMARY}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'sapi') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ayam') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ikan') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'olahan') } />
                         </Tab>
                     </Tabs>
                 }
                 <MODAL isVisible={this.state.loading} message='Memuat Produk' />
                 <StatusBar
-                    backgroundColor='#7c0c10'
+                    backgroundColor={COLORS.PRIMARY}
                     barStyle='light-content'
                     />
             </Container>
@@ -107,7 +108,7 @@ const styles = StyleSheet.create({
         borderRadius: 3,
     },
     headerColor: {
-        backgroundColor: '#7c0c10'
+        backgroundColor: COLORS.PRIMARY
     },
     badge: {
         height: 18,

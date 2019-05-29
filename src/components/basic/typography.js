@@ -1,4 +1,5 @@
-
+import { FONT_TYPE } from './Fonts';
+import { COLORS } from './colors';
 
 
 export const TYPOGRAPHY = {
@@ -45,4 +46,15 @@ export const TYPOGRAPHY = {
     f28b: {fontSize: 28, fontWeight: 'bold'},
     f29b: {fontSize: 29, fontWeight: 'bold'},
     f30b: {fontSize: 30, fontWeight: 'bold'},
+
+    header              : {fontSize: 18, ...FONT_TYPE.regular, color: COLORS.PURE_WHITE, fontWeight: 'normal'},
+    subHeader           : {fontSize: 16, ...FONT_TYPE.bold, color: COLORS.BLACK_NORMAL},
+    h1                  : {fontSize: 14, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
+    h2                  : {fontSize: 12, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
+    h3                  : {fontSize: 10, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
+    p                   : {fontSize: 8, ...FONT_TYPE.light, color: COLORS.GRAY_FADE},
+
+    inlineProp          : {fontSize: 14, ...FONT_TYPE.light, color: COLORS.GRAY_FADE},
+    subtotalValue       : {fontSize: 14, ...FONT_TYPE.bold, color: COLORS.GRAY_FADE},
+    specialActionText   : {fontSize: 15, ...FONT_TYPE.bold, color: COLORS.PRIMARY}
 };
