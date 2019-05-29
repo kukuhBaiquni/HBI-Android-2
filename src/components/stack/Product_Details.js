@@ -20,7 +20,7 @@ import { SERVER_URL, IDR_FORMAT, UNIT_CONVERTER } from '../basic/supportFunction
 import { BACKDARKRED } from '../../images';
 import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
-import ModalQuantityEditor from '../basic/template/modalQuantityEditor';
+import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
 
 class ProductDetails extends Component {
     static navigationOptions = ({navigation}) => {
@@ -43,7 +43,6 @@ class ProductDetails extends Component {
         }
 
         this._showModalContent = this._showModalContent.bind(this);
-        this._changeCount = this._changeCount.bind(this);
         this._addToCart = this._addToCart.bind(this);
     }
 
@@ -69,23 +68,28 @@ class ProductDetails extends Component {
         }, 10);
     };
 
-    _changeCount(x) {
-        let count = this.state.itemCount
-        if (x === 'inc') {
-            count ++
-            this.setState({itemCount: count, loading: true})
-        }else{
-            if (count > 1) {
-                count --
-                this.setState({itemCount: count, loading: true})
-            }
-        }
+    _incrementValue = () => {
+        let count = this.state.itemCount;
+        count ++;
+        this.setState({itemCount: count, loading: true});
         var data = {
             token: this.state.token,
             id: this.props.navigation.state.params.id,
             qty: count
-        }
-        this.props.dispatch(countItem(data))
+        };
+        this.props.dispatch(countItem(data));
+    };
+
+    _decrementValue = () => {
+        let count = this.state.itemCount;
+        count --;
+        this.setState({itemCount: count, loading: true});
+        var data = {
+            token: this.state.token,
+            id: this.props.navigation.state.params.id,
+            qty: count
+        };
+        this.props.dispatch(countItem(data));
     };
 
     _addToCart(v) {
@@ -198,13 +202,13 @@ class ProductDetails extends Component {
     _renderModal = () => {
         const { navigation } = this.props;
         return(
-            <ModalQuantityEditor
+            <MODAL_QUANTITY_EDITOR
                 closeModal={this._closeModal}
                 showModalContent={this._showModalContent}
                 hideModalContent={this._hideModalContent}
                 addToCart={this._addToCart}
-                onChangeValue={this._changeCount}
-                onChangeValueDecrement={this._changeCount}
+                onChangeValueIncrement={this._incrementValue}
+                onChangeValueDecrement={this._decrementValue}
 
                 isContentVisible={this.state.showModalContent}
                 isVisible={this.state.showModal}
@@ -214,6 +218,7 @@ class ProductDetails extends Component {
                 data={navigation.state.params}
                 userStatus={this.props.userData.status}
                 resultCounting={this.props.resultCounting}
+                buttonText='Tambah ke Keranjang'
                 />
         )
     };

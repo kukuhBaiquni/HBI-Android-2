@@ -4,124 +4,122 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'rea
 import { Icon } from 'react-native-elements';
 import { BarIndicator } from 'react-native-indicators';
 import { IDR_FORMAT, SERVER_URL } from '../supportFunction';
+import { COLORS } from '../colors';
+import { TYPOGRAPHY } from '../typography';
 
-export default class ModalQuantityEditor extends Component {
-
+export const MODAL_QUANTITY_EDITOR = (props) => {
     _closeModal = () => {
-        this.props.closeModal();
+        props.closeModal();
     };
 
     _showModalContent = () => {
-        this.props.showModalContent();
+        props.showModalContent();
     };
 
     _hideModalContent = () => {
-        this.props.hideModalContent();
+        props.hideModalContent();
     };
 
-    _onChangeValue(x) {
-        if (x) {
-            this.props.onChangeValue('inc');
-        }else{
-            this.props.onChangeValue('dec')
-        }
+    _onDecrement = () => {
+        props.onChangeValueDecrement();
+    };
+
+    _onIncrement = () => {
+        props.onChangeValueIncrement();
     };
 
     _addToCart = () => {
-        this.props.addToCart(this.props.data);
+        props.addToCart(props.data);
     };
 
-    render() {
-        return(
-            <Modal
-                isVisible={this.props.isVisible}
-                style={{alignItems: 'center'}}
-                onBackdropPress={this._closeModal}
-                onBackButtonPress={this._closeModal}
-                onModalShow={this._showModalContent}
-                onModalHide={this._hideModalContent}
-                hideModalContentWhileAnimating={true}
-                useNativeDriver
-                >
-                <View style={styles.modalContainer}>
-                    <View style={styles.modalHeader}>
-                        <Text style={styles.modalHeaderTitle}>Pilihan Anda</Text>
-                        <TouchableOpacity style={styles.closeButtonHeader}>
-                            <Icon name='clear' color='#919191' size={22} onPress={this._closeModal}/>
-                        </TouchableOpacity>
-                    </View>
-                    {
-                        this.props.isContentVisible &&
-                        <View>
-                            <View style={{flexDirection: 'row'}}>
-                                <View style={styles.imageModalContainer}>
-                                    <Image
-                                        resizeMode='contain'
-                                        style={styles.imageStyle}
-                                        source={{uri: `${SERVER_URL}images/products/${this.props.data.photo}`}}
-                                        />
-                                </View>
-                                <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
-                                    <Text style={styles.productnameText}>{this.props.data.productname}</Text>
-                                    {
-                                        this.props.loadingPrice
-                                        ?
-                                        <View style={styles.loadingContainer}>
-                                            <BarIndicator count={5} size={15} color='#919191' />
-                                        </View>
-                                        :
-                                        <Text style={styles.priceTextModal}>{IDR_FORMAT(this.props.itemCount === 1 ? (this.props.userStatus === 'Non Member' ? this.props.data.enduserprice : this.props.data.resellerprice) : this.props.resultCounting)}</Text>
-                                    }
-                                    {/*Increment Button*/}
-                                    <View style={styles.interactionButtonContainer}>
-                                        <TouchableOpacity onPress={() => this._onChangeValue('dec')}>
-                                            <View style={styles.pmButton}>
-                                                <Text style={styles.pmButtonText}>-</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                        <View style={styles.counterText}>
-                                            <Text>{this.props.itemCount}</Text>
-                                        </View>
-                                        <TouchableOpacity onPress={() => this._onChangeValue('inc')}>
-                                            <View style={styles.pmButton}>
-                                                <Text style={styles.pmButtonText}>+</Text>
-                                            </View>
-                                        </TouchableOpacity>
-                                    </View>
-                                </View>
+    return(
+        <Modal
+            isVisible={props.isVisible}
+            style={{alignItems: 'center'}}
+            onBackdropPress={this._closeModal}
+            onBackButtonPress={this._closeModal}
+            onModalShow={this._showModalContent}
+            onModalHide={this._hideModalContent}
+            hideModalContentWhileAnimating={true}
+            useNativeDriver
+            >
+            <View style={styles.modalContainer}>
+                <View style={styles.modalHeader}>
+                    <Text style={styles.modalHeaderTitle}>Ubah Kuantitas</Text>
+                    <TouchableOpacity style={styles.closeButtonHeader}>
+                        <Icon name='clear' color={COLORS.GRAY_ICON} size={22} onPress={this._closeModal}/>
+                    </TouchableOpacity>
+                </View>
+                {
+                    props.isContentVisible &&
+                    <View>
+                        <View style={{flexDirection: 'row'}}>
+                            <View style={styles.imageModalContainer}>
+                                <Image
+                                    resizeMode='cover'
+                                    style={styles.imageStyle}
+                                    source={{uri: `${SERVER_URL}images/products/${props.data.photo}`}}
+                                    />
                             </View>
-                            <View style={styles.buttonAddToCartModal}>
-                                <TouchableOpacity onPress={this._addToCart}>
-                                    <View style={styles.buttonAddTocartExe}>
-                                        <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
+                            <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
+                                <Text style={styles.productnameText}>{props.data.productname}</Text>
+                                {
+                                    props.loadingPrice
+                                    ?
+                                    <View style={styles.loadingContainer}>
+                                        <BarIndicator count={5} size={15} color={COLORS.GRAY_BORDER} />
                                     </View>
-                                </TouchableOpacity>
+                                    :
+                                    <Text style={styles.priceTextModal}>{IDR_FORMAT(props.itemCount === 1 ? (props.userStatus === 'Non Member' ? props.data.enduserprice : props.data.resellerprice) : props.resultCounting)}</Text>
+                                }
+                                {/*Increment Button*/}
+                                <View style={styles.interactionButtonContainer}>
+                                    <TouchableOpacity onPress={this._onDecrement}>
+                                        <View style={styles.pmButton}>
+                                            <Text style={styles.pmButtonText}>-</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                    <View style={styles.counterText}>
+                                        <Text>{props.itemCount}</Text>
+                                    </View>
+                                    <TouchableOpacity onPress={this._onIncrement}>
+                                        <View style={styles.pmButton}>
+                                            <Text style={styles.pmButtonText}>+</Text>
+                                        </View>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
-                    }
-                </View>
-            </Modal>
-        )
-    }
+                        <View style={styles.buttonAddToCartModal}>
+                            <TouchableOpacity onPress={this._addToCart}>
+                                <View style={styles.buttonAddTocartExe}>
+                                    <Text style={styles.buttonText}>{props.buttonText}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    </View>
+                }
+            </View>
+        </Modal>
+    )
 };
 
 const styles = StyleSheet.create({
     modalContainer: {
-        backgroundColor: 'white',
+        backgroundColor: COLORS.PURE_WHITE,
         width: 300,
         height: 250,
         borderRadius: 4
     },
     modalHeader: {
-        borderBottomColor: '#e0e0e0',
+        borderBottomColor: COLORS.GRAY_ICON,
         borderBottomWidth: 1,
         width: '100%'
     },
     modalHeaderTitle: {
         textAlign: 'left',
         padding: 15,
-        color: '#919191',
-        fontSize: 16
+        ...TYPOGRAPHY.h1
     },
     closeButtonHeader: {
         position: 'absolute',
@@ -138,14 +136,14 @@ const styles = StyleSheet.create({
     imageStyle: {
         width: 120,
         height: 120,
-        borderColor: '#e2e2e2',
-        borderWidth: 1
+        borderColor: COLORS.GRAY_FADE,
+        borderWidth: 1,
+        borderRadius: 5
     },
     productnameText: {
-        fontSize: 16,
+        ...TYPOGRAPHY.h1,
         width: 140,
         textAlign: 'left',
-        color: '#919191'
     },
     loadingContainer: {
         height: 24,
@@ -154,7 +152,7 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     priceTextModal: {
-        fontWeight: 'bold',
+        ...TYPOGRAPHY.priceTextModal,
         marginTop: 5
     },
     interactionButtonContainer: {
@@ -167,7 +165,7 @@ const styles = StyleSheet.create({
     pmButton: {
         height: 30,
         width: 30,
-        backgroundColor: '#7c0c10',
+        backgroundColor: COLORS.PRIMARY,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 3
@@ -182,7 +180,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1,
-        borderColor: '#e2e2e2',
+        borderColor: COLORS.GRAY_ICON,
         borderRadius: 3
     },
     buttonAddToCartModal: {
@@ -193,9 +191,13 @@ const styles = StyleSheet.create({
     buttonAddTocartExe: {
         height: 45,
         width: 260,
-        backgroundColor: '#7c0c10',
+        backgroundColor: COLORS.PRIMARY,
         justifyContent: 'center',
         alignItems: 'center',
         borderRadius: 3
     },
+    buttonText: {
+        ...TYPOGRAPHY.h1,
+        color: COLORS.PURE_WHITE
+    }
 });
