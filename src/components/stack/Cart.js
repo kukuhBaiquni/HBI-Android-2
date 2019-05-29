@@ -16,7 +16,7 @@ import { removeItem, forceResetRI } from '../../actions/Remove_Item';
 import { withNavigationFocus } from 'react-navigation';
 import { EMPTY_CART, BACKDARKRED } from '../../images';
 import { SERVER_URL, IDR_FORMAT } from '../basic/supportFunction';
-import ModalQuantityEditor from '../basic/template/modalQuantityEditor';
+import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
 import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
@@ -57,6 +57,7 @@ class Cart extends Component {
         }
         this.showSpecificModal = this.showSpecificModal.bind(this);
         this.removeSingleItem = this.removeSingleItem.bind(this);
+        this.onSave = this.onSave.bind(this);
     };
 
     checkToken = async () => {
@@ -89,20 +90,25 @@ class Cart extends Component {
         }
     };
 
-    changeCount(x) {
-        let count = this.state.qty
-        if (x === 'inc') {
-            count ++;
-            this.setState({qty: count, loading: true});
-        }else{
-            if (count > 1) {
-                count --
-                this.setState({qty: count, loading: true});
-            }
-        }
+    _incrementValue = () => {
+        let count = this.state.itemCount;
+        count ++;
+        this.setState({itemCount: count, loading: true});
         var data = {
             token: this.state.token,
-            id: this.state.idProduct,
+            id: this.props.navigation.state.params.id,
+            qty: count
+        };
+        this.props.dispatch(countItem(data));
+    };
+
+    _decrementValue = () => {
+        let count = this.state.itemCount;
+        count --;
+        this.setState({itemCount: count, loading: true});
+        var data = {
+            token: this.state.token,
+            id: this.props.navigation.state.params.id,
             qty: count
         };
         this.props.dispatch(countItem(data));
@@ -170,22 +176,43 @@ class Cart extends Component {
     _renderModal = () => {
         const { navigation } = this.props;
         return(
-            <ModalQuantityEditor
+            <MODAL_QUANTITY_EDITOR
                 closeModal={this._closeModal}
                 showModalContent={this._showModalContent}
                 hideModalContent={this._hideModalContent}
-                addToCart={this._addToCart}
-                onChangeValue={this._changeCount}
-                onChangeValueDecrement={this._changeCount}
+                onSave={this.onSave}
+                onChangeValueIncrement={this._incrementValue}
+                onChangeValueDecrement={this._decrementValue}
 
                 isContentVisible={this.state.showModalContent}
                 isVisible={this.state.showModal}
                 loadingPrice={this.state.loading}
                 itemCount={this.state.itemCount}
 
-                data={navigation.state.params}
+                data={
+                    productname: this.state.productname,
+                    id: this.state.idProduct,
+                    amount: this.state.qty,
+                    resellerprice: ,
+                    enduserprice: ,
+                    packing: ,
+                    unit: ,
+                    photo: ,
+                    description: ,
+                    // 
+                    // idProduct: cart[x].id,
+                    // id_Product: cart[x]._id,
+                    // showModal: true,
+                    // productName: cart[x].product_name,
+                    // subtotal: cart[x].subtotal,
+                    // productPrice: cart[x].price,
+                    // productPhoto: cart[x].photo,
+                    // qty: cart[x].qty,
+                    // index: x
+                }
                 userStatus={this.props.userData.status}
                 resultCounting={this.props.resultCounting}
+                buttonText='Simpan'
                 />
         )
     };
@@ -284,74 +311,9 @@ class Cart extends Component {
                         onWillFocus={() => this.checkToken()}
                         />
                     {/*=============================================*/}
-                    <Modal
-                        isVisible={this.state.showModal}
-                        style={{alignItems: 'center'}}
-                        onBackdropPress={() => this.setState({showModal: false})}
-                        onBackButtonPress={() => this.setState({showModal: false})}
-                        onModalShow={() => this.setState({showModalContent: true})}
-                        onModalHide={() => this.setState({showModalContent: false})}
-                        hideModalContentWhileAnimating={true}
-                        useNativeDriver
-                        >
-                    <View style={{ backgroundColor: 'white', width: 300, height: 250, borderRadius: 4}}>
-                        <View style={{borderBottomColor: '#e0e0e0', borderBottomWidth: 1, width: '100%'}}>
-                            <Text style={{textAlign: 'left', padding: 15, color: '#919191', fontSize: 16}}>Pilihan Anda</Text>
-                            <TouchableOpacity style={{position: 'absolute', right: 10, top: 15}}>
-                                <Icon name='clear' color='#919191' size={22} onPress={() => this.setState({showModal: false})}/>
-                            </TouchableOpacity>
-                        </View>
-                        {
-                            this.state.showModalContent &&
-                            <ScrollView>
-                                <View style={{flexDirection: 'row'}}>
-                                    <View style={{elevation: 1, width: 120, height: 120, marginTop: 10, marginLeft: 20}}>
-                                        <Image
-                                            resizeMode='contain'
-                                            style={{width: 120, height: 120, borderColor: '#e2e2e2', borderWidth: 1}}
-                                            source={{uri: `${SERVER_URL}images/products/${this.state.productPhoto}`}}
-                                            />
-                                    </View>
-                                    <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
-                                        <Text style={{fontSize: 16, width: 140, textAlign: 'left', color: '#919191'}}>{this.state.productName}</Text>
-                                        {
-                                            this.state.loading
-                                            ?
-                                            <View style={{height: 24, width: 80, paddingTop: 7, alignItems: 'center'}}>
-                                                <BarIndicator count={5} size={15} color='#919191' />
-                                            </View>
-                                            :
-                                            <Text style={{fontWeight: 'bold', marginTop: 5}}>{IDR_FORMAT(this.state.qty === 1 ? this.state.productPrice : this.state.subtotal)}</Text>
-                                        }
-                                        {/*Increment Button*/}
-                                        <View style={{flexDirection: 'row', width: 110, height: 40, marginTop: 20, justifyContent: 'space-between'}}>
-                                            <TouchableNativeFeedback onPress={(x) => this.changeCount('dec')}>
-                                                <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                                                    <Text style={{color: 'white', fontSize: 22}}>-</Text>
-                                                </View>
-                                            </TouchableNativeFeedback>
-                                            <View style={{width: 40, height: 30, justifyContent: 'center', alignItems: 'center', borderWidth: 1, borderColor: '#e2e2e2', borderRadius: 3}}>
-                                                <Text>{this.state.qty}</Text>
-                                            </View>
-                                            <TouchableNativeFeedback onPress={(x) => this.changeCount('inc')}>
-                                                <View style={{height: 30, width: 30, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                                                    <Text style={{color: 'white', fontSize: 18}}>+</Text>
-                                                </View>
-                                            </TouchableNativeFeedback>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View style={{alignItems: 'center', marginTop: 10, marginBottom:20}}>
-                                    <TouchableOpacity onPress={() => this.onSave()}>
-                                        <View style={{height: 45, width: 260, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center', borderRadius: 3}}>
-                                            <Text style={{color: 'white'}}>Simpan perubahan</Text>
-                                        </View>
-                                    </TouchableOpacity>
-                                </View>
-                            </ScrollView>
-                        }
-                    </View>
-                    </Modal>
+
+                    {this._renderModal()}
+
                     {/*=============================================*/}
                     {
                         cart.length !== 0

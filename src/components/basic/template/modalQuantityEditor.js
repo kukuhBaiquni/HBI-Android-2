@@ -32,6 +32,12 @@ export const MODAL_QUANTITY_EDITOR = (props) => {
         props.addToCart(props.data);
     };
 
+    _saveQuantity = () => {
+        props.saaveQuantity();
+    };
+
+    console.log(props);
+
     return(
         <Modal
             isVisible={props.isVisible}
