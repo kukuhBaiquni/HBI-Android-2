@@ -39,3 +39,13 @@ export const UNIT_CONVERTER = (input) => {
         return 'Invalid Input'
     };
 };
+
+export const CAPITALIZE = (x) => {
+    var cs = x.split(' ');
+    var as = cs.map(r => r.toLowerCase());
+    var result = [];
+    for (var i = 0; i < as.length; i++) {
+        result.push(as[i].charAt(0).toUpperCase() + as[i].slice(1));
+    };
+    return result.join(' ');
+};

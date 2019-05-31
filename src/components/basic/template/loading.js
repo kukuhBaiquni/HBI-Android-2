@@ -18,7 +18,7 @@ export const MODAL = (props) => {
             <View style={styles.modalContainer}>
                 <Text style={styles.modalWaitText}>{props.message}</Text>
                 <DotIndicator
-                    color='#7c0c10'
+                    color={COLORS.PRIMARY}
                     size={8}
                     />
             </View>
@@ -28,5 +28,5 @@ export const MODAL = (props) => {
 
 const styles = StyleSheet.create({
     modalContainer: { backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'},
-    modalWaitText: {fontWeight: 'bold', top: 15, marginTop: 5}
+    modalWaitText: {...TYPOGRAPHY.normalPriceText, top: 15, marginTop: 5}
 });

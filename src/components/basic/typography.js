@@ -52,12 +52,12 @@ export const TYPOGRAPHY = {
     h1                  : {fontSize: 14, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
     h2                  : {fontSize: 12, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
     h3                  : {fontSize: 10, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
-    p                   : {fontSize: 13, ...FONT_TYPE.light, color: COLORS.GRAY_TEXT},
+    p                   : {fontSize: 14, ...FONT_TYPE.light, color: COLORS.GRAY_TEXT},
 
     inlineProp          : {fontSize: 14, ...FONT_TYPE.light, color: COLORS.GRAY_FADE},
     subtotalValue       : {fontSize: 14, ...FONT_TYPE.bold, color: COLORS.GRAY_FADE},
     specialActionText   : {fontSize: 15, ...FONT_TYPE.medium, color: COLORS.ORANGE_DEFAULT},
-    priceTextModal      : {fontSize: 16, ...FONT_TYPE.bold, color: COLORS.PRIMARY},
+    priceTextModal      : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.PRIMARY},
 
     memberPriceText     : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.PRIMARY},
     normalPriceText     : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.BLACK_NORMAL},

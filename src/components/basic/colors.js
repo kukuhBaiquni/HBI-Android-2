@@ -9,6 +9,8 @@ export const COLORS = {
     BASE_BACKGROUND     : '#d2c9bf',
     BLACK_NORMAL        : '#333333',
 
+    CYAN_BASE           : '#1fd7ef',
+
     GRAY_FADE           : '#bababa',
     GRAY_ICON           : '#9b9b9b',
     GRAY_BORDER         : '#d7d7d7',

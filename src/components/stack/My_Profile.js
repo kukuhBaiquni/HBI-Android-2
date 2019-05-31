@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, TouchableNativeFeedback, ScrollView, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { SERVER_URL } from '../basic/supportFunction';
+import { SERVER_URL, CAPITALIZE } from '../basic/supportFunction';
 import LinearGradient from 'react-native-linear-gradient';
 import { fetchUser } from '../../actions/Get_User_Data';
 import moment from 'moment';
@@ -51,24 +51,14 @@ class MyProfile extends Component {
                 </View>
                 <View style={{backgroundColor: 'white', padding: 10}}>
                     <Text style={styles.dataUser}>Jl.{userData.data.address.street} No.{userData.data.address.no} Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}</Text>
-                    <Text style={styles.dataUser}>Kecamatan {capital(userData.data.address.district)}</Text>
-                    <Text style={styles.dataUser}>Kelurahan {capital(userData.data.address.village)}</Text>
-                    <Text style={styles.dataUser}>{capital(userData.data.address.city)}</Text>
+                    <Text style={styles.dataUser}>Kecamatan {CAPITALIZE(userData.data.address.district)}</Text>
+                    <Text style={styles.dataUser}>Kelurahan {CAPITALIZE(userData.data.address.village)}</Text>
+                    <Text style={styles.dataUser}>{CAPITALIZE(userData.data.address.city)}</Text>
                 </View>
             </ScrollView>
         )
     }
-}
-
-function capital(x) {
-    var cs = x.split(' ')
-    var as = cs.map(r => r.toLowerCase())
-    var result = []
-    for (var i = 0; i < as.length; i++) {
-        result.push(as[i].charAt(0).toUpperCase() + as[i].slice(1))
-    }
-    return result.join(' ')
-}
+};
 
 const styles = StyleSheet.create({
     header: {

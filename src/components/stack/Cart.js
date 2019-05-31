@@ -335,7 +335,7 @@ class Cart extends Component {
                             </View>
                             {
                                 this.state.number !== 0 &&
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Payment')} style={{justifyContent: 'center', alignItems: 'center', backgroundColor: '#7c0c10', width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3}}>
+                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Payment')} style={styles.paymentButton}>
                                     <Text style={{color: 'white', fontSize: 16}}>Bayar</Text>
                                 </TouchableOpacity>
                             }
@@ -396,4 +396,5 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 12
     },
+    paymentButton: {justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.PRIMARY, width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3}
 });

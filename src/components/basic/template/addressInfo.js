@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { COLORS } from '../colors';
 import { TYPOGRAPHY } from '../typography';
+import { CAPITALIZE } from '../supportFunction';
 
 export const ADDRESS_INFO = (props) => {
     const { userData, navigation } = props;
@@ -27,13 +28,13 @@ export const ADDRESS_INFO = (props) => {
                             userData.data.address.street !== '' || navigation.state.params !== undefined
                             ?
                             <View>
-                                <Text style={{...TYPOGRAPHY.f13}}>
+                                <Text style={{...TYPOGRAPHY.p}}>
                                     Jl.{userData.data.address.street} No.{userData.data.address.no}
                                     Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}
                                 </Text>
-                                <Text style={{...TYPOGRAPHY.f13}}>Kecamatan {userData.data.address.district}</Text>
-                                <Text style={{...TYPOGRAPHY.f13}}>Kelurahan {userData.data.address.village}</Text>
-                                <Text style={{...TYPOGRAPHY.f13}}>{userData.data.address.city}</Text>
+                                <Text style={{...TYPOGRAPHY.p}}>Kecamatan {CAPITALIZE(userData.data.address.district)}</Text>
+                                <Text style={{...TYPOGRAPHY.p}}>Kelurahan {CAPITALIZE(userData.data.address.village)}</Text>
+                                <Text style={{...TYPOGRAPHY.p}}>{CAPITALIZE(userData.data.address.city)}</Text>
                             </View>
                             :
                             <Text style={userInfo.alertUncompleteAddress}>Alamat belum lengkap</Text>
@@ -50,13 +51,13 @@ export const ADDRESS_INFO = (props) => {
                             userData.data.address.street !== '' || navigation.state.params !== undefined
                             ?
                             <View>
-                                <Text style={{...TYPOGRAPHY.f13}}>
+                                <Text style={{...TYPOGRAPHY.p}}>
                                     Jl.{navigation.state.params.street} No.{navigation.state.params.no}
                                     Rt.{navigation.state.params.rt} Rw.{navigation.state.params.rw}
                                 </Text>
-                                <Text style={{...TYPOGRAPHY.f13}}>Kecamatan {navigation.state.params.district}</Text>
-                                <Text style={{...TYPOGRAPHY.f13}}>Kelurahan {navigation.state.params.village}</Text>
-                                <Text style={{...TYPOGRAPHY.f13}}>{navigation.state.params.city}</Text>
+                                <Text style={{...TYPOGRAPHY.p}}>Kecamatan {CAPITALIZE(navigation.state.params.district)}</Text>
+                                <Text style={{...TYPOGRAPHY.p}}>Kelurahan {CAPITALIZE(navigation.state.params.village)}</Text>
+                                <Text style={{...TYPOGRAPHY.p}}>{CAPITALIZE(navigation.state.params.city)}</Text>
                             </View>
                             :
                             <Text style={userInfo.alertUncompleteAddress}>Alamat belum lengkap</Text>
@@ -72,17 +73,17 @@ const userInfo = StyleSheet.create({
 
     container                   : { alignItems: 'center', marginTop: 15 },
 
-    propertyText                : { ...TYPOGRAPHY.f13b },
+    propertyText                : { ...TYPOGRAPHY.subHeader },
 
-    valueText                   : { marginBottom: 5, ...TYPOGRAPHY.f13 },
+    valueText                   : { marginBottom: 5, ...TYPOGRAPHY.p },
 
     alertUncompleteAddress      : { fontStyle: 'italic', color: '#bababa' },
 
-    papperWhite                 : { backgroundColor: 'white', padding: 10, width: '95%', elevation: 3, borderRadius: 3 },
+    papperWhite                 : { backgroundColor: 'white', padding: 10, width: '95%', elevation: 1, borderRadius: 3 },
 
-    titleText                   : { ...TYPOGRAPHY.f16b, color: COLORS.PRIMARY, marginBottom: 10 },
+    titleText                   : { ...TYPOGRAPHY.memberPriceText, ...TYPOGRAPHY.f14, marginBottom: 5 },
 
-    changeText                  : { color: COLORS.PRIMARY, ...TYPOGRAPHY.f15 },
+    changeText                  : { ...TYPOGRAPHY.memberPriceText, ...TYPOGRAPHY.f14 },
 
     changeTextPseudoButton      : { position: 'absolute', right: 10, top: 0 },
 

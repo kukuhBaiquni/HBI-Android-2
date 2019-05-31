@@ -4,8 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollVi
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { fetchUser } from '../../actions/Get_User_Data';
-import { SERVER_URL } from '../basic/supportFunction';
-import { IDR_FORMAT } from '../basic/supportFunction';
+import { SERVER_URL, IDR_FORMAT } from '../basic/supportFunction';
 import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
 import { DotIndicator, WaveIndicator } from 'react-native-indicators';
@@ -17,18 +16,22 @@ import { FREE_ONGKIR, BACKDARKRED } from '../../images';
 import { SUCCESS_DIALOG } from '../basic/template/successDialog';
 import { MODAL } from '../basic/template/loading';
 import { ADDRESS_INFO } from '../basic/template/addressInfo';
+import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 class Payment extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Pembayaran',
-            headerTintColor: '#7c0c10',
+            headerTintColor: COLORS.PURE_WHITE,
             headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
-        }
+            headerTitleStyle: {
+                ...TYPOGRAPHY.header
+            },
+        };
     };
 
     constructor(props) {
@@ -104,7 +107,7 @@ class Payment extends Component {
                     rw: userData.data.address.rw,
                     targetMember: targetMember.id,
                     ongkir: Number(targetMember.ongkir)
-                }
+                };
             }else{
                 data = {
                     name: navigation.state.params.name,
@@ -119,7 +122,7 @@ class Payment extends Component {
                     rw: navigation.state.params.address.rw,
                     targetMember: targetMember.id,
                     ongkir: Number(targetMember.ongkir)
-                }
+                };
             }
             this.setState({loading: true});
             dispatch(confirmTransaction(data));
@@ -169,7 +172,7 @@ class Payment extends Component {
         };
         const newParams = Object.assign({}, params, {token: this.state.token});
         return(
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, backgroundColor: COLORS.BASE_BACKGROUND}}>
                 <NavigationEvents
                     onDidFocus={() => this._afterRender()}
                     />
@@ -215,7 +218,7 @@ class Payment extends Component {
                                             <Text style={itemDetails.productName}>{x.product_name}</Text>
                                             <View style={itemDetails.productDetails}>
                                                 <Image
-                                                    resizeMode='contain'
+                                                    resizeMode='cover'
                                                     style={itemDetails.imageStyle}
                                                     source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
                                                     />
@@ -266,7 +269,7 @@ class Payment extends Component {
                                     <View style={styles.separator} />
                                 </View>
                                 <View style={result.footerContainer}>
-                                    <Text style={result.totalPricePropText}>Total Bayar</Text>
+                                    <Text style={result.totalPricePropText}>Total yang harus dibayar</Text>
                                     <Text style={result.totalPriceValue}>
                                         {this.state.isFreeOngkir ? IDR_FORMAT(total) : IDR_FORMAT(total + Number(targetMember.ongkir))}
                                     </Text>
@@ -296,92 +299,41 @@ export default connect(
 )(Payment);
 
 const styles = StyleSheet.create({
-    header: {
-        height: 60,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        flexDirection: 'row',
-        alignItems: 'center',
-        borderBottomColor: '#cecece',
-        borderBottomWidth: 1
-    },
-    headerTitle: {
-        fontSize: 18,
-        color: '#7c0c10'
-    },
-    productWrapper: {
-        alignItems: 'center'
-    },
-    productHeader: {
-        borderColor: '#eaeaea',
-        height: 50,
-        borderWidth: 1,
-        marginTop: 10,
-        backgroundColor: '#f3f3f3',
-        justifyContent: 'center',
-        width: '100%'
-    },
-    productName: {
-        fontWeight: 'bold',
-        fontSize: 16,
-        marginLeft: 20
-    },
-    button: {
-        marginBottom: 40,
-        width: 250,
-        height: 45,
-        backgroundColor: '#c4dbc0',
-        borderColor: '#228200',
-        borderRadius: 3,
-        borderWidth: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-    modalContainer: { backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'},
-    modalWaitText: {fontWeight: 'bold', top: 15, marginTop: 5},
-    STmain: {backgroundColor: '#cce8c2', borderRadius: 5, width: 300},
-    STheader: {borderBottomColor: '#98c189', borderBottomWidth: 1, height: 50, justifyContent: 'center', alignItems: 'center'},
-    STtext: {fontSize: 18, color: '#228200'},
-    STscrollable: {backgroundColor: '#f7fff4', padding: 20, height: 400},
-    STtransactionCodeText: {color: '#bababa', marginBottom: 2},
-    STtransactionCodeValue: {fontSize: 20, marginBottom: 10},
-    STtransactionTotalPriceValue: {marginBottom: 10, fontSize: 18},
-    STtrxText: {fontSize: 17, marginBottom: 10},
-    STdateText: {fontSize: 20, marginBottom: 20},
-    colorText: {color: '#bababa'},
-    centeringItems: {textAlign: 'center'},
-    alignCenter: {alignItems: 'center'},
-    font13: {fontSize: 13},
-    separator: {backgroundColor: '#d7d7d7', height: 1, width: '95%'},
-    modalBase: { backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}
+    header                              : { height: 60, backgroundColor: 'white', justifyContent: 'center', flexDirection: 'row', alignItems: 'center', borderBottomColor: '#cecece', borderBottomWidth: 1  },
+    headerTitle                         : { ...TYPOGRAPHY.header  },
+    productName                         : { fontWeight: 'bold', fontSize: 16, marginLeft: 20  },
+    button                              : { marginBottom: 40, width: 250, height: 45, backgroundColor: '#c4dbc0', borderColor: '#228200', borderRadius: 3, borderWidth: 1, justifyContent: 'center', alignItems: 'center'  },
+    modalContainer                      : { backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center' },
+    modalWaitText                       : { fontWeight: 'bold', top: 15, marginTop: 5 },
+    separator                           : { backgroundColor: '#d7d7d7', height: 1, width: '95%' },
 });
 
 const itemDetails = StyleSheet.create({
-    container: {backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 3},
-    headerTitle: {fontSize: 20, padding: 10, fontWeight: 'bold', color: '#7c0c10'},
-    productName: {marginLeft: 12, fontWeight: 'bold', fontSize: 16, marginBottom: 5, marginTop: 12},
-    productDetails: {backgroundColor: 'white', height: 100, flexDirection: 'row', marginLeft: 12},
-    imageStyle: {width: 90, height: 90, borderColor: '#eaeaea', borderWidth: 1},
-    orderInfo: {marginBottom: 5, width: '25%'},
-    propertyText: {marginLeft: 10, color: '#a3a3a3'},
-    subtotalText: {marginLeft: 10, color: '#a3a3a3', position: 'absolute', bottom: 3},
-    valueText: {textAlign: 'right', color: '#9b9b9b'},
-    subtotalValue: {textAlign: 'right', position: 'absolute', bottom: 3, right: 0},
+    container                   : { backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 1 },
+    headerTitle                 : { ...TYPOGRAPHY.header, color: COLORS.PRIMARY, ...TYPOGRAPHY.f16, marginLeft: 10, marginTop: 10 },
+    productName                 : { marginLeft: 12, ...TYPOGRAPHY.subHeader, marginBottom: 5, marginTop: 12 },
+    productDetails              : { backgroundColor: 'white', height: 100, flexDirection: 'row', marginLeft: 12 },
+    imageStyle                  : { width: 90, height: 90, borderColor: COLORS.GRAY_BORDER, borderRadius: 3, borderWidth: 1 },
+    orderInfo                   : { marginBottom: 5, width: '25%' },
+    propertyText                : { marginLeft: 10, ...TYPOGRAPHY.p },
+    subtotalText                : { marginLeft: 10, ...TYPOGRAPHY.p, position: 'absolute', bottom: 3 },
+    valueText                   : { textAlign: 'right', ...TYPOGRAPHY.normalPriceText },
+    subtotalValue               : { textAlign: 'right', ...TYPOGRAPHY.priceTextModal, position: 'absolute', bottom: 3, right: 0 },
 });
 
 const result = StyleSheet.create({
-    totalPrice: {paddingTop: 10, paddingLeft: 10, paddingRight: 10},
-    propText: {fontWeight: 'bold', fontSize: 15},
-    rightTotalPrice: {fontSize: 15, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'},
-    ongkirContainer: {paddingLeft: 10, paddingRight: 10, marginBottom: 10},
-    infoFreeOngkir: {position: 'absolute', left: 60, top: 4, borderWidth: 2, borderColor: 'red', borderRadius: 10, width: 16, height: 16, justifyContent: 'center', alignItems: 'center'},
-    fakeIconInfo: {color: 'red', fontWeight: 'bold', fontSize: 11},
-    freeOngkirImage: {height: 30, width: 70, position: 'absolute', right: 10},
-    ongkirPrice: {fontSize: 15, position: 'absolute', right: 10, fontWeight: 'bold', textAlign: 'right'},
-    footerContainer: {paddingTop: 10, paddingLeft: 10, paddingRight: 10, marginBottom: 10},
-    totalPricePropText: {fontWeight: 'bold', fontSize: 17},
-    totalPriceValue: {fontSize: 17, position: 'absolute', right: 10, top: 10, fontWeight: 'bold', textAlign: 'right'},
-    confirmationButtonContainer: {justifyContent: 'center', alignItems: 'center', marginBottom: 10},
-    confirmationTouchableArea: {marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: '#7c0c10', justifyContent: 'center', alignItems: 'center'},
-    confirmationButtonText: {color: 'white', fontSize: 16}
+    totalPrice                      : { paddingTop: 10, paddingLeft: 10, paddingRight: 10 },
+    propText                        : { ...TYPOGRAPHY.normalPriceText },
+    rightTotalPrice                 : { position: 'absolute', right: 10, top: 10, textAlign: 'right', ...TYPOGRAPHY.normalPriceText, color: COLORS.PRIMARY },
+    ongkirPrice                     : { position: 'absolute', right: 10, textAlign: 'right', ...TYPOGRAPHY.normalPriceText, color: COLORS.CYAN_BASE },
+    ongkirContainer                 : { paddingLeft: 10, paddingRight: 10, marginBottom: 10 },
+    infoFreeOngkir                  : { position: 'absolute', left: 55, top: 2, borderWidth: 2, borderColor: COLORS.CYAN_BASE, borderRadius: 10, width: 16, height: 16, justifyContent: 'center', alignItems: 'center' },
+    fakeIconInfo                    : { color: COLORS.CYAN_BASE, fontWeight: 'bold', fontSize: 11 },
+    freeOngkirImage                 : { height: 30, width: 70, position: 'absolute', right: 10 },
+    footerContainer                 : { paddingTop: 10, paddingLeft: 10, paddingRight: 10, marginBottom: 10 },
+    totalPricePropText              : { ...TYPOGRAPHY.normalPriceText, ...TYPOGRAPHY.f16 },
+    totalPriceValue                 : { position: 'absolute', right: 10, top: 10, textAlign: 'right', ...TYPOGRAPHY.memberPriceText, ...TYPOGRAPHY.f16 },
+    confirmationButtonContainer     : { justifyContent: 'center', alignItems: 'center', marginBottom: 10 },
+    confirmationTouchableArea       : { marginTop: 10, borderRadius: 3, height: 50, width: 350, backgroundColor: COLORS.PRIMARY, justifyContent: 'center', alignItems: 'center', elevation: 1 },
+    confirmationButtonText          : { ...TYPOGRAPHY.buttonText, color: COLORS.PURE_WHITE, ...TYPOGRAPHY.f16 }
 });

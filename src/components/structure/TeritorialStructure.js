@@ -7,6 +7,7 @@ import {
     StyleSheet,
 } from 'react-native';
 import PropTypes from 'prop-types';
+import { CAPITALIZE } from '../basic/supportFunction';
 
 export default class TeritorialStructure extends Component {
     render() {
@@ -36,7 +37,7 @@ export default class TeritorialStructure extends Component {
                                 >
                                 {
                                     this.props.listCities.map((x, i) =>
-                                        <Picker.Item key={i} label={capital(x.nama_kota)} value={x.nama_kota} />
+                                        <Picker.Item key={i} label={CAPITALIZE(x.nama_kota)} value={x.nama_kota} />
                                     )
                                 }
                             </Picker>
@@ -51,7 +52,7 @@ export default class TeritorialStructure extends Component {
                                 >
                                 {
                                     this.props.listDistricts.map((x, i) =>
-                                        <Picker.Item key={i} label={capital(x.nama_kecamatan)} value={x.nama_kecamatan} />
+                                        <Picker.Item key={i} label={CAPITALIZE(x.nama_kecamatan)} value={x.nama_kecamatan} />
                                     )
                                 }
                             </Picker>
@@ -66,7 +67,7 @@ export default class TeritorialStructure extends Component {
                                 >
                                 {
                                     this.props.listVillages.map((x, i) =>
-                                        <Picker.Item key={i} label={capital(x.nama_kelurahan)} value={x.nama_kelurahan} />
+                                        <Picker.Item key={i} label={CAPITALIZE(x.nama_kelurahan)} value={x.nama_kelurahan} />
                                     )
                                 }
                             </Picker>
@@ -112,17 +113,7 @@ export default class TeritorialStructure extends Component {
             </View>
         )
     }
-}
-
-function capital(x) {
-    var cs = x.split(' ')
-    var as = cs.map(r => r.toLowerCase())
-    var result = []
-    for (var i = 0; i < as.length; i++) {
-        result.push(as[i].charAt(0).toUpperCase() + as[i].slice(1))
-    }
-    return result.join(' ')
-}
+};
 
 TeritorialStructure.propTypes = {
     listCities: PropTypes.array,
@@ -142,7 +133,7 @@ TeritorialStructure.propTypes = {
     rwHandler: PropTypes.string,
     onChangeRw: PropTypes.func,
     onSave: PropTypes.func
-}
+};
 
 const styles = StyleSheet.create({
     container: {
@@ -193,4 +184,4 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: 'bold'
     }
-})
+});

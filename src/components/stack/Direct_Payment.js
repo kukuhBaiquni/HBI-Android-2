@@ -4,8 +4,8 @@ import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollVi
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { fetchUser } from '../../actions/Get_User_Data';
-import { SERVER_URL } from '../basic/supportFunction';
-import { IDR_FORMAT } from '../basic/supportFunction';
+import { SERVER_URL, IDR_FORMAT, CAPITALIZE } from '../basic/supportFunction';
+import {  } from '../basic/supportFunction';
 import { BarIndicator, DotIndicator, WaveIndicator } from 'react-native-indicators';
 import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
@@ -390,9 +390,9 @@ class DirectPayment extends Component {
                                             <Text style={styles.f13}>
                                                 Jl.{userData.data.address.street} No.{userData.data.address.no} Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}
                                             </Text>
-                                            <Text style={styles.f13}>Kecamatan {capital(userData.data.address.district)}</Text>
-                                            <Text style={styles.f13}>Kelurahan {capital(userData.data.address.village)}</Text>
-                                            <Text style={styles.f13}>{capital(userData.data.address.city)}</Text>
+                                            <Text style={styles.f13}>Kecamatan {CAPITALIZE(userData.data.address.district)}</Text>
+                                            <Text style={styles.f13}>Kelurahan {CAPITALIZE(userData.data.address.village)}</Text>
+                                            <Text style={styles.f13}>{CAPITALIZE(userData.data.address.city)}</Text>
                                         </View>
                                         :
                                         <Text style={{fontStyle: 'italic', color: '#bababa'}}>Alamat belum lengkap</Text>
@@ -406,9 +406,9 @@ class DirectPayment extends Component {
                                             <Text style={styles.f13}>
                                                 Jl.{userData.data.address.street} No.{navigation.state.params.no} Rt.{userData.data.address.rt} Rw.{userData.data.address.rw}
                                             </Text>
-                                            <Text style={styles.f13}>Kecamatan {capital(navigation.state.params.district)}</Text>
-                                            <Text style={styles.f13}>Kelurahan {capital(navigation.state.params.village)}</Text>
-                                            <Text style={styles.f13}>{capital(navigation.state.params.city)}</Text>
+                                            <Text style={styles.f13}>Kecamatan {CAPITALIZE(navigation.state.params.district)}</Text>
+                                            <Text style={styles.f13}>Kelurahan {CAPITALIZE(navigation.state.params.village)}</Text>
+                                            <Text style={styles.f13}>{CAPITALIZE(navigation.state.params.city)}</Text>
                                         </View>
                                     }
                                 </View>
@@ -520,16 +520,6 @@ class DirectPayment extends Component {
             )
         }
     }
-}
-
-function capital(x) {
-    var cs = x.split(' ')
-    var as = cs.map(r => r.toLowerCase())
-    var result = []
-    for (var i = 0; i < as.length; i++) {
-        result.push(as[i].charAt(0).toUpperCase() + as[i].slice(1))
-    }
-    return result.join(' ')
 }
 
 const styles = StyleSheet.create({
