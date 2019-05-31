@@ -126,23 +126,24 @@ const styles = StyleSheet.create({
     modalContainer: {
         backgroundColor: COLORS.PURE_WHITE,
         width: 300,
-        height: 250,
+        height: 235,
         borderRadius: 4
     },
     modalHeader: {
-        borderBottomColor: COLORS.GRAY_ICON,
+        borderBottomColor: COLORS.GRAY_BORDER,
         borderBottomWidth: 1,
-        width: '100%'
+        width: '100%',
+        justifyContent: 'space-between'
     },
     modalHeaderTitle: {
         textAlign: 'left',
-        padding: 15,
-        ...TYPOGRAPHY.h1
+        padding: 10,
+        ...TYPOGRAPHY.subHeader
     },
     closeButtonHeader: {
         position: 'absolute',
         right: 10,
-        top: 15
+        top: 10
     },
     imageModalContainer: {
         elevation: 1,
@@ -159,7 +160,7 @@ const styles = StyleSheet.create({
         borderRadius: 5
     },
     productnameText: {
-        ...TYPOGRAPHY.h1,
+        ...TYPOGRAPHY.normalPriceText,
         width: 140,
         textAlign: 'left',
     },
