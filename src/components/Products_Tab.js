@@ -4,6 +4,8 @@ import { Spinner } from 'native-base';
 import { SERVER_URL } from '../components/basic/supportFunction';
 import { IDR_FORMAT } from '../components/basic/supportFunction';
 import * as Animatable from 'react-native-animatable';
+import { COLORS } from './basic/colors';
+import { TYPOGRAPHY } from './basic/typography';
 
 export default class ProductsTab extends Component {
 
@@ -26,7 +28,7 @@ export default class ProductsTab extends Component {
                                 <View>
                                     <Image
                                         resizeMode='contain'
-                                        style={{width: 160, height: 160, marginBottom: 10}}
+                                        style={styles.imageStyle}
                                         source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
                                         />
                                     <View style={{flexDirection: 'row'}}>
@@ -57,17 +59,18 @@ var styles = StyleSheet.create({
     },
     title: {
         textAlign: 'center',
-        color: 'black',
-        fontWeight: 'bold',
-        fontSize: 16,
+        ...TYPOGRAPHY.subHeader,
+        ...TYPOGRAPHY.f13,
         flex: 1,
         flexWrap: 'wrap'
     },
     price: {
-        fontSize: 14,
+        ...TYPOGRAPHY.p,
+        ...TYPOGRAPHY.f14,
         textAlign: 'center'
     },
     itemContainer: {
         marginTop: 20
-    }
+    },
+    imageStyle: {width: 160, height: 160, marginBottom: 10, borderRadius: 15}
 })
