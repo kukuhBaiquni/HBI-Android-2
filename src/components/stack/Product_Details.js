@@ -21,6 +21,7 @@ import { BACKDARKRED } from '../../images';
 import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
 import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
+import { TYPOGRAPHY } from '../basic/typography';
 
 class ProductDetails extends Component {
     static navigationOptions = ({navigation}) => {
@@ -230,15 +231,15 @@ class ProductDetails extends Component {
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     {
                         this.state.renderItems.map((x, i) =>
-                            <TouchableOpacity key={i} style={{height: 230, width: 160, backgroundColor: 'white', margin: 5, borderRadius: 5, elevation: 1}}>
+                            <TouchableOpacity key={i} style={styles.basicCard}>
                                 <Image
                                     source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
                                     style={{height: 150, width: '100%', borderTopRightRadius: 5, borderTopLeftRadius: 5}}
                                     resizeMode='cover'
                                     />
                                 <View style={{padding: 5}}>
-                                    <Text>{x.productname}</Text>
-                                    <Text>{IDR_FORMAT(x.enduserprice)}</Text>
+                                    <Text style={{...TYPOGRAPHY.p}}>{x.productname}</Text>
+                                    <Text style={{...TYPOGRAPHY.p}}>{IDR_FORMAT(x.enduserprice)}</Text>
                                 </View>
                             </TouchableOpacity>
                         )
@@ -252,7 +253,7 @@ class ProductDetails extends Component {
     render() {
         const { navigation, isFocused } = this.props;
         return(
-            <View style={{flex: 1}}>
+            <View style={{flex: 1, backgroundColor: COLORS.BASE_BACKGROUND}}>
                 <NavigationEvents
                     onDidFocus={() => this.checkToken()}
                     onWillFocus={() => this.removeStorage()}
@@ -301,9 +302,9 @@ class ProductDetails extends Component {
 
                                 <View style={styles.viewContainer}>
                                     <Text style={styles.productNameText}>{navigation.state.params.productname}</Text>
-                                    <Text>Harga Normal {IDR_FORMAT(navigation.state.params.enduserprice)}</Text>
+                                    <Text style={styles.normalPriceText}>Harga Normal {IDR_FORMAT(navigation.state.params.enduserprice)}</Text>
                                     <View style={styles.vipRowMember}>
-                                        <Text style={{color: COLORS.PRIMARY}}>Harga Member {IDR_FORMAT(navigation.state.params.resellerprice)}</Text>
+                                        <Text style={styles.memberPriceText}>Harga Member {IDR_FORMAT(navigation.state.params.resellerprice)}</Text>
                                         <View style={styles.badgeVip}>
                                             <Text style={{color: 'white', fontWeight: 'bold', fontSize: 11}}>VIP</Text>
                                         </View>
@@ -312,10 +313,10 @@ class ProductDetails extends Component {
 
                                 <View style={styles.viewContainer}>
                                     <Text style={styles.subtitle}>Informasi Produk</Text>
-                                    <Text>Packing {UNIT_CONVERTER(navigation.state.params.packing)}/pack</Text>
+                                    <Text style={{...TYPOGRAPHY.p}}>Packing {UNIT_CONVERTER(navigation.state.params.packing)}/pack</Text>
                                     <View style={{height: 8}} />
                                     <Text style={styles.subtitle}>Deskripsi Produk</Text>
-                                    <Text>{navigation.state.params.description}</Text>
+                                    <Text style={{...TYPOGRAPHY.p}}>{navigation.state.params.description}</Text>
                                 </View>
                                 <View style={styles.viewContainer}>
                                     <Text style={styles.subtitle}>Lihat Produk Lainnya</Text>
@@ -330,10 +331,10 @@ class ProductDetails extends Component {
                 }
                 <View style={styles.footerWrapper}>
                     <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
-                        <Text style={{color: '#7c0c10'}}>Beli Sekarang</Text>
+                        <Text style={{color: COLORS.PRIMARY, ...TYPOGRAPHY.buttonText}}>Beli Sekarang</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10', backgroundColor: '#7c0c10'}]} onPress={this._showModal}>
-                        <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
+                    <TouchableOpacity style={[styles.button, {borderColor: COLORS.PRIMARY, backgroundColor: COLORS.PRIMARY}]} onPress={this._showModal}>
+                        <Text style={{color: COLORS.PURE_WHITE, ...TYPOGRAPHY.buttonText}}>Tambah ke Keranjang</Text>
                     </TouchableOpacity>
                 </View>
                 {this._renderModal()}
@@ -372,8 +373,7 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         textAlign: 'left',
-        fontSize: 15,
-        fontWeight: 'bold',
+        ...TYPOGRAPHY.subHeader,
         color: COLORS.BLACK_NORMAL
     },
     viewContainer: {
@@ -448,32 +448,10 @@ const styles = StyleSheet.create({
         width: 30,
         justifyContent: 'center'
     },
-    viewBackgroundStyle: {
-        marginBottom: 30,
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        elevation: 3
-    },
-    normalPriceText: {
-        fontSize: 15,
-        color: '#666666',
-        fontWeight: 'bold'
-    },
-    memberPriceText: {
-        fontSize: 15,
-        color: 'red',
-        fontWeight: 'bold'
-    },
-    discountEllipse: {
-        borderWidth: 1,
-        borderColor: 'red',
-        backgroundColor: '#ffc4c4',
-        justifyContent: 'center',
-        alignItems: 'center',
-        borderRadius: 10,
-        marginTop: 3
-    },
     productNameText: {fontSize: 20, color: COLORS.BLACK_NORMAL, fontWeight: 'bold', marginBottom: 5},
     vipRowMember: {flexDirection: 'row', alignItems: 'center', marginTop: 3},
-    badgeVip: {backgroundColor: COLORS.PRIMARY, justifyContent: 'center', alignItems: 'center', width: 30, height: 16, borderRadius: 10, marginLeft: 5}
+    badgeVip: {backgroundColor: COLORS.PRIMARY, justifyContent: 'center', alignItems: 'center', width: 30, height: 16, borderRadius: 10, marginLeft: 5},
+    memberPriceText: {...TYPOGRAPHY.memberPriceText},
+    normalPriceText: {...TYPOGRAPHY.normalPriceText},
+    basicCard: {height: 230, width: 160, backgroundColor: COLORS.PURE_WHITE, margin: 5, borderRadius: 5, elevation: 1}
 });

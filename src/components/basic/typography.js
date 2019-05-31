@@ -48,14 +48,18 @@ export const TYPOGRAPHY = {
     f30b: {fontSize: 30, fontWeight: 'bold'},
 
     header              : {fontSize: 18, ...FONT_TYPE.regular, color: COLORS.PURE_WHITE, fontWeight: 'normal'},
-    subHeader           : {fontSize: 16, ...FONT_TYPE.bold, color: COLORS.BLACK_NORMAL},
+    subHeader           : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.BLACK_NORMAL},
     h1                  : {fontSize: 14, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
     h2                  : {fontSize: 12, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
     h3                  : {fontSize: 10, ...FONT_TYPE.regular, color: COLORS.BLACK_NORMAL},
-    p                   : {fontSize: 8, ...FONT_TYPE.light, color: COLORS.GRAY_FADE},
+    p                   : {fontSize: 13, ...FONT_TYPE.light, color: COLORS.GRAY_TEXT},
 
     inlineProp          : {fontSize: 14, ...FONT_TYPE.light, color: COLORS.GRAY_FADE},
     subtotalValue       : {fontSize: 14, ...FONT_TYPE.bold, color: COLORS.GRAY_FADE},
     specialActionText   : {fontSize: 15, ...FONT_TYPE.regular, color: COLORS.ORANGE_DEFAULT},
-    priceTextModal      : {fontSize: 16, ...FONT_TYPE.bold, color: COLORS.PRIMARY}
+    priceTextModal      : {fontSize: 16, ...FONT_TYPE.bold, color: COLORS.PRIMARY},
+
+    memberPriceText     : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.PRIMARY},
+    normalPriceText     : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.BLACK_NORMAL},
+    buttonText          : {fontSize: 14, ...FONT_TYPE.medium}
 };

@@ -12,6 +12,7 @@ export const COLORS = {
     GRAY_FADE           : '#bababa',
     GRAY_ICON           : '#9b9b9b',
     GRAY_BORDER         : '#d7d7d7',
+    GRAY_TEXT           : '#636363',
 
     GREEN_SEMI_WHITE    : '#f7fff4',
     GREEN_FADE          : '#cce8c2',
