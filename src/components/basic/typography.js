@@ -56,7 +56,7 @@ export const TYPOGRAPHY = {
 
     inlineProp          : {fontSize: 14, ...FONT_TYPE.light, color: COLORS.GRAY_FADE},
     subtotalValue       : {fontSize: 14, ...FONT_TYPE.bold, color: COLORS.GRAY_FADE},
-    specialActionText   : {fontSize: 15, ...FONT_TYPE.regular, color: COLORS.ORANGE_DEFAULT},
+    specialActionText   : {fontSize: 15, ...FONT_TYPE.medium, color: COLORS.ORANGE_DEFAULT},
     priceTextModal      : {fontSize: 16, ...FONT_TYPE.bold, color: COLORS.PRIMARY},
 
     memberPriceText     : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.PRIMARY},

@@ -73,13 +73,13 @@ const styles = StyleSheet.create({
 
     productNameText         : { ...TYPOGRAPHY.subHeader, marginLeft: 12, marginBottom: 5, marginTop: 10 },
 
-    propText                : { marginLeft: 10, ...TYPOGRAPHY.h1 },
+    propText                : { marginLeft: 10, ...TYPOGRAPHY.p },
 
-    propTextSubtotal        : { marginLeft: 10, ...TYPOGRAPHY.h1, position: 'absolute', bottom: 3 },
+    propTextSubtotal        : { marginLeft: 10, ...TYPOGRAPHY.p, position: 'absolute', bottom: 3 },
 
     partial45               : { marginBottom: 5, width: '45%' },
 
-    valText                 : { textAlign: 'right', ...TYPOGRAPHY.h1 },
+    valText                 : { textAlign: 'right', ...TYPOGRAPHY.normalPriceText },
 
     changeDetails           : { textAlign: 'right', marginTop: 13, ...TYPOGRAPHY.specialActionText },
 

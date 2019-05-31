@@ -330,8 +330,8 @@ class Cart extends Component {
                             </ScrollView>
                         <View style={[styles.productHeader, {height: 60, paddingLeft: 20, position: 'absolute', bottom: 0}]}>
                             <View>
-                                <Text style={{fontSize: 14}}>Total Harga</Text>
-                                <Text style={{color: '#7c0c10', fontSize: 20}}>{IDR_FORMAT(total)}</Text>
+                                <Text style={{...TYPOGRAPHY.p}}>Total Harga</Text>
+                                <Text style={{...TYPOGRAPHY.buttonText, ...TYPOGRAPHY.f20, color: COLORS.PRIMARY}}>{IDR_FORMAT(total)}</Text>
                             </View>
                             {
                                 this.state.number !== 0 &&
