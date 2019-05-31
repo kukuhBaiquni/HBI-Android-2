@@ -91,24 +91,24 @@ class Cart extends Component {
     };
 
     _incrementValue = () => {
-        let count = this.state.itemCount;
+        let count = this.state.qty;
         count ++;
-        this.setState({itemCount: count, loading: true});
+        this.setState({qty: count, loading: true});
         var data = {
             token: this.state.token,
-            id: this.props.navigation.state.params.id,
+            id: this.state.idProduct,
             qty: count
         };
         this.props.dispatch(countItem(data));
     };
 
     _decrementValue = () => {
-        let count = this.state.itemCount;
+        let count = this.state.qty;
         count --;
-        this.setState({itemCount: count, loading: true});
+        this.setState({qty: count, loading: true});
         var data = {
             token: this.state.token,
-            id: this.props.navigation.state.params.id,
+            id: this.state.idProduct,
             qty: count
         };
         this.props.dispatch(countItem(data));
@@ -175,6 +175,18 @@ class Cart extends Component {
 
     _renderModal = () => {
         const { navigation } = this.props;
+        const { id_Product, productName, idProduct, qty, productPrice, productPhoto, description } = this.state;
+        const data = {
+            _id: id_Product,
+            idProduct,
+            productname: productName,
+            itemCount: qty,
+            category: '',
+            resellerprice: productPrice,
+            enduserprice: productPrice,
+            photo: productPhoto,
+            description: ''
+        };
         return(
             <MODAL_QUANTITY_EDITOR
                 closeModal={this._closeModal}
@@ -187,32 +199,13 @@ class Cart extends Component {
                 isContentVisible={this.state.showModalContent}
                 isVisible={this.state.showModal}
                 loadingPrice={this.state.loading}
-                itemCount={this.state.itemCount}
+                itemCount={qty}
+                data={data}
 
-                data={
-                    productname: this.state.productname,
-                    id: this.state.idProduct,
-                    amount: this.state.qty,
-                    resellerprice: ,
-                    enduserprice: ,
-                    packing: ,
-                    unit: ,
-                    photo: ,
-                    description: ,
-                    // 
-                    // idProduct: cart[x].id,
-                    // id_Product: cart[x]._id,
-                    // showModal: true,
-                    // productName: cart[x].product_name,
-                    // subtotal: cart[x].subtotal,
-                    // productPrice: cart[x].price,
-                    // productPhoto: cart[x].photo,
-                    // qty: cart[x].qty,
-                    // index: x
-                }
-                userStatus={this.props.userData.status}
+                userStatus={this.props.userData.data.status}
                 resultCounting={this.props.resultCounting}
                 buttonText='Simpan'
+                routeName={navigation.state.routeName}
                 />
         )
     };
@@ -328,6 +321,7 @@ class Cart extends Component {
                                             openModal={this.showSpecificModal}
                                             index={i}
                                             removeItem={this.removeSingleItem}
+                                            routeName={navigation.state.routeName}
                                             />
                                     )
                                 }
@@ -357,8 +351,8 @@ class Cart extends Component {
                     :
                     <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
                         <Image style={{height: 80, width: 80}} source={EMPTY_CART} />
-                        <Text style={{color: '#7c0c10', fontWeight: 'bold', fontSize: 24, marginTop: 20}}>Oops..</Text>
-                        <Text style={{color: '#7c0c10', fontWeight: 'bold', fontSize: 16, marginTop: 10}}>Keranjang Belanja Anda kosong!</Text>
+                        <Text style={{color: COLORS.PRIMARY, fontWeight: 'bold', fontSize: 24, marginTop: 20}}>Oops..</Text>
+                        <Text style={{color: COLORS.PRIMARY, fontWeight: 'bold', fontSize: 16, marginTop: 10}}>Keranjang Belanja Anda kosong!</Text>
                     </View>
                 }
             </View>
@@ -369,10 +363,10 @@ class Cart extends Component {
             )
         }
     }
-}
+};
 
 function mapDispatchToProps(dispatch) {
-    return dispatch
+    return dispatch;
 };
 
 export default connect(
@@ -402,4 +396,4 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 12
     },
-})
+});

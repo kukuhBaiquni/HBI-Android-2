@@ -33,10 +33,16 @@ export const MODAL_QUANTITY_EDITOR = (props) => {
     };
 
     _saveQuantity = () => {
-        props.saaveQuantity();
+        props.onSave();
     };
 
-    console.log(props);
+    _prices = () => {
+        if (props.userStatus === 'Non Member') {
+            return props.data.enduserprice;
+        }else{
+            return props.data.resellerprice;
+        }
+    };
 
     return(
         <Modal
@@ -76,7 +82,13 @@ export const MODAL_QUANTITY_EDITOR = (props) => {
                                         <BarIndicator count={5} size={15} color={COLORS.GRAY_BORDER} />
                                     </View>
                                     :
-                                    <Text style={styles.priceTextModal}>{IDR_FORMAT(props.itemCount === 1 ? (props.userStatus === 'Non Member' ? props.data.enduserprice : props.data.resellerprice) : props.resultCounting)}</Text>
+                                    <Text style={styles.priceTextModal}>{
+                                            IDR_FORMAT(
+                                                props.itemCount === 1
+                                                ? (this._prices())
+                                                : (props.routeName === 'ProductDetails' ? props.resultCounting : (this._prices()*props.itemCount))
+                                            )
+                                        }</Text>
                                 }
                                 {/*Increment Button*/}
                                 <View style={styles.interactionButtonContainer}>
@@ -97,7 +109,7 @@ export const MODAL_QUANTITY_EDITOR = (props) => {
                             </View>
                         </View>
                         <View style={styles.buttonAddToCartModal}>
-                            <TouchableOpacity onPress={this._addToCart}>
+                            <TouchableOpacity onPress={props.routeName === 'ProductDetails' ? this._addToCart : this._saveQuantity}>
                                 <View style={styles.buttonAddTocartExe}>
                                     <Text style={styles.buttonText}>{props.buttonText}</Text>
                                 </View>

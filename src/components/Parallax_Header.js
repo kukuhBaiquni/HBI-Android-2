@@ -9,6 +9,7 @@ import {
     View,
     Dimensions,
 } from 'react-native';
+import { COLORS } from './basic/colors';
 
 const {
     height: SCREEN_HEIGHT,
@@ -163,8 +164,8 @@ class RNParallax extends Component {
     // title background color transition from white to red
     transparency() {
         return this.state.scrollY.interpolate({
-            inputRange: [0, 200, 205],
-            outputRange: ['rgba(255,255,255, 0)', 'rgba(255,255,255, 0)', 'white'],
+            inputRange: [0, 190, 205, 245],
+            outputRange: ['rgba(255,255,255, 0)', 'rgba(255,255,255, 0)', 'white', 'white'],
             extrapolate: 'clamp'
         })
     }
@@ -172,8 +173,8 @@ class RNParallax extends Component {
     // from read to white
     titleTransition() {
         return this.state.scrollY.interpolate({
-            inputRange: [0, 230, 235],
-            outputRange: ['rgba(255, 255 ,255 , 0)', 'rgba(255, 255, 255, 0)', '#7c0c10'],
+            inputRange: [0, 235, 245],
+            outputRange: [COLORS.PRIMARY, COLORS.PRIMARY, COLORS.PRIMARY],
             extrapolate: 'clamp'
         })
     }
@@ -231,7 +232,7 @@ class RNParallax extends Component {
                 <Animated.View style={{position: 'absolute', left: 0, marginLeft: 10, opacity: this.transparency2()}}>
                     {renderBackButton()}
                 </Animated.View>
-                <Animated.Text numberOfLines={1} style={[styles.headerText, titleStyle, {color: '#7c0c10', width: this.titleWidth(), marginTop: this.marginTransition()}]}>
+                <Animated.Text numberOfLines={1} style={[styles.headerText, titleStyle, {color: this.titleTransition(), width: this.titleWidth(), marginTop: this.marginTransition()}]}>
                     {title}
                 </Animated.Text>
                 <Animated.View style={{position: 'absolute', right: 20, marginLeft: 10, opacity: this.transparency2()}}>

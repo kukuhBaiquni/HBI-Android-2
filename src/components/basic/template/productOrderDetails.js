@@ -11,7 +11,7 @@ export const PRODUCT_ORDER_DETAILS = (props) => {
     };
 
     _removeSingleItem = () => {
-        props.removeSingleItem(props.index);
+        props.removeItem(props.index);
     };
 
     return(
@@ -19,9 +19,12 @@ export const PRODUCT_ORDER_DETAILS = (props) => {
             <View style={styles.basicCard}>
                 <View style={{marginBottom: 15}}>
                     <Text style={styles.productNameText}>{props.data.product_name}</Text>
-                    <TouchableOpacity style={styles.touchableRemoveItem} onPress={this._removeSingleItem}>
-                        <Icon name='delete' color={COLORS.GRAY_ICON} />
-                    </TouchableOpacity>
+                    {
+                        props.routeName === 'Cart' &&
+                        <TouchableOpacity style={styles.touchableRemoveItem} onPress={this._removeSingleItem}>
+                            <Icon name='delete' color={COLORS.GRAY_ICON} />
+                        </TouchableOpacity>
+                    }
                     <View style={styles.productDetails}>
                         <Image
                             resizeMode='cover'
@@ -36,7 +39,12 @@ export const PRODUCT_ORDER_DETAILS = (props) => {
                         <View style={styles.partial45}>
                             <Text style={styles.valText}>{IDR_FORMAT(Number(props.data.price))}</Text>
                             <Text style={styles.valText}>{props.data.qty}</Text>
-                            <Text onPress={this._openModal} style={styles.changeDetails}>Ubah Rincian</Text>
+                            {
+                                props.routeName === 'Cart' &&
+                                <TouchableOpacity onPress={this._openModal}>
+                                    <Text style={styles.changeDetails}>Ubah Rincian</Text>
+                                </TouchableOpacity>
+                            }
                             <Text style={styles.subTotal}>
                                 {IDR_FORMAT(Number(props.data.price) * Number(props.data.qty))}
                             </Text>
@@ -53,7 +61,7 @@ export const PRODUCT_ORDER_DETAILS = (props) => {
 
 const styles = StyleSheet.create({
 
-    basicCard               : { backgroundColor: COLORS.PURE_WHITE, marginTop: 10, width: '95%', borderRadius: 3, elevation: 3 },
+    basicCard               : { backgroundColor: COLORS.PURE_WHITE, marginTop: 10, width: '95%', borderRadius: 3, elevation: 1 },
 
     touchableRemoveItem     : { position: 'absolute', right: 5, top: 5 },
 
@@ -75,7 +83,7 @@ const styles = StyleSheet.create({
 
     changeDetails           : { textAlign: 'right', marginTop: 13, ...TYPOGRAPHY.specialActionText },
 
-    subTotal                : { textAlign: 'right', right: 0, position: 'absolute', bottom: 3, ...TYPOGRAPHY.f15b },
+    subTotal                : { textAlign: 'right', right: 0, position: 'absolute', bottom: 3, ...TYPOGRAPHY.priceTextModal },
 
     separator               : { backgroundColor: '#d7d7d7', height: 1, width: '95%' }
 });

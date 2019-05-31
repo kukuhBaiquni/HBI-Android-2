@@ -102,7 +102,7 @@ class ProductDetails extends Component {
         this.props.dispatch(addToCart(item));
     };
 
-    showModal() {
+    _showModal = () => {
         if (this.state.isLoggedIn) {
             this.setState({
                 showModal: true
@@ -216,9 +216,10 @@ class ProductDetails extends Component {
                 itemCount={this.state.itemCount}
 
                 data={navigation.state.params}
-                userStatus={this.props.userData.status}
+                userStatus={this.props.userData.data.status}
                 resultCounting={this.props.resultCounting}
                 buttonText='Tambah ke Keranjang'
+                routeName={navigation.state.routeName}
                 />
         )
     };
@@ -331,7 +332,7 @@ class ProductDetails extends Component {
                     <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
                         <Text style={{color: '#7c0c10'}}>Beli Sekarang</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10', backgroundColor: '#7c0c10'}]} onPress={() => this.showModal()}>
+                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10', backgroundColor: '#7c0c10'}]} onPress={this._showModal}>
                         <Text style={{color: 'white'}}>Tambah ke Keranjang</Text>
                     </TouchableOpacity>
                 </View>
