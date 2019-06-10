@@ -4,6 +4,7 @@ import { TYPOGRAPHY } from '../typography';
 import { COLORS } from '../colors';
 import { Icon } from 'react-native-elements';
 import { IDR_FORMAT, SERVER_URL } from '../supportFunction';
+import PropTypes from 'prop-types';
 
 export const PRODUCT_ORDER_DETAILS = (props) => {
     _openModal = () => {
@@ -57,6 +58,14 @@ export const PRODUCT_ORDER_DETAILS = (props) => {
             </View>
         </View>
     )
+};
+
+PRODUCT_ORDER_DETAILS.proptypes = {
+    data: PropTypes.object.isRequired,
+    openModal: PropTypes.func,
+    index: PropTypes.number.isRequired,
+    removeItem: PropTypes.func,
+    routeName: PropTypes.string.isRequired
 };
 
 const styles = StyleSheet.create({

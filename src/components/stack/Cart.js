@@ -328,34 +328,34 @@ class Cart extends Component {
 
                                 <View style={{height: 70}} />
                             </ScrollView>
-                        <View style={[styles.productHeader, {height: 60, paddingLeft: 20, position: 'absolute', bottom: 0}]}>
-                            <View>
-                                <Text style={{...TYPOGRAPHY.p}}>Total Harga</Text>
-                                <Text style={{...TYPOGRAPHY.buttonText, ...TYPOGRAPHY.f20, color: COLORS.PRIMARY}}>{IDR_FORMAT(total)}</Text>
+                            <View style={[styles.productHeader, {height: 60, paddingLeft: 20, position: 'absolute', bottom: 0}]}>
+                                <View>
+                                    <Text style={{...TYPOGRAPHY.p}}>Total Harga</Text>
+                                    <Text style={{...TYPOGRAPHY.buttonText, ...TYPOGRAPHY.f20, color: COLORS.PRIMARY}}>{IDR_FORMAT(total)}</Text>
+                                </View>
+                                {
+                                    this.state.number !== 0 &&
+                                    <TouchableOpacity onPress={() => this.props.navigation.navigate('Payment')} style={styles.paymentButton}>
+                                        <Text style={{color: 'white', fontSize: 16}}>Bayar</Text>
+                                    </TouchableOpacity>
+                                }
                             </View>
-                            {
-                                this.state.number !== 0 &&
-                                <TouchableOpacity onPress={() => this.props.navigation.navigate('Payment')} style={styles.paymentButton}>
-                                    <Text style={{color: 'white', fontSize: 16}}>Bayar</Text>
-                                </TouchableOpacity>
-                            }
+                            <FlashMessage
+                                position='top'
+                                floating={true}
+                                duration={3000}
+                                ref='suc-cart'
+                                icon={this.props.status.saveChanges.success ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
+                                />
                         </View>
-                        <FlashMessage
-                            position='top'
-                            floating={true}
-                            duration={3000}
-                            ref='suc-cart'
-                            icon={this.props.status.saveChanges.success ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
-                            />
-                    </View>
-                    :
-                    <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
-                        <Image style={{height: 80, width: 80}} source={EMPTY_CART} />
-                        <Text style={{color: COLORS.PRIMARY, fontWeight: 'bold', fontSize: 24, marginTop: 20}}>Oops..</Text>
-                        <Text style={{color: COLORS.PRIMARY, fontWeight: 'bold', fontSize: 16, marginTop: 10}}>Keranjang Belanja Anda kosong!</Text>
-                    </View>
-                }
-            </View>
+                        :
+                        <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
+                            <Image style={{height: 80, width: 80}} source={EMPTY_CART} />
+                            <Text style={{color: COLORS.PRIMARY, fontWeight: 'bold', fontSize: 24, marginTop: 20}}>Oops..</Text>
+                            <Text style={{color: COLORS.PRIMARY, fontWeight: 'bold', fontSize: 16, marginTop: 10}}>Keranjang Belanja Anda kosong!</Text>
+                        </View>
+                    }
+                </View>
             )
         }else{
             return(

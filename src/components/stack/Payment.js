@@ -4,7 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollVi
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { fetchUser } from '../../actions/Get_User_Data';
-import { SERVER_URL, IDR_FORMAT } from '../basic/supportFunction';
+import { SERVER_URL, IDR_FORMAT, PRODUCT_PATH } from '../basic/supportFunction';
 import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
 import { DotIndicator, WaveIndicator } from 'react-native-indicators';
@@ -151,7 +151,7 @@ class Payment extends Component {
         const { userData, navigation, cart, transaction, targetMember } = this.props;
         const listData = cart.filter(x => x.status === true);
         let total = 0;
-        const loop = cart.map(x => total += x.subtotal);
+        cart.map(x => total += x.subtotal);
         let params = {};
         if (navigation.state.params === undefined) {
             params = userData.data;
@@ -220,7 +220,7 @@ class Payment extends Component {
                                                 <Image
                                                     resizeMode='cover'
                                                     style={itemDetails.imageStyle}
-                                                    source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
+                                                    source={{uri: `${SERVER_URL}${PRODUCT_PATH}${x.photo}`}}
                                                     />
                                                 <View style={itemDetails.orderInfo}>
                                                     <Text style={itemDetails.propertyText}>Harga</Text>

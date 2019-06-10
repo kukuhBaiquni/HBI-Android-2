@@ -3,6 +3,8 @@ export const SERVER_URL = 'http://halalbeef.co.id/';
 // export const SERVER_URL = 'http://192.168.0.113:1728/';``
 
 export const LOCALE_DAY = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
+export const PROCUCT_PATH = 'images/products/';
+export const PROFILE_PATH = 'images/dummy/';
 
 export const IDR_FORMAT = (angka) => {
     if (isNaN(angka)) {
