@@ -58,11 +58,10 @@ class NotificationDetails extends Component {
         }
     };
 
-    _showPicker = () => {
-        if (this.state.photoHandler === '') {
+    _showPicker = (x) => {
+        if (this.state.photoHandler === '' || x === 'force') {
             ImagePicker.showImagePicker(options, (response) => {
                 if (response.uri) {
-                    console.log(response.uri);
                     this.setState({
                         showPreview: true,
                         photoHandler: response.uri
@@ -70,13 +69,13 @@ class NotificationDetails extends Component {
                 }
             });
         }else{
-            
+
         }
     };
 
     _changePhoto = () => {
         this.setState({showPreview: false});
-        this._showPicker();
+        this._showPicker('force');
     };
 
     render() {
