@@ -7,20 +7,23 @@ import { SERVER_URL, IDR_FORMAT, LOCALE_DAY }from '../basic/supportFunction';
 import moment from 'moment';
 import { loadSingleTransaction } from '../../actions/Load_Single_Transaction';
 import { FREE_ONGKIR, BACKDARKRED } from '../../images';
+import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 class TransactionDetails extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Detail Transaksi',
-            headerTintColor: '#7c0c10',
+            headerTintColor: COLORS.PURE_WHITE,
             headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 16, width: 16}} source={BACKDARKRED} /> )
+            headerTitleStyle: {
+                ...TYPOGRAPHY.header
+            },
         };
-    };
-
+    }
     constructor(props) {
         super(props)
         this.state = {
@@ -60,20 +63,20 @@ class TransactionDetails extends Component {
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <View style={styles.container}>
                                     <Text style={styles.subTitle}>ID Transaksi</Text>
-                                    <Text style={{color: '#a5a5a5'}}>{data.trx}</Text>
+                                    <Text style={styles.defaultParagraph}>{data.trx}</Text>
                                 </View>
                                 <View style={styles.container}>
                                     <Text style={[styles.subTitle]}>Waktu Pemesanan</Text>
-                                    <Text style={{color: '#a5a5a5'}}>{LOCALE_DAY[new Date(data.start_date).getDay()] + ', ' + moment(data.start_date).format('DD MMM YYYY') + ' - ' + moment(data.start_date).format('HH:mm')}</Text>
+                                    <Text style={styles.defaultParagraph}>{LOCALE_DAY[new Date(data.start_date).getDay()] + ', ' + moment(data.start_date).format('DD MMM YYYY') + ' - ' + moment(data.start_date).format('HH:mm')}</Text>
                                 </View>
                                 <View style={styles.container}>
                                     <Text style={[styles.subTitle, {marginBottom: 5}]}>Alamat Pengiriman</Text>
-                                    <Text style={{color: '#a5a5a5'}}>{data.address.receiver}</Text>
-                                    <Text style={{color: '#a5a5a5'}}>0{data.address.receiver_phone}</Text>
-                                    <Text style={{color: '#a5a5a5'}}>Jl.{data.address.streets} No.{data.address.no} Rt.0{data.address.rt} Rw.0{data.address.rw}</Text>
-                                    <Text style={{color: '#a5a5a5'}}>Kecamatan {data.address.districts}</Text>
-                                    <Text style={{color: '#a5a5a5'}}>Kelurahan {data.address.villages}</Text>
-                                    <Text style={{color: '#a5a5a5'}}>{data.address.cities}</Text>
+                                    <Text style={styles.defaultParagraph}>{data.address.receiver}</Text>
+                                    <Text style={styles.defaultParagraph}>0{data.address.receiver_phone}</Text>
+                                    <Text style={styles.defaultParagraph}>Jl.{data.address.streets} No.{data.address.no} Rt.0{data.address.rt} Rw.0{data.address.rw}</Text>
+                                    <Text style={styles.defaultParagraph}>Kecamatan {data.address.districts}</Text>
+                                    <Text style={styles.defaultParagraph}>Kelurahan {data.address.villages}</Text>
+                                    <Text style={styles.defaultParagraph}>{data.address.cities}</Text>
                                 </View>
                                 <View style={styles.container}>
                                     <Text style={styles.subTitle}>Lacak Pesanan</Text>
@@ -82,8 +85,8 @@ class TransactionDetails extends Component {
                                         ?
                                         data.tracking_history.map((x, i) =>
                                             <View key={i} style={{marginTop: 10}}>
-                                                <Text style={{color: '#a5a5a5'}}>{LOCALE_DAY[new Date(x.time).getDay()] + ', ' + moment(x.time).format('DD MMM YYYY') + ' - ' + moment(x.time).format('HH:mm')}</Text>
-                                                <Text style={{color: color[x.tracking_type]}}>{trackingTitle[x.tracking_type]}</Text>
+                                                <Text style={styles.defaultParagraph}>{LOCALE_DAY[new Date(x.time).getDay()] + ', ' + moment(x.time).format('DD MMM YYYY') + ' - ' + moment(x.time).format('HH:mm')}</Text>
+                                                <Text style={{...TYPOGRAPHY.subHeader, color: color[x.tracking_type]}}>{trackingTitle[x.tracking_type]}</Text>
                                             </View>
                                         )
                                         :
@@ -91,26 +94,26 @@ class TransactionDetails extends Component {
                                     }
                                 </View>
                                 <View style={[styles.container, {padding: 5}]}>
-                                    <Text style={{fontWeight: 'bold', padding: 10, color: '#7c0c10', fontSize: 17}}>Detail Pesanan</Text>
+                                    <Text style={[styles.subTitle, {padding: 10}]}>Detail Pesanan</Text>
                                 </View>
                                 {
                                     data.detail_items.map((x, i) =>
                                         <View key={i} style={styles.container}>
                                             <View style={{flexDirection: 'row'}}>
                                                 <Image
-                                                    resizeMode='contain'
-                                                    style={{width: 70, height: 70, borderColor: '#e2e2e2', borderWidth: 1}}
+                                                    resizeMode='cover'
+                                                    style={styles.imageStyles}
                                                     source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
                                                     />
-                                                <View style={{marginLeft: 10, marginTop: -5, width: 252}}>
-                                                    <Text numberOfLines={1} style={{fontWeight: 'bold', fontSize: 16, color: '#7c0c10'}}>{x.product_name}</Text>
+                                                <View style={styles.detailContainer}>
+                                                    <Text numberOfLines={1} style={styles.productNameText}>{x.product_name}</Text>
                                                     <View style={{flexDirection: 'row'}}>
-                                                        <Text>Harga: </Text>
-                                                        <Text style={{color: '#a5a5a5', textAlign: 'right', position: 'absolute', right: 10}}>{IDR_FORMAT(x.price)}</Text>
+                                                        <Text style={{...TYPOGRAPHY.p}}>Harga: </Text>
+                                                        <Text style={styles.defaultRightText}>{IDR_FORMAT(x.price)}</Text>
                                                     </View>
                                                     <View style={{flexDirection: 'row'}}>
-                                                        <Text>Kuantitas: </Text>
-                                                        <Text style={{color: '#a5a5a5', textAlign: 'right', position: 'absolute', right: 10}}>{x.qty} {this.props.listProducts.filter((r) => r.id === x.id ).map((x) => x.unit)}</Text>
+                                                        <Text style={{...TYPOGRAPHY.p}}>Kuantitas: </Text>
+                                                        <Text style={styles.defaultRightText}>{x.qty} {this.props.listProducts.filter((r) => r.id === x.id ).map((x) => x.unit)}</Text>
                                                     </View>
                                                 </View>
                                                 <View>
@@ -120,9 +123,9 @@ class TransactionDetails extends Component {
                                                 </View>
                                             </View>
                                             <View style={{width: '100%', flexDirection: 'row'}}>
-                                                <Text style={{marginTop: 5, marginLeft: 80, fontWeight: 'bold', color: '#7c0c10'}}>Subtotal </Text>
+                                                <Text style={styles.subtotalText}>Subtotal </Text>
                                                 <View style={{width: '100%', position: 'absolute'}}>
-                                                    <Text style={{marginTop: 5, textAlign: 'right'}}>{IDR_FORMAT(x.price * x.qty)}</Text>
+                                                    <Text style={styles.subtotalValue}>{IDR_FORMAT(x.price * x.qty)}</Text>
                                                 </View>
                                             </View>
                                         </View>
@@ -131,27 +134,27 @@ class TransactionDetails extends Component {
                             </View>
                             <View style={{justifyContent: 'center', alignItems: 'center'}}>
                                 <View style={styles.footer}>
-                                    <Text style={[styles.subTitle, {padding: 10, fontSize: 15, marginLeft: 83}]}>Total Belanja</Text>
+                                    <Text style={styles.totalPriceText}>Total Belanja</Text>
                                     <View style={{width: '100%', position: 'absolute'}}>
-                                        <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{IDR_FORMAT(data.total_price - data.ongkir)}</Text>
+                                        <Text style={styles.totalPriceValue}>{IDR_FORMAT(data.total_price - data.ongkir)}</Text>
                                     </View>
                                 </View>
                                 <View style={styles.footer}>
-                                    <Text style={[styles.subTitle, {padding: 10, fontSize: 15, marginLeft: 83}]}>Ongkos Kirim</Text>
+                                    <Text style={{padding: 10, marginLeft: 83, ...TYPOGRAPHY.p}}>Ongkos Kirim</Text>
                                     <View style={{width: '100%', position: 'absolute'}}>
                                         {
                                             data.ongkir === 0
                                             ?
-                                            <Image resizeMode='contain' style={{height: 30, width: 70, position: 'absolute', right: 10, top: 5}} source={FREE_ONGKIR}/>
+                                            <Image resizeMode='contain' style={styles.freeOngkirImage} source={FREE_ONGKIR}/>
                                             :
-                                            <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{IDR_FORMAT(data.ongkir)}</Text>
+                                            <Text style={styles.totalPriceValue}>{IDR_FORMAT(data.ongkir)}</Text>
                                         }
                                     </View>
                                 </View>
                                 <View style={[styles.footer, {backgroundColor: '#fff9fa'}]}>
-                                    <Text style={[styles.subTitle, {padding: 10, fontSize: 15, marginLeft: 83}]}>Total Pembayaran</Text>
+                                    <Text style={{padding: 10, ...TYPOGRAPHY.p, marginLeft: 83}}>Total Pembayaran</Text>
                                     <View style={{width: '100%', position: 'absolute'}}>
-                                        <Text style={{padding: 10, fontSize: 15, fontWeight: 'bold', textAlign: 'right'}}>{IDR_FORMAT(data.total_price)}</Text>
+                                        <Text style={styles.totalPriceValue}>{IDR_FORMAT(data.total_price)}</Text>
                                     </View>
                                 </View>
                             </View>
@@ -191,20 +194,75 @@ const styles = StyleSheet.create({
         width: '95%',
         marginTop: 10,
         padding: 10,
-        elevation: 3,
+        elevation: 1,
         borderRadius: 5
     },
     subTitle: {
-        fontWeight: 'bold',
-        color: '#7c0c10'
+        ...TYPOGRAPHY.subHeader,
+        color: COLORS.PRIMARY
     },
     footer: {
         backgroundColor: 'white',
-        marginTop: 10,
+        marginTop: 5,
         marginBottom: 0,
         flexDirection: 'row',
         width: '95%',
-        elevation: 3,
+        elevation: 1,
         borderRadius: 5
-    }
+    },
+    defaultParagraph: {
+        ...TYPOGRAPHY.p,
+        color: COLORS.GRAY_TEXT,
+    },
+    detailContainer: {
+        marginLeft: 10,
+        marginTop: -5,
+        width: 252
+    },
+    productNameText: {
+        ...TYPOGRAPHY.subHeader,
+        color: COLORS.PRIMARY,
+        ...TYPOGRAPHY.f15
+    },
+    subtotalText: {
+        marginTop: 5,
+        marginLeft: 80,
+        ...TYPOGRAPHY.p
+    },
+    subtotalValue: {
+        marginTop: 5,
+        textAlign: 'right',
+        ...TYPOGRAPHY.priceTextModal
+    },
+    defaultRightText: {
+        ...TYPOGRAPHY.p,
+        textAlign: 'right',
+        position: 'absolute',
+        right: 10
+    },
+    imageStyles: {
+        width: 70,
+        height: 70,
+        borderColor: COLORS.GRAY_BORDER,
+        borderWidth: 1,
+        borderRadius: 3
+    },
+    totalPriceText: {
+        ...TYPOGRAPHY.p,
+        padding: 10,
+        fontSize: 15,
+        marginLeft: 80
+    },
+    totalPriceValue: {
+        padding: 10,
+        ...TYPOGRAPHY.priceTextModal,
+        textAlign: 'right'
+    },
+    freeOngkirImage: {
+        height: 30,
+        width: 70,
+        position: 'absolute',
+        right: 10,
+        top: 5
+    },
 })

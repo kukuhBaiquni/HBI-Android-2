@@ -16,19 +16,23 @@ import { countItem } from '../../actions/Counting_Items';
 import { resetTransactionState } from '../../actions/Direct_Purchase';
 import * as Animatable from 'react-native-animatable';
 import { FREE_ONGKIR, BACKDARKRED } from '../../images';
+import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 class DirectPayment extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Pembayaran',
-            headerTintColor: '#7c0c10',
+            headerTintColor: COLORS.PURE_WHITE,
             headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
-        }
-    };
+            headerTitleStyle: {
+                ...TYPOGRAPHY.header
+            },
+        };
+    }
 
     constructor(props) {
         super(props)
