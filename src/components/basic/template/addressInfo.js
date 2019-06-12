@@ -5,7 +5,7 @@ import { TYPOGRAPHY } from '../typography';
 import { CAPITALIZE } from '../supportFunction';
 
 export const ADDRESS_INFO = (props) => {
-    const { userData, navigation } = props;
+    const { userData, navigation, newParams } = props;
     return(
         <View style={userInfo.container}>
             <View style={userInfo.papperWhite}>

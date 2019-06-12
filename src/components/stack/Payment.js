@@ -205,6 +205,7 @@ class Payment extends Component {
                         <ADDRESS_INFO
                             navigation={navigation}
                             userData={userData}
+                            newParams={newParams}
                             />
 
                         <View style={{alignItems: 'center'}}>

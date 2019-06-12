@@ -61,5 +61,7 @@ export const TYPOGRAPHY = {
 
     memberPriceText     : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.PRIMARY},
     normalPriceText     : {fontSize: 14, ...FONT_TYPE.medium, color: COLORS.BLACK_NORMAL},
-    buttonText          : {fontSize: 14, ...FONT_TYPE.medium}
+    buttonText          : {fontSize: 14, ...FONT_TYPE.medium},
+
+    italicDefault       : {...FONT_TYPE.italic}
 };

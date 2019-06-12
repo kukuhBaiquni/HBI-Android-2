@@ -36,20 +36,20 @@ class ListMarket extends Component {
             addressHandler: '',
             indexHandler: 0,
             region: {
-                latitude: -6.949364630440158,
-                longitude: 107.613774407655,
-                latitudeDelta: 0.01754357210323132,
-                longitudeDelta: 0.00994127243757248
+                latitude: -6.9442352,
+                longitude: 107.6455722,
+                latitudeDelta: 0,
+                longitudeDelta: 0.5
             },
             camera: {
                 center: {
-                    latitude: -6.949364630440158,
-                    longitude: 107.613774407655
+                    latitude: -6.9442352,
+                    longitude: 107.6455722
                 },
                 pitch: 0,
                 heading: 1,
-                altitude: 0,
-                zoom: 13
+                altitude: 12.71,
+                zoom: 5
             },
             locationDenied: null,
             activeMemberIndex: 0,

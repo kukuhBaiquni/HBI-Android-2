@@ -7,17 +7,21 @@ import moment from 'moment';
 import { readingNotification } from '../../actions/Reading_Notification';
 import { NavigationEvents } from 'react-navigation';
 import { BACKDARKRED } from '../../images';
+import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 class NotificationDetails extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Detail Notifikasi',
-            headerTintColor: '#7c0c10',
+            headerTintColor: COLORS.PURE_WHITE,
             headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 16, width: 16}} source={BACKDARKRED} /> )
+            headerTitleStyle: {
+                ...TYPOGRAPHY.header
+            },
         };
     };
 
@@ -41,36 +45,34 @@ class NotificationDetails extends Component {
                     />
                 <View style={{alignItems: 'center', marginTop: 10}}>
                     <View style={styles.container}>
-                        <Text style={{fontWeight: 'bold', fontSize: 20}}>Terima Kasih!</Text>
-                        <Text>{header2[data.tracking]}</Text>
-                        <Text style={{color: '#a3a3a3', fontSize: 13}}>{LOCALE_DAY[new Date(data.date).getDay()] +', '+ moment(data.date).format('DD MMM YYYY') + ' '+ moment(data.date).format('HH:mm')}</Text>
-                        <View style={{height: 40}} />
+                        <Text style={[TYPOGRAPHY.subHeader, TYPOGRAPHY.f20]}>Terima Kasih!</Text>
+                        <Text style={styles.trackingLevel}>{header2[data.tracking]}</Text>
+                        <Text style={styles.timeText}>{LOCALE_DAY[new Date(data.date).getDay()] +', '+ moment(data.date).format('DD MMM YYYY') + ' '+ moment(data.date).format('HH:mm')}</Text>
+                        <View style={{height: 20}} />
                         {
                             data.tracking === 1 &&
                             <View>
-                                <View style={{alignItems: 'center', borderBottomColor: '#a3a3a3', borderBottomWidth: 1, marginBottom: 25}}>
-                                    <Text style={{color: '#a3a3a3'}}>Dan segera lakukan pembayaran sebelum:</Text>
-                                    <Text style={{fontSize: 20, marginBottom: 5, color: '#a3a3a3'}}>{LOCALE_DAY[new Date(data.content.due_date).getDay()] +', '+ moment(data.content.due_date).format('DD MMM YYYY') + ' '+ moment(data.content.due_date).format('HH:mm')}</Text>
+                                <View style={styles.dueDateContainer}>
+                                    <Text style={styles.dueDateInfoText}>Dan segera lakukan pembayaran sebelum:</Text>
+                                    <Text style={styles.dueDateText}>{LOCALE_DAY[new Date(data.content.due_date).getDay()] +', '+ moment(data.content.due_date).format('DD MMM YYYY') + ' '+ moment(data.content.due_date).format('HH:mm')}</Text>
                                 </View>
-                                <View style={{alignItems: 'center', borderBottomColor: '#a3a3a3', borderBottomWidth: 1, marginBottom: 25}}>
-                                    <Text style={{color: '#a3a3a3'}}>Metode Pembayaran:</Text>
-                                    <Text style={{color: '#a3a3a3', fontSize: 16, marginBottom: 10}}>Transfer ke <Text style={{fontWeight: 'bold'}}>rekening BCA 2820260417</Text></Text>
-                                    <Text style={{color: '#a3a3a3', fontStyle: 'italic'}}>Jumlah transfer pembayaran harus sesuai</Text>
-                                    <Text style={{color: '#a3a3a3', fontStyle: 'italic'}}>dengan jumlah tagihan (hingga 3 digit terakhir).</Text>
-                                    <Text style={{color: '#a3a3a3', fontStyle: 'italic'}}>Tulis Nomor Transaksi pada kolom Detail Transfer,</Text>
-                                    <Text style={{color: '#a3a3a3', fontStyle: 'italic', marginBottom: 15}}>untuk kelancaran proses pembayaran Anda.</Text>
+                                <View style={styles.paymentMethodContainer}>
+                                    <Text style={{color: COLORS.GRAY_ICON, ...TYPOGRAPHY.p}}>Metode Pembayaran:</Text>
+                                    <Text style={styles.mixTransferTo}>Transfer ke <Text style={{...TYPOGRAPHY.h1, color: COLORS.PRIMARY}}>rekening BCA 2820260417</Text></Text>
+                                    <Text style={styles.noteItalic}>Jumlah transfer pembayaran harus sesuai dengan jumlah tagihan (hingga 3 digit terakhir). Tulis Nomor Transaksi pada kolom Detail Transfer,</Text>
+                                    <Text style={[styles.noteItalic, {marginBottom: 15}]}>untuk kelancaran proses pembayaran Anda.</Text>
                                 </View>
                             </View>
                         }
-                        <Text style={{fontSize: 18, color: '#a3a3a3'}}>Detail Pesanan Anda:</Text>
-                        <View style={{borderBottomColor: '#a3a3a3', borderBottomWidth: 1, marginBottom: 15}}>
-                            <Text style={{color: '#a3a3a3'}}>Nomor Transaksi</Text>
-                            <Text style={{position: 'absolute', right: 0, color: '#a3a3a3'}}>{data.trx}</Text>
+                        <Text style={styles.detailOrderText}>Detail Pesanan Anda:</Text>
+                        <View style={styles.orderDetailContainer}>
+                            <Text style={styles.trxText}>Nomor Transaksi</Text>
+                            <Text style={styles.trxTextVal}>{data.trx}</Text>
                             {
                                 data.tracking === 1 &&
                                 <View>
-                                    <Text style={{color: '#a3a3a3', marginBottom: 10}}>Jumlah Tagihan</Text>
-                                    <Text style={{position: 'absolute', right: 0, fontWeight: 'bold'}}>{IDR_FORMAT(data.content.amount)}</Text>
+                                    <Text style={[styles.trxText, {marginBottom: 10}]}>Jumlah Tagihan</Text>
+                                    <Text style={[styles.trxTextVal, {...TYPOGRAPHY.priceTextModal}]}>{IDR_FORMAT(data.content.amount)}</Text>
                                 </View>
                             }
                             {
@@ -92,7 +94,7 @@ class NotificationDetails extends Component {
                             </View>
                         }
                         <TouchableOpacity style={{alignItems: 'center'}} onPress={() => navigation.navigate('TransactionDetails', {trx: data.trx})}>
-                            <Text style={{fontSize: 16, fontWeight: 'bold', color: '#7c0c10'}}>Lihat Detail</Text>
+                            <Text style={styles.toDetail}>Lihat Detail</Text>
                         </TouchableOpacity>
                     </View>
                 </View>
@@ -128,5 +130,70 @@ const styles = StyleSheet.create({
         borderRadius: 3,
         elevation: 3,
         padding: 15
+    },
+    trackingLevel: {
+        ...TYPOGRAPHY.p
+    },
+    timeText: {
+        color: COLORS.GRAY_ICON,
+        ...TYPOGRAPHY.p
+    },
+    dueDateContainer: {
+        alignItems: 'center',
+        borderBottomColor: COLORS.GRAY_ICON,
+        borderBottomWidth: 1,
+        marginBottom: 25,
+    },
+    dueDateInfoText: {
+        color: COLORS.GRAY_ICON,
+        ...TYPOGRAPHY.p
+    },
+    dueDateText: {
+        marginBottom: 5,
+        ...TYPOGRAPHY.subHeader,
+        ...TYPOGRAPHY.f20,
+        color: COLORS.GRAY_ICON
+    },
+    paymentMethodContainer: {
+        alignItems: 'center',
+        borderBottomColor: COLORS.GRAY_ICON,
+        borderBottomWidth: 1,
+        marginBottom: 25
+    },
+    mixTransferTo: {
+        color: COLORS.GRAY_ICON,
+        ...TYPOGRAPHY.p,
+        ...TYPOGRAPHY.f14,
+        marginBottom: 10
+    },
+    noteItalic: {
+        color: COLORS.GRAY_ICON,
+        ...TYPOGRAPHY.italicDefault,
+        ...TYPOGRAPHY.f13,
+        textAlign: 'center',
+        lineHeight: 18
+    },
+    detailOrderText: {
+        ...TYPOGRAPHY.subHeader,
+        ...TYPOGRAPHY.f15,
+        color: COLORS.BLACK_NORMAL
+    },
+    orderDetailContainer: {
+        borderBottomColor: COLORS.GRAY_ICON,
+        borderBottomWidth: 1,
+        marginBottom: 15
+    },
+    trxText: {
+        ...TYPOGRAPHY.p,
+    },
+    trxTextVal: {
+        position: 'absolute',
+        right: 0,
+        ...TYPOGRAPHY.p
+    },
+    toDetail: {
+        ...TYPOGRAPHY.subHeader,
+        color: COLORS.PRIMARY,
+        ...TYPOGRAPHY.f17
     }
 });
