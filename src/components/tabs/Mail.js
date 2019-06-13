@@ -77,7 +77,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'center',
-        elevation: 3
+        elevation: 1
     },
     headerText: {
         ...TYPOGRAPHY.header,

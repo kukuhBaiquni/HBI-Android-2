@@ -57,6 +57,7 @@ function* workerConfirmTransaction(form) {
             yield put(confirmTransactionFailed())
         }
     }catch (error) {
+        console.log(error.response.statusCode);
         yield put(InternalServerError());
     }
 }

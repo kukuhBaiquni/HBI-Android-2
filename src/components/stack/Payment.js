@@ -60,7 +60,7 @@ class Payment extends Component {
             const village = navigation.state.params.village;
         }
         setTimeout(() => {
-            this.setState({showContent: true});
+            this.setState({showContent: true, token: this.props.token});
         }, 10);
     };
 
@@ -92,7 +92,7 @@ class Payment extends Component {
     submitTransaction() {
         const { navigation, userData, targetMember, dispatch } = this.props;
         let data = {};
-        if (this.state.isAddressValid) {
+        if (userData.data.address.street !== '' || navigation.state.params !== undefined) {
             if (navigation.state.params === undefined) {
                 data = {
                     name: userData.data.name,
@@ -190,7 +190,7 @@ class Payment extends Component {
                         <View style={styles.modalContainer}>
                             <Text style={styles.modalWaitText}>Mohon Tunggu</Text>
                             <DotIndicator
-                                color='#7c0c10'
+                                color={COLORS.PRIMARY}
                                 size={8}
                                 />
                         </View>
