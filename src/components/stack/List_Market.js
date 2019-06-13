@@ -17,6 +17,7 @@ import {WaveIndicator} from 'react-native-indicators';
 import { DRAWER_DEFAULT, CONTOH_2, BELANJA, BELANJA_C, BACKDARKRED } from '../../images';
 import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -145,7 +146,7 @@ class ListMarket extends Component {
         }else{
             origin = this.state.fakePosition;
         }
-        this.setState({indexHandler: i, destination, activeMemberIndex: i})
+        this.setState({indexHandler: i, destination, activeMemberIndex: i});
         if (this.state.myPosition === null && this.state.fakePosition === null) {
             this.map.animateCamera({
                 center: {
@@ -178,7 +179,7 @@ class ListMarket extends Component {
     };
 
     _renderListMember = () => {
-        const { listMarket } = this.props;
+        const { listMarket } = this.props
         if (listMarket.data.length !== 0) {
             return(
                 listMarket.data.map((x, i) =>
@@ -191,7 +192,15 @@ class ListMarket extends Component {
                         description={x.address.nama_toko}
                         tracksViewChanges={false}
                         >
-                        <Image style={styles.pinImage} source={DRAWER_DEFAULT} />
+                        <View style={this.state.activeMemberIndex === i ? styles.pinWrapper : [styles.pinWrapper, {backgroundColor: COLORS.PRIMARY}]}>
+                            {
+                                this.state.activeMemberIndex === i
+                                ?
+                                <Image style={styles.pinImage} source={DRAWER_DEFAULT} />
+                                :
+                                <Text style={{color: COLORS.PURE_WHITE, fontSize: 10, fontWeight: 'bold'}}>HBI</Text>
+                            }
+                        </View>
                     </Marker>
                 )
             )
@@ -529,9 +538,9 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between'
     },
     pinImage: {
-        height: 20,
+        borderRadius: 10,
         width: 20,
-        borderRadius: 10
+        height: 20
     },
     swipeText: {
         fontSize: 18,
@@ -584,5 +593,15 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    pinWrapper: {
+        backgroundColor: 'transparent',
+        height: 25,
+        width: 25,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderColor: COLORS.PRIMARY,
+        borderRadius: 15,
+        borderWidth: 1
     }
 });
