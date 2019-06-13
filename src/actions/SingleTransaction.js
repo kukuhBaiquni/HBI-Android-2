@@ -7,14 +7,14 @@ export const singleTransaction = (data) => {
     };
 };
 
-const singleTransactionSuccess = () => {
+const singleTransactionSuccess = (data) => {
     return {
         type: 'SAVE_SINGLE_TRANSACTION',
         data
     };
 };
 
-const resetSingleTransaction = () => {
+export const resetSingleTransaction = () => {
     return {
         type: 'RESET_SINGLE_TRANSACTION'
     };

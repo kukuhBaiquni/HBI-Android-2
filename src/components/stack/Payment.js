@@ -18,6 +18,7 @@ import { MODAL } from '../basic/template/loading';
 import { ADDRESS_INFO } from '../basic/template/addressInfo';
 import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
+import { resetSingleTransaction } from '../../actions/SingleTransaction';
 
 class Payment extends Component {
     static navigationOptions = ({navigation}) => {
@@ -43,11 +44,13 @@ class Payment extends Component {
             loading: false,
             transactionLoading: true,
             isFreeOngkir: false,
-            showContent: false
+            showContent: false,
+            data: []
         }
     };
 
     _afterRender = () => {
+        console.log(this.props);
         const { dispatch, cart, navigation } = this.props;
         dispatch(resetTransactionState())
         let acu = 0;
@@ -60,7 +63,11 @@ class Payment extends Component {
             const village = navigation.state.params.village;
         }
         setTimeout(() => {
-            this.setState({showContent: true, token: this.props.token});
+            if (this.props.singleTransaction.length > 0) {
+                this.setState({showContent: true, token: this.props.token, data: this.props.singleTransaction});
+            }else{
+                this.setState({showContent: true, token: this.props.token, data: cart.filter(x => x.status === true)});
+            }
         }, 10);
     };
 
@@ -149,7 +156,6 @@ class Payment extends Component {
 
     render() {
         const { userData, navigation, cart, transaction, targetMember } = this.props;
-        const listData = cart.filter(x => x.status === true);
         let total = 0;
         cart.map(x => total += x.subtotal);
         let params = {};
@@ -175,6 +181,7 @@ class Payment extends Component {
             <View style={{flex: 1, backgroundColor: COLORS.BASE_BACKGROUND}}>
                 <NavigationEvents
                     onDidFocus={() => this._afterRender()}
+                    onWillBlur={() => this.props.dispatch(resetSingleTransaction())}
                     />
                 <Modal
                     isVisible={this.state.loading}
@@ -214,7 +221,7 @@ class Payment extends Component {
                                     <Text style={itemDetails.headerTitle}>Detail Pesanan</Text>
                                 </View>
                                 {
-                                    listData.map((x, i) =>
+                                    this.state.data.map((x, i) =>
                                         <View key={i}>
                                             <Text style={itemDetails.productName}>{x.product_name}</Text>
                                             <View style={itemDetails.productDetails}>

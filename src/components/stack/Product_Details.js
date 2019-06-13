@@ -22,6 +22,7 @@ import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
 import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
 import { TYPOGRAPHY } from '../basic/typography';
+import { singleTransaction } from '../../actions/SingleTransaction';
 
 class ProductDetails extends Component {
     static navigationOptions = ({navigation}) => {
@@ -122,18 +123,11 @@ class ProductDetails extends Component {
     };
 
     checkToken = () => {
-        setTimeout( async () => {
-            try {
-                const val = await AsyncStorage.getItem('access_token');
-                if (val !== null) {
-                    this.setState({isLoggedIn: true, token: JSON.parse(val)});
-                }else{
-                    this.setState({isLoggedIn: false});
-                }
-            } catch (error) {
-                this.setState({isLoggedIn: false});
-            }
-        }, 10);
+        if (this.props.token !== '') {
+            this.setState({isLoggedIn: true, token: this.props.token});
+        }else{
+            this.setState({isLoggedIn: false, token: ''});
+        }
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -158,32 +152,26 @@ class ProductDetails extends Component {
                 this.props.dispatch(forceResetATC())
             }
         }
+        if (prevProps.singleTransaction !== this.props.singleTransaction) {
+            this.props.navigation.navigate('Payment');
+        }
     };
 
-    directPurchase = async () => {
-        try{
-            if (this.state.token !== '') {
-                const item = this.props.navigation.state.params;
-                await AsyncStorage.setItem('direct_purchase', JSON.stringify(item))
-                this.props.navigation.navigate('DirectPayment')
-            }else{
-                Alert.alert(
-                    'Kesalahan',
-                    'Anda harus login untuk berbelanja, login sekarang?',
-                    [
-                        {text: 'YA', onPress: () => this.props.navigation.navigate('Login')},
-                        {text: 'TIDAK'}
-                    ],
-                    { cancelable: false }
-                );
-            }
-        }catch(error) {}
-    };
-
-    removeStorage = async () => {
-        try{
-            await AsyncStorage.removeItem('direct_purchase');
-        }catch(error) {}
+    _directPurchase = () => {
+        const data = this.props.navigation.state.params;
+        if (this.state.isLoggedIn) {
+            this.props.dispatch(singleTransaction([data]));
+        }else{
+            Alert.alert(
+                'Kesalahan',
+                'Anda harus login untuk berbelanja, login sekarang?',
+                [
+                    {text: 'YA', onPress: () => this.props.navigation.navigate('Login')},
+                    {text: 'TIDAK'}
+                ],
+                { cancelable: false }
+            );
+        }
     };
 
     _showModalContent = () => {
@@ -256,7 +244,6 @@ class ProductDetails extends Component {
             <View style={{flex: 1, backgroundColor: COLORS.BASE_BACKGROUND}}>
                 <NavigationEvents
                     onDidFocus={() => this.checkToken()}
-                    onWillFocus={() => this.removeStorage()}
                     />
                 <MODAL isVisible={!this.state.isVisibleMain} message='Memuat Produk' />
                 {
@@ -330,7 +317,7 @@ class ProductDetails extends Component {
                     />
                 }
                 <View style={styles.footerWrapper}>
-                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this.directPurchase()}>
+                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this._directPurchase()}>
                         <Text style={{color: COLORS.PRIMARY, ...TYPOGRAPHY.buttonText}}>Beli Sekarang</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.button, {borderColor: COLORS.PRIMARY, backgroundColor: COLORS.PRIMARY}]} onPress={this._showModal}>

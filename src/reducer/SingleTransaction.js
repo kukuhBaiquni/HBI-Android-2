@@ -1,4 +1,4 @@
-let initialState = {};
+let initialState = [];
 
 export default function singleTransaction(state = initialState, action) {
     switch (action.type) {
@@ -7,7 +7,7 @@ export default function singleTransaction(state = initialState, action) {
         return action.data;
 
         case 'RESET_SINGLE_TRANSACTION':
-        return {}
+        return [];
 
         default:
         return state;
