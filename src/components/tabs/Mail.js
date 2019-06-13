@@ -7,6 +7,8 @@ import { SERVER_URL } from '../basic/supportFunction';
 import { connect } from 'react-redux';
 import { NOTIFIKASI_C, NOTIFIKASI } from '../../images';
 import BadgeNotification from '../Badge_Notification';
+import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 class Mail extends Component {
     render() {
@@ -70,7 +72,7 @@ export default connect(
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'white',
+        backgroundColor: COLORS.PRIMARY,
         padding: 10,
         flexDirection: 'row',
         alignItems: 'center',
@@ -78,10 +80,8 @@ const styles = StyleSheet.create({
         elevation: 3
     },
     headerText: {
-        color: '#7c0c10',
-        fontWeight: 'bold',
-        fontSize: 20,
-        paddingTop: 10
+        ...TYPOGRAPHY.header,
+        paddingTop: 10,
     },
     arrowNavigation: {
         position: 'absolute',
@@ -96,10 +96,9 @@ const styles = StyleSheet.create({
     },
     subtitle: {
         marginLeft: 10,
-        color: '#515151',
         textAlign: 'left',
-        fontSize: 15,
-        fontWeight: 'bold'
+        ...TYPOGRAPHY.subHeader,
+        ...TYPOGRAPHY.f15
     },
     containerWithIcon: {
         backgroundColor: 'white',

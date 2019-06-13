@@ -92,7 +92,6 @@ class Payment extends Component {
     submitTransaction() {
         const { navigation, userData, targetMember, dispatch } = this.props;
         let data = {};
-        console.log(this.state.isAddressValid);
         if (this.state.isAddressValid) {
             if (navigation.state.params === undefined) {
                 data = {

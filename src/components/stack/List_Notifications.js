@@ -7,6 +7,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 import { BACKDARKRED } from '../../images';
 import { FONT_TYPE } from '../basic/Fonts';
 import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 const { width: SCREEN_WIDTH} = Dimensions.get('window');
 
@@ -112,12 +113,12 @@ class ListNotifications extends Component {
                                                 <View style={styles.markerOverlay} />
                                             </TouchableNativeFeedback>
                                         }
-                                        <Text>Nomor Transaksi</Text>
+                                        <Text style={{...TYPOGRAPHY.p, color: COLORS.BLACK_NORMAL}}>Nomor Transaksi</Text>
                                         <Text style={styles.trxText}>{x.trx}</Text>
                                         <Text style={styles.dateText}>
                                             {LOCALE_DAY[new Date(x.date).getDay()] + ', ' + moment(x.date).format('DD MMM YYYY') + ' - ' + moment(x.date).format('HH:mm')}
                                         </Text>
-                                        <Text style={{color: TRACKING_COLOR_STATUS[x.tracking]}}>{TRACKING_MESSAGE_STATUS[x.tracking]}</Text>
+                                        <Text style={{...TYPOGRAPHY.subHeader, color: TRACKING_COLOR_STATUS[x.tracking]}}>{TRACKING_MESSAGE_STATUS[x.tracking]}</Text>
                                     </TouchableOpacity>
                                 </View>
                             )
@@ -158,10 +159,10 @@ const styles = StyleSheet.create({
         height: 70,
         paddingTop: 5,
         paddingLeft: 15,
-        elevation: 3
+        elevation: 1
     },
-    trxText: {position: 'absolute', right: 10, top: 7, fontWeight: 'bold'},
-    dateText: {fontSize: 12, color: '#a3a3a3'},
+    trxText: {position: 'absolute', right: 10, top: 7, ...TYPOGRAPHY.subHeader, color: COLORS.GRAY_TEXT},
+    dateText: {...TYPOGRAPHY.p, ...TYPOGRAPHY.f14},
     pannelContainer: {
         alignItems: 'center',
         justifyContent: 'center'
@@ -215,5 +216,5 @@ const styles = StyleSheet.create({
     }
 });
 
-const readed = [styles.listItem, {backgroundColor: '#eaeaea'}];
-const unread = [styles.listItem, {backgroundColor: 'white'}];
+const readed = [styles.listItem, {backgroundColor: COLORS.GRAY_BORDER}];
+const unread = [styles.listItem, {backgroundColor: COLORS.PURE_WHITE}];

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { StatusBar, StyleSheet, TextInput, View, TouchableOpacity, ScrollView, TouchableNativeFeedback, AsyncStorage, ToastAndroid } from 'react-native';
-import { Container, Header, Item, Text, Right, Button, Content, Tab, Tabs, ScrollableTab } from 'native-base';
+import { StatusBar, StyleSheet, TextInput, View, TouchableOpacity, ScrollView, TouchableNativeFeedback, AsyncStorage, ToastAndroid, BackHandler } from 'react-native';
+import { Container, Header, Item, Text, Right, Button, Content, Tab, Tabs, ScrollableTab, Left } from 'native-base';
 import { Icon } from 'react-native-elements';
 import ProductsTab from '../Products_Tab';
 import { connect } from 'react-redux';
@@ -14,8 +14,16 @@ import { fetchUser } from '../../actions/Get_User_Data';
 import { setPlayerId } from '../../actions/Set_Player_Id';
 import { setInitialToken } from '../../actions/Set_Initial_Token';
 import { withNavigationFocus } from 'react-navigation';
+import { MODAL } from '../basic/template/loading';
+import { COLORS } from '../basic/colors';
 
 class ShopPageMember extends Component {
+    static navigationOptions = ({navigation}) => {
+        return {
+            header: null
+        };
+    }
+
     constructor(props) {
         super(props)
         this.state = {
@@ -26,7 +34,8 @@ class ShopPageMember extends Component {
     };
 
     _afterRender = () => {
-        this.setState({isFocused: true})
+        BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
+        this.setState({isFocused: true});
         const { navigation } = this.props;
         this.props.dispatch(getAllProducts());
         setTimeout(async () => {
@@ -51,8 +60,15 @@ class ShopPageMember extends Component {
         });
     };
 
+    _handleBackButton = () => {
+        const { navigation } = this.props;
+        navigation.navigate('Beranda');
+        return true
+    };
+
     _beforeBlur = () => {
         this.setState({isFocused: false});
+        BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
     };
 
     _onAnimationEnd = () => {
@@ -69,7 +85,12 @@ class ShopPageMember extends Component {
                     onWillBlur={this._beforeBlur}
                     />
                 <Header style={styles.headerColor}>
-                    <Item style={{borderBottomColor: '#7c0c10'}}>
+                    <Left>
+                        <TouchableOpacity onPress={() => navigation.navigate('Beranda')}>
+                            <Icon name='arrow-back' color='white' />
+                        </TouchableOpacity>
+                    </Left>
+                    <Item style={{borderBottomColor: COLORS.PRIMARY}}>
                         <TouchableNativeFeedback onPress={() => navigation.navigate('SearchAutocomplete')}>
                             <View style={styles.input}>
                                 <Text style={{color: '#a2a2a2', paddingTop: 7, paddingLeft: 5, fontSize: 16}}>Cari Produk</Text>
@@ -87,40 +108,24 @@ class ShopPageMember extends Component {
                 </Header>
                 {
                     isProductsVisible && isFocused &&
-                    <Tabs onChangeTab={(x) => console.log(x)} tabBarUnderlineStyle={{backgroundColor: '#7c0c10'}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
+                    <Tabs onChangeTab={(x) => console.log(x)} tabBarUnderlineStyle={{backgroundColor: COLORS.PRIMARY}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'sapi') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'ayam') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'ikan') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: '#7c0c10'}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
                             <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'olahan') } />
                         </Tab>
                     </Tabs>
                 }
-                <Modal
-                    isVisible={this.state.loading}
-                    style={{alignItems: 'center'}}
-                    hideModalContentWhileAnimating={true}
-                    useNativeDriver
-                    backdropColor='white'
-                    backdropOpacity={0.5}
-                    animationIn='fadeIn'
-                    animationOut='fadeOut'
-                    >
-                    <View style={{ backgroundColor: 'transparent', width: 230, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                        <Text style={{textAlign: 'center', marginTop: 10, color: '#4f4f4f'}}>Memuat Produk..</Text>
-                        <WaveIndicator
-                            color='#4f4f4f'
-                            />
-                    </View>
-                </Modal>
+                <MODAL isVisible={this.state.loading} message='Memuat Produk' />
                 <StatusBar
-                    backgroundColor='#7c0c10'
+                    backgroundColor={COLORS.PRIMARY}
                     barStyle='light-content'
                     />
             </Container>
@@ -138,13 +143,14 @@ export default connect(
 
 const styles = StyleSheet.create({
     input : {
-        width: 280,
+        width: 260,
+        marginLeft: 10,
         height: 35,
         backgroundColor: 'white',
         borderRadius: 3,
     },
     headerColor: {
-        backgroundColor: '#7c0c10'
+        backgroundColor: COLORS.PRIMARY
     },
     badge: {
         height: 18,

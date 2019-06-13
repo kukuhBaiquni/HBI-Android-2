@@ -1,14 +1,14 @@
-import React, { Component, PureComponent } from 'react';
+import React, { Component } from 'react';
 import { View } from 'react-native';
-import { connect } from 'react-redux';
 import { NavigationEvents } from 'react-navigation';
+import { connect } from 'react-redux';
 
-class ListMarket extends Component {
+class ConnectorNavigation extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             header: null
         };
-    }
+    };
 
     _beforeRender = () => {
         const { navigation, userData } = this.props;
@@ -30,11 +30,10 @@ class ListMarket extends Component {
     }
 };
 
-
 function mapDispatchToProps(dispatch) {
     return dispatch;
 };
 
 export default connect(
     mapDispatchToProps
-)(ListMarket);
+)(ConnectorNavigation);

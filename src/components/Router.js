@@ -5,7 +5,7 @@ import { Icon } from 'react-native-elements';
 import SearchAutocomplete from './stack/Search_Autocomplete';
 import Example from './Static_Example';
 import ShopPage from './tabs/Shop_Page';
-import ShopPageMember from './tabs/Shop_Page_Member';
+import ShopPageMember from './stack/Shop_Page_Member';
 import ProductDetails from './stack/Product_Details';
 import Mail from './tabs/Mail';
 import Cart from './stack/Cart';
@@ -48,6 +48,7 @@ import { connect } from 'react-redux';
 import { BACKDARKRED, BACKWHITE, CHECKLIST_DARKRED, CANCEL_DARKRED, BERANDA, BERITA_C, BERITA, BELANJA, BELANJA_C, NOTIFIKASI, NOTIFIKASI_C, AKUN, AKUN_C } from '../images';
 import { COLORS } from './basic/colors';
 import { TYPOGRAPHY } from './basic/typography';
+import MapListMarket from './stack/MapListMarket';
 
 const config = {
     lazy: true,
@@ -220,7 +221,8 @@ const RootStack = createStackNavigator({
     ListProducts:               { screen: ShopPage },
     ForgetPassword:             { screen: ForgetPassword },
     ChangePassword:             { screen: ChangePassword },
-    ShopPageMember:             { screen: ShopPageMember }
+    ShopPageMember:             { screen: ShopPageMember },
+    MapListMarket:              { screen: MapListMarket },
 }, {
     initialRouteName: 'MainTabs'
 });
