@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { BarIndicator } from 'react-native-indicators';
-import { IDR_FORMAT, SERVER_URL } from '../supportFunction';
+import { IDR_FORMAT, SERVER_URL, PRODUCT_PATH } from '../supportFunction';
 import { COLORS } from '../colors';
 import { TYPOGRAPHY } from '../typography';
 
@@ -21,7 +21,9 @@ export const MODAL_QUANTITY_EDITOR = (props) => {
     };
 
     _onDecrement = () => {
-        props.onChangeValueDecrement();
+        if (props.itemCount > 1) {
+            props.onChangeValueDecrement();
+        }
     };
 
     _onIncrement = () => {
@@ -43,7 +45,6 @@ export const MODAL_QUANTITY_EDITOR = (props) => {
             return props.data.resellerprice;
         }
     };
-
     return(
         <Modal
             isVisible={props.isVisible}
@@ -70,7 +71,7 @@ export const MODAL_QUANTITY_EDITOR = (props) => {
                                 <Image
                                     resizeMode='cover'
                                     style={styles.imageStyle}
-                                    source={{uri: `${SERVER_URL}images/products/${props.data.photo}`}}
+                                    source={{uri: `${SERVER_URL}${PRODUCT_PATH}${props.data.photo}`}}
                                     />
                             </View>
                             <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>

@@ -152,15 +152,13 @@ class ProductDetails extends Component {
                 this.props.dispatch(forceResetATC())
             }
         }
-        if (prevProps.singleTransaction !== this.props.singleTransaction) {
-            this.props.navigation.navigate('Payment');
-        }
     };
 
     _directPurchase = () => {
         const data = this.props.navigation.state.params;
         if (this.state.isLoggedIn) {
             this.props.dispatch(singleTransaction([data]));
+            this.props.navigation.navigate('Payment');
         }else{
             Alert.alert(
                 'Kesalahan',
@@ -317,7 +315,7 @@ class ProductDetails extends Component {
                     />
                 }
                 <View style={styles.footerWrapper}>
-                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={() => this._directPurchase()}>
+                    <TouchableOpacity style={[styles.button, {borderColor: '#7c0c10'}]} onPress={this._directPurchase}>
                         <Text style={{color: COLORS.PRIMARY, ...TYPOGRAPHY.buttonText}}>Beli Sekarang</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.button, {borderColor: COLORS.PRIMARY, backgroundColor: COLORS.PRIMARY}]} onPress={this._showModal}>
