@@ -13,18 +13,24 @@ import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { forceResetSA } from '../../actions/Save_Address';
 import { BACKDARKRED } from '../../images';
+import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
+import { MODAL } from '../basic/template/loading';
+import { CAPITALIZE } from '../basic/supportFunction';
 
 class EditAddress extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Ubah Alamat',
-            headerTintColor: '#7c0c10',
+            headerTintColor: COLORS.PURE_WHITE,
             headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
-        }
+            headerTitleStyle: {
+                ...TYPOGRAPHY.header
+            },
+        };
     };
 
     constructor(props){
@@ -180,42 +186,30 @@ class EditAddress extends Component {
                 <NavigationEvents
                     onWillFocus={() => this.beforeRender()}
                     />
-                <Modal
-                    isVisible={this.state.loading}
-                    style={{alignItems: 'center'}}
-                    hideModalContentWhileAnimating={true}
-                    useNativeDriver
-                    >
-                    <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                        <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
-                        <DotIndicator
-                            color='#7c0c10'
-                            size={8}
-                            />
-                    </View>
-                </Modal>
+                <MODAL isVisible={this.state.loading} message='Mohon Tunggu' />
                 <ScrollView>
                     <View style={{justifyContent: 'center', alignItems: 'center'}}>
-                        <View style={{backgroundColor: 'white', width: '100%', elevation: 3}}>
+                        <View style={styles.basicCard}>
                             <Form>
                                 <Item stackedLabel style={{width: 330}}>
-                                    <Label style={{color: '#a0a0a0'}}>Nama Penerima</Label>
+                                    <Label style={styles.titleInput}>Nama Penerima</Label>
                                     <Input
                                         onChangeText={(x) => this.setState({nameHandler: x})}
                                         value={this.state.nameHandler}
                                         editable={this.state.saveState === 'default' ? false : true}
-                                        style={this.state.saveState === 'default' ? {color: '#a0a0a0'} : {color: 'black'}}
+                                        style={this.state.saveState === 'default' ? [styles.inputValue, {color: '#a0a0a0'}] : [styles.inputValue, {color: 'black'}]}
                                         />
                                 </Item>
                                 <Item stackedLabel style={{width: 330}}>
-                                    <Label style={{color: '#a0a0a0'}}>Nomor Telepon Penerima</Label>
+                                    <Label style={styles.titleInput}>Nomor Telepon Penerima</Label>
                                     <Input
                                         keyboardType='numeric'
                                         onChangeText={(x) => this.setState({phoneHandler: x})}
                                         value={this.state.phoneHandler}
+                                        style={styles.inputValue}
                                         />
                                 </Item>
-                                <Label style={{fontSize: 15, marginLeft: 15, marginTop: 10, color: '#a0a0a0'}}>Kota/Kabupaten</Label>
+                                <Label style={[styles.titleInput, {marginLeft: 15, marginTop: 10}]}>Kota/Kabupaten</Label>
                                 <Item picker style={{width: 335, marginLeft: 10}}>
                                     <Picker
                                         mode="dropdown"
@@ -224,10 +218,10 @@ class EditAddress extends Component {
                                         selectedValue='KOTA BANDUNG'
                                         onValueChange={(x, f) => this.citySelected(x, f)}
                                         >
-                                        <Picker.Item label='KOTA BANDUNG' value='KOTA BANDUNG' />
+                                        <Picker.Item label='Kota Bandung' value='KOTA BANDUNG' />
                                     </Picker>
                                 </Item>
-                                <Label style={{fontSize: 15, marginLeft: 15, marginTop: 10, color: '#a0a0a0'}}>Kecamatan</Label>
+                                <Label style={[styles.titleInput, {marginLeft: 15, marginTop: 10}]}>Kecamatan</Label>
                                 <Item picker style={{width: 335, marginLeft: 10}}>
                                     <Picker
                                         mode="dropdown"
@@ -237,12 +231,12 @@ class EditAddress extends Component {
                                         >
                                         {
                                             this.props.territorial.districts.map((x, i) =>
-                                                <Picker.Item key={i} label={x.nama_kecamatan} value={x.nama_kecamatan} />
+                                                <Picker.Item key={i} label={CAPITALIZE(x.nama_kecamatan)} value={x.nama_kecamatan} />
                                             )
                                         }
                                     </Picker>
                                 </Item>
-                                <Label style={{fontSize: 15, marginLeft: 15, marginTop: 10, color: '#a0a0a0'}}>Kelurahan</Label>
+                                <Label style={[styles.titleInput, {marginLeft: 15, marginTop: 10}]}>Kelurahan</Label>
                                 <Item picker style={{width: 335, marginLeft: 10}}>
                                     <Picker
                                         mode="dropdown"
@@ -252,40 +246,44 @@ class EditAddress extends Component {
                                         >
                                         {
                                             this.props.territorial.villages.map((x, i) =>
-                                            <Picker.Item key={i} label={x.nama_kelurahan} value={x.nama_kelurahan} />
+                                            <Picker.Item key={i} label={CAPITALIZE(x.nama_kelurahan)} value={x.nama_kelurahan} />
                                         )
                                     }
                                 </Picker>
                             </Item>
                             <Item stackedLabel style={{width: 330}}>
-                                <Label style={{color: '#a0a0a0'}}>Jalan</Label>
+                                <Label style={styles.titleInput}>Jalan</Label>
                                 <Input
                                     value={this.state.streetHandler}
                                     onChangeText={(x) => this.setState({streetHandler: x})}
+                                    style={styles.inputValue}
                                     />
                             </Item>
                             <Item stackedLabel style={{width: 330}}>
-                                <Label style={{color: '#a0a0a0'}}>Nomor</Label>
+                                <Label style={styles.titleInput}>Nomor</Label>
                                 <Input
                                     keyboardType='numeric'
                                     value={this.state.nomorHandler}
                                     onChangeText={(x) => this.setState({nomorHandler: x})}
+                                    style={styles.inputValue}
                                     />
                             </Item>
                             <Item stackedLabel style={{width: 330}}>
-                                <Label style={{color: '#a0a0a0'}}>RT</Label>
+                                <Label style={styles.titleInput}>RT</Label>
                                 <Input
                                     keyboardType='numeric'
                                     value={this.state.rtHandler}
                                     onChangeText={(x) => this.setState({rtHandler: x})}
+                                    style={styles.inputValue}
                                     />
                             </Item>
                             <Item stackedLabel style={{width: 330}}>
-                                <Label style={{color: '#a0a0a0'}}>RW</Label>
+                                <Label style={styles.titleInput}>RW</Label>
                                 <Input
                                     keyboardType='numeric'
                                     value={this.state.rwHandler}
                                     onChangeText={(x) => this.setState({rwHandler: x})}
+                                    style={styles.inputValue}
                                     />
                             </Item>
                         </Form>
@@ -304,8 +302,8 @@ class EditAddress extends Component {
                                         index={i}
                                         onPress={(x) => this.onValueChange(x)}
                                         borderWidth={1}
-                                        buttonInnerColor={'#7c0c10'}
-                                        buttonOuterColor={this.state.index === i ? '#7c0c10' : '#919191'}
+                                        buttonInnerColor={COLORS.PRIMARY}
+                                        buttonOuterColor={this.state.index === i ? COLORS.PRIMARY : COLORS.GRAY_ICON}
                                         isSelected={this.state.index === i}
                                         buttonSize={12}
                                         buttonOuterSize={20}
@@ -315,7 +313,7 @@ class EditAddress extends Component {
                                         index={i}
                                         labelHorizontal={true}
                                         onPress={(x) => this.onValueChange(x)}
-                                        labelStyle={this.state.index === i ? {fontSize: 14, color: '#7c0c10', marginTop: -2} : {fontSize: 12, color: '#919191', marginTop: -2}}
+                                        labelStyle={this.state.index === i ? {fontSize: 14, color: COLORS.PRIMARY, marginTop: -2} : {fontSize: 12, color: COLORS.GRAY_BUTTON, marginTop: -2}}
                                         />
                                 </RadioButton>
                             )
@@ -323,8 +321,8 @@ class EditAddress extends Component {
                     </RadioForm>
                 </View>
                 <View style={{alignItems: 'center', marginTop: 10, marginBottom: 10}}>
-                    <TouchableOpacity onPress={() => this.onSave()} style={{borderRadius: 3, width: '95%', height: 50, backgroundColor: '#7c0c10', alignItems: 'center', justifyContent: 'center'}}>
-                        <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>Simpan</Text>
+                    <TouchableOpacity onPress={() => this.onSave()} style={styles.saveButton}>
+                        <Text style={{...TYPOGRAPHY.subHeader, color: COLORS.PURE_WHITE}}>Simpan</Text>
                     </TouchableOpacity>
                 </View>
             </ScrollView>
@@ -354,5 +352,24 @@ const styles = StyleSheet.create({
     headerTitle: {
         fontSize: 18,
         color: '#7c0c10'
+    },
+    basicCard: {
+        backgroundColor: 'white',
+        width: '100%',
+        elevation: 3
+    },
+    titleInput: {
+        ...TYPOGRAPHY.subHeader
+    },
+    inputValue: {
+        ...TYPOGRAPHY.p
+    },
+    saveButton: {
+        borderRadius: 3,
+        width: '95%',
+        height: 50,
+        backgroundColor: COLORS.PRIMARY,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
