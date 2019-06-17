@@ -14,7 +14,7 @@ const countItemFailed = () => {
     return { type: 'COUNT_ITEM_FAILED' };
 };
 
-const resetCountItem = () => {
+export const resetCountItem = () => {
     return { type: 'RESET_COUNT_ITEM' };
 };
 
