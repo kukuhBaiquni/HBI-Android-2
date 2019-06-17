@@ -19,7 +19,8 @@ import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
 import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
 import { resetSingleTransaction } from '../../actions/SingleTransaction';
-import { countItem } from '../../actions/Counting_Items';
+import { countItem, resetCountItem } from '../../actions/Counting_Items';
+import { directPurchase } from '../../actions/Direct_Purchase';
 
 import MapView, { Marker } from 'react-native-maps';
 
@@ -64,11 +65,11 @@ class Payment extends Component {
 
     _afterRender = () => {
         const { dispatch, cart, navigation } = this.props;
-        dispatch(resetTransactionState())
+        dispatch(resetTransactionState());
         let acu = 0;
-        cart.map(x => acu += x.freeOngkirConsideration)
+        cart.map(x => acu += x.freeOngkirConsideration);
         if (acu > 23) {
-            this.setState({isFreeOngkir: true})
+            this.setState({isFreeOngkir: true});
         }
         dispatch(forceResetRoot())
         if (navigation.state.params !== undefined) {
@@ -81,7 +82,7 @@ class Payment extends Component {
                 this.setState({showContent: true, token: this.props.token, data: cart.filter(x => x.status === true)});
             }
         }, 10);
-        this._totalMapping()
+        this._totalMapping();
     };
 
     componentDidUpdate(prevProps, prevState) {
@@ -108,12 +109,13 @@ class Payment extends Component {
             if (this.state.transactionLoading) {
                 this.setState({transactionLoading: false});
                 dispatch(resetTransactionState());
+                dispatch(resetCountItem);
             }
         }
     };
 
     submitTransaction() {
-        const { navigation, userData, targetMember, dispatch } = this.props;
+        const { navigation, userData, targetMember, dispatch, singleTransaction } = this.props;
         let data = {};
         if (userData.data.address.street !== '' || navigation.state.params !== undefined) {
             if (navigation.state.params === undefined) {
@@ -124,10 +126,10 @@ class Payment extends Component {
                     city: userData.data.address.city,
                     district: userData.data.address.district,
                     village: userData.data.address.village,
-                    token: this.state.token,
                     no: userData.data.address.no,
                     rt: userData.data.address.rt,
                     rw: userData.data.address.rw,
+                    token: this.state.token,
                     targetMember: targetMember.id,
                     ongkir: Number(targetMember.ongkir)
                 };
@@ -139,16 +141,24 @@ class Payment extends Component {
                     city: navigation.state.params.city,
                     district: navigation.state.params.district,
                     village: navigation.state.params.village,
-                    token: this.state.token,
                     no: navigation.state.params.address.no,
                     rt: navigation.state.params.address.rt,
                     rw: navigation.state.params.address.rw,
+                    token: this.state.token,
                     targetMember: targetMember.id,
                     ongkir: Number(targetMember.ongkir)
                 };
             }
             this.setState({loading: true});
-            dispatch(confirmTransaction(data));
+            if (singleTransaction.length > 0) {
+                const xData = Object.assign({}, data, {
+                    id: this.state.idProduct,
+                    qty: this.state.itemCount
+                });
+                dispatch(directPurchase(xData));
+            }else{
+                dispatch(confirmTransaction(data));
+            }
         }else{
             Alert.alert(
                 'Kesalahan',
