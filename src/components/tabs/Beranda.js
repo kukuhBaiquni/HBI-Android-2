@@ -55,6 +55,7 @@ class Beranda extends Component {
 
     _afterRender = async () => {
         const { token, userData, dispatch, listProducts } = this.props;
+        if (listProducts.data.length === 0) dispatch(getAllProducts());
         try{
             const id = await AsyncStorage.getItem('PlayerID')
             const token = await AsyncStorage.getItem('access_token');
@@ -66,7 +67,6 @@ class Beranda extends Component {
                 if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens}));
                 if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser(tokens));
             }
-            if (listProducts.length === 0) dispatch(getAllProducts());
         }catch(error) {
             ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
         };

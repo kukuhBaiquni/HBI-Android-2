@@ -7,17 +7,16 @@ export const getAllProducts = () => {
     return { type: 'GET_ALL_PRODUCTS' };
 };
 
-const getAllProducts_success = (data) => {
+const getAllProductSuccess = (data) => {
     return { type: 'GET_ALL_PRODUCTS_SUCCESS', data}; // To Reducer List_Products.js
 };
 
-// GLOBAL STATUS
-const requestDone = () => {
-    return { type: 'REQUEST_DONE' }; // To Reducer Global_Status.js
+const getAllProductFailed = () => {
+    return { type: 'GET_ALL_PRODUCTS_FAILED' };
 };
 
-const requestFailed = () => {
-    return { type: 'REQUEST_FAILED' }; // To Reducer Global_Status.js
+export const resetGetAllProductState = () => {
+    return { type: 'RESET_GET_ALL_PRODUCTS_STATE' };
 };
 
 // WATCHER & WORKER
@@ -30,7 +29,7 @@ function* workerGetAllProducts() {
     try {
         var response = yield call(() => {
             return request
-            .get(`${SERVER_URL}android/get_all_products`)
+            .get(`${SERVER_URL}products`)
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .then((res) => {
@@ -39,10 +38,11 @@ function* workerGetAllProducts() {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw.data;
-        yield put(getAllProducts_success(data));
-        yield put(requestDone());
+        console.log(data);
+        yield put(getAllProductSuccess(data));
     }catch (error) {
-        yield put(requestFailed());
+        console.log(error.response);
+        yield put(getAllProductFailed());
     }
 };
 // ============================================================

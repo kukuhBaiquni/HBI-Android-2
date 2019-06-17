@@ -36,34 +36,12 @@ class ShopPageMember extends Component {
     _afterRender = () => {
         BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
         this.setState({isFocused: true});
-        const { navigation } = this.props;
-        this.props.dispatch(getAllProducts());
-        setTimeout(async () => {
-            this.setState({
-                isProductsVisible: true
-            });
-            try{
-                const id = await AsyncStorage.getItem('PlayerID');
-                const token = await AsyncStorage.getItem('access_token');
-                if (id !== null && token !== null) {
-                    const ids = JSON.parse(id);
-                    const tokens = JSON.parse(token);
-                    this.setState({token: tokens});
-                    if (this.props.token === '') this.props.dispatch(setInitialToken(tokens));
-                    if (this.props.userData.playerID !== ids) this.props.dispatch(setPlayerId({ids, token: tokens}));
-                    if (this.props.userData.name === '') this.props.dispatch(fetchUser(tokens));
-                }
-                if (this.props.listProducts.length === 0) this.props.dispatch(getAllProducts());
-            }catch(error) {
-                ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
-            };
-        });
     };
 
     _handleBackButton = () => {
         const { navigation } = this.props;
         navigation.navigate('Beranda');
-        return true
+        return true;
     };
 
     _beforeBlur = () => {
@@ -109,17 +87,17 @@ class ShopPageMember extends Component {
                 {
                     isProductsVisible && isFocused &&
                     <Tabs onChangeTab={(x) => console.log(x)} tabBarUnderlineStyle={{backgroundColor: COLORS.PRIMARY}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'sapi') } />
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: COLORS.PURE_WHITE}} tabStyle={{backgroundColor: COLORS.PURE_WHITE}} heading="Daging Sapi">
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'sapi') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'ayam') } />
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: COLORS.PURE_WHITE}} tabStyle={{backgroundColor: COLORS.PURE_WHITE}} heading="Daging Ayam">
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'ayam') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'ikan') } />
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: COLORS.PURE_WHITE}} tabStyle={{backgroundColor: COLORS.PURE_WHITE}} heading="Daging Ikan">
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'ikan') } />
                         </Tab>
-                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.filter(x => x.category === 'olahan') } />
+                        <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: COLORS.PURE_WHITE}} tabStyle={{backgroundColor: COLORS.PURE_WHITE}} heading="Olahan">
+                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={this.props.userData.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'olahan') } />
                         </Tab>
                     </Tabs>
                 }
