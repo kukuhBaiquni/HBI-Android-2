@@ -18,6 +18,8 @@ import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbs
 import { checkEmail } from '../../actions/Check_Email';
 import GoogleSignIn from 'react-native-google-sign-in';
 import { BACKDARKRED } from '../../images';
+import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -25,19 +27,16 @@ class Login extends Component {
     static navigationOptions = ({navigation}) => {
         return {
             title: 'Login',
-            headerTintColor: '#7c0c10',
+            headerTintColor: COLORS.PURE_WHITE,
             headerStyle: {
-                backgroundColor: 'white',
-                borderBottomColor: 'black'
+                backgroundColor: COLORS.PRIMARY,
+                borderBottomColor: COLORS.PURE_BLACK
             },
             headerTitleStyle: {
-                color: '#7c0c10',
-                fontSize: 16,
-                fontWeight: 'normal'
+                ...TYPOGRAPHY.header
             },
-            headerBackImage: ( <Image resizeMode='contain' style={{height: 19, width: 19}} source={BACKDARKRED} /> )
-        }
-    };
+        };
+    }
 
     constructor(props) {
         super(props)

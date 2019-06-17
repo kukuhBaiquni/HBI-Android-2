@@ -1,6 +1,6 @@
-export const SERVER_URL = 'http://halalbeef.co.id/';
+// export const SERVER_URL = 'http://halalbeef.co.id/';
 // export const SERVER_URL = 'http://192.168.43.24/';
-// export const SERVER_URL = 'http://192.168.0.113:1728/';``
+export const SERVER_URL = 'http://halalbeef.co.id:1728/api/v1/';
 
 export const LOCALE_DAY = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
 export const PRODUCT_PATH = 'images/products/';

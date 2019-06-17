@@ -8,14 +8,14 @@ export default class MailPartials extends Component {
 
     render() {
         const { userData, type, navigation } = this.props;
-        const data = userData.data.notifications[type].slice(0, 3).reverse();
-        if (userData.data.notifications[type].length === 0) {
+        if (userData.data.notifications === undefined) {
             return(
                 <View style={{paddingTop: 15, paddingBottom: 15}}>
                     <Text style={styles.emptyNotifText}>Belum ada notifikasi</Text>
                 </View>
             )
         }else{
+            const data = userData.data.notifications[type].slice(0, 3).reverse();
             return(
                 <View style={{alignItems: 'center'}}>
                     {

@@ -7,7 +7,7 @@ export default function resultCounting(state = initialState, action) {
         return action.data.result;
 
         case 'RESET_COUNT_ITEM':
-        return 0
+        return 0;
 
         default:
         return state;

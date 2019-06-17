@@ -1,5 +1,5 @@
 import React, { Component, PureComponent } from 'react';
-import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TouchableNativeFeedback, StatusBar, AsyncStorage, Dimensions, ToastAndroid, PermissionsAndroid } from 'react-native';
+import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TouchableNativeFeedback, StatusBar, AsyncStorage, Dimensions, ToastAndroid, PermissionsAndroid, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper';
 import { SERVER_URL, IDR_FORMAT, _FONTS } from '../basic/supportFunction';
@@ -74,7 +74,14 @@ class MapListMarket extends Component {
         }
     };
 
+    _handleBackButton = () => {
+        const { navigation } = this.props;
+        navigation.navigate('Beranda');
+        return true
+    };
+
     _afterRender = async () => {
+        BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
         this.props.dispatch(getMemberLocation())
         try {
             const granted = await PermissionsAndroid.request(
@@ -98,6 +105,10 @@ class MapListMarket extends Component {
             console.log(err);
         }
         this._toggleVisibility();
+    };
+
+    _beforeBlur = () => {
+        BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
     };
 
     _toggleVisibility = () => {
@@ -337,7 +348,7 @@ class MapListMarket extends Component {
 
     _removePin = () => {
         if (this.state.fakePosition !== null) {
-            this.setState({fakePosition: null})
+            this.setState({fakePosition: null});
         }
     };
 
@@ -351,7 +362,8 @@ class MapListMarket extends Component {
                         barStyle='light-content'
                         />
                     <NavigationEvents
-                        onDidFocus={() => this._afterRender()}
+                        onDidFocus={this._afterRender}
+                        onWillBlur={this._beforeBlur}
                         />
                     <MODAL isVisible={!this.state.isMemberVisible} message='Memuat Peta' />
                     {this._renderMyLocationButton()}

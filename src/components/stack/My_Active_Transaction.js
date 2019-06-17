@@ -31,9 +31,9 @@ class MyActiveTransaction extends Component {
         }
     };
 
-    beforeRender (){
-        const token = this.props.navigation.state.params.token;
-        this.props.dispatch(loadTransactionTypePending(token))
+    _afterRender (){
+        const token = this.props.token;
+        this.props.dispatch(loadTransactionTypePending(token));
     };
 
     render() {
@@ -45,7 +45,7 @@ class MyActiveTransaction extends Component {
         return(
             <View>
                 <NavigationEvents
-                    onWillFocus={() => this.beforeRender()}
+                    onDidFocus={() => this._afterRender()}
                     />
                 <ScrollView>
                     <View style={{height: 10}} />

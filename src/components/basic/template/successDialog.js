@@ -28,8 +28,8 @@ export const SUCCESS_DIALOG = (props) => {
                     <Text style={styles.instruction4}> {STRINGS.instruction4} </Text>
                     <Text style={styles.STdateText}>{moment(data.due_date).format('DD MMM YYYY HH:mm')}</Text>
                 </View>
-                <TouchableOpacity style={styles.button}>
-                    <Text onPress={() => toDetail()} style={{...TYPOGRAPHY.subHeader, color: COLORS.GREEN_DARK}}> {STRINGS.buttonText} </Text>
+                <TouchableOpacity onPress={() => toDetail()} style={styles.button}>
+                    <Text style={{...TYPOGRAPHY.subHeader, color: COLORS.GREEN_DARK}}> {STRINGS.buttonText} </Text>
                 </TouchableOpacity>
             </ScrollView>
         </View>
@@ -51,7 +51,7 @@ const STRINGS = {
     instruction1            : 'Jumlah transfer pembayaran harus sesuai dengan jumlah tagihan (hingga 3 digit terakhir).',
     instruction3            : 'Isi Nomor Transaksi pada kolom detail transfer',
     instruction4            : 'Lakukan pembayaran sebelum',
-    buttonText              : 'Lihat'
+    buttonText              : 'Kembali'
 };
 
 const styles = StyleSheet.create({

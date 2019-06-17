@@ -19,7 +19,7 @@ import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
 import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
 import { resetSingleTransaction } from '../../actions/SingleTransaction';
-import { countItem, resetCountItem } from '../../actions/Counting_Items';
+import { countItem } from '../../actions/Counting_Items';
 import { directPurchase } from '../../actions/Direct_Purchase';
 
 import MapView, { Marker } from 'react-native-maps';
@@ -64,7 +64,7 @@ class Payment extends Component {
     };
 
     _afterRender = () => {
-        const { dispatch, cart, navigation } = this.props;
+        const { dispatch, cart, navigation, singleTransaction } = this.props;
         dispatch(resetTransactionState());
         let acu = 0;
         cart.map(x => acu += x.freeOngkirConsideration);
@@ -77,7 +77,7 @@ class Payment extends Component {
         }
         setTimeout(() => {
             if (this.props.singleTransaction.length > 0) {
-                this.setState({showContent: true, token: this.props.token, data: this.props.singleTransaction});
+                this.setState({showContent: true, token: this.props.token, data: this.props.singleTransaction, idProduct: singleTransaction[0].id});
             }else{
                 this.setState({showContent: true, token: this.props.token, data: cart.filter(x => x.status === true)});
             }
@@ -88,7 +88,7 @@ class Payment extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { userData, dispatch, status, resultCounting } = this.props;
         if (prevProps.resultCounting !== resultCounting) {
-            this.setState({loadingPrice: false, subtotalhandler: this.props.resultCounting});
+            this.setState({loadingPrice: false, subtotalhandler: resultCounting});
         }
         if (prevProps.userData.data !== userData.data) {
             if (userData.data.address.street !== '') {
@@ -109,7 +109,6 @@ class Payment extends Component {
             if (this.state.transactionLoading) {
                 this.setState({transactionLoading: false});
                 dispatch(resetTransactionState());
-                dispatch(resetCountItem());
             }
         }
     };
@@ -172,8 +171,7 @@ class Payment extends Component {
     };
 
     _queueRouting = () => {
-        this.props.navigation.popToTop();
-        this.props.navigation.navigate('MyTransaction');
+        this.props.navigation.navigate('Beranda');
     };
 
     showInfo() {
@@ -248,8 +246,7 @@ class Payment extends Component {
     _openModal = () => {
         const { singleTransaction } = this.props;
         this.setState({
-            showModal: true,
-            idProduct: singleTransaction[0].id
+            showModal: true
         });
     };
 
