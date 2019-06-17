@@ -109,7 +109,7 @@ class Payment extends Component {
             if (this.state.transactionLoading) {
                 this.setState({transactionLoading: false});
                 dispatch(resetTransactionState());
-                dispatch(resetCountItem);
+                dispatch(resetCountItem());
             }
         }
     };
