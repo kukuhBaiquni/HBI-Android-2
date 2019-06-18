@@ -5,7 +5,7 @@ import { Container, Header, Content, Input, Item } from 'native-base';
 import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
-import { submitFormLogin } from '../../actions/Login_Attempt';
+import { submitFormLogin, resetTokenState } from '../../actions/Login_Attempt';
 import { forceResetAV } from '../../actions/Account_Verification';
 import Modal from "react-native-modal";
 import validator from 'validator';
@@ -43,7 +43,6 @@ class Login extends Component {
         super(props)
         this.state = {
             secure: true,
-            showModal: true,
             visibility: 0,
             emailHandler: '',
             passwordHandler: '',
@@ -157,32 +156,36 @@ class Login extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         let data = this.state.oauthData;
+        const { dispatch, token, navigation } = this.props;
         if (this.props.status.isEmailFree) {
             Alert.alert(
                 'Login gagal',
                 'Akun tidak terdaftar, daftar sekarang?',
                 [
-                    {text: 'OK', onPress: () => this.props.navigation.replace('Register', data)}
+                    {text: 'OK', onPress: () => navigation.replace('Register', data)}
                 ],
                 { cancelable: false }
             );
         }
-        if (this.props.status.login.error) {
-            if (this.state.loading) {
-                this.setState({loading: false, isLoginError: true})
+        if (token.error !== prevProps.token.error) {
+            if (token.error) {
+                if (this.state.loading) {
+                    this.setState({loading: false, isLoginError: true});
+                    dispatch(resetTokenState());
+                }
             }
         }else{
-            if (prevProps.token !== this.props.token) {
-                const token = this.props.token;
-                this.storeToken(token)
+            if (prevProps.token.success !== token.success) {
+                const token = this.props.token.type;
+                this.storeToken(token);
             }
         }
     };
 
     storeToken = async (token) => {
         try {
-            await AsyncStorage.setItem('access_token', JSON.stringify(token))
-            this.props.dispatch(forceResetAV())
+            await AsyncStorage.setItem('token', JSON.stringify(token))
+            this.props.dispatch(forceResetAV());
             this.props.navigation.reset([NavigationActions.navigate({ routeName: 'MainTabs' })], 0)
         } catch (error) {
             Alert.alert(
@@ -193,7 +196,7 @@ class Login extends Component {
                 ],
                 { cancelable: false }
             );
-            this.props.dispatch(forceResetAV())
+            this.props.dispatch(forceResetAV());
             this.props.navigation.reset([NavigationActions.navigate({ routeName: 'MainTabs' })], 0)
         }
     };

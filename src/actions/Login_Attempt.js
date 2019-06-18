@@ -42,8 +42,8 @@ function* workerLoginAttempt(data) {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
-        if (data.token) {
-            yield put(setInitialToken(data.token));
+        if (data.data) {
+            yield put(setInitialToken(data.data));
         }else{
             yield put(loginFailed());
         }

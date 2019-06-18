@@ -29,6 +29,7 @@ function* workerGetMemberLocation() {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
+        console.log(data);
         yield put(getMemberLocationSuccess(data.data));
     }catch (error) {
         yield put(getMemberLocationFailed());
