@@ -22,7 +22,7 @@ function* workerGetMemberLocation() {
     try {
         var response = yield call(() => {
             return request
-            .get(`${SERVER_URL}non-member/get-member-location`)
+            .get(`${SERVER_URL}reports/member/location`)
             .then((res) => {
                 return res;
             })

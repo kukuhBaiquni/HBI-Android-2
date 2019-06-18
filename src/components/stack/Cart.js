@@ -60,29 +60,19 @@ class Cart extends Component {
         this.onSave = this.onSave.bind(this);
     };
 
-    checkToken = async () => {
-        try {
-            const token = await AsyncStorage.getItem('access_token');
-            if (token !== null) {
-                const raw = JSON.parse(token);
-                this.setState({token: raw, number: this.props.cart.length});
-            }else{
-                Alert.alert(
-                    'Kesalahan',
-                    'Anda harus login untuk melihat keranjang, login sekarang?',
-                    [
-                        {text: 'YA', onPress: () => this.props.navigation.navigate('Login')},
-                        {text: 'TIDAK'}
-                    ],
-                    { cancelable: false }
-                );
-            }
-        }catch (error) {
+    checkToken = () => {
+        const { userData, token, cart, navigation } = this.props;
+        if (userData.data.name !== undefined) {
+            this.setState({
+                token: token.type.access,
+                number: cart.length
+            });
+        }else{
             Alert.alert(
                 'Kesalahan',
                 'Anda harus login untuk melihat keranjang, login sekarang?',
                 [
-                    {text: 'YA', onPress: () => this.props.navigation.navigate('Login')},
+                    {text: 'YA', onPress: () => navigation.navigate('Login')},
                     {text: 'TIDAK'}
                 ],
                 { cancelable: false }

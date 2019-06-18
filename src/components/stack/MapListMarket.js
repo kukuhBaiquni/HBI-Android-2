@@ -8,7 +8,6 @@ import { NavigationEvents } from 'react-navigation';
 import MapView, { Marker } from 'react-native-maps';
 import Geolocation from 'react-native-geolocation-service';
 import MapViewDirections from 'react-native-maps-directions';
-import { getMemberLocation } from '../../actions/Get_Member_Location';
 import Icon from 'react-native-vector-icons/Entypo';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { withNavigationFocus } from 'react-navigation';
@@ -82,7 +81,6 @@ class MapListMarket extends Component {
 
     _afterRender = async () => {
         BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
-        this.props.dispatch(getMemberLocation())
         try {
             const granted = await PermissionsAndroid.request(
                 PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,

@@ -171,7 +171,7 @@ const Tabs = createMaterialTopTabNavigator({
             tabBarOnPress: async (x) => {
                 {
                     try {
-                        const val = await AsyncStorage.getItem('access_token');
+                        const val = await AsyncStorage.getItem('token');
                         if (val !== null) {
                             x.navigation.navigate('Profile')
                         }else{

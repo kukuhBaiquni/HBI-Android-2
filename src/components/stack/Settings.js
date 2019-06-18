@@ -42,7 +42,7 @@ class Settings extends Component {
 
     confirmLogout = async (x) => {
         try {
-            await AsyncStorage.removeItem('access_token');
+            await AsyncStorage.removeItem('token');
             LoginManager.logOut();
             GoogleSignIn.signOut();
             this.props.navigation.replace('MainTabs');

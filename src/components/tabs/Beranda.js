@@ -10,6 +10,7 @@ import { setInitialToken } from '../../actions/Set_Initial_Token';
 
 import NetInfo from "@react-native-community/netinfo";
 import RNExitApp from 'react-native-exit-app';
+import { getMemberLocation } from '../../actions/Get_Member_Location';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 import { COLORS } from '../basic/colors';
@@ -55,17 +56,18 @@ class Beranda extends Component {
 
     _afterRender = async () => {
         const { token, userData, dispatch, listProducts } = this.props;
+        dispatch(getMemberLocation());
         if (listProducts.data.length === 0) dispatch(getAllProducts());
         try{
             const id = await AsyncStorage.getItem('PlayerID')
-            const token = await AsyncStorage.getItem('access_token');
+            const token = await AsyncStorage.getItem('token');
             if (id !== null && token !== null) {
                 const ids = JSON.parse(id);
                 const tokens = JSON.parse(token);
-                this.setState({token: tokens});
+                this.setState({token: tokens.access});
                 dispatch(setInitialToken(tokens));
-                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens}));
-                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser(tokens));
+                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens.access}));
+                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser(tokens.access));
             }
         }catch(error) {
             ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);

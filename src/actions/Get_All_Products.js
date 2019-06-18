@@ -29,7 +29,7 @@ function* workerGetAllProducts() {
     try {
         var response = yield call(() => {
             return request
-            .get(`${SERVER_URL}products`)
+            .get(`${SERVER_URL}products?all=1`)
             .set('Content-Type', 'application/json')
             .set('Accept', 'application/json')
             .then((res) => {
@@ -38,10 +38,8 @@ function* workerGetAllProducts() {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw.data;
-        console.log(data);
         yield put(getAllProductSuccess(data));
     }catch (error) {
-        console.log(error.response);
         yield put(getAllProductFailed());
     }
 };

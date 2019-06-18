@@ -20,6 +20,7 @@ import GoogleSignIn from 'react-native-google-sign-in';
 import { BACKDARKRED } from '../../images';
 import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
+import { MODAL } from '../basic/template/loading';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -150,7 +151,7 @@ class Login extends Component {
             this.setState({loading: true, isFormEmpty: false})
             this.props.dispatch(submitFormLogin(data));
         }else{
-            this.setState({isFormEmpty: true})
+            this.setState({isFormEmpty: true});
         }
     };
 
@@ -258,20 +259,7 @@ class Login extends Component {
                     onWillFocus={() => this.cleanStorage()}
                     onDidFocus={() => this.showFlashMessage()}
                     />
-                <Modal
-                    isVisible={this.state.loading}
-                    style={{alignItems: 'center'}}
-                    hideModalContentWhileAnimating={true}
-                    useNativeDriver
-                    >
-                    <View style={{ backgroundColor: 'white', width: 130, height: 90, borderRadius: 3, alignItems: 'center'}}>
-                        <Text style={{fontWeight: 'bold', top: 15, marginTop: 5}}>Mohon Tunggu</Text>
-                        <DotIndicator
-                            color='#7c0c10'
-                            size={8}
-                            />
-                    </View>
-                </Modal>
+                <MODAL isVisible={this.state.loading} message='Mohon Tunggu' />
                 <View style={{alignItems: 'center', marginTop: 100}}>
                     {this.state.isLoginError && <Text style={{color: 'red', width: 280, textAlign: 'center', fontSize: 12}}>{this.props.status.login.message}</Text>}
                     <View style={{width: 260, alignItems: 'center', marginTop: 10}}>
