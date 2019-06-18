@@ -2,8 +2,8 @@ import { put, call, takeEvery } from 'redux-saga/effects';
 import request from 'superagent';
 import { SERVER_URL, ERROR_TYPE } from '../components/basic/supportFunction';
 
-export const fetchUser = (token) => {
-    return { type: 'FETCH_USER_DATA', token }
+export const fetchUser = (data) => {
+    return { type: 'FETCH_USER_DATA', data }
 };
 
 const fetchUserSuccess = (data) => {
@@ -22,22 +22,24 @@ export function* watcherFecthUserData(token) {
     yield takeEvery('FETCH_USER_DATA', workerFetchUserData);
 };
 
-function* workerFetchUserData(data) {
+function* workerFetchUserData(form) {
+    console.log(form);
     try {
-        var response = yield call(() => {
-            return request
-            .get(`${SERVER_URL}profile/get_user`)
-            .set('Authorization', data.token)
-            .then((res) => {
-                return res;
-            })
-        })
-        var raw = JSON.parse(response.xhr._response);
-        var data = raw;
-        if (data.success) {
-            yield put(fetchUserSuccess(data.data));
-        }
+        // var response = yield call(() => {
+        //     return request
+        //     .get(`${SERVER_URL}users/${data.}`)
+        //     .set('Authorization', data.token)
+        //     .then((res) => {
+        //         return res;
+        //     })
+        // })
+        // var raw = JSON.parse(response.xhr._response);
+        // var data = raw;
+        // if (data.success) {
+        //     yield put(fetchUserSuccess(data.data));
+        // }
     }catch (error) {
+        console.log(error.response);
         const message = ERROR_TYPE(error.status);
         yield put(fetchUserFailed(message));
     }
