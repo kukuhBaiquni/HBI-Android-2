@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 import { Text, View, TouchableOpacity, TouchableNativeFeedback, StyleSheet, ScrollView, Switch, Alert, AsyncStorage, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { connect } from 'react-redux';
-import FBSDK, { LoginManager } from 'react-native-fbsdk';
+// import FBSDK, { LoginManager } from 'react-native-fbsdk';
 import { fetchUser, logOutRequest } from '../../actions/Get_User_Data';
-import GoogleSignIn from 'react-native-google-sign-in';
+// import GoogleSignIn from 'react-native-google-sign-in';
 import { BACKDARKRED } from '../../images';
 
 class Settings extends Component {
@@ -41,15 +41,15 @@ class Settings extends Component {
     };
 
     confirmLogout = async (x) => {
-        try {
-            await AsyncStorage.removeItem('token');
-            LoginManager.logOut();
-            GoogleSignIn.signOut();
-            this.props.navigation.replace('MainTabs');
-            this.props.dispatch(logOutRequest());
-        }catch (error) {
-            this.props.navigation.replace('MainTabs');
-        }
+        // try {
+        //     await AsyncStorage.removeItem('token');
+        //     LoginManager.logOut();
+        //     GoogleSignIn.signOut();
+        //     this.props.navigation.replace('MainTabs');
+        //     this.props.dispatch(logOutRequest());
+        // }catch (error) {
+        //     this.props.navigation.replace('MainTabs');
+        // }
     }
 
     render() {

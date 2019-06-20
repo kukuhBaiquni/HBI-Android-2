@@ -13,10 +13,10 @@ import { DotIndicator } from 'react-native-indicators';
 import { NavigationEvents, NavigationActions } from 'react-navigation';
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
-import FBSDK, { LoginManager } from 'react-native-fbsdk';
-import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+// import FBSDK, { LoginManager } from 'react-native-fbsdk';
+// import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+// import GoogleSignIn from 'react-native-google-sign-in';
 import { checkEmail } from '../../actions/Check_Email';
-import GoogleSignIn from 'react-native-google-sign-in';
 import { BACKDARKRED } from '../../images';
 import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
@@ -54,58 +54,58 @@ class Login extends Component {
         }
     };
 
-    facebookLogin() {
-        LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
-            if (!result.isCancelled) {
-                AccessToken.getCurrentAccessToken()
-                .then((data) => {
-                    const {accessToken} = data;
-                    const responseInfoCallback = (error, result) => {
-                        if (error) {
-                            Alert.alert(
-                                'Kesalahan',
-                                'Permintaan anda tidak dapat di proses',
-                                [
-                                    {text: 'OK'}
-                                ],
-                                { cancelable: false }
-                            );
-                        } else {
-                            const data = {
-                                name: result.name,
-                                email: result.email
-                            }
-                            AsyncStorage.setItem('facebook_data', JSON.stringify(data))
-                        }
-                    }
-                    const infoRequest = new GraphRequest(
-                        '/me',
-                        {
-                            accessToken: accessToken,
-                            parameters: {
-                                fields: {
-                                    string: 'email,name,picture'
-                                }
-                            }
-                        },
-                        responseInfoCallback
-                    );
-                    new GraphRequestManager().addRequest(infoRequest).start()
-                })
-            }
-        })
-        .then(() => this.emailCheck()),
-        function(error) {
-            Alert.alert(
-                'Kesalahan',
-                'Permintaan anda tidak dapat di proses',
-                [
-                    {text: 'OK'}
-                ],
-                { cancelable: false }
-            );
-        }
-    };
+    // facebookLogin() {
+    //     LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
+    //         if (!result.isCancelled) {
+    //             AccessToken.getCurrentAccessToken()
+    //             .then((data) => {
+    //                 const {accessToken} = data;
+    //                 const responseInfoCallback = (error, result) => {
+    //                     if (error) {
+    //                         Alert.alert(
+    //                             'Kesalahan',
+    //                             'Permintaan anda tidak dapat di proses',
+    //                             [
+    //                                 {text: 'OK'}
+    //                             ],
+    //                             { cancelable: false }
+    //                         );
+    //                     } else {
+    //                         const data = {
+    //                             name: result.name,
+    //                             email: result.email
+    //                         }
+    //                         AsyncStorage.setItem('facebook_data', JSON.stringify(data))
+    //                     }
+    //                 }
+    //                 const infoRequest = new GraphRequest(
+    //                     '/me',
+    //                     {
+    //                         accessToken: accessToken,
+    //                         parameters: {
+    //                             fields: {
+    //                                 string: 'email,name,picture'
+    //                             }
+    //                         }
+    //                     },
+    //                     responseInfoCallback
+    //                 );
+    //                 new GraphRequestManager().addRequest(infoRequest).start()
+    //             })
+    //         }
+    //     })
+    //     .then(() => this.emailCheck()),
+    //     function(error) {
+    //         Alert.alert(
+    //             'Kesalahan',
+    //             'Permintaan anda tidak dapat di proses',
+    //             [
+    //                 {text: 'OK'}
+    //             ],
+    //             { cancelable: false }
+    //         );
+    //     }
+    // };
 
     emailCheck() {
         setTimeout( async () => {
@@ -216,31 +216,31 @@ class Login extends Component {
         }
     };
 
-    googleLogin = async () => {
-        try {
-            await GoogleSignIn.configure({
-                scopes: ['profile'],
-                clientID: '482052818855-k825ol3id455sejkmbl5elquvc9p8jvv.apps.googleusercontent.com'
-            })
-            const user = await GoogleSignIn.signInPromise();
-            const raw = await {
-                name: user.name,
-                email: user.email
-            }
-            this.setState({oauthData: raw});
-            await this.props.dispatch(checkEmail(user.email))
-        } catch(error) {
-            this.setState({error: JSON.stringify(error)})
-            Alert.alert(
-                'Login gagal',
-                'Login dibatalkan oleh pengguna',
-                [
-                    {text: 'OK'}
-                ],
-                { cancelable: false }
-            );
-        }
-    };
+    // googleLogin = async () => {
+    //     try {
+    //         await GoogleSignIn.configure({
+    //             scopes: ['profile'],
+    //             clientID: '482052818855-k825ol3id455sejkmbl5elquvc9p8jvv.apps.googleusercontent.com'
+    //         })
+    //         const user = await GoogleSignIn.signInPromise();
+    //         const raw = await {
+    //             name: user.name,
+    //             email: user.email
+    //         }
+    //         this.setState({oauthData: raw});
+    //         await this.props.dispatch(checkEmail(user.email))
+    //     } catch(error) {
+    //         this.setState({error: JSON.stringify(error)})
+    //         Alert.alert(
+    //             'Login gagal',
+    //             'Login dibatalkan oleh pengguna',
+    //             [
+    //                 {text: 'OK'}
+    //             ],
+    //             { cancelable: false }
+    //         );
+    //     }
+    // };
 
     _infoMessageFromChangePassword = () => {
         return(
@@ -344,7 +344,7 @@ class Login extends Component {
                             duration={500}
                             iterationCount={1}
                             >
-                            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => this.facebookLogin()}>
+                            <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]}>
                                 <SocialIcon
                                     type='facebook'
                                     raised={false}
@@ -361,7 +361,7 @@ class Login extends Component {
                             duration={500}
                             iterationCount={1}
                             >
-                            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]} onPress={() => this.googleLogin()}>
+                            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]}>
                                 <SocialIcon
                                     type='google'
                                     raised={false}

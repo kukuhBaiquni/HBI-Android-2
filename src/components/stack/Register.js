@@ -11,11 +11,11 @@ import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { NavigationActions, NavigationEvents } from 'react-navigation';
 import { facebookRegister } from '../../actions/Facebook_Register';
-import FBSDK, { LoginManager } from 'react-native-fbsdk';
-import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+// import FBSDK, { LoginManager } from 'react-native-fbsdk';
+// import { AccessToken, GraphRequest, GraphRequestManager } from 'react-native-fbsdk';
+// import GoogleSignIn from 'react-native-google-sign-in';
 import { checkEmail, forceResetCE } from '../../actions/Check_Email';
 import { resetToken } from '../../actions/Login_Attempt';
-import GoogleSignIn from 'react-native-google-sign-in';
 import { BACKDARKRED } from '../../images';
 
 class Register extends Component {
@@ -233,58 +233,58 @@ class Register extends Component {
         }
     };
 
-    facebookRegisterX() {
-        LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
-            if (!result.isCancelled) {
-                AccessToken.getCurrentAccessToken()
-                .then((data) => {
-                    const {accessToken} = data;
-                    const responseInfoCallback = (error, result) => {
-                        if (error) {
-                            Alert.alert(
-                                'Kesalahan',
-                                'Permintaan anda tidak dapat di proses',
-                                [
-                                    {text: 'OK'}
-                                ],
-                                { cancelable: false }
-                            )
-                        } else {
-                            const data = {
-                                name: result.name,
-                                email: result.email
-                            }
-                            AsyncStorage.setItem('facebook_data', JSON.stringify(data))
-                        }
-                    }
-                    const infoRequest = new GraphRequest(
-                        '/me',
-                        {
-                            accessToken: accessToken,
-                            parameters: {
-                                fields: {
-                                    string: 'email,name,picture'
-                                }
-                            }
-                        },
-                        responseInfoCallback
-                    );
-                    new GraphRequestManager().addRequest(infoRequest).start()
-                })
-            }
-        })
-        .then(() => this.emailCheck()),
-        function(error) {
-            Alert.alert(
-                'Kesalahan',
-                'Permintaan anda tidak dapat di proses',
-                [
-                    {text: 'OK'}
-                ],
-                { cancelable: false }
-            );
-        }
-    };
+    // facebookRegisterX() {
+    //     LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
+    //         if (!result.isCancelled) {
+    //             AccessToken.getCurrentAccessToken()
+    //             .then((data) => {
+    //                 const {accessToken} = data;
+    //                 const responseInfoCallback = (error, result) => {
+    //                     if (error) {
+    //                         Alert.alert(
+    //                             'Kesalahan',
+    //                             'Permintaan anda tidak dapat di proses',
+    //                             [
+    //                                 {text: 'OK'}
+    //                             ],
+    //                             { cancelable: false }
+    //                         )
+    //                     } else {
+    //                         const data = {
+    //                             name: result.name,
+    //                             email: result.email
+    //                         }
+    //                         AsyncStorage.setItem('facebook_data', JSON.stringify(data))
+    //                     }
+    //                 }
+    //                 const infoRequest = new GraphRequest(
+    //                     '/me',
+    //                     {
+    //                         accessToken: accessToken,
+    //                         parameters: {
+    //                             fields: {
+    //                                 string: 'email,name,picture'
+    //                             }
+    //                         }
+    //                     },
+    //                     responseInfoCallback
+    //                 );
+    //                 new GraphRequestManager().addRequest(infoRequest).start()
+    //             })
+    //         }
+    //     })
+    //     .then(() => this.emailCheck()),
+    //     function(error) {
+    //         Alert.alert(
+    //             'Kesalahan',
+    //             'Permintaan anda tidak dapat di proses',
+    //             [
+    //                 {text: 'OK'}
+    //             ],
+    //             { cancelable: false }
+    //         );
+    //     }
+    // };
 
     emailCheck() {
         setTimeout( async () => {
@@ -313,31 +313,31 @@ class Register extends Component {
         this.props.navigation.replace('Login')
     };
 
-    googleRegister = async () => {
-        LoginManager.logOut()
-        try {
-            await GoogleSignIn.configure({
-                scopes: ['profile'],
-                clientID: '482052818855-k825ol3id455sejkmbl5elquvc9p8jvv.apps.googleusercontent.com'
-            })
-            const user = await GoogleSignIn.signInPromise();
-            const raw = {
-                name: user.name,
-                email: user.email
-            }
-            this.setState({oauthData: raw, loading: true, nameHandler: this.state.oauthData.name});
-            await this.props.dispatch(checkEmail(user.email))
-        } catch(error) {
-            Alert.alert(
-                'Login gagal',
-                'Login dibatalkan oleh pengguna',
-                [
-                    {text: 'OK'}
-                ],
-                { cancelable: false }
-            );
-        }
-    };
+    // googleRegister = async () => {
+    //     LoginManager.logOut()
+    //     try {
+    //         await GoogleSignIn.configure({
+    //             scopes: ['profile'],
+    //             clientID: '482052818855-k825ol3id455sejkmbl5elquvc9p8jvv.apps.googleusercontent.com'
+    //         })
+    //         const user = await GoogleSignIn.signInPromise();
+    //         const raw = {
+    //             name: user.name,
+    //             email: user.email
+    //         }
+    //         this.setState({oauthData: raw, loading: true, nameHandler: this.state.oauthData.name});
+    //         await this.props.dispatch(checkEmail(user.email))
+    //     } catch(error) {
+    //         Alert.alert(
+    //             'Login gagal',
+    //             'Login dibatalkan oleh pengguna',
+    //             [
+    //                 {text: 'OK'}
+    //             ],
+    //             { cancelable: false }
+    //         );
+    //     }
+    // };
 
     render() {
         const { isNameValid, isEmailValid, isPasswordValid, isPasswordMatch, isFormEmpty } = this.state;
@@ -505,7 +505,7 @@ class Register extends Component {
                         duration={500}
                         iterationCount={1}
                         >
-                        <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]} onPress={() => this.facebookRegisterX()}>
+                        <TouchableOpacity style={[styles.button, { backgroundColor: '#3b5998' }]}>
                             <SocialIcon
                                 type='facebook'
                                 raised={false}
@@ -522,7 +522,7 @@ class Register extends Component {
                         duration={500}
                         iterationCount={1}
                         >
-                        <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]} onPress={() => this.googleRegister()}>
+                        <TouchableOpacity style={[styles.button, { backgroundColor: '#ff4242' }]}>
                             <SocialIcon
                                 type='google'
                                 raised={false}
