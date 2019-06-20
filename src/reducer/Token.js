@@ -2,6 +2,8 @@ let initialState = {
     type: {
         access: '',
         refresh: '',
+        _id: '',
+        validUntil: ''
     },
     error: false,
     success: false
@@ -20,8 +22,10 @@ export default function token(state = initialState, action) {
         return Object.assign({}, state, {
             type: {
                 ...state.type,
-                access: action.data.access,
-                refresh: action.data.refresh
+                access: action.data.token,
+                refresh: action.data.refreshToken,
+                _id: action.data.userId,
+                validUntil: action.data.validUntil
             },
             error: false,
             success: true
@@ -32,7 +36,9 @@ export default function token(state = initialState, action) {
             type: {
                 ...state.type,
                 access: '',
-                refresh: ''
+                refresh: '',
+                _id: '',
+                validUntil: ''
             },
             error: false,
             success: false

@@ -2,8 +2,8 @@ import { put, call, takeEvery } from 'redux-saga/effects';
 import request from 'superagent';
 import { SERVER_URL, ERROR_TYPE } from '../components/basic/supportFunction';
 
-export const fetchUser = (token) => {
-    return { type: 'FETCH_USER_DATA', token }
+export const fetchUser = (data) => {
+    return { type: 'FETCH_USER_DATA', data }
 };
 
 const fetchUserSuccess = (data) => {

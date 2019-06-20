@@ -59,15 +59,15 @@ class Beranda extends Component {
         dispatch(getMemberLocation());
         if (listProducts.data.length === 0) dispatch(getAllProducts());
         try{
-            const id = await AsyncStorage.getItem('PlayerID')
+            const id = await AsyncStorage.getItem('PlayerID');
             const token = await AsyncStorage.getItem('token');
             if (id !== null && token !== null) {
                 const ids = JSON.parse(id);
                 const tokens = JSON.parse(token);
-                this.setState({token: tokens.access});
+                 this.setState({token: tokens.token});
                 dispatch(setInitialToken(tokens));
-                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens.access}));
-                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser(tokens.access));
+                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens.token}));
+                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser(tokens.userId));
             }
         }catch(error) {
             ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);

@@ -178,15 +178,23 @@ class Login extends Component {
             if (prevProps.token.success !== token.success) {
                 const token = this.props.token.type;
                 this.storeToken(token);
+                if (token.success) {
+                    if (this.state.loading) {
+                        const token = this.props.token.type;
+                        this.setState({loading: false, isLoginError: false});
+                        this.storeToken(token);
+                        dispatch(resetTokenState());
+                    }
+                }
             }
         }
     };
 
     storeToken = async (token) => {
         try {
-            await AsyncStorage.setItem('token', JSON.stringify(token))
+            await AsyncStorage.setItem('token', JSON.stringify(token));
             this.props.dispatch(forceResetAV());
-            this.props.navigation.reset([NavigationActions.navigate({ routeName: 'MainTabs' })], 0)
+            this.props.navigation.reset([NavigationActions.navigate({ routeName: 'MainTabs' })], 0);
         } catch (error) {
             Alert.alert(
                 'Kesalahan',
