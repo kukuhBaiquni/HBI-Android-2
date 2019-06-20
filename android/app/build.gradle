@@ -156,31 +156,31 @@ dependencies {
     implementation 'com.google.android.gms:play-services-base:10.0.1'
     implementation 'com.google.android.gms:play-services-maps:10.0.1'
 
-    compile(project(':react-native-geolocation-service')) {
+    implementation(project(':react-native-geolocation-service')) {
         exclude group: 'com.google.android.gms', module: 'play-services-location'
     }
-    compile 'com.google.android.gms:play-services-location:10.0.1'
+    implementation 'com.google.android.gms:play-services-location:10.0.1'
 
-    compile project(':react-native-geolocation-service')
+    implementation project(':react-native-geolocation-service')
     implementation project(':react-native-maps')
-    compile project(':react-native-splash-screen')
-    compile project(':react-native-onesignal')
-    compile project(':react-native-google-sign-in')
-    compile project(':react-native-linear-gradient')
-    compile project(':react-native-vector-icons')
-    compile project(':react-native-fbsdk')
-    compile project(':react-native-send-intent')
-    compile project(':react-native-image-picker')
-    compile(project(":react-native-google-sign-in")) {
-        exclude group: "com.google.android.gms"
-    }
-    compile project(':react-native-exit-app')
-    implementation 'com.facebook.fresco:fresco:1.10.0'
-    implementation 'com.facebook.fresco:animated-gif:1.10.0'
-    compile "com.google.android.gms:play-services-auth:16.0.1"
+    implementation project(':react-native-splash-screen')
+    implementation project(':react-native-onesignal')
+    //implementation project(':react-native-google-sign-in')
+    implementation project(':react-native-linear-gradient')
+    implementation project(':react-native-vector-icons')
+    //implementation project(':react-native-fbsdk')
+    implementation project(':react-native-send-intent')
+    implementation project(':react-native-image-picker')
+    //implementation(project(":react-native-google-sign-in")) {
+    //    exclude group: "com.google.android.gms"
+    //}
+    implementation project(':react-native-exit-app')
+    //implementation 'com.facebook.fresco:fresco:1.10.0'
+    //implementation 'com.facebook.fresco:animated-gif:1.10.0'
+    implementation "com.google.android.gms:play-services-auth:10.0.1"
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:+"  // From node_modules
-    implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
+    //implementation 'com.facebook.android:facebook-android-sdk:4.34.0'
     implementation "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     implementation project(':react-native-community-netinfo')
 }
