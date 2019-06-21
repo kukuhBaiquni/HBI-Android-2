@@ -3,6 +3,7 @@ import request from 'superagent';
 import { SERVER_URL } from '../components/basic/supportFunction';
 
 export const countItem = (data) => {
+    console.log('exe');
     return { type: 'COUNT_ITEM', data };
 };
 
@@ -18,34 +19,30 @@ export const resetCountItem = () => {
     return { type: 'RESET_COUNT_ITEM' };
 };
 
-const InternalServerError = () => {
-    return { type: 'INTERNAL_SERVER_ERROR' }
-};
-
 export function* watcherCountItem(data) {
     yield takeEvery('COUNT_ITEM', workerCountItem);
 };
 
 function* workerCountItem(form) {
+    console.log(form);
     try {
         var response = yield call(() => {
             return request
-            .post(`${SERVER_URL}non-member/counting-items`)
+            .post(`${SERVER_URL}util/realtime/price`)
             .set('Authorization', form.data.token)
-            .send({id: form.data.id})
+            .send({productId: form.data.productId})
             .send({qty: form.data.qty})
+            .send({status: form.data.status})
             .then((res) => {
                 return res;
             })
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
-        if (data.result) {
-            yield put(countItemSuccess(data));
-        }else{
-            yield put(countItemFailed())
-        }
+        console.log(data);
+        yield put(countItemSuccess(data));
     }catch (error) {
-        yield put(InternalServerError());
+        console.log(error.response);
+        yield put(countItemFailed())
     }
 }

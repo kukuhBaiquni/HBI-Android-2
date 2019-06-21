@@ -86,8 +86,9 @@ class Cart extends Component {
         this.setState({qty: count, loading: true});
         var data = {
             token: this.state.token,
-            id: this.state.idProduct,
-            qty: count
+            productId: this.state.idProduct,
+            qty: count,
+            status: this.props.userData.data.personalIdentity.status
         };
         this.props.dispatch(countItem(data));
     };
@@ -98,8 +99,9 @@ class Cart extends Component {
         this.setState({qty: count, loading: true});
         var data = {
             token: this.state.token,
-            id: this.state.idProduct,
-            qty: count
+            productId: this.state.idProduct,
+            qty: count,
+            status: this.props.userData.data.personalIdentity.status
         };
         this.props.dispatch(countItem(data));
     };

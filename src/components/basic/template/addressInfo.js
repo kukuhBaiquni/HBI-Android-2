@@ -6,8 +6,6 @@ import { CAPITALIZE } from '../supportFunction';
 
 export const ADDRESS_INFO = (props) => {
     const { userData, navigation, newParams } = props;
-    console.log(navigation);
-    console.log(userData);
     return(
         <View style={userInfo.container}>
             <View style={userInfo.papperWhite}>

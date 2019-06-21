@@ -77,8 +77,9 @@ class ProductDetails extends Component {
         this.setState({itemCount: count, loading: true});
         var data = {
             token: this.state.token,
-            id: this.props.navigation.state.params.id,
-            qty: count
+            productId: this.props.navigation.state.params.id,
+            qty: count,
+            status: this.props.userData.data.personalIdentity.status
         };
         this.props.dispatch(countItem(data));
     };
@@ -89,8 +90,9 @@ class ProductDetails extends Component {
         this.setState({itemCount: count, loading: true});
         var data = {
             token: this.state.token,
-            id: this.props.navigation.state.params.id,
-            qty: count
+            productId: this.props.navigation.state.params.id,
+            qty: count,
+            status: this.props.userData.data.personalIdentity.status
         };
         this.props.dispatch(countItem(data));
     };
