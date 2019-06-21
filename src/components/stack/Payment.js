@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollView, Alert, Dimensions } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
-import { SERVER_URL, IDR_FORMAT, PRODUCT_PATH } from '../basic/supportFunction';
+import { STATIC_RES_URL, IDR_FORMAT } from '../basic/supportFunction';
 import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
 import { DotIndicator, WaveIndicator } from 'react-native-indicators';
@@ -187,7 +187,7 @@ class Payment extends Component {
             const data = [
                 Object.assign({}, basic, {
                     product_name: basic.productname,
-                    price: isMember ? basic.resellerprice : enduserprice,
+                    price: isMember ? basic.resellerprice : basic.enduserprice,
                     qty: this.state.itemCount
                 })
             ];
@@ -302,7 +302,16 @@ class Payment extends Component {
         cart.map(x => total += x.subtotal);
         let params = {};
         if (navigation.state.params === undefined) {
-            params = userData.data;
+            params = {
+                name: userData.data.personalIdentity.name,
+                phone: userData.data.personalIdentity.phone,
+                address: {
+                    street: userData.data.personalIdentity.address.street,
+                    city: userData.data.personalIdentity.address.city.name,
+                    district: userData.data.personalIdentity.address.district.name,
+                    village: userData.data.personalIdentity.address.village.name
+                }
+            };
         }else{
             params = {
                 name: navigation.state.params.name,
@@ -354,7 +363,7 @@ class Payment extends Component {
 
                         <ADDRESS_INFO
                             navigation={navigation}
-                            userData={userData}
+                            userData={userData.data}
                             newParams={newParams}
                             />
                         <View style={{alignItems: 'center', marginTop: 10}}>
@@ -379,7 +388,7 @@ class Payment extends Component {
                                                 <Image
                                                     resizeMode='cover'
                                                     style={itemDetails.imageStyle}
-                                                    source={{uri: `${SERVER_URL}${PRODUCT_PATH}${x.photo}`}}
+                                                    source={{uri: `${STATIC_RES_URL}products/${x.photo}`}}
                                                     />
                                                 <View style={itemDetails.orderInfo}>
                                                     <Text style={itemDetails.propertyText}>Harga</Text>

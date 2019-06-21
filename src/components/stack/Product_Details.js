@@ -16,7 +16,7 @@ import { addToCart, forceResetATC } from '../../actions/Add_To_Cart';
 import { withNavigationFocus } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
 import { WaveIndicator } from 'react-native-indicators';
-import { SERVER_URL, IDR_FORMAT, UNIT_CONVERTER } from '../basic/supportFunction';
+import { STATIC_RES_URL, IDR_FORMAT, UNIT_CONVERTER } from '../basic/supportFunction';
 import { BACKDARKRED } from '../../images';
 import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
@@ -49,14 +49,15 @@ class ProductDetails extends Component {
     }
 
     componentDidMount() {
+        const { listProducts, navigation } = this.props;
         let list = [];
         let arr = [];
-        let exception = this.props.listProducts.map(function(e) { return e.id }).indexOf(this.props.navigation.state.params.id);
+        let exception = listProducts.data.map(function(e) { return e.id }).indexOf(navigation.state.params.id);
         while(list.length < 6){
-            var random = Math.floor(Math.random()*this.props.listProducts.length);
+            var random = Math.floor(Math.random()*listProducts.data.length);
             if(arr.indexOf(random) > -1 || random == exception) continue;
             arr[arr.length] = random;
-            list.push(this.props.listProducts[random]);
+            list.push(listProducts.data[random]);
         };
         this._showMain(list);
     };
@@ -187,7 +188,7 @@ class ProductDetails extends Component {
     };
 
     _renderModal = () => {
-        const { navigation } = this.props;
+        const { navigation, userData, resultCounting } = this.props;
         return(
             <MODAL_QUANTITY_EDITOR
                 closeModal={this._closeModal}
@@ -203,8 +204,8 @@ class ProductDetails extends Component {
                 itemCount={this.state.itemCount}
 
                 data={navigation.state.params}
-                userStatus={this.props.userData.data.status}
-                resultCounting={this.props.resultCounting}
+                userStatus={userData.data.status}
+                resultCounting={resultCounting}
                 buttonText='Tambah ke Keranjang'
                 routeName={navigation.state.routeName}
                 />
@@ -219,7 +220,7 @@ class ProductDetails extends Component {
                         this.state.renderItems.map((x, i) =>
                             <TouchableOpacity key={i} style={styles.basicCard}>
                                 <Image
-                                    source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
+                                    source={{uri: `${STATIC_RES_URL}products/${x.photo}`}}
                                     style={{height: 150, width: '100%', borderTopRightRadius: 5, borderTopLeftRadius: 5}}
                                     resizeMode='cover'
                                     />
@@ -255,7 +256,7 @@ class ProductDetails extends Component {
                         title={navigation.state.params.productname}
                         backgroundColor='#f4f4f4'
                         titleStyle={styles.productName}
-                        backgroundImage={{uri: `${SERVER_URL}images/products/${navigation.state.params.photo}`}}
+                        backgroundImage={{uri: `${STATIC_RES_URL}products/${navigation.state.params.photo}`}}
                         backgroundImageScale={2}
                         renderNavBar={() => (
                             <View style={styles.fixedNavbar}>

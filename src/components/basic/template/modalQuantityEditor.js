@@ -3,7 +3,7 @@ import Modal from 'react-native-modal';
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Image } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { BarIndicator } from 'react-native-indicators';
-import { IDR_FORMAT, SERVER_URL, PRODUCT_PATH } from '../supportFunction';
+import { IDR_FORMAT, STATIC_RES_URL } from '../supportFunction';
 import { COLORS } from '../colors';
 import { TYPOGRAPHY } from '../typography';
 
@@ -71,7 +71,7 @@ export const MODAL_QUANTITY_EDITOR = (props) => {
                                 <Image
                                     resizeMode='cover'
                                     style={styles.imageStyle}
-                                    source={{uri: `${SERVER_URL}${PRODUCT_PATH}${props.data.photo}`}}
+                                    source={{uri: `${STATIC_RES_URL}products/${props.data.photo}`}}
                                     />
                             </View>
                             <View style={{height: 120, width: 140, marginTop: 10, paddingLeft: 10}}>
