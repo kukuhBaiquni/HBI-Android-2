@@ -22,21 +22,19 @@ export function* watcherFecthUserData(token) {
     yield takeEvery('FETCH_USER_DATA', workerFetchUserData);
 };
 
-function* workerFetchUserData(data) {
+function* workerFetchUserData(form) {
     try {
         var response = yield call(() => {
             return request
-            .get(`${SERVER_URL}profile/get_user`)
-            .set('Authorization', data.token)
+            .get(`${SERVER_URL}users/${form.data._id}`)
+            .set('Authorization', form.data.token)
             .then((res) => {
                 return res;
             })
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
-        if (data.success) {
-            yield put(fetchUserSuccess(data.data));
-        }
+        yield put(fetchUserSuccess(data.data));
     }catch (error) {
         const message = ERROR_TYPE(error.status);
         yield put(fetchUserFailed(message));

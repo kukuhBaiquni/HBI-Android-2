@@ -3,7 +3,7 @@ import { View, TouchableOpacity, StyleSheet, ScrollView, Text, Image, AsyncStora
 import { NavigationEvents } from 'react-navigation';
 import { connect } from 'react-redux';
 
-import { getAllProducts } from '../../actions/Get_All_Products';
+import { getAllProducts, resetGetAllProductState } from '../../actions/Get_All_Products';
 import { fetchUser } from '../../actions/Get_User_Data';
 import { setPlayerId } from '../../actions/Set_Player_Id';
 import { setInitialToken } from '../../actions/Set_Initial_Token';
@@ -64,10 +64,10 @@ class Beranda extends Component {
             if (id !== null && token !== null) {
                 const ids = JSON.parse(id);
                 const tokens = JSON.parse(token);
-                 this.setState({token: tokens.token});
-                dispatch(setInitialToken(tokens));
-                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens.token}));
-                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser(tokens.userId));
+                 this.setState({token: tokens.access});
+                dispatch(setInitialToken(tokens.access));
+                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens.access}));
+                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser({token: tokens.access, _id: tokens._id}));
             }
         }catch(error) {
             ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
@@ -75,9 +75,14 @@ class Beranda extends Component {
     };
 
     componentDidUpdate(prevProps, prevState) {
-        const { userData } = this.props;
+        const { userData, listProducts, dispatch } = this.props;
         if (prevProps.userData.success !== userData.success) {
-            ToastAndroid.show(`Selamat datang ${userData.data.name}`, ToastAndroid.LONG, ToastAndroid.BOTTOM);
+            ToastAndroid.show(`Selamat datang ${userData.data.personalIdentity.name}`, ToastAndroid.LONG, ToastAndroid.BOTTOM);
+        }
+        if (prevProps.listProducts.success !== listProducts.success) {
+            if (listProducts.success) {
+                dispatch(resetGetAllProductState())
+            }
         }
     };
 

@@ -22,14 +22,13 @@ function* workerGetMemberLocation() {
     try {
         var response = yield call(() => {
             return request
-            .get(`${SERVER_URL}users?loc=1`)
+            .get(`${SERVER_URL}reports/member/location`)
             .then((res) => {
                 return res;
             })
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
-        console.log(data);
         yield put(getMemberLocationSuccess(data.data));
     }catch (error) {
         yield put(getMemberLocationFailed());
