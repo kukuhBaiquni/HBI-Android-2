@@ -81,7 +81,7 @@ class Beranda extends Component {
         }
         if (prevProps.listProducts.success !== listProducts.success) {
             if (listProducts.success) {
-                dispatch(resetGetAllProductState())
+                dispatch(resetGetAllProductState());
             }
         }
     };

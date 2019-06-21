@@ -12,7 +12,7 @@ class ListMarket extends Component {
 
     _beforeRender = () => {
         const { navigation, userData } = this.props;
-        if (userData.data.status === 'Member') {
+        if (userData.data.personalIdentity.status === 'Member') {
             navigation.navigate('ShopPageMember');
         }else{
             navigation.navigate('MapListMarket');

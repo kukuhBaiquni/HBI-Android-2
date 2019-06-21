@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { View, Text, Image, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Spinner } from 'native-base';
-import { SERVER_URL } from '../components/basic/supportFunction';
+import { STATIC_RES_URL } from '../components/basic/supportFunction';
+
 import { IDR_FORMAT } from '../components/basic/supportFunction';
 import * as Animatable from 'react-native-animatable';
 import { COLORS } from './basic/colors';
@@ -29,7 +30,7 @@ export default class ProductsTab extends Component {
                                     <Image
                                         resizeMode='contain'
                                         style={styles.imageStyle}
-                                        source={{uri: `${SERVER_URL}images/products/${x.photo}`}}
+                                        source={{uri: `${STATIC_RES_URL}products/${x.photo}`}}
                                         />
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={styles.title}>{x.productname}</Text>
