@@ -22,22 +22,8 @@ export const ADDRESS_INFO = (props) => {
                         <Text style={userInfo.propertyText}>Nama</Text>
                         <Text style={userInfo.valueText}>{userData.personalIdentity.name}</Text>
                         <Text style={userInfo.propertyText}>Nomor Telepon</Text>
-                        <Text style={userInfo.valueText}>0{userData.personalIdentity.phone}</Text>
-                        <Text style={userInfo.propertyText}>Alamat Pengiriman</Text>
-                        {
-                            userData.personalIdentity.address.street !== '' || navigation.state.params !== undefined
-                            ?
-                            <View>
-                                <Text style={{...TYPOGRAPHY.p}}>
-                                    {userData.personalIdentity.address.street}
-                                </Text>
-                                <Text style={{...TYPOGRAPHY.p}}>Kecamatan {CAPITALIZE(userData.personalIdentity.address.district.name)}</Text>
-                                <Text style={{...TYPOGRAPHY.p}}>Kelurahan {CAPITALIZE(userData.personalIdentity.address.village.name)}</Text>
-                                <Text style={{...TYPOGRAPHY.p}}>{CAPITALIZE(userData.personalIdentity.address.city.name)}</Text>
-                            </View>
-                            :
-                            <Text style={userInfo.alertUncompleteAddress}>Alamat belum lengkap</Text>
-                        }
+                        <Text style={userInfo.valueText}>{userData.personalIdentity.phone}</Text>
+
                     </View>
                     :
                     <View>
@@ -51,7 +37,7 @@ export const ADDRESS_INFO = (props) => {
                             ?
                             <View>
                                 <Text style={{...TYPOGRAPHY.p}}>
-                                    {navigation.state.params.street}
+                                    Jl. {navigation.state.params.street}
                                 </Text>
                                 <Text style={{...TYPOGRAPHY.p}}>Kecamatan {CAPITALIZE(navigation.state.params.district.name)}</Text>
                                 <Text style={{...TYPOGRAPHY.p}}>Kelurahan {CAPITALIZE(navigation.state.params.village.name)}</Text>
@@ -71,11 +57,7 @@ const userInfo = StyleSheet.create({
 
     container                   : { alignItems: 'center', marginTop: 15 },
 
-    propertyText                : { ...TYPOGRAPHY.subHeader },
-
     valueText                   : { marginBottom: 5, ...TYPOGRAPHY.p },
-
-    alertUncompleteAddress      : { fontStyle: 'italic', color: '#bababa' },
 
     papperWhite                 : { backgroundColor: 'white', padding: 10, width: '95%', elevation: 1, borderRadius: 3 },
 
@@ -84,5 +66,7 @@ const userInfo = StyleSheet.create({
     changeText                  : { ...TYPOGRAPHY.memberPriceText, ...TYPOGRAPHY.f14 },
 
     changeTextPseudoButton      : { position: 'absolute', right: 10, top: 0 },
+
+    propertyText                : { ...TYPOGRAPHY.subHeader },
 
 });

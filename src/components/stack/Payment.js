@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollView, Alert, Dimensions } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollView, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
 import { STATIC_RES_URL, IDR_FORMAT } from '../basic/supportFunction';
@@ -22,11 +22,7 @@ import { resetSingleTransaction } from '../../actions/SingleTransaction';
 import { countItem } from '../../actions/Counting_Items';
 import { directPurchase } from '../../actions/Direct_Purchase';
 
-import MapView, { Marker } from 'react-native-maps';
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-const googleApis = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
+import MapAddressOngkir from '../basic/template/MapAddressOngkir';
 
 class Payment extends Component {
     static navigationOptions = ({navigation}) => {
@@ -366,15 +362,9 @@ class Payment extends Component {
                             userData={userData.data}
                             newParams={newParams}
                             />
-                        <View style={{alignItems: 'center', marginTop: 10}}>
-                            <View style={styles.basicCard}>
-                                <Text style={styles.infoTopMap}>Ketuk pada peta untuk menandai lokasi</Text>
-                                <MapView
-                                    ref={map => this.map = map}
-                                    style={{height: 200, width: '100%'}}
-                                    />
-                            </View>
-                        </View>
+                        <MapAddressOngkir
+                            address={userData.data.personalIdentity.address}
+                            />
                         <View style={{alignItems: 'center'}}>
                             <View style={itemDetails.container}>
                                 <View>
@@ -485,8 +475,6 @@ const styles = StyleSheet.create({
     modalWaitText                       : { fontWeight: 'bold', top: 15, marginTop: 5 },
     separator                           : { backgroundColor: '#d7d7d7', height: 1, width: '95%' },
     changeDetails                       : { textAlign: 'right', marginTop: 13, ...TYPOGRAPHY.specialActionText },
-    basicCard                           : { backgroundColor: 'white', width: '95%', borderRadius: 3 },
-    infoTopMap                          : { ...TYPOGRAPHY.p, marginLeft: 10, marginTop: 5, marginBottom: 5, fontSize: 12 }
 });
 
 const itemDetails = StyleSheet.create({

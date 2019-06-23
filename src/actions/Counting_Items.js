@@ -24,7 +24,6 @@ export function* watcherCountItem(data) {
 };
 
 function* workerCountItem(form) {
-    console.log(form);
     try {
         var response = yield call(() => {
             return request
@@ -39,10 +38,8 @@ function* workerCountItem(form) {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
-        console.log(data);
         yield put(countItemSuccess(data));
     }catch (error) {
-        console.log(error.response);
         yield put(countItemFailed())
     }
 }
