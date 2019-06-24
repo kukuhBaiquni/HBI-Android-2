@@ -7,12 +7,10 @@ import { Form, Item, Input, Label, Picker } from 'native-base';
 import { DRAWER_DEFAULT } from '../../../images';
 import { ORIGIN_POINT } from '../supportFunction';
 
-import { CAPITALIZE } from '../supportFunction';
+import { CAPITALIZE, API_KEY } from '../supportFunction';
 
 import { COLORS } from '../colors';
 import { TYPOGRAPHY } from '../typography';
-
-const googleApis = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
 
 export default class MapAddressOngkir extends Component {
     constructor(props) {
@@ -23,13 +21,12 @@ export default class MapAddressOngkir extends Component {
                 longitude: 107.600628,
                 latitudeDelta: 0,
                 longitudeDelta: 0.5
-            },
-            apikey: 'AIzaSyCIMNrAZbX3gmDtNVYVhJVEIV3btZesLVU'
+            }
         }
     };
 
     componentDidMount() {
-        fetch(googleApis + `Sindanglaya no 131 rt 03 rw 01 arcamanik binaharapan bandung` + `&key=${this.state.apikey}`)
+        fetch(googleApis + `Sindanglaya no 131 rt 03 rw 01 arcamanik binaharapan bandung` + `&key=${API_KEY}`)
         .then(res => console.log(JSON.parse(res._bodyText)));
     };
 

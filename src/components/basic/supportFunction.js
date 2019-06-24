@@ -6,6 +6,7 @@ export const STATIC_RES_URL = 'http://halalbeef.co.id/images/';
 export const LOCALE_DAY = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'at', 'Sabtu'];
 export const PRODUCT_PATH = 'images/products/';
 export const PROFILE_PATH = 'images/dummy/';
+export const API_KEY = 'AIzaSyCIMNrAZbX3gmDtNVYVhJVEIV3btZesLVU';
 
 export const ORIGIN_POINT = {
     latitude: -6.887244,
