@@ -31,43 +31,35 @@ class SetLocation extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            coordinate: {
-                latitude: '',
-                longitude: ''
-            },
+            coordinate: null,
             addresshandler: ''
         };
     };
 
     _getLocation(location) {
-        fetch(googleApis + location.latitude + `,` + location.longitude + `&key=${API_KEY}`)
-        .then(res => res.json())
-        .then(resJson => {
-            this.setState({coordinate: location});
-        })
-        .catch((err) => {
-            console.log(err);
-        });
+        this.setState({coordinate: location});
+        // fetch(googleApis + location.latitude + `,` + location.longitude + `&key=${API_KEY}`)
+        // .then(res => res.json())
+        // .then(resJson => {
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        // });
     };
 
     _renderManualPosition = () => {
-        const { coordinate } = this.state;
-        if (coordinate.latitude !== '' && coordinate.longitude !== '') {
-            return(
-                <Marker
-                    coordinate={this.state.coordinate}
-                    title='Posisi Saya'
-                    description='{this.state.addressHandler}'
-                    showsCompass={false}
-                    >
-                    <Icon name='man' size={20} color={COLORS.PRIMARY} />
-                </Marker>
-            )
-        }
+        return(
+            <Marker
+                coordinate={this.state.coordinate}
+                title='Posisi Saya'
+                description='{this.state.addressHandler}'
+                >
+                <Icon name='man' size={20} color={COLORS.PRIMARY} />
+            </Marker>
+        )
     };
 
     render() {
-        console.log(this.state.coordinate);
         if (this.props.isFocused) {
             return(
                 <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
@@ -77,10 +69,9 @@ class SetLocation extends Component {
                             style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}
                             initialRegion={{...ORIGIN_POINT, latitudeDelta: 0, longitudeDelta: 0.5}}
                             showsCompass={false}
-                            onRegionChangeComplete={(x) => this.setState({coordinate: x})}
                             onPress={(e) => this._getLocation(e.nativeEvent.coordinate)}
                             >
-                            {this._renderManualPosition()}
+                            {this.state.coordinate !== null && this._renderManualPosition()}
                         </MapView>
                         <View style={styles.infoContainer}>
                             <View style={styles.floatingInfo}>
