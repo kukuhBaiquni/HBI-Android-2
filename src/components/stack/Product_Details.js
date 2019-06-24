@@ -67,7 +67,7 @@ class ProductDetails extends Component {
             this.setState({
                 isVisibleMain: true,
                 renderItems: list
-            })
+            });
         }, 10);
     };
 

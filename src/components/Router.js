@@ -49,6 +49,7 @@ import { BACKDARKRED, BACKWHITE, CHECKLIST_DARKRED, CANCEL_DARKRED, BERANDA, BER
 import { COLORS } from './basic/colors';
 import { TYPOGRAPHY } from './basic/typography';
 import MapListMarket from './stack/MapListMarket';
+import SetLocation from './stack/Set_Location';
 
 const config = {
     lazy: true,
@@ -223,6 +224,7 @@ const RootStack = createStackNavigator({
     ChangePassword:             { screen: ChangePassword },
     ShopPageMember:             { screen: ShopPageMember },
     MapListMarket:              { screen: MapListMarket },
+    SetLocation:                { screen: SetLocation },
 }, {
     initialRouteName: 'MainTabs'
 });

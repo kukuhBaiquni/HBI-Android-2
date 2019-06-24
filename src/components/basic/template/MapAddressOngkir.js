@@ -47,7 +47,7 @@ export default class MapAddressOngkir extends Component {
     };
 
     render() {
-        const { address, editModeAddress, changeEditMode, customData } = this.props;
+        const { address, editModeAddress, changeEditMode, customData, navigation } = this.props;
         return(
             <View style={{alignItems: 'center', marginTop: 10}}>
                 <View style={styles.basicCard}>
@@ -62,29 +62,6 @@ export default class MapAddressOngkir extends Component {
                     </MapView>
                     <Text style={styles.propertyText}>Alamat Pengiriman</Text>
                     {
-                        editModeAddress
-                        ?
-                        <View style={{marginBottom: 10, alignItems: 'center'}}>
-                            <Item stackedLabel style={{width: 325}}>
-                                <Label style={{...TYPOGRAPHY.subHeader}}>Nama Penerima</Label>
-                                <Input
-                                    onChangeText={(x) => onChangeText('name', x)}
-                                    value={customData.name}
-                                    editable={true}
-                                    style={{...TYPOGRAPHY.p}}
-                                    />
-                            </Item>
-                            <Item stackedLabel style={{width: 325}}>
-                                <Label style={{...TYPOGRAPHY.subHeader}}>Nomor Telepon Penerima</Label>
-                                <Input
-                                    keyboardType='numeric'
-                                    onChangeText={(x) => onChangeText('phone', x)}
-                                    value={customData.phone}
-                                    style={{...TYPOGRAPHY.p}}
-                                    />
-                            </Item>
-                        </View>
-                        :
                         address.street !== '' || navigation.state.params !== undefined
                         ?
                         <View style={styles.infoTopMap}>
@@ -94,7 +71,7 @@ export default class MapAddressOngkir extends Component {
                             <Text style={{...TYPOGRAPHY.p}}>Kecamatan {CAPITALIZE(address.district.name)}</Text>
                             <Text style={{...TYPOGRAPHY.p}}>Kelurahan {CAPITALIZE(address.village.name)}</Text>
                             <Text style={{...TYPOGRAPHY.p}}>{CAPITALIZE(address.city.name)}</Text>
-                            <TouchableOpacity style={styles.touchableArea} onPress={() => changeEditMode()}>
+                            <TouchableOpacity style={styles.touchableArea} onPress={() => navigation.navigate('SetLocation')}>
                                 <Icon name='edit' color={COLORS.PRIMARY} size={17} />
                                 <Text style={[styles.changeText, {marginLeft: 2}]}>{editModeAddress ? 'Simpan' : 'Ubah'}</Text>
                             </TouchableOpacity>

@@ -336,14 +336,12 @@ class Payment extends Component {
         let clone = Object.assign({}, this.state.customData, {
             [params]: value
         });
-        console.log(clone);
         this.setState({
             customData: clone
         });
     };
 
     render() {
-        console.log(this.state);
         const { userData, navigation, cart, transaction, targetMember, singleTransaction } = this.props;
         let total = 0;
         cart.map(x => total += x.subtotal);
@@ -420,6 +418,7 @@ class Payment extends Component {
                             editModeAddress={this.state.editModeAddress}
                             customData={this.state.customData}
                             changeEditMode={this._changeEditModeAddress}
+                            navigation={navigation}
                             />
                         <View style={{alignItems: 'center'}}>
                             <View style={itemDetails.container}>
