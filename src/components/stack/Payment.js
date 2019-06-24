@@ -21,6 +21,7 @@ import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
 import { resetSingleTransaction } from '../../actions/SingleTransaction';
 import { countItem } from '../../actions/Counting_Items';
 import { directPurchase } from '../../actions/Direct_Purchase';
+import { DRAWER_DEFAULT } from '../../images';
 
 import MapAddressOngkir from '../basic/template/MapAddressOngkir';
 
@@ -55,12 +56,26 @@ class Payment extends Component {
             showModalContent: false,
             loadingPrice: false,
             idProduct: 0,
-            subtotalhandler: 0
+            subtotalhandler: 0,
+
+            editModeBasic: false,
+            editModeAddress: false,
+
+            customData: {
+                name: '',
+                phone: '',
+                address: {
+                    city: '',
+                    district: '',
+                    village: '',
+                    street: ''
+                }
+            }
         }
     };
 
     _afterRender = () => {
-        const { dispatch, cart, navigation, singleTransaction } = this.props;
+        const { dispatch, cart, navigation, singleTransaction, userData } = this.props;
         dispatch(resetTransactionState());
         let acu = 0;
         cart.map(x => acu += x.freeOngkirConsideration);
@@ -71,13 +86,22 @@ class Payment extends Component {
         if (navigation.state.params !== undefined) {
             const village = navigation.state.params.village;
         }
-        setTimeout(() => {
-            if (this.props.singleTransaction.length > 0) {
-                this.setState({showContent: true, token: this.props.token, data: this.props.singleTransaction, idProduct: singleTransaction[0].id});
-            }else{
-                this.setState({showContent: true, token: this.props.token, data: cart.filter(x => x.status === true)});
+        let data = Object.assign({}, this.state.customData, {
+            name: userData.data.personalIdentity.name,
+            phone: userData.data.personalIdentity.phone,
+            address: {
+                ...this.state.customData.address,
+                city: userData.data.personalIdentity.address.city,
+                district: userData.data.personalIdentity.address.district,
+                village: userData.data.personalIdentity.address.village,
+                street: userData.data.personalIdentity.address.street
             }
-        }, 10);
+        });
+        if (this.props.singleTransaction.length > 0) {
+            this.setState({showContent: true, token: this.props.token, data: this.props.singleTransaction, idProduct: singleTransaction[0].id, customData: data});
+        }else{
+            this.setState({showContent: true, token: this.props.token, data: cart.filter(x => x.status === true), customData: data});
+        }
         this._totalMapping();
     };
 
@@ -292,7 +316,34 @@ class Payment extends Component {
         }
     };
 
+    _changeEditModeAddress = () => {
+        this.setState(function(prevState) {
+            return {
+                editModeAddress: !prevState.editModeAddress
+            }
+        });
+    };
+
+    _changeEditModeBasic = () => {
+        this.setState(function(prevState) {
+            return {
+                editModeBasic: !prevState.editModeBasic
+            }
+        });
+    };
+
+    _onChangeText = (params, value) => {
+        let clone = Object.assign({}, this.state.customData, {
+            [params]: value
+        });
+        console.log(clone);
+        this.setState({
+            customData: clone
+        });
+    };
+
     render() {
+        console.log(this.state);
         const { userData, navigation, cart, transaction, targetMember, singleTransaction } = this.props;
         let total = 0;
         cart.map(x => total += x.subtotal);
@@ -358,12 +409,17 @@ class Payment extends Component {
                     <ScrollView>
 
                         <ADDRESS_INFO
-                            navigation={navigation}
                             userData={userData.data}
-                            newParams={newParams}
+                            customData={this.state.customData}
+                            editModeBasic={this.state.editModeBasic}
+                            changeEditMode={this._changeEditModeBasic}
+                            onChangeText={this._onChangeText}
                             />
                         <MapAddressOngkir
                             address={userData.data.personalIdentity.address}
+                            editModeAddress={this.state.editModeAddress}
+                            customData={this.state.customData}
+                            changeEditMode={this._changeEditModeAddress}
                             />
                         <View style={{alignItems: 'center'}}>
                             <View style={itemDetails.container}>

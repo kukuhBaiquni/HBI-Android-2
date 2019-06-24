@@ -7,6 +7,11 @@ export const LOCALE_DAY = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jum\'a
 export const PRODUCT_PATH = 'images/products/';
 export const PROFILE_PATH = 'images/dummy/';
 
+export const ORIGIN_POINT = {
+    latitude: -6.887244,
+    longitude: 107.600628,
+};
+
 export const IDR_FORMAT = (angka) => {
     if (isNaN(angka)) {
         return 'loading..'

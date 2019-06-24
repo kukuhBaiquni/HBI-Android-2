@@ -1,7 +1,11 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { Form, Item, Input, Label, Picker } from 'native-base';
+import { DRAWER_DEFAULT } from '../../../images';
+import { ORIGIN_POINT } from '../supportFunction';
 
 import { CAPITALIZE } from '../supportFunction';
 
@@ -27,13 +31,23 @@ export default class MapAddressOngkir extends Component {
     componentDidMount() {
         fetch(googleApis + `Sindanglaya no 131 rt 03 rw 01 arcamanik binaharapan bandung` + `&key=${this.state.apikey}`)
         .then(res => console.log(JSON.parse(res._bodyText)));
-    }
+    };
+
+    _originPoint = () => {
+        return(
+            <Marker
+                coordinate={{latitude: ORIGIN_POINT.latitude, longitude: ORIGIN_POINT.longitude}}
+                >
+                <Image style={styles.pinImage} source={DRAWER_DEFAULT} />
+            </Marker>
+        )
+    };
 
     _renderRoute = () => {
     };
 
     render() {
-        const { address } = this.props;
+        const { address, editModeAddress, changeEditMode, customData } = this.props;
         return(
             <View style={{alignItems: 'center', marginTop: 10}}>
                 <View style={styles.basicCard}>
@@ -43,9 +57,34 @@ export default class MapAddressOngkir extends Component {
                         initialRegion={this.state.region}
                         onRegionChangeComplete={(x) => this.setState({region: x})}
                         onPress={(e) => this._markerPosition(e.nativeEvent.coordinate)}
-                        />
+                        >
+                        {this._originPoint()}
+                    </MapView>
                     <Text style={styles.propertyText}>Alamat Pengiriman</Text>
                     {
+                        editModeAddress
+                        ?
+                        <View style={{marginBottom: 10, alignItems: 'center'}}>
+                            <Item stackedLabel style={{width: 325}}>
+                                <Label style={{...TYPOGRAPHY.subHeader}}>Nama Penerima</Label>
+                                <Input
+                                    onChangeText={(x) => onChangeText('name', x)}
+                                    value={customData.name}
+                                    editable={true}
+                                    style={{...TYPOGRAPHY.p}}
+                                    />
+                            </Item>
+                            <Item stackedLabel style={{width: 325}}>
+                                <Label style={{...TYPOGRAPHY.subHeader}}>Nomor Telepon Penerima</Label>
+                                <Input
+                                    keyboardType='numeric'
+                                    onChangeText={(x) => onChangeText('phone', x)}
+                                    value={customData.phone}
+                                    style={{...TYPOGRAPHY.p}}
+                                    />
+                            </Item>
+                        </View>
+                        :
                         address.street !== '' || navigation.state.params !== undefined
                         ?
                         <View style={styles.infoTopMap}>
@@ -55,6 +94,10 @@ export default class MapAddressOngkir extends Component {
                             <Text style={{...TYPOGRAPHY.p}}>Kecamatan {CAPITALIZE(address.district.name)}</Text>
                             <Text style={{...TYPOGRAPHY.p}}>Kelurahan {CAPITALIZE(address.village.name)}</Text>
                             <Text style={{...TYPOGRAPHY.p}}>{CAPITALIZE(address.city.name)}</Text>
+                            <TouchableOpacity style={styles.touchableArea} onPress={() => changeEditMode()}>
+                                <Icon name='edit' color={COLORS.PRIMARY} size={17} />
+                                <Text style={[styles.changeText, {marginLeft: 2}]}>{editModeAddress ? 'Simpan' : 'Ubah'}</Text>
+                            </TouchableOpacity>
                         </View>
                         :
                         <Text style={styles.alertUncompleteAddress}>Alamat belum lengkap</Text>
@@ -70,4 +113,7 @@ const styles = StyleSheet.create({
     infoTopMap                  : { ...TYPOGRAPHY.subHeader, marginLeft: 10, marginTop: 5, marginBottom: 5},
     propertyText                : { ...TYPOGRAPHY.subHeader, marginLeft: 10, marginTop: 5, marginBottom: -5 },
     alertUncompleteAddress      : { fontStyle: 'italic', color: '#bababa' },
+    changeText                  : { ...TYPOGRAPHY.memberPriceText, ...TYPOGRAPHY.f14 },
+    touchableArea               : { marginTop: 10, flexDirection: 'row', alignItems: 'center' },
+    pinImage                    : { borderRadius: 10, width: 20, height: 20 },
 });
