@@ -259,7 +259,7 @@ class MapListMarket extends Component {
                     />
             )
         }
-    }
+    };
 
     _replacer = () => {
         return(

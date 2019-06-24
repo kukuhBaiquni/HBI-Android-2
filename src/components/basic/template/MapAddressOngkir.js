@@ -25,10 +25,10 @@ export default class MapAddressOngkir extends Component {
         }
     };
 
-    componentDidMount() {
-        fetch(googleApis + `Sindanglaya no 131 rt 03 rw 01 arcamanik binaharapan bandung` + `&key=${API_KEY}`)
-        .then(res => console.log(JSON.parse(res._bodyText)));
-    };
+    // componentDidMount() {
+    //     fetch(googleApis + `Sindanglaya no 131 rt 03 rw 01 arcamanik binaharapan bandung` + `&key=${API_KEY}`)
+    //     .then(res => console.log(JSON.parse(res._bodyText)));
+    // };
 
     _originPoint = () => {
         return(
