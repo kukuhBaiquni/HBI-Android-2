@@ -18,7 +18,6 @@ import { ADDRESS_INFO } from '../basic/template/addressInfo';
 import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
 import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
-import { resetSingleTransaction } from '../../actions/SingleTransaction';
 import { countItem } from '../../actions/Counting_Items';
 import { directPurchase } from '../../actions/Direct_Purchase';
 import { DRAWER_DEFAULT } from '../../images';
@@ -377,7 +376,6 @@ class Payment extends Component {
             <View style={{flex: 1, backgroundColor: COLORS.BASE_BACKGROUND}}>
                 <NavigationEvents
                     onDidFocus={() => this._afterRender()}
-                    onWillBlur={() => this.props.dispatch(resetSingleTransaction())}
                     />
                 {this._renderQuantityEditor()}
                 <Modal

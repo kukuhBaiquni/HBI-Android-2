@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import MapView, { Marker } from 'react-native-maps';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, KeyboardAvoidingView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, KeyboardAvoidingView, ScrollView } from 'react-native';
 import { COLORS } from '../basic/colors';
 import { TYPOGRAPHY } from '../basic/typography';
 import { ORIGIN_POINT, API_KEY } from '../basic/supportFunction';
@@ -12,6 +12,7 @@ import { Item, Input, Label } from 'native-base';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const googleApis = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
+const candidate = ['administrative_area_level_1', 'administrative_area_level_2', 'administrative_area_level_3'];
 
 class SetLocation extends Component {
     static navigationOptions = ({navigation}) => {
@@ -31,20 +32,42 @@ class SetLocation extends Component {
     constructor(props) {
         super(props)
         this.state = {
+            region: null,
             coordinate: null,
-            addresshandler: ''
+            pcd: '',
+            addressHandler: '',
+            isAddressValid: true
         };
+    };
+
+    componentDidMount() {
+        this.setState({
+            region: {
+                ...ORIGIN_POINT, latitudeDelta: 0, longitudeDelta: 0.5
+            }
+        })
     };
 
     _getLocation(location) {
         this.setState({coordinate: location});
-        // fetch(googleApis + location.latitude + `,` + location.longitude + `&key=${API_KEY}`)
-        // .then(res => res.json())
-        // .then(resJson => {
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        // });
+        fetch(googleApis + location.latitude + `,` + location.longitude + `&key=${API_KEY}`)
+        .then(res => res.json())
+        .then(resJson => {
+            let result = [];
+            for (var i = 0; i < resJson.results[0].address_components.length; i++) {
+                for (var j = 0; j < candidate.length; j++) {
+                    if (resJson.results[0].address_components[i].types[0] === candidate[j]) {
+                        result.push(resJson.results[0].address_components[i].long_name);
+                    }
+                };
+            };
+            this.setState({
+                pcd: result.join(', ')
+            })
+        })
+        .catch((err) => {
+            console.log(err);
+        });
     };
 
     _renderManualPosition = () => {
@@ -52,11 +75,25 @@ class SetLocation extends Component {
             <Marker
                 coordinate={this.state.coordinate}
                 title='Posisi Saya'
-                description='{this.state.addressHandler}'
+                description={this.state.pcd}
                 >
                 <Icon name='man' size={20} color={COLORS.PRIMARY} />
             </Marker>
         )
+    };
+
+    _submit = () => {
+        if (this.state.addressHandler.length > 9) {
+            this.props.navigation.navigate('Payment', {destinationPoint: this.state.coordinate, addressString: this.state.addressHandler, pcd: this.state.pcd});
+        }else{
+            this.setState({isAddressValid: false})
+        }
+    };
+
+    _onChangeText(x) {
+        this.setState({
+            addressHandler: x
+        });
     };
 
     render() {
@@ -67,8 +104,11 @@ class SetLocation extends Component {
                         <MapView
                             ref={map => this.map = map}
                             style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}
-                            initialRegion={{...ORIGIN_POINT, latitudeDelta: 0, longitudeDelta: 0.5}}
+                            initialRegion={this.state.region}
+                            onRegionChangeComplete={(x) => this.setState({region: x})}
                             showsCompass={false}
+                            showsUserLocation={true}
+                            showsMyLocationButton={false}
                             onPress={(e) => this._getLocation(e.nativeEvent.coordinate)}
                             >
                             {this.state.coordinate !== null && this._renderManualPosition()}
@@ -80,21 +120,24 @@ class SetLocation extends Component {
                         </View>
                         <View style={styles.absoluteBottom}>
                             <View style={styles.userInput}>
-                                <Text style={{...TYPOGRAPHY.subHeader}}>Lokasi Anda (Provinsi, Kota, Kecamatan)</Text>
-                                <Text style={{...TYPOGRAPHY.p}}>Anda belum memilih lokasi..</Text>
-                                <Item stackedLabel style={{width: 310, marginTop: 5}}>
-                                    <Label style={{...TYPOGRAPHY.subHeader}}>Alamat Lengkap</Label>
-                                    <Input
-                                        onChangeText={(x) => onChangeText('name', x)}
-                                        value=''
-                                        editable={true}
-                                        placeholder='Jalan, Rt, Rw, Nomor'
-                                        style={{...TYPOGRAPHY.p}}
-                                        />
-                                </Item>
-                                <TouchableOpacity style={styles.doneButton}>
-                                    <Text style={{...TYPOGRAPHY.subHeader, ...TYPOGRAPHY.f15, color: COLORS.PURE_WHITE}}>Selesai</Text>
-                                </TouchableOpacity>
+                                <ScrollView>
+                                    <Text style={{...TYPOGRAPHY.subHeader}}>Lokasi Anda (Provinsi, Kota, Kecamatan)</Text>
+                                    <Text style={{...TYPOGRAPHY.p}}>{this.state.pcd === '' ? 'Anda belum memilih lokasi..' : this.state.pcd}</Text>
+                                    <Item stackedLabel style={{width: 310, marginTop: 5}}>
+                                        <Label style={{...TYPOGRAPHY.subHeader}}>Alamat Lengkap</Label>
+                                        <Input
+                                            onChangeText={(x) => this._onChangeText(x)}
+                                            value={this.state.addressHandler}
+                                            editable={true}
+                                            placeholder='Jalan, Nomor, Rt, Rw'
+                                            style={{...TYPOGRAPHY.p}}
+                                            />
+                                    </Item>
+                                    {!this.state.isAddressValid && <Label style={{...TYPOGRAPHY.p, color: 'red', marginLeft: 10}}>Alamat belum lengkap..</Label>}
+                                    <TouchableOpacity style={styles.doneButton} onPress={this._submit}>
+                                        <Text style={{...TYPOGRAPHY.subHeader, ...TYPOGRAPHY.f15, color: COLORS.PURE_WHITE}}>Selesai</Text>
+                                    </TouchableOpacity>
+                                </ScrollView>
                             </View>
                         </View>
                     </View>
@@ -112,7 +155,7 @@ const styles = StyleSheet.create({
     infoContainer: { alignItems: 'center', width: SCREEN_WIDTH, position: 'absolute', top: 10, left: 0 },
     floatingInfo: { backgroundColor: COLORS.PURE_WHITE, elevation: 5, width: SCREEN_WIDTH*0.8, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 20},
     absoluteBottom: {position: 'absolute', bottom: 85, left: 0, width: SCREEN_WIDTH, alignItems: 'center'},
-    userInput: { backgroundColor: COLORS.PURE_WHITE, height: 200, width: SCREEN_WIDTH*0.95, borderRadius: 5, elevation: 5, padding: 10},
+    userInput: { backgroundColor: COLORS.PURE_WHITE, height: 220, width: SCREEN_WIDTH*0.95, borderRadius: 5, elevation: 5, padding: 10},
     doneButton: {backgroundColor: COLORS.PRIMARY, width: '100%', height: 45, borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginTop: 25}
 });
 

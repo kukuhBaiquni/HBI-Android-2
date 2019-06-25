@@ -22,7 +22,7 @@ import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
 import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
 import { TYPOGRAPHY } from '../basic/typography';
-import { singleTransaction } from '../../actions/SingleTransaction';
+import { singleTransaction, resetSingleTransaction } from '../../actions/SingleTransaction';
 
 class ProductDetails extends Component {
     static navigationOptions = ({navigation}) => {
@@ -126,6 +126,7 @@ class ProductDetails extends Component {
     };
 
     checkToken = () => {
+        this.props.dispatch(resetSingleTransaction());
         if (this.props.token !== '') {
             this.setState({isLoggedIn: true, token: this.props.token});
         }else{
