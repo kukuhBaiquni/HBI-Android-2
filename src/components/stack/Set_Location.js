@@ -83,7 +83,7 @@ class SetLocation extends Component {
     };
 
     _submit = () => {
-        if (this.state.addressHandler.length > 9) {
+        if (this.state.addressHandler.length > 9 && this.state.addressHandler !== '') {
             this.props.navigation.navigate('Payment', {destinationPoint: this.state.coordinate, addressString: this.state.addressHandler, pcd: this.state.pcd});
         }else{
             this.setState({isAddressValid: false})

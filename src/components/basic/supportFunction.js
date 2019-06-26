@@ -58,3 +58,21 @@ export const CAPITALIZE = (x) => {
     };
     return result.join(' ');
 };
+
+export const ONGKIR = (distance) => {
+    if (Number(distance) > 10) {
+        let raw = Math.ceil(distance*3300).toString();
+        if (Number(raw) > 10000) {
+            return raw.charAt(0) + raw.charAt(1) + '000';
+        }else{
+            return raw.charAt(0) + '000';
+        }
+    }else{
+        let raw = Math.ceil(distance*2200).toString();
+        if (Number(raw) > 10000) {
+            return raw.charAt(0) + raw.charAt(1) + '000';
+        }else{
+            return raw.charAt(0) + '000';
+        }
+    }
+};

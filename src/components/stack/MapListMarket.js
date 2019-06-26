@@ -2,7 +2,7 @@ import React, { Component, PureComponent } from 'react';
 import { View, Text, TouchableOpacity, Image, StyleSheet, ScrollView, TouchableNativeFeedback, StatusBar, AsyncStorage, Dimensions, ToastAndroid, PermissionsAndroid, BackHandler } from 'react-native';
 import { connect } from 'react-redux';
 import Swiper from 'react-native-swiper';
-import { SERVER_URL, IDR_FORMAT, _FONTS } from '../basic/supportFunction';
+import { SERVER_URL, IDR_FORMAT, _FONTS, ONGKIR } from '../basic/supportFunction';
 import { NavigationEvents } from 'react-navigation';
 
 import MapView, { Marker } from 'react-native-maps';
@@ -152,7 +152,7 @@ class MapListMarket extends Component {
 
     _setMemberToReducer(x) {
         if (this.state.distance !== null) {
-            const ongkir = ongkirCalculation(this.state.distance);
+            const ongkir = ONGKIR(this.state.distance);
             this.props.navigation.navigate('ListProducts', {member: x, ongkir});
         }
     };
@@ -404,7 +404,7 @@ class MapListMarket extends Component {
                                                     <View style={styles.leftAlign}>
                                                         <Text style={[styles.shopNameText, {marginLeft: 10}]}>Ongkir</Text>
                                                         <Text style={[styles.shopNameText, {marginRight: 10, textAlign: 'right'}]}>
-                                                            {IDR_FORMAT(ongkirCalculation(this.state.distance))}
+                                                            {IDR_FORMAT(ONGKIR(this.state.distance))}
                                                         </Text>
                                                     </View>
                                                 }
@@ -437,24 +437,6 @@ class MapListMarket extends Component {
         }
     }
 };
-
-const ongkirCalculation = (distance) => {
-    if (Number(distance) > 10) {
-        let raw = Math.ceil(distance*3300).toString();
-        if (Number(raw) > 10000) {
-            return raw.charAt(0) + raw.charAt(1) + '000';
-        }else{
-            return raw.charAt(0) + '000';
-        }
-    }else{
-        let raw = Math.ceil(distance*2200).toString();
-        if (Number(raw) > 10000) {
-            return raw.charAt(0) + raw.charAt(1) + '000';
-        }else{
-            return raw.charAt(0) + '000';
-        }
-    }
-}
 
 function mapDispatchToProps(dispatch) {
     return dispatch;

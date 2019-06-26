@@ -3,7 +3,9 @@ import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
 import MapViewDirections from 'react-native-maps-directions';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Entypo from 'react-native-vector-icons/Entypo';
 import { Form, Item, Input, Label, Picker } from 'native-base';
+import { NavigationEvents } from 'react-navigation';
 import { DRAWER_DEFAULT } from '../../../images';
 import { ORIGIN_POINT } from '../supportFunction';
 
@@ -21,7 +23,8 @@ export default class MapAddressOngkir extends Component {
                 longitude: 107.600628,
                 latitudeDelta: 0,
                 longitudeDelta: 0.5
-            }
+            },
+            distance: null
         }
     };
 
@@ -29,6 +32,36 @@ export default class MapAddressOngkir extends Component {
     //     fetch(googleApis + `Sindanglaya no 131 rt 03 rw 01 arcamanik binaharapan bandung` + `&key=${API_KEY}`)
     //     .then(res => console.log(JSON.parse(res._bodyText)));
     // };
+
+    _afterRender = () => {
+        const origin = {...ORIGIN_POINT};
+        if (this.props.navigation.state.params !== undefined) {
+            const destination = this.props.navigation.state.params.destinationPoint;
+            this.map.fitToCoordinates([
+                origin,
+                destination
+            ], {
+                edgePadding: {
+                    top: 10,
+                    right: 40,
+                    bottom: 10,
+                    left: 40
+                }, animated: true
+            });
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        if (prevState.distance !== this.state.distance) {
+            if (prevState.distance === null) {
+                this._getDestinationPoint();
+            }
+        }
+    };
+
+    _getDestinationPoint = () => {
+        this.props.getOngkir(this.state.distance);
+    };
 
     _originPoint = () => {
         return(
@@ -41,33 +74,64 @@ export default class MapAddressOngkir extends Component {
     };
 
     _renderRoute = () => {
+        const { navigation } = this.props;
+        if (this.props.navigation.state.params !== undefined) {
+            return(
+                <MapViewDirections
+                    origin={navigation.state.params.destinationPoint}
+                    destination={{...ORIGIN_POINT}}
+                    apikey={API_KEY}
+                    mode='WALKING'
+                    strokeWidth={2}
+                    strokeColor={COLORS.PRIMARY}
+                    onReady={(x) => this.setState({distance: x.distance})}
+                    onError={(error) => console.log(error)}
+                    />
+            )
+        }
+    };
+
+    _destinationPoint = () => {
+        const { navigation } = this.props;
+        return(
+            <Marker
+                coordinate={navigation.state.params.destinationPoint}
+                >
+                <Entypo name='man' size={20} color={COLORS.PRIMARY} />
+            </Marker>
+        )
     };
 
     render() {
         const { address, editModeAddress, changeEditMode, customData, navigation } = this.props;
         return(
             <View style={{alignItems: 'center', marginTop: 10}}>
+                <NavigationEvents
+                    onDidFocus={this._afterRender}
+                    />
                 <View style={styles.basicCard}>
                     <MapView
                         ref={map => this.map = map}
                         style={{height: 200, width: '100%'}}
                         initialRegion={this.state.region}
                         onRegionChangeComplete={(x) => this.setState({region: x})}
-                        onPress={(e) => this._markerPosition(e.nativeEvent.coordinate)}
                         >
                         {this._originPoint()}
+                        {this._renderRoute()}
+                        {navigation.state.params !== undefined && this._destinationPoint()}
                     </MapView>
-                    <Text style={styles.propertyText}>Alamat Pengiriman</Text>
+                    <Text style={styles.propertyText}>Alamat Tujuan</Text>
                     {
                         address.street !== '' || navigation.state.params !== undefined
                         ?
                         <View style={styles.infoTopMap}>
                             <Text style={{...TYPOGRAPHY.p}}>
-                                Jl. {address.street}
+                                Jl. {navigation.state.params !== undefined ? navigation.state.params.addressString : address.street}
                             </Text>
-                            <Text style={{...TYPOGRAPHY.p}}>Kecamatan {CAPITALIZE(address.district.name)}</Text>
-                            <Text style={{...TYPOGRAPHY.p}}>Kelurahan {CAPITALIZE(address.village.name)}</Text>
-                            <Text style={{...TYPOGRAPHY.p}}>{CAPITALIZE(address.city.name)}</Text>
+                            <Text style={{...TYPOGRAPHY.p}}>{CAPITALIZE(navigation.state.params !== undefined ? navigation.state.params.pcd.split(', ')[0] : address.district.name)}</Text>
+                            <Text style={{...TYPOGRAPHY.p}}>{CAPITALIZE(navigation.state.params !== undefined ? navigation.state.params.pcd.split(', ')[1] : address.city.name)}</Text>
+                            <Text style={{...TYPOGRAPHY.p}}>Provinsi {CAPITALIZE(navigation.state.params !== undefined ? navigation.state.params.pcd.split(', ')[2] : address.province.name)}</Text>
+                            {this.state.distance !== null && <Text style={{...TYPOGRAPHY.p}}>Jarak {Math.round(this.state.distance * 100) / 100} km</Text>}
                             <TouchableOpacity style={styles.touchableArea} onPress={() => navigation.navigate('SetLocation')}>
                                 <Icon name='edit' color={COLORS.PRIMARY} size={17} />
                                 <Text style={[styles.changeText, {marginLeft: 2}]}>{editModeAddress ? 'Simpan' : 'Ubah'}</Text>

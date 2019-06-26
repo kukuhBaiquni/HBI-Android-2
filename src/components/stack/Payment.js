@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { View, Text, TouchableOpacity, StyleSheet, AsyncStorage, Image, ScrollView, Alert } from 'react-native';
 import { Icon } from 'react-native-elements';
 import { NavigationEvents } from 'react-navigation';
-import { STATIC_RES_URL, IDR_FORMAT } from '../basic/supportFunction';
+import { STATIC_RES_URL, IDR_FORMAT, ONGKIR } from '../basic/supportFunction';
 import { forceResetRoot } from '../../actions/Load_Cities';
 import Modal from "react-native-modal";
 import { DotIndicator, WaveIndicator } from 'react-native-indicators';
@@ -55,7 +55,7 @@ class Payment extends Component {
             showModalContent: false,
             loadingPrice: false,
             idProduct: 0,
-            subtotalhandler: 0,
+            subtotalHandler: 0,
 
             editModeBasic: false,
             editModeAddress: false,
@@ -107,7 +107,7 @@ class Payment extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { userData, dispatch, status, resultCounting } = this.props;
         if (prevProps.resultCounting !== resultCounting) {
-            this.setState({loadingPrice: false, subtotalhandler: resultCounting});
+            this.setState({loadingPrice: false, subtotalHandler: resultCounting*this.state.itemCount});
         }
         if (prevProps.userData.data !== userData.data) {
             if (userData.data.address.street !== '') {
@@ -222,11 +222,11 @@ class Payment extends Component {
             const basic = singleTransaction[0];
             const isMember = userData.data.status === 'Member' ? true : false;
             const result = isMember ? basic.resellerprice * this.state.itemCount : basic.enduserprice * this.state.itemCount;
-            this.setState({subtotalhandler: result});
+            this.setState({subtotalHandler: result});
         }else{
             let total = 0;
             cart.map(x => total += x.subtotal);
-            this.setState({subtotalhandler: total});
+            this.setState({subtotalHandler: total});
         }
     };
 
@@ -340,7 +340,14 @@ class Payment extends Component {
         });
     };
 
+    _getOngkir = (distance) => {
+        this.setState({
+            ongkir: ONGKIR(distance)
+        });
+    };
+
     render() {
+        console.log(this.state.isFreeOngkir);
         const { userData, navigation, cart, transaction, targetMember, singleTransaction } = this.props;
         let total = 0;
         cart.map(x => total += x.subtotal);
@@ -403,7 +410,6 @@ class Payment extends Component {
                 {
                     this.state.showContent &&
                     <ScrollView>
-
                         <ADDRESS_INFO
                             userData={userData.data}
                             customData={this.state.customData}
@@ -417,6 +423,7 @@ class Payment extends Component {
                             customData={this.state.customData}
                             changeEditMode={this._changeEditModeAddress}
                             navigation={navigation}
+                            getOngkir={this._getOngkir}
                             />
                         <View style={{alignItems: 'center'}}>
                             <View style={itemDetails.container}>
@@ -465,7 +472,7 @@ class Payment extends Component {
                                 <View style={result.totalPrice}>
                                     <Text style={result.propText}>Total Belanja</Text>
                                     <Text style={result.rightTotalPrice}>
-                                        {IDR_FORMAT(this.state.subtotalhandler)}
+                                        {IDR_FORMAT(this.state.subtotalHandler)}
                                     </Text>
                                 </View>
                                 <View style={result.ongkirContainer}>
@@ -492,7 +499,7 @@ class Payment extends Component {
                                 <View style={result.footerContainer}>
                                     <Text style={result.totalPricePropText}>Total yang harus dibayar</Text>
                                     <Text style={result.totalPriceValue}>
-                                        {this.state.isFreeOngkir ? IDR_FORMAT(this.state.subtotalhandler) : IDR_FORMAT(this.state.subtotalhandler + Number(targetMember.ongkir))}
+                                        {this.state.isFreeOngkir ? IDR_FORMAT(this.state.subtotalHandler) : IDR_FORMAT(this.state.subtotalHandler + Number(targetMember.ongkir))}
                                     </Text>
                                 </View>
                             </View>
