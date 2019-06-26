@@ -3,7 +3,6 @@ import request from 'superagent';
 import { SERVER_URL } from '../components/basic/supportFunction';
 
 export const countItem = (data) => {
-    console.log('exe');
     return { type: 'COUNT_ITEM', data };
 };
 
@@ -29,7 +28,7 @@ function* workerCountItem(form) {
             return request
             .post(`${SERVER_URL}util/realtime/price`)
             .set('Authorization', form.data.token)
-            .send({productId: form.data.productId})
+            .send({productId: form.data.id})
             .send({qty: form.data.qty})
             .send({status: form.data.status})
             .then((res) => {
@@ -38,7 +37,7 @@ function* workerCountItem(form) {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
-        yield put(countItemSuccess(data));
+        yield put(countItemSuccess(data.data));
     }catch (error) {
         yield put(countItemFailed())
     }

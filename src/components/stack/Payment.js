@@ -76,10 +76,20 @@ class Payment extends Component {
     _afterRender = () => {
         const { dispatch, cart, navigation, singleTransaction, userData } = this.props;
         dispatch(resetTransactionState());
-        let acu = 0;
-        cart.map(x => acu += x.freeOngkirConsideration);
-        if (acu > 23) {
-            this.setState({isFreeOngkir: true});
+        if (singleTransaction > 0) {
+            if (this.state.itemCount > 29) {
+                this.setState({isFreeOngkir: true});
+            }else{
+                this.setState({isFreeOngkir: false});
+            }
+        }else{
+            let acu = 0;
+            cart.map(x => acu += x.freeOngkirConsideration);
+            if (acu > 30) {
+                this.setState({isFreeOngkir: true});
+            }else{
+                this.setState({isFreeOngkir: false});
+            }
         }
         dispatch(forceResetRoot())
         if (navigation.state.params !== undefined) {
@@ -97,9 +107,9 @@ class Payment extends Component {
             }
         });
         if (this.props.singleTransaction.length > 0) {
-            this.setState({showContent: true, token: this.props.token, data: this.props.singleTransaction, idProduct: singleTransaction[0].id, customData: data});
+            this.setState({showContent: true, token: this.props.token.type.token, data: this.props.singleTransaction, idProduct: singleTransaction[0].id, customData: data});
         }else{
-            this.setState({showContent: true, token: this.props.token, data: cart.filter(x => x.status === true), customData: data});
+            this.setState({showContent: true, token: this.props.token.type.token, data: cart.filter(x => x.status === true), customData: data});
         }
         this._totalMapping();
     };
@@ -107,7 +117,7 @@ class Payment extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { userData, dispatch, status, resultCounting } = this.props;
         if (prevProps.resultCounting !== resultCounting) {
-            this.setState({loadingPrice: false, subtotalHandler: resultCounting*this.state.itemCount});
+            this.setState({loadingPrice: false, subtotalHandler: resultCounting});
         }
         if (prevProps.userData.data !== userData.data) {
             if (userData.data.address.street !== '') {
@@ -202,7 +212,7 @@ class Payment extends Component {
         const { cart, singleTransaction, userData } = this.props;
         if (singleTransaction.length > 0) {
             const basic = singleTransaction[0];
-            const isMember = userData.data.status === 'Member' ? true : false;
+            const isMember = userData.data.personalIdentity.status === 'Member' ? true : false;
             const data = [
                 Object.assign({}, basic, {
                     product_name: basic.productname,
@@ -220,7 +230,7 @@ class Payment extends Component {
         const { cart, singleTransaction, userData } = this.props;
         if (singleTransaction.length > 0) {
             const basic = singleTransaction[0];
-            const isMember = userData.data.status === 'Member' ? true : false;
+            const isMember = userData.data.personalIdentity.status === 'Member' ? true : false;
             const result = isMember ? basic.resellerprice * this.state.itemCount : basic.enduserprice * this.state.itemCount;
             this.setState({subtotalHandler: result});
         }else{
@@ -237,7 +247,8 @@ class Payment extends Component {
         var data = {
             token: this.state.token,
             id: this.state.idProduct,
-            qty: count
+            qty: count,
+            status: this.props.userData.data.personalIdentity.status
         };
         this.props.dispatch(countItem(data));
     };
@@ -249,7 +260,8 @@ class Payment extends Component {
         var data = {
             token: this.state.token,
             id: this.state.idProduct,
-            qty: count
+            qty: count,
+            status: this.props.userData.data.personalIdentity.status
         };
         this.props.dispatch(countItem(data));
     };
@@ -446,7 +458,7 @@ class Payment extends Component {
                                                     <Text style={itemDetails.subtotalText}>Subtotal</Text>
                                                 </View>
                                                 <View style={{marginBottom: 5, width: '45%'}}>
-                                                    <Text style={itemDetails.valueText}>{IDR_FORMAT(x.price)}</Text>
+                                                    <Text style={itemDetails.valueText}>{IDR_FORMAT(userData.data.personalIdentity.status === 'Member' ? x.resellerprice : x.enduserprice)}</Text>
                                                     <Text style={itemDetails.valueText}>{x.qty}</Text>
                                                     {
                                                         singleTransaction.length > 0 &&
@@ -457,7 +469,7 @@ class Payment extends Component {
                                                     <Text style={itemDetails.subtotalValue}>
                                                         {
                                                             singleTransaction.length > 0
-                                                            ? IDR_FORMAT(x.price * x.qty)
+                                                            ? IDR_FORMAT((userData.data.personalIdentity.status === 'Member' ? x.resellerprice : x.enduserprice) * x.qty)
                                                             : IDR_FORMAT(x.subtotal)
                                                         }
                                                     </Text>
@@ -486,7 +498,7 @@ class Payment extends Component {
                                         <Image resizeMode='contain' style={result.freeOngkirImage} source={FREE_ONGKIR}/>
                                         :
                                         <Text style={result.ongkirPrice}>
-                                            {IDR_FORMAT(Number(targetMember.ongkir))}
+                                            {IDR_FORMAT(Number(this.state.ongkir))}
                                         </Text>
                                     }
                                 </View>

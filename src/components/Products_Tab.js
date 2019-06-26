@@ -11,7 +11,7 @@ import { TYPOGRAPHY } from './basic/typography';
 export default class ProductsTab extends Component {
 
     render() {
-        let { products, navigation } = this.props;
+        let { products, navigation, status } = this.props;
         return(
             <View>
                 <ScrollView>
@@ -35,11 +35,11 @@ export default class ProductsTab extends Component {
                                     <View style={{flexDirection: 'row'}}>
                                         <Text style={styles.title}>{x.productname}</Text>
                                     </View>
-                                    <Text style={styles.price}>{IDR_FORMAT(x.enduserprice)}/{x.unit}</Text>
-                                    {
+                                    <Text style={styles.price}>{IDR_FORMAT(status === 'Member' ? x.resellerprice : x.enduserprice)}/{x.unit}</Text>
+                                    {/*
                                         this.props.status === 'Non Member' &&
                                         <Text style={styles.price}>Stock: {x.amount}</Text>
-                                    }
+                                    */}
                                 </View>
                             </TouchableOpacity>
                             )

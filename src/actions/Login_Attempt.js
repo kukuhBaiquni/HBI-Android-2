@@ -42,6 +42,12 @@ function* workerLoginAttempt(data) {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
+        // {
+        //     refreshToken,
+        //     token,
+        //     userId,
+        //     validUntil
+        // };
         if (data.data) {
             yield put(setInitialToken(data.data));
         }else{

@@ -64,10 +64,10 @@ class Beranda extends Component {
             if (id !== null && token !== null) {
                 const ids = JSON.parse(id);
                 const tokens = JSON.parse(token);
-                 this.setState({token: tokens.access});
+                 this.setState({token: tokens.token});
                 dispatch(setInitialToken(tokens));
-                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens.access}));
-                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser({token: tokens.access, _id: tokens._id}));
+                if (userData.data.playerID !== ids) dispatch(setPlayerId({ids, token: tokens.token}));
+                if (JSON.stringify(userData.data) === JSON.stringify({})) dispatch(fetchUser({token: tokens.token, _id: tokens.userId}));
             }
         }catch(error) {
             ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);

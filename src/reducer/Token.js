@@ -1,8 +1,8 @@
 let initialState = {
     type: {
-        access: '',
-        refresh: '',
-        _id: '',
+        token: '',
+        refreshToken: '',
+        userId: '',
         validUntil: ''
     },
     error: false,
@@ -22,9 +22,9 @@ export default function token(state = initialState, action) {
         return Object.assign({}, state, {
             type: {
                 ...state.type,
-                access: action.data.token,
-                refresh: action.data.refreshToken,
-                _id: action.data.userId,
+                token: action.data.token,
+                refreshToken: action.data.refreshToken,
+                userId: action.data.userId,
                 validUntil: action.data.validUntil
             },
             error: false,
@@ -35,9 +35,9 @@ export default function token(state = initialState, action) {
         return Object.assign({}, state, {
             type: {
                 ...state.type,
-                access: '',
-                refresh: '',
-                _id: '',
+                token: '',
+                refreshToken: '',
+                userId: '',
                 validUntil: ''
             },
             error: false,

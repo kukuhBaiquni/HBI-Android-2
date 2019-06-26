@@ -51,59 +51,6 @@ class Login extends Component {
         }
     };
 
-    // facebookLogin() {
-    //     LoginManager.logInWithReadPermissions(['public_profile']).then(function(result) {
-    //         if (!result.isCancelled) {
-    //             AccessToken.getCurrentAccessToken()
-    //             .then((data) => {
-    //                 const {accessToken} = data;
-    //                 const responseInfoCallback = (error, result) => {
-    //                     if (error) {
-    //                         Alert.alert(
-    //                             'Kesalahan',
-    //                             'Permintaan anda tidak dapat di proses',
-    //                             [
-    //                                 {text: 'OK'}
-    //                             ],
-    //                             { cancelable: false }
-    //                         );
-    //                     } else {
-    //                         const data = {
-    //                             name: result.name,
-    //                             email: result.email
-    //                         }
-    //                         AsyncStorage.setItem('facebook_data', JSON.stringify(data))
-    //                     }
-    //                 }
-    //                 const infoRequest = new GraphRequest(
-    //                     '/me',
-    //                     {
-    //                         accessToken: accessToken,
-    //                         parameters: {
-    //                             fields: {
-    //                                 string: 'email,name,picture'
-    //                             }
-    //                         }
-    //                     },
-    //                     responseInfoCallback
-    //                 );
-    //                 new GraphRequestManager().addRequest(infoRequest).start()
-    //             })
-    //         }
-    //     })
-    //     .then(() => this.emailCheck()),
-    //     function(error) {
-    //         Alert.alert(
-    //             'Kesalahan',
-    //             'Permintaan anda tidak dapat di proses',
-    //             [
-    //                 {text: 'OK'}
-    //             ],
-    //             { cancelable: false }
-    //         );
-    //     }
-    // };
-
     emailCheck() {
         setTimeout( async () => {
             const data = await AsyncStorage.getItem('facebook_data')
@@ -175,14 +122,14 @@ class Login extends Component {
             if (prevProps.token.success !== token.success) {
                 const token = this.props.token.type;
                 this.storeToken(token);
-                if (token.success) {
-                    if (this.state.loading) {
-                        const token = this.props.token.type;
-                        this.setState({loading: false, isLoginError: false});
-                        this.storeToken(token);
-                        dispatch(resetTokenState());
-                    }
-                }
+                dispatch(resetTokenState());
+                // if (this.props.token.success) {
+                //     if (this.state.loading) {
+                //         const token = this.props.token.type;
+                //         this.setState({loading: false, isLoginError: false});
+                //         this.storeToken(token);
+                //     }
+                // }
             }
         }
     };
@@ -220,32 +167,6 @@ class Login extends Component {
             );
         }
     };
-
-    // googleLogin = async () => {
-    //     try {
-    //         await GoogleSignIn.configure({
-    //             scopes: ['profile'],
-    //             clientID: '482052818855-k825ol3id455sejkmbl5elquvc9p8jvv.apps.googleusercontent.com'
-    //         })
-    //         const user = await GoogleSignIn.signInPromise();
-    //         const raw = await {
-    //             name: user.name,
-    //             email: user.email
-    //         }
-    //         this.setState({oauthData: raw});
-    //         await this.props.dispatch(checkEmail(user.email))
-    //     } catch(error) {
-    //         this.setState({error: JSON.stringify(error)})
-    //         Alert.alert(
-    //             'Login gagal',
-    //             'Login dibatalkan oleh pengguna',
-    //             [
-    //                 {text: 'OK'}
-    //             ],
-    //             { cancelable: false }
-    //         );
-    //     }
-    // };
 
     _infoMessageFromChangePassword = () => {
         return(

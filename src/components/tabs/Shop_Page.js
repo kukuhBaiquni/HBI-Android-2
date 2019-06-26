@@ -42,7 +42,7 @@ class ShopPage extends Component {
     };
 
     render() {
-        const { navigation, targetMember } = this.props;
+        const { navigation, targetMember, userData } = this.props;
         return(
             <Container>
                 <NavigationEvents
@@ -67,18 +67,18 @@ class ShopPage extends Component {
                 </Header>
                 {
                     this.state.isProductsVisible &&
-                    <Tabs tabBarUnderlineStyle={{backgroundColor: COLORS.PRIMARY}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
+                    <Tabs tabBarUnderlineStyle={{backgroundColor: COLORS.PRIMARY}} renderTabBar={() => <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Sapi">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'sapi') } />
+                            <ProductsTab status={userData.data.personalIdentity.status} onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'sapi') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ayam">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ayam') } />
+                            <ProductsTab status={userData.data.personalIdentity.status} onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ayam') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Daging Ikan">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ikan') } />
+                            <ProductsTab status={userData.data.personalIdentity.status} onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'ikan') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: 'white'}} tabStyle={{backgroundColor: 'white'}} heading="Olahan">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'olahan') } />
+                            <ProductsTab status={userData.data.personalIdentity.status} onAnimationEnd={this._onAnimationEnd} navigation = { navigation } products = { targetMember.stock.filter(x => x.category === 'olahan') } />
                         </Tab>
                     </Tabs>
                 }
