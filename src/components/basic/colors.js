@@ -25,5 +25,5 @@ export const COLORS = {
     PURE_BLACK          : '#000000',
     PURE_WHITE          : '#ffffff',
 
-    ORANGE_DEFAULT      : '#ce8d0c'
+    ORANGE_DEFAULT      : '#ce8d0c',
 };

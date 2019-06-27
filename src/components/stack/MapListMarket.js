@@ -295,7 +295,7 @@ class MapListMarket extends Component {
                 title='Posisi Saya'
                 description={this.state.addressHandler}
                 >
-                <Icon name='man' size={20} color='darkred' />
+                <Icon name='man' size={23} color='darkred' />
             </Marker>
         )
     };

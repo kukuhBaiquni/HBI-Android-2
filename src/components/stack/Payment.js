@@ -359,7 +359,6 @@ class Payment extends Component {
     };
 
     render() {
-        console.log(this.state.isFreeOngkir);
         const { userData, navigation, cart, transaction, targetMember, singleTransaction } = this.props;
         let total = 0;
         cart.map(x => total += x.subtotal);

@@ -33,7 +33,7 @@ class SetLocation extends Component {
         super(props)
         this.state = {
             region: null,
-            coordinate: null,
+            fakePosition: null,
             pcd: '',
             addressHandler: '',
             isAddressValid: true
@@ -49,7 +49,7 @@ class SetLocation extends Component {
     };
 
     _getLocation(location) {
-        this.setState({coordinate: location});
+        this.setState({fakePosition: location});
         fetch(googleApis + location.latitude + `,` + location.longitude + `&key=${API_KEY}`)
         .then(res => res.json())
         .then(resJson => {
@@ -70,21 +70,9 @@ class SetLocation extends Component {
         });
     };
 
-    _renderManualPosition = () => {
-        return(
-            <Marker
-                coordinate={this.state.coordinate}
-                title='Posisi Saya'
-                description={this.state.pcd}
-                >
-                <Icon name='man' size={20} color={COLORS.PRIMARY} />
-            </Marker>
-        )
-    };
-
     _submit = () => {
         if (this.state.addressHandler.length > 9 && this.state.addressHandler !== '') {
-            this.props.navigation.navigate('Payment', {destinationPoint: this.state.coordinate, addressString: this.state.addressHandler, pcd: this.state.pcd});
+            this.props.navigation.navigate('Payment', {destinationPoint: this.state.fakePosition, addressString: this.state.addressHandler, pcd: this.state.pcd});
         }else{
             this.setState({isAddressValid: false})
         }
@@ -97,6 +85,7 @@ class SetLocation extends Component {
     };
 
     render() {
+        console.log(this.state.fakePosition);
         if (this.props.isFocused) {
             return(
                 <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
@@ -105,14 +94,15 @@ class SetLocation extends Component {
                             ref={map => this.map = map}
                             style={{width: SCREEN_WIDTH, height: SCREEN_HEIGHT}}
                             initialRegion={this.state.region}
-                            onRegionChangeComplete={(x) => this.setState({region: x})}
+                            onRegionChangeComplete={(x) => this._getLocation(x)}
                             showsCompass={false}
-                            showsUserLocation={true}
+                            showsUserLocation={false}
                             showsMyLocationButton={false}
-                            onPress={(e) => this._getLocation(e.nativeEvent.coordinate)}
                             >
-                            {this.state.coordinate !== null && this._renderManualPosition()}
                         </MapView>
+                        <View style={styles.markerFixed}>
+                            <Icon name='location-pin' size={29} color={COLORS.ORANGE_DEFAULT} />
+                        </View>
                         <View style={styles.infoContainer}>
                             <View style={styles.floatingInfo}>
                                 <Text style={{...TYPOGRAPHY.subHeader}}>Ketuk pada peta untuk memilih lokasi</Text>
@@ -156,7 +146,9 @@ const styles = StyleSheet.create({
     floatingInfo: { backgroundColor: COLORS.PURE_WHITE, elevation: 5, width: SCREEN_WIDTH*0.8, height: 30, alignItems: 'center', justifyContent: 'center', borderRadius: 20},
     absoluteBottom: {position: 'absolute', bottom: 85, left: 0, width: SCREEN_WIDTH, alignItems: 'center'},
     userInput: { backgroundColor: COLORS.PURE_WHITE, height: 220, width: SCREEN_WIDTH*0.95, borderRadius: 5, elevation: 5, padding: 10},
-    doneButton: {backgroundColor: COLORS.PRIMARY, width: '100%', height: 45, borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginTop: 25}
+    doneButton: {backgroundColor: COLORS.PRIMARY, width: '100%', height: 45, borderRadius: 5, justifyContent: 'center', alignItems: 'center', marginTop: 25},
+    markerFixed: { left: '50%', position: 'absolute', top: '40%' }
+
 });
 
 export default withNavigationFocus(SetLocation);

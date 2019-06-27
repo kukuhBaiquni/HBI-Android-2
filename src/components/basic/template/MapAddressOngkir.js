@@ -97,7 +97,7 @@ export default class MapAddressOngkir extends Component {
             <Marker
                 coordinate={navigation.state.params.destinationPoint}
                 >
-                <Entypo name='man' size={20} color={COLORS.PRIMARY} />
+                <Entypo name='location-pin' size={20} color={COLORS.ORANGE_DEFAULT} />
             </Marker>
         )
     };
