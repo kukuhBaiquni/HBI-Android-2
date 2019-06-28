@@ -28,7 +28,7 @@ function* workerCountItem(form) {
             return request
             .post(`${SERVER_URL}util/realtime/price`)
             .set('Authorization', form.data.token)
-            .send({productId: form.data.id})
+            .send({productId: form.data.productId})
             .send({qty: form.data.qty})
             .send({status: form.data.status})
             .then((res) => {

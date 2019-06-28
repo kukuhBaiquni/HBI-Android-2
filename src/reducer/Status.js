@@ -153,20 +153,6 @@ export default function status(state = initialState, action) {
       isEmailFree: false
     });
 
-    case 'ADD_TO_CART_SUCCESS':
-    return Object.assign({}, state, {
-      addToCart: {
-        ...state.addToCart, success: true, error: false
-      }
-    });
-
-    case 'ADD_TO_CART_FAILED':
-    return Object.assign({}, state, {
-      addToCart: {
-        ...state.addToCart, success: false, error: true
-      }
-    });
-
     case 'RESET_ATC_STATE':
     return Object.assign({}, state, {
       addToCart: {

@@ -3,53 +3,43 @@ import request from 'superagent';
 import { SERVER_URL } from '../components/basic/supportFunction';
 
 export const addToCart = (data) => {
-  return { type: 'ADD_TO_CART', data };
+    return { type: 'ADD_TO_CART', data };
 };
 
-const addToCartSuccess = () => {
-  return { type: 'ADD_TO_CART_SUCCESS' };
-};
-
-const loadCartWithDataSuccess = (data) => {
-  return { type: 'LOAD_CART_WITH_DATA_SUCCESS', data };
+const addToCartSuccess = (data) => {
+    return { type: 'ADD_TO_CART_SUCCESS', data };
 };
 
 const addToCartFailed = () => {
-  return { type: 'ADD_TO_CART_FAILED' };
+    return { type: 'ADD_TO_CART_FAILED' };
 };
 
-export const forceResetATC = () => {
-  return { type: 'RESET_ATC_STATE' };
-};
-
-const InternalServerError = () => {
-  return { type: 'INTERNAL_SERVER_ERROR' };
+export const resetAddToCart = () => {
+    return { type: 'RESET_CART_STATE' };
 };
 
 export function* watcherAddtoCart(data) {
-  yield takeEvery('ADD_TO_CART', workerAddtoCart);
+    yield takeEvery('ADD_TO_CART', workerAddtoCart);
 };
 
-function* workerAddtoCart(product) {
-  try {
-    var response = yield call(() => {
-      return request
-      .post(`${SERVER_URL}non-member/add-to-cart/${product.data.id}`)
-      .set('Authorization', product.data.token)
-      .send({qty: product.data.qty})
-      .then((res) => {
-        return res;
-      })
-    })
-    var raw = JSON.parse(response.xhr._response);
-    var data = raw;
-    if (data.success) {
-      yield put(loadCartWithDataSuccess(data.data))
-      yield put(addToCartSuccess());
-    }else{
-      yield put(addToCartFailed());
+function* workerAddtoCart(form) {
+    try {
+        var response = yield call(() => {
+            return request
+            .post(`${SERVER_URL}users/${form.data.userId}/cart`)
+            .set('Authorization', form.data.token)
+            .send({qty: form.data.qty})
+            .send({packing: form.data.packing})
+            .send({productId: form.data.id})
+            .send({productName: form.data.productName})
+            .then((res) => {
+                return res;
+            })
+        })
+        var raw = JSON.parse(response.xhr._response);
+        var data = raw;
+        yield put(addToCartSuccess(data.data));
+    }catch (error) {
+        yield put(addToCartFailed());
     }
-  }catch (error) {
-    yield put(InternalServerError());
-  }
-}
+};

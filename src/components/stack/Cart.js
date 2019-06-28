@@ -6,16 +6,15 @@ import Modal from "react-native-modal";
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
 import { countItem } from '../../actions/Counting_Items';
 import { BarIndicator } from 'react-native-indicators';
-import { saveChanges, forceResetSC } from '../../actions/Save_Changes';
+import { saveChanges } from '../../actions/Save_Changes';
+import { resetAddToCart } from '../../actions/Add_To_Cart'
 import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationEvents } from 'react-navigation';
-import { cartCheckPartial, forceResetCP } from '../../actions/Cart_Check_Partial';
-import { cartCheckAll, forceResetCA } from '../../actions/Cart_Check_All';
 import { removeItem, forceResetRI } from '../../actions/Remove_Item';
 import { withNavigationFocus } from 'react-navigation';
 import { EMPTY_CART, BACKDARKRED } from '../../images';
-import { SERVER_URL, IDR_FORMAT } from '../basic/supportFunction';
+import { STATIC_RES_URL, IDR_FORMAT } from '../basic/supportFunction';
 import { MODAL_QUANTITY_EDITOR } from '../basic/template/modalQuantityEditor';
 import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
@@ -50,6 +49,7 @@ class Cart extends Component {
             id_Product: '',
             productName: '',
             productPrice: 0,
+            packing: 0,
             subtotal: 0,
             qty: 0,
             productPhoto: '',
@@ -60,12 +60,12 @@ class Cart extends Component {
         this.onSave = this.onSave.bind(this);
     };
 
-    checkToken = () => {
+    _checkToken = () => {
         const { userData, token, cart, navigation } = this.props;
-        if (userData.data.name !== undefined) {
+        if (userData.data.personalIdentity.name !== undefined) {
             this.setState({
-                token: token.type.access,
-                number: cart.length
+                token: token.type.token,
+                number: cart.data.length
             });
         }else{
             Alert.alert(
@@ -107,18 +107,17 @@ class Cart extends Component {
     };
 
     showSpecificModal(x) {
-        this.props.dispatch(forceResetSC());
+        this.props.dispatch(resetAddToCart());
         const { cart } = this.props;
         this.setState({
-            idProduct: cart[x].id,
-            id_Product: cart[x]._id,
+            idProduct: cart.data[x].productId,
             showModal: true,
-            productName: cart[x].product_name,
-            subtotal: cart[x].subtotal,
-            productPrice: cart[x].price,
-            productPhoto: cart[x].photo,
-            qty: cart[x].qty,
-            index: x
+            productName: cart.data[x].productName,
+            productPrice: cart.data[x].price,
+            productPhoto: cart.data[x].photo,
+            qty: cart.data[x].qty,
+            index: x,
+            packing: cart.data[x].packing
         });
     };
 
@@ -127,8 +126,10 @@ class Cart extends Component {
         const data = {
             token: this.state.token,
             id: this.state.idProduct,
-            _id: this.state.id_Product,
-            qty: this.state.qty
+            userId: this.props.userData.data._id,
+            qty: this.state.qty,
+            productName: this.state.productName,
+            packing: this.state.packing
         };
         this.props.dispatch(saveChanges(data));
     };
@@ -137,7 +138,7 @@ class Cart extends Component {
         this.props.dispatch(forceResetRI());
         const { cart } = this.props;
         const data = {
-            id: cart[n]._id,
+            id: cart.data[n].id,
             token: this.state.token
         };
         Alert.alert(
@@ -194,7 +195,7 @@ class Cart extends Component {
                 itemCount={qty}
                 data={data}
 
-                userStatus={this.props.userData.data.status}
+                userStatus={this.props.userData.data.personalIdentity.status}
                 resultCounting={this.props.resultCounting}
                 buttonText='Simpan'
                 routeName={navigation.state.routeName}
@@ -206,8 +207,9 @@ class Cart extends Component {
         if (prevProps.resultCounting !== this.props.resultCounting) {
             this.setState({loading: false, subtotal: this.props.resultCounting});
         }
-        if (prevProps.status.saveChanges.success !== this.props.status.saveChanges.success) {
-            if (this.props.status.saveChanges.success) {
+
+        if (prevProps.cart.success !== this.props.cart.success) {
+            if (this.props.cart.success) {
                 showMessage({
                     message: 'Sukses',
                     description: 'Perubahan berhasil disimpan',
@@ -215,53 +217,15 @@ class Cart extends Component {
                 });
             }
         }
-        if (prevProps.status.saveChanges.error !== this.props.status.saveChanges.error) {
-            if (this.props.status.saveChanges.error) {
-                showMessage({
-                    message: 'Gagal',
-                    description: 'Perubahan gagal disimpan',
-                    type: 'error'
-                });
-            }
+
+        if (prevProps.cart.error !== this.props.cart.error) {
+            showMessage({
+                message: 'Gagal',
+                description: 'Perubahan gagal disimpan',
+                type: 'error'
+            });
         }
-        if (prevProps.cart !== this.props.cart) {
-            let count = 0;
-            this.props.cart.forEach(x => {
-                if (x.status) {
-                    count++;
-                }
-            })
-            this.setState({number: count})
-            if (count === this.props.cart.length) {
-                this.setState({checkControl: true});
-            }else{
-                this.setState({checkControl: false});
-            }
-        }
-        if (prevProps.status.checkPartial.error !== this.props.status.checkPartial.error) {
-            if (this.props.status.checkPartial.error) {
-                Alert.alert(
-                    'Kesalahan',
-                    'Silahkan ulangi permintaan anda.',
-                    [
-                        {text: 'OK', onPress: () => this.props.dispatch(forceResetCP())},
-                    ],
-                    { cancelable: false }
-                );
-            }
-        }
-        if (prevProps.status.checkAll.error !== this.props.status.checkAll.error) {
-            if (this.props.status.checkAll.error) {
-                Alert.alert(
-                    'Kesalahan',
-                    'Silahkan ulangi permintaan anda.',
-                    [
-                        {text: 'OK', onPress: () => this.props.dispatch(forceResetCA())},
-                    ],
-                    { cancelable: false }
-                );
-            }
-        }
+
         if (prevProps.status.removeItem.error !== this.props.status.removeItem.error) {
             if (this.props.status.removeItem.error) {
                 Alert.alert(
@@ -274,6 +238,7 @@ class Cart extends Component {
                 );
             }
         }
+        
         if (prevProps.status.removeItem.success !== this.props.status.removeItem.success) {
             if (this.props.status.removeItem.success) {
                 showMessage({
@@ -287,13 +252,12 @@ class Cart extends Component {
 
     render() {
         const { navigation, cart, isFocused } = this.props;
-        let total = 0;
-        cart.forEach(x => total += x.subtotal)
+        let total = cart.total;
         if (isFocused) {
             return(
                 <View style={{flex: 1}}>
                     <NavigationEvents
-                        onWillFocus={() => this.checkToken()}
+                        onDidFocus={() => this._checkToken()}
                         />
                     {/*=============================================*/}
 
@@ -301,20 +265,49 @@ class Cart extends Component {
 
                     {/*=============================================*/}
                     {
-                        cart.length !== 0
+                        cart.data.length !== 0
                         ?
                         <View style={{flex: 1}}>
                             <ScrollView style={{backgroundColor: COLORS.BASE_BACKGROUND}}>
                                 {
-                                    cart.map((x, i) =>
-                                        <PRODUCT_ORDER_DETAILS
-                                            key={i}
-                                            data={x}
-                                            openModal={this.showSpecificModal}
-                                            index={i}
-                                            removeItem={this.removeSingleItem}
-                                            routeName={navigation.state.routeName}
-                                            />
+                                    cart.data.map((x, i) =>
+                                        <View key={i} style={{alignItems: 'center'}}>
+                                            <View style={{backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 3}}>
+                                                <View style={{marginBottom: 15}}>
+                                                    <Text style={styles.productNameText}>{x.productName}</Text>
+                                                    <TouchableOpacity style={{position: 'absolute', right: 5, top: 5}} onPress={(x) => this.removeSingleItem(i)}>
+                                                        <Icon name='delete' color='#9b9b9b' />
+                                                    </TouchableOpacity>
+
+                                                    <View style={styles.productDetails}>
+                                                        <Image
+                                                            resizeMode='cover'
+                                                            style={styles.imageStyle}
+                                                            source={{uri: `${STATIC_RES_URL}products/${x.photo}`}}
+                                                            />
+                                                        <View style={styles.partials25}>
+                                                            <Text style={styles.propText}>Harga</Text>
+                                                            <Text style={styles.propText}>Kuantitas</Text>
+                                                            <Text style={styles.propTextSubtotal}>Subtotal</Text>
+                                                        </View>
+                                                        <View style={styles.partial45}>
+                                                            <Text style={styles.valText}>{IDR_FORMAT(Number(x.price))}</Text>
+                                                            <Text style={styles.valText}>{x.qty}</Text>
+                                                            <TouchableOpacity onPress={(x) => this.showSpecificModal(i)}>
+                                                                <Text style={styles.changeDetails}>Ubah Rincian</Text>
+                                                            </TouchableOpacity>
+                                                            <Text style={styles.subTotal}>
+                                                                {IDR_FORMAT(Number(x.price) * Number(x.qty))}
+                                                            </Text>
+                                                        </View>
+                                                    </View>
+
+                                                    <View style={{alignItems: 'center'}}>
+                                                        <View style={{backgroundColor: '#d7d7d7', height: 1, width: '95%'}} />
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
                                     )
                                 }
 
@@ -388,5 +381,31 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         marginLeft: 12
     },
-    paymentButton: {justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.PRIMARY, width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3}
+    paymentButton: {justifyContent: 'center', alignItems: 'center', backgroundColor: COLORS.PRIMARY, width: 80, height: 40, position: 'absolute', right: 20, borderRadius: 3},
+
+    basicCard               : { backgroundColor: COLORS.PURE_WHITE, marginTop: 10, width: '95%', borderRadius: 3, elevation: 1 },
+
+    touchableRemoveItem     : { position: 'absolute', right: 5, top: 5 },
+
+    imageStyle              : { width: 90, height: 90, borderColor: COLORS.GRAY_ICON, borderWidth: 1 },
+
+    productDetails          : { backgroundColor: COLORS.PURE_WHITE, height: 100, flexDirection: 'row', marginLeft: 12 },
+
+    partials25              : { marginBottom: 5, width: '25%' },
+
+    productNameText         : { ...TYPOGRAPHY.subHeader, marginLeft: 12, marginBottom: 5, marginTop: 10 },
+
+    propText                : { marginLeft: 10, ...TYPOGRAPHY.p },
+
+    propTextSubtotal        : { marginLeft: 10, ...TYPOGRAPHY.p, position: 'absolute', bottom: 3 },
+
+    partial45               : { marginBottom: 5, width: '45%' },
+
+    valText                 : { textAlign: 'right', ...TYPOGRAPHY.normalPriceText },
+
+    changeDetails           : { textAlign: 'right', marginTop: 13, ...TYPOGRAPHY.specialActionText },
+
+    subTotal                : { textAlign: 'right', right: 0, position: 'absolute', bottom: 3, ...TYPOGRAPHY.priceTextModal },
+
+    separator               : { backgroundColor: '#d7d7d7', height: 1, width: '95%' }
 });

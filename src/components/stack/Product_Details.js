@@ -12,7 +12,7 @@ import FlashMessage from 'react-native-flash-message';
 import { showMessage } from 'react-native-flash-message';
 import { NavigationEvents } from 'react-navigation';
 import { countItem } from '../../actions/Counting_Items';
-import { addToCart, forceResetATC } from '../../actions/Add_To_Cart';
+import { addToCart, resetAddToCart } from '../../actions/Add_To_Cart';
 import { withNavigationFocus } from 'react-navigation';
 import * as Animatable from 'react-native-animatable';
 import { WaveIndicator } from 'react-native-indicators';
@@ -46,7 +46,7 @@ class ProductDetails extends Component {
 
         this._showModalContent = this._showModalContent.bind(this);
         this._addToCart = this._addToCart.bind(this);
-    }
+    };
 
     componentDidMount() {
         const { listProducts, navigation } = this.props;
@@ -98,11 +98,14 @@ class ProductDetails extends Component {
     };
 
     _addToCart(v) {
-        this.setState({showModal: false})
+        this.setState({showModal: false});
         const item = {
             token: this.state.token,
+            userId: this.props.userData.data._id,
+            qty: this.state.itemCount,
+            packing: this.props.navigation.state.params.packing,
             id: this.props.navigation.state.params.id,
-            qty: this.state.itemCount
+            productName: this.props.navigation.state.params.productname
         }
         this.props.dispatch(addToCart(item));
     };
@@ -125,10 +128,10 @@ class ProductDetails extends Component {
         }
     };
 
-    checkToken = () => {
+    _checkToken = () => {
         this.props.dispatch(resetSingleTransaction());
-        if (this.props.token !== '') {
-            this.setState({isLoggedIn: true, token: this.props.token});
+        if (this.props.token.type.token !== '') {
+            this.setState({isLoggedIn: true, token: this.props.token.type.token});
         }else{
             this.setState({isLoggedIn: false, token: ''});
         }
@@ -136,7 +139,7 @@ class ProductDetails extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.resultCounting !== this.props.resultCounting) {
-            this.setState({loading: false})
+            this.setState({loading: false});
         }
         if (this.props.status.addToCart.error !== this.props.status.addToCart.success) {
             if (this.props.status.addToCart.error) {
@@ -145,7 +148,7 @@ class ProductDetails extends Component {
                     description: 'Proses gagal, silahkan ulangi permintaan anda',
                     type: 'danger',
                 });
-                this.props.dispatch(forceResetATC())
+                this.props.dispatch(resetAddToCart());
             }
             if (this.props.status.addToCart.success) {
                 showMessage({
@@ -153,7 +156,7 @@ class ProductDetails extends Component {
                     description: 'Produk berhasil ditambahkan ke keranjang.',
                     type: 'success',
                 });
-                this.props.dispatch(forceResetATC())
+                this.props.dispatch(resetAddToCart());
             }
         }
     };
@@ -245,7 +248,7 @@ class ProductDetails extends Component {
         return(
             <View style={{flex: 1, backgroundColor: COLORS.BASE_BACKGROUND}}>
                 <NavigationEvents
-                    onDidFocus={() => this.checkToken()}
+                    onDidFocus={() => this._checkToken()}
                     />
                 <MODAL isVisible={!this.state.isVisibleMain} message='Memuat Produk' />
                 {
@@ -313,7 +316,7 @@ class ProductDetails extends Component {
 
                                 {this._renderHorizontalScoller()}
 
-                                <View style={{height: 150}} />
+                                <View style={{height: 25}} />
                             </ScrollView>
                         )}
                     />

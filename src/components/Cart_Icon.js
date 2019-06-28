@@ -5,34 +5,44 @@ import { TouchableOpacity, View, Text, StyleSheet, Alert, AsyncStorage } from 'r
 import * as Animatable from 'react-native-animatable';
 import { NavigationEvents } from 'react-navigation';
 import { loadCart } from '../actions/Load_Cart';
+import { resetAddToCart } from '../actions/Add_To_Cart';
 
 class CartIcon extends Component {
     constructor(props) {
         super(props)
-
         this.state = {
             token: ''
         }
     }
 
     _afterRender = () => {
-        const token = this.props.token.type.access;
+        const token = this.props.token.type.token;
+        const id = this.props.userData.data._id;
         if (token !== '') {
             this.setState({token});
-            this.props.dispatch(loadCart(token));
+            this.props.dispatch(loadCart({token, id}));
+        }
+    };
+
+    componentDidUpdate(prevProps, prevState) {
+        const { cart, dispatch } = this.props;
+        if (prevProps.cart.success !== cart.success) {
+            if (cart.success) {
+                dispatch(resetAddToCart());
+            }
         }
     };
 
     render() {
         const { navigation, bcolor } = this.props;
-        const items = this.props.cart;
+        const items = this.props.cart.data;
         return(
             <TouchableOpacity onPress={() => navigation.navigate('Cart')}>
                 <NavigationEvents
                     onDidFocus={() => this._afterRender()}
                     />
                 {
-                    this.props.cart.length > 0 &&
+                    this.props.cart.data.length > 0 &&
                     <Animatable.View style={styles.badge}
                         animation='rubberBand'
                         useNativeDriver

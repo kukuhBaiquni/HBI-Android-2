@@ -1,22 +1,68 @@
-let initialState = [];
+let initialState = {
+    success: false,
+    error: false,
+    data: [],
+    total: 0
+};
 
 export default function cart(state = initialState, action) {
   switch (action.type) {
 
-    case 'LOAD_CART_WITH_DATA_SUCCESS':
-    return action.data;
+    case 'ADD_TO_CART_SUCCESS':
+    return Object.assign({}, state, {
+        success: true,
+        error: false,
+        data: action.data.items,
+        total: action.data.total
+    });
 
-    case 'SAVE_CHANGES_WITH_DATA_SUCCESS':
-    return action.data;
+    case 'ADD_TO_CART_FAILED':
+    return Object.assign({}, state, {
+        success: false,
+        error: true
+    });
 
-    case 'CART_CHECK_PARTIAL_SUCCESS':
-    return action.data;
+    case 'LOAD_CART_SUCCESS':
+    return Object.assign({}, state, {
+        success: true,
+        error: false,
+        data: action.data.items,
+        total: action.data.total
+    });
 
-    case 'CART_CHECK_ALL_SUCCESS':
-    return action.data;
+    case 'LOAD_CART_FAILED':
+    return Object.assign({}, state, {
+        success: false,
+        error: true
+    });
 
-    case 'REMOVE_ITEM_WITH_DATA_SUCCESS':
-    return action.data;
+    case 'SAVE_CHANGES_SUCCESS':
+    return Object.assign({}, state, {
+        success: true,
+        error: false,
+        data: action.data.items,
+        total: action.data.total
+    });
+
+    case 'SAVE_CHANGES_FAILED':
+    return Object.assign({}, state, {
+        success: false,
+        error: true
+    });
+
+    case 'RESET_CART_STATE':
+    return Object.assign({}, state, {
+        success: false,
+        error: false
+    });
+
+    case 'REMOVE_CART_ITEM':
+    return Object.assign({}, state, {
+        success: true,
+        error: false,
+        data: action.data.items,
+        total: action.data.total
+    });
 
     default:
     return state;

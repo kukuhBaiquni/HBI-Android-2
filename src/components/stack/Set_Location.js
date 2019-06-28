@@ -63,7 +63,7 @@ class SetLocation extends Component {
             };
             this.setState({
                 pcd: result.join(', ')
-            })
+            });
         })
         .catch((err) => {
             console.log(err);
@@ -74,7 +74,7 @@ class SetLocation extends Component {
         if (this.state.addressHandler.length > 9 && this.state.addressHandler !== '') {
             this.props.navigation.navigate('Payment', {destinationPoint: this.state.fakePosition, addressString: this.state.addressHandler, pcd: this.state.pcd});
         }else{
-            this.setState({isAddressValid: false})
+            this.setState({isAddressValid: false});
         }
     };
 

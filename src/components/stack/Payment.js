@@ -84,7 +84,7 @@ class Payment extends Component {
             }
         }else{
             let acu = 0;
-            cart.map(x => acu += x.freeOngkirConsideration);
+            cart.data.map(x => acu += x.freeOngkirConsideration);
             if (acu > 30) {
                 this.setState({isFreeOngkir: true});
             }else{
@@ -109,7 +109,7 @@ class Payment extends Component {
         if (this.props.singleTransaction.length > 0) {
             this.setState({showContent: true, token: this.props.token.type.token, data: this.props.singleTransaction, idProduct: singleTransaction[0].id, customData: data});
         }else{
-            this.setState({showContent: true, token: this.props.token.type.token, data: cart.filter(x => x.status === true), customData: data});
+            this.setState({showContent: true, token: this.props.token.type.token, data: cart.data.filter(x => x.status === true), customData: data});
         }
         this._totalMapping();
     };
@@ -222,7 +222,7 @@ class Payment extends Component {
             ];
             return data;
         }else{
-            return cart.filter(x => x.status);
+            return cart.data.filter(x => x.status);
         }
     };
 
@@ -235,7 +235,7 @@ class Payment extends Component {
             this.setState({subtotalHandler: result});
         }else{
             let total = 0;
-            cart.map(x => total += x.subtotal);
+            cart.data.map(x => total += x.subtotal);
             this.setState({subtotalHandler: total});
         }
     };
@@ -361,7 +361,7 @@ class Payment extends Component {
     render() {
         const { userData, navigation, cart, transaction, targetMember, singleTransaction } = this.props;
         let total = 0;
-        cart.map(x => total += x.subtotal);
+        cart.data.map(x => total += x.subtotal);
         let params = {};
         if (navigation.state.params === undefined) {
             params = {

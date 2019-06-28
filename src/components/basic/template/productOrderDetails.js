@@ -3,7 +3,7 @@ import { View, Text, TouchableOpacity, Image, StyleSheet } from 'react-native';
 import { TYPOGRAPHY } from '../typography';
 import { COLORS } from '../colors';
 import { Icon } from 'react-native-elements';
-import { IDR_FORMAT, SERVER_URL } from '../supportFunction';
+import { IDR_FORMAT, STATIC_RES_URL } from '../supportFunction';
 import PropTypes from 'prop-types';
 
 export const PRODUCT_ORDER_DETAILS = (props) => {
@@ -19,7 +19,7 @@ export const PRODUCT_ORDER_DETAILS = (props) => {
         <View style={{alignItems: 'center'}}>
             <View style={styles.basicCard}>
                 <View style={{marginBottom: 15}}>
-                    <Text style={styles.productNameText}>{props.data.product_name}</Text>
+                    <Text style={styles.productNameText}>{props.data.productName}</Text>
                     {
                         props.routeName === 'Cart' &&
                         <TouchableOpacity style={styles.touchableRemoveItem} onPress={this._removeSingleItem}>
@@ -30,7 +30,7 @@ export const PRODUCT_ORDER_DETAILS = (props) => {
                         <Image
                             resizeMode='cover'
                             style={styles.imageStyle}
-                            source={{uri: `${SERVER_URL}images/products/${props.data.photo}`}}
+                            source={{uri: `${STATIC_RES_URL}products/${props.data.photo}`}}
                             />
                         <View style={styles.partials25}>
                             <Text style={styles.propText}>Harga</Text>
