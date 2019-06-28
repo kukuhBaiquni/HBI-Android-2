@@ -14,6 +14,8 @@ import { CAPITALIZE, API_KEY } from '../supportFunction';
 import { COLORS } from '../colors';
 import { TYPOGRAPHY } from '../typography';
 
+const googleApis = 'https://maps.googleapis.com/maps/api/geocode/json?address=';
+
 export default class MapAddressOngkir extends Component {
     constructor(props) {
         super(props)
@@ -28,10 +30,19 @@ export default class MapAddressOngkir extends Component {
         }
     };
 
-    // componentDidMount() {
-    //     fetch(googleApis + `Sindanglaya no 131 rt 03 rw 01 arcamanik binaharapan bandung` + `&key=${API_KEY}`)
-    //     .then(res => console.log(JSON.parse(res._bodyText)));
-    // };
+    componentDidMount() {
+        const userAddress = this.props.address;
+        if (userAddress.city.name !== '' && userAddress.district.name !== '' && userAddress.province.name !== '') {
+            fetch(googleApis + `${userAddress.city.name}, ${userAddress.district.name}` + `&key=${API_KEY}`)
+            .then(res => res.json())
+            .then(resJson => {
+                console.log(resJson);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+        }
+    };
 
     _afterRender = () => {
         const origin = {...ORIGIN_POINT};
@@ -97,7 +108,7 @@ export default class MapAddressOngkir extends Component {
             <Marker
                 coordinate={navigation.state.params.destinationPoint}
                 >
-                <Entypo name='location-pin' size={20} color={COLORS.ORANGE_DEFAULT} />
+                <Entypo name='location-pin' size={29} color={COLORS.BLUE_SEA} />
             </Marker>
         )
     };

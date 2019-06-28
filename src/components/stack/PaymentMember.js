@@ -204,7 +204,7 @@ class Payment extends Component {
     };
 
     showInfo() {
-        Alert.alert('Gratis Ongkir', 'Mininum pembelian diatas 15kg.', [{text: 'OK'}], { cancelable: true });
+        Alert.alert('Gratis Ongkir', 'Mininum pembelian diatas 12kg.', [{text: 'OK'}], { cancelable: true });
     };
 
 
@@ -246,7 +246,7 @@ class Payment extends Component {
         this.setState({itemCount: count, loadingPrice: true});
         var data = {
             token: this.state.token,
-            productId: this.state.idProduct,
+            id: this.state.idProduct,
             qty: count,
             status: this.props.userData.data.personalIdentity.status
         };
@@ -259,7 +259,7 @@ class Payment extends Component {
         this.setState({itemCount: count, loadingPrice: true});
         var data = {
             token: this.state.token,
-            productId: this.state.idProduct,
+            id: this.state.idProduct,
             qty: count,
             status: this.props.userData.data.personalIdentity.status
         };
@@ -436,7 +436,6 @@ class Payment extends Component {
                             navigation={navigation}
                             getOngkir={this._getOngkir}
                             />
-                        
                         <View style={{alignItems: 'center'}}>
                             <View style={itemDetails.container}>
                                 <View>
@@ -511,7 +510,7 @@ class Payment extends Component {
                                 <View style={result.footerContainer}>
                                     <Text style={result.totalPricePropText}>Total yang harus dibayar</Text>
                                     <Text style={result.totalPriceValue}>
-                                        {this.state.isFreeOngkir ? IDR_FORMAT(this.state.subtotalHandler) : IDR_FORMAT(this.state.subtotalHandler + Number(this.state.ongkir))}
+                                        {this.state.isFreeOngkir ? IDR_FORMAT(this.state.subtotalHandler) : IDR_FORMAT(this.state.subtotalHandler + Number(targetMember.ongkir))}
                                     </Text>
                                 </View>
                             </View>

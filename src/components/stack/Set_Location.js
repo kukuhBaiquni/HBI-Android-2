@@ -85,7 +85,6 @@ class SetLocation extends Component {
     };
 
     render() {
-        console.log(this.state.fakePosition);
         if (this.props.isFocused) {
             return(
                 <KeyboardAvoidingView style={styles.container} behavior="position" enabled>
@@ -96,12 +95,12 @@ class SetLocation extends Component {
                             initialRegion={this.state.region}
                             onRegionChangeComplete={(x) => this._getLocation(x)}
                             showsCompass={false}
-                            showsUserLocation={false}
+                            showsUserLocation={true}
                             showsMyLocationButton={false}
                             >
                         </MapView>
                         <View style={styles.markerFixed}>
-                            <Icon name='location-pin' size={29} color={COLORS.ORANGE_DEFAULT} />
+                            <Icon name='location-pin' size={29} color={COLORS.BLUE_SEA} />
                         </View>
                         <View style={styles.infoContainer}>
                             <View style={styles.floatingInfo}>

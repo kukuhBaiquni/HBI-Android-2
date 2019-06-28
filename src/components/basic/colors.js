@@ -26,4 +26,7 @@ export const COLORS = {
     PURE_WHITE          : '#ffffff',
 
     ORANGE_DEFAULT      : '#ce8d0c',
+
+    BLUE_SEA            : '#45a8ff',
+    LIME                : 'lime'
 };
