@@ -15,14 +15,7 @@ export default class ProductsTab extends Component {
         return(
             <View>
                 <ScrollView>
-                    <Animatable.View
-                        style={styles.container}
-                        animation='fadeInUpBig'
-                        iterationCount={1}
-                        delay={500}
-                        direction='alternate'
-                        onAnimationEnd={this.props.onAnimationEnd}
-                        >
+                    <View style={styles.container}>
                         {
                             products.sort((a, b) => a.id - b.id).map((x, i) =>
                             <TouchableOpacity style={styles.itemContainer} key={i} onPress={() => navigation.navigate('ProductDetails', x)}>
@@ -44,7 +37,7 @@ export default class ProductsTab extends Component {
                             </TouchableOpacity>
                             )
                         }
-                    </Animatable.View>
+                    </View>
                 </ScrollView>
             </View>
         )

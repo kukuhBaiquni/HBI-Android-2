@@ -34,10 +34,8 @@ function* workerLoadCart(form) {
         })
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
-        console.log(data);
         yield put(loadCartSuccess(data.data));
     }catch (error) {
-        console.log(error.response);
         yield put(loadCartFailed());
     }
 };

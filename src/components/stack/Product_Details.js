@@ -228,7 +228,7 @@ class ProductDetails extends Component {
                 <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
                     {
                         this.state.renderItems.map((x, i) =>
-                            <TouchableOpacity key={i} style={styles.basicCard}>
+                            <TouchableOpacity key={i} style={styles.basicCard} onPress={() => this.props.navigation.replace('ProductDetails', x)}>
                                 <Image
                                     source={{uri: `${STATIC_RES_URL}products/${x.photo}`}}
                                     style={{height: 150, width: '100%', borderTopRightRadius: 5, borderTopLeftRadius: 5}}

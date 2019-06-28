@@ -9,10 +9,7 @@ import CartIcon from '../Cart_Icon';
 import { setTargetMember } from '../../actions/Set_Target_Member';
 import Modal from "react-native-modal";
 import { WaveIndicator } from 'react-native-indicators';
-import { getAllProducts } from '../../actions/Get_All_Products';
-import { fetchUser } from '../../actions/Get_User_Data';
-import { setPlayerId } from '../../actions/Set_Player_Id';
-import { setInitialToken } from '../../actions/Set_Initial_Token';
+import { loadCart } from '../../actions/Load_Cart';
 import { withNavigationFocus } from 'react-navigation';
 import { MODAL } from '../basic/template/loading';
 import { COLORS } from '../basic/colors';
@@ -29,40 +26,17 @@ class ShopPageMember extends Component {
         this.state = {
             isProductsVisible: false,
             loading: true,
-            isFocused: false
+            isFocused: false,
+            activeTab: 0
         }
     };
 
-    // _afterRender = () => {
-    //     BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
-    //     this.setState({isFocused: true});
-    //     const { navigation } = this.props;
-    //     this.props.dispatch(getAllProducts());
-    //     setTimeout(async () => {
-    //         this.setState({
-    //             isProductsVisible: true
-    //         });
-    //         try{
-    //             const id = await AsyncStorage.getItem('PlayerID');
-    //             const token = await AsyncStorage.getItem('access_token');
-    //             if (id !== null && token !== null) {
-    //                 const ids = JSON.parse(id);
-    //                 const tokens = JSON.parse(token);
-    //                 this.setState({token: tokens});
-    //                 if (this.props.token === '') this.props.dispatch(setInitialToken(tokens));
-    //                 if (this.props.userData.playerID !== ids) this.props.dispatch(setPlayerId({ids, token: tokens}));
-    //                 if (this.props.userData.name === '') this.props.dispatch(fetchUser(tokens));
-    //             }
-    //             if (this.props.listProducts.length === 0) this.props.dispatch(getAllProducts());
-    //         }catch(error) {
-    //             ToastAndroid.show('Data tidak dapat diakses.', ToastAndroid.LONG, ToastAndroid.BOTTOM);
-    //         };
-    //     });
-    // };
-
     _afterRender = () => {
         BackHandler.addEventListener('hardwareBackPress', this._handleBackButton);
-        this.setState({isFocused: true, isProductsVisible: true});
+        const token = this.props.token.type.token;
+        const id = this.props.userData.data._id;
+        this.setState({isFocused: true, isProductsVisible: true, loading: false});
+        this.props.dispatch(loadCart({token, id}));
     };
 
     _handleBackButton = () => {
@@ -74,10 +48,6 @@ class ShopPageMember extends Component {
     _beforeBlur = () => {
         this.setState({isFocused: false});
         BackHandler.removeEventListener('hardwareBackPress', this._handleBackButton);
-    };
-
-    _onAnimationEnd = () => {
-        this.setState({ loading: false });
     };
 
     render() {
@@ -113,18 +83,18 @@ class ShopPageMember extends Component {
                 </Header>
                 {
                     isProductsVisible && isFocused &&
-                    <Tabs onChangeTab={(x) => console.log(x)} tabBarUnderlineStyle={{backgroundColor: COLORS.PRIMARY}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
+                    <Tabs onChangeTab={(x) => this.setState({activeTab: x.i})} tabBarUnderlineStyle={{backgroundColor: COLORS.PRIMARY}} renderTabBar={()=> <ScrollableTab style={{borderBottomColor: 'white', height: 45}} />}>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: COLORS.PURE_WHITE}} tabStyle={{backgroundColor: COLORS.PURE_WHITE}} heading="Daging Sapi">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={userData.data.personalIdentity.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'sapi') } />
+                            <ProductsTab status={userData.data.personalIdentity.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'sapi') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: COLORS.PURE_WHITE}} tabStyle={{backgroundColor: COLORS.PURE_WHITE}} heading="Daging Ayam">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={userData.data.personalIdentity.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'ayam') } />
+                            <ProductsTab status={userData.data.personalIdentity.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'ayam') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: COLORS.PURE_WHITE}} tabStyle={{backgroundColor: COLORS.PURE_WHITE}} heading="Daging Ikan">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={userData.data.personalIdentity.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'ikan') } />
+                            <ProductsTab status={userData.data.personalIdentity.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'ikan') } />
                         </Tab>
                         <Tab textStyle={{color: '#9e9e9e'}} activeTextStyle={{color: COLORS.PRIMARY}} activeTabStyle={{backgroundColor: COLORS.PURE_WHITE}} tabStyle={{backgroundColor: COLORS.PURE_WHITE}} heading="Olahan">
-                            <ProductsTab onAnimationEnd={this._onAnimationEnd} status={userData.data.personalIdentity.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'olahan') } />
+                            <ProductsTab status={userData.data.personalIdentity.status} navigation = { navigation } products = { listProducts.data.filter(x => x.category === 'olahan') } />
                         </Tab>
                     </Tabs>
                 }

@@ -57,7 +57,6 @@ class Cart extends Component {
         }
         this.showSpecificModal = this.showSpecificModal.bind(this);
         this.removeSingleItem = this.removeSingleItem.bind(this);
-        this.onSave = this.onSave.bind(this);
     };
 
     _checkToken = () => {
@@ -121,7 +120,7 @@ class Cart extends Component {
         });
     };
 
-    onSave() {
+    onSave = () => {
         this.setState({showModal: false, showModalContent: false});
         const data = {
             token: this.state.token,
