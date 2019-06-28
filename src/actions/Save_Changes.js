@@ -34,10 +34,8 @@ function* workerSaveChanges(form) {
         });
         var raw = JSON.parse(response.xhr._response);
         var data = raw;
-        console.log('00', data);
         yield put(saveChangesSuccess(data.data));
     }catch (error) {
-        console.log('00', error.response);
         yield put(saveChangesFailed());
     }
 };

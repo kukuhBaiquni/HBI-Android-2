@@ -135,15 +135,15 @@ class Cart extends Component {
     };
 
     removeSingleItem(n) {
-        this.props.dispatch(forceResetRI());
         const { cart } = this.props;
         const data = {
-            id: cart.data[n].id,
-            token: this.state.token
+            id: cart.data[n].productId,
+            token: this.state.token,
+            userId: this.props.userData.data._id
         };
         Alert.alert(
             'Hapus Produk',
-            'Apakah anda yakin ingin menghapus produk ini?',
+            `Apakah anda yakin ingin menghapus ${cart.data[n].productName}?`,
             [
                 {text: 'YA', onPress: () => this.props.dispatch(removeItem(data))},
                 {text: 'TIDAK'}
@@ -215,15 +215,19 @@ class Cart extends Component {
                     description: 'Perubahan berhasil disimpan',
                     type: 'success'
                 });
+                this.props.dispatch(resetAddToCart());
             }
         }
 
         if (prevProps.cart.error !== this.props.cart.error) {
-            showMessage({
-                message: 'Gagal',
-                description: 'Perubahan gagal disimpan',
-                type: 'error'
-            });
+            if (this.props.cart.error) {
+                showMessage({
+                    message: 'Gagal',
+                    description: 'Perubahan gagal disimpan',
+                    type: 'error'
+                });
+                this.props.dispatch(resetAddToCart());
+            }
         }
 
         if (prevProps.status.removeItem.error !== this.props.status.removeItem.error) {
@@ -238,7 +242,7 @@ class Cart extends Component {
                 );
             }
         }
-        
+
         if (prevProps.status.removeItem.success !== this.props.status.removeItem.success) {
             if (this.props.status.removeItem.success) {
                 showMessage({
@@ -275,7 +279,7 @@ class Cart extends Component {
                                             <View style={{backgroundColor: 'white', marginTop: 10, width: '95%', borderRadius: 3, elevation: 3}}>
                                                 <View style={{marginBottom: 15}}>
                                                     <Text style={styles.productNameText}>{x.productName}</Text>
-                                                    <TouchableOpacity style={{position: 'absolute', right: 5, top: 5}} onPress={(x) => this.removeSingleItem(i)}>
+                                                    <TouchableOpacity style={{position: 'absolute', right: 5, top: 5}} onPress={() => this.removeSingleItem(i)}>
                                                         <Icon name='delete' color='#9b9b9b' />
                                                     </TouchableOpacity>
 

@@ -141,20 +141,24 @@ class ProductDetails extends Component {
         if (prevProps.resultCounting !== this.props.resultCounting) {
             this.setState({loading: false});
         }
-        if (this.props.status.addToCart.error !== this.props.status.addToCart.success) {
-            if (this.props.status.addToCart.error) {
-                showMessage({
-                    message: 'Gagal',
-                    description: 'Proses gagal, silahkan ulangi permintaan anda',
-                    type: 'danger',
-                });
-                this.props.dispatch(resetAddToCart());
-            }
-            if (this.props.status.addToCart.success) {
+
+        if (prevProps.cart.success !== this.props.cart.success) {
+            if (this.props.cart.success) {
                 showMessage({
                     message: 'Sukses',
                     description: 'Produk berhasil ditambahkan ke keranjang.',
                     type: 'success',
+                });
+                this.props.dispatch(resetAddToCart());
+            }
+        }
+
+        if (prevProps.cart.error !== this.props.cart.error) {
+            if (this.props.cart.error) {
+                showMessage({
+                    message: 'Gagal',
+                    description: 'Proses gagal, silahkan ulangi permintaan anda',
+                    type: 'danger',
                 });
                 this.props.dispatch(resetAddToCart());
             }

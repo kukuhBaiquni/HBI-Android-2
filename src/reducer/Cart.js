@@ -2,7 +2,7 @@ let initialState = {
     success: false,
     error: false,
     data: [],
-    total: 0
+    total: 0,
 };
 
 export default function cart(state = initialState, action) {
@@ -50,18 +50,24 @@ export default function cart(state = initialState, action) {
         error: true
     });
 
-    case 'RESET_CART_STATE':
-    return Object.assign({}, state, {
-        success: false,
-        error: false
-    });
-
-    case 'REMOVE_CART_ITEM':
+    case 'REMOVE_ITEM_SUCCESS':
     return Object.assign({}, state, {
         success: true,
         error: false,
         data: action.data.items,
         total: action.data.total
+    });
+
+    case 'REMOVE_ITEM_FAILED':
+    return Object.assign({}, state, {
+        success: false,
+        error: true
+    });
+
+    case 'RESET_CART_STATE':
+    return Object.assign({}, state, {
+        success: false,
+        error: false
     });
 
     default:
