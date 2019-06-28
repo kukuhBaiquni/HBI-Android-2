@@ -26,7 +26,11 @@ export default class MapAddressOngkir extends Component {
                 latitudeDelta: 0,
                 longitudeDelta: 0.5
             },
-            distance: null
+            distance: null,
+            directLocation: {
+                latitude: 0,
+                longitude: 0
+            }
         }
     };
 
@@ -36,7 +40,23 @@ export default class MapAddressOngkir extends Component {
             fetch(googleApis + `${userAddress.city.name}, ${userAddress.district.name}` + `&key=${API_KEY}`)
             .then(res => res.json())
             .then(resJson => {
-                console.log(resJson);
+                let clone = {...this.state.directLocation};
+                clone.latitude = resJson.results[0].geometry.location.lat;
+                clone.longitude = resJson.results[0].geometry.location.lng;
+                this.setState({
+                    directLocation: clone
+                });
+                this.map.fitToCoordinates([
+                    origin,
+                    clone
+                ], {
+                    edgePadding: {
+                        top: 10,
+                        right: 40,
+                        bottom: 10,
+                        left: 40
+                    }, animated: true
+                });
             })
             .catch((err) => {
                 console.log(err);
@@ -48,6 +68,7 @@ export default class MapAddressOngkir extends Component {
         const origin = {...ORIGIN_POINT};
         if (this.props.navigation.state.params !== undefined) {
             const destination = this.props.navigation.state.params.destinationPoint;
+            this.setState({directLocation: destination});
             this.map.fitToCoordinates([
                 origin,
                 destination
@@ -86,11 +107,11 @@ export default class MapAddressOngkir extends Component {
 
     _renderRoute = () => {
         const { navigation } = this.props;
-        if (this.props.navigation.state.params !== undefined) {
+        if (this.state.directLocation.longitude !== 0 && this.state.directLocation.latitude !== 0) {
             return(
                 <MapViewDirections
-                    origin={navigation.state.params.destinationPoint}
-                    destination={{...ORIGIN_POINT}}
+                    origin={{...ORIGIN_POINT}}
+                    destination={this.state.directLocation}
                     apikey={API_KEY}
                     mode='WALKING'
                     strokeWidth={2}
@@ -106,7 +127,7 @@ export default class MapAddressOngkir extends Component {
         const { navigation } = this.props;
         return(
             <Marker
-                coordinate={navigation.state.params.destinationPoint}
+                coordinate={this.state.directLocation}
                 >
                 <Entypo name='location-pin' size={29} color={COLORS.BLUE_SEA} />
             </Marker>
@@ -129,7 +150,7 @@ export default class MapAddressOngkir extends Component {
                         >
                         {this._originPoint()}
                         {this._renderRoute()}
-                        {navigation.state.params !== undefined && this._destinationPoint()}
+                        {this.state.directLocation.latitude !== 0 && this.state.directLocation.longitude && this._destinationPoint()}
                     </MapView>
                     <Text style={styles.propertyText}>Alamat Tujuan</Text>
                     {
