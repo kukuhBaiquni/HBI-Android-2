@@ -6,7 +6,7 @@ import { Icon, SocialIcon } from 'react-native-elements';
 import * as Animatable from 'react-native-animatable';
 import Divider from '../Divider';
 import validator from 'validator';
-import { submitFormRegister, forceResetRG, registerFailedPrototype } from '../../actions/Register';
+import { submitFormRegister, registerFailedPrototype } from '../../actions/Register';
 import Modal from "react-native-modal";
 import { DotIndicator } from 'react-native-indicators';
 import { NavigationActions, NavigationEvents } from 'react-navigation';
@@ -92,8 +92,7 @@ class Register extends Component {
                         password: this.state.passwordHandler
                     }
                 };
-                console.log(data);
-
+                this.props.dispatch(submitFormRegister(data));
             }else{
                 this.setState({ isPasswordMatch: false });
             }

@@ -3,53 +3,42 @@ import request from 'superagent';
 import { SERVER_URL } from '../components/basic/supportFunction';
 
 export const submitFormRegister = (data) => {
-  return { type: 'SUBMIT_FORM_REGISTER', data};
+    return { type: 'SUBMIT_FORM_REGISTER', data};
 };
 
-export const forceResetRG = () => {
-  return { type: 'RESET_REGISTER_STATE' };
+const registerSuccess = (data) => {
+    return { type: 'REGISTER_SUCCESS', data};
 };
 
-const registerSuccess = (message) => {
-  return { type: 'REGISTER_SUCCESS', message};
-};
-
-const registerFailed = (message) => {
-  return { type: 'REGISTER_FAILED', message};
+const registerFailed = (data) => {
+    return { type: 'REGISTER_FAILED', data};
 };
 
 export const registerFailedPrototype = () => {
-  return { type: 'REGISTER_FAILED_PROTOTYPE' }
+    return { type: 'REGISTER_FAILED_PROTOTYPE' }
 }
 
 export function* watcherRegister(data) {
-  yield takeEvery('SUBMIT_FORM_REGISTER', workerRegister);
-};
-
-const InternalServerError = () => {
-  return { type: 'INTERNAL_SERVER_ERROR' }
+    yield takeEvery('SUBMIT_FORM_REGISTER', workerRegister);
 };
 
 function* workerRegister(form) {
-  try {
-    var response = yield call(() => {
-      return request
-      .post(`${SERVER_URL}register`)
-      .send({name: form.data.name})
-      .send({email: form.data.email})
-      .send({password: form.data.password})
-      .then((res) => {
-        return res
-      })
-    })
-    var raw = JSON.parse(response.xhr._response);
-    var message = raw;
-    if (message.success) {
-      yield put(registerSuccess(message));
-    }else{
-      yield put(registerFailed(message));
-    };
-  }catch (error) {
-    yield put(InternalServerError());
-  }
+    console.log(form);
+    try {
+        var response = yield call(() => {
+            return request
+            .post(`${SERVER_URL}users`)
+            .send({personalIdentity: form.data.personalIdentity})
+            .then((res) => {
+                return res
+            })
+        })
+        var raw = JSON.parse(response.xhr._response);
+        var data = raw;
+        console.log(data);
+        // yield put(registerSuccess(data));
+    }catch (error) {
+        console.log(error.response);
+        // yield put(registerFailed(data));
+    }
 };
