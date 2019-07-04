@@ -35,6 +35,7 @@ export default class MapAddressOngkir extends Component {
     };
 
     componentDidMount() {
+        const origin = {...ORIGIN_POINT};
         const userAddress = this.props.address;
         if (userAddress.city.name !== '' && userAddress.district.name !== '' && userAddress.province.name !== '') {
             fetch(googleApis + `${userAddress.city.name}, ${userAddress.district.name}` + `&key=${API_KEY}`)
@@ -85,9 +86,7 @@ export default class MapAddressOngkir extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if (prevState.distance !== this.state.distance) {
-            if (prevState.distance === null) {
-                this._getDestinationPoint();
-            }
+            this._getDestinationPoint();
         }
     };
 

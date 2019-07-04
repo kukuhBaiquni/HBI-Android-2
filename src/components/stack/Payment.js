@@ -66,7 +66,6 @@ class Payment extends Component {
                 address: {
                     city: '',
                     district: '',
-                    village: '',
                     street: ''
                 }
             }
@@ -75,8 +74,7 @@ class Payment extends Component {
 
     _afterRender = () => {
         const { dispatch, cart, navigation, singleTransaction, userData } = this.props;
-        dispatch(resetTransactionState());
-        if (singleTransaction > 0) {
+        if (singleTransaction.length > 0) {
             if (this.state.itemCount > 29) {
                 this.setState({isFreeOngkir: true});
             }else{
@@ -84,32 +82,28 @@ class Payment extends Component {
             }
         }else{
             let acu = 0;
-            cart.data.map(x => acu += x.freeOngkirConsideration);
-            if (acu > 30) {
+            cart.data.map(x => acu += x.qty);
+            if (acu > 29) {
                 this.setState({isFreeOngkir: true});
             }else{
                 this.setState({isFreeOngkir: false});
             }
         }
-        dispatch(forceResetRoot())
-        if (navigation.state.params !== undefined) {
-            const village = navigation.state.params.village;
-        }
+
         let data = Object.assign({}, this.state.customData, {
             name: userData.data.personalIdentity.name,
             phone: userData.data.personalIdentity.phone,
             address: {
                 ...this.state.customData.address,
-                city: userData.data.personalIdentity.address.city,
-                district: userData.data.personalIdentity.address.district,
-                village: userData.data.personalIdentity.address.village,
+                city: userData.data.personalIdentity.address.city.name,
+                district: userData.data.personalIdentity.address.district.name,
                 street: userData.data.personalIdentity.address.street
             }
         });
         if (this.props.singleTransaction.length > 0) {
             this.setState({showContent: true, token: this.props.token.type.token, data: this.props.singleTransaction, idProduct: singleTransaction[0].id, customData: data});
         }else{
-            this.setState({showContent: true, token: this.props.token.type.token, data: cart.data.filter(x => x.status === true), customData: data});
+            this.setState({showContent: true, token: this.props.token.type.token, data: cart.data, customData: data});
         }
         this._totalMapping();
     };
@@ -144,59 +138,61 @@ class Payment extends Component {
 
     submitTransaction() {
         const { navigation, userData, targetMember, dispatch, singleTransaction } = this.props;
+        console.log(navigation.state.params);
         let data = {};
-        if (userData.data.address.street !== '' || navigation.state.params !== undefined) {
-            if (navigation.state.params === undefined) {
-                data = {
-                    name: userData.data.name,
-                    phone: userData.data.phone,
-                    street: userData.data.address.street,
-                    city: userData.data.address.city,
-                    district: userData.data.address.district,
-                    village: userData.data.address.village,
-                    no: userData.data.address.no,
-                    rt: userData.data.address.rt,
-                    rw: userData.data.address.rw,
-                    token: this.state.token,
-                    targetMember: targetMember.id,
-                    ongkir: Number(targetMember.ongkir)
-                };
-            }else{
-                data = {
-                    name: navigation.state.params.name,
-                    phone: navigation.state.params.phone,
-                    street: navigation.state.params.street,
-                    city: navigation.state.params.city,
-                    district: navigation.state.params.district,
-                    village: navigation.state.params.village,
-                    no: navigation.state.params.address.no,
-                    rt: navigation.state.params.address.rt,
-                    rw: navigation.state.params.address.rw,
-                    token: this.state.token,
-                    targetMember: targetMember.id,
-                    ongkir: Number(targetMember.ongkir)
-                };
-            }
-            this.setState({loading: true});
-            if (singleTransaction.length > 0) {
-                const xData = Object.assign({}, data, {
-                    id: this.state.idProduct,
-                    qty: this.state.itemCount
-                });
-                dispatch(directPurchase(xData));
-            }else{
-                dispatch(confirmTransaction(data));
-            }
-        }else{
-            Alert.alert(
-                'Kesalahan',
-                'Alamat yang anda berikan kurang lengkap, silahkan lengkapi dahulu alamat anda.',
-                [
-                    {text: 'OK'}
-                ],
-                { cancelable: false }
-            );
-        }
+        console.log({...this.state.customData, ongkir: this.state.ongkir});
+        // if (userData.data.address.street !== '' || navigation.state.params !== undefined) {
+        //     if (navigation.state.params === undefined) {
+        //         data = {
+        //             name: userData.data.name,
+        //             phone: userData.data.phone,
+        //             street: userData.data.address.street,
+        //             city: userData.data.address.city,
+        //             district: userData.data.address.district,
+        //             village: userData.data.address.village,
+        //             no: userData.data.address.no,
+        //             rt: userData.data.address.rt,
+        //             rw: userData.data.address.rw,
+        //             token: this.state.token,
+        //             targetMember: targetMember.id,
+        //             ongkir: Number(targetMember.ongkir)
+        //         };
+        //     }else{
+        //         data = {
+        //             name: navigation.state.params.name,
+        //             phone: navigation.state.params.phone,
+        //             street: navigation.state.params.street,
+        //             city: navigation.state.params.city,
+        //             district: navigation.state.params.district,
+        //             village: navigation.state.params.village,
+        //             no: navigation.state.params.address.no,
+        //             rt: navigation.state.params.address.rt,
+        //             rw: navigation.state.params.address.rw,
+        //             token: this.state.token,
+        //             targetMember: targetMember.id,
+        //             ongkir: Number(targetMember.ongkir)
+        //         };
+        //     }
+        //     this.setState({loading: true});
+        //     if (singleTransaction.length > 0) {
+        //         const xData = Object.assign({}, data, {
+        //             id: this.state.idProduct,
+        //             qty: this.state.itemCount
+        //         });
+        //         dispatch(directPurchase(xData));
+        //     }else{
+        //         dispatch(confirmTransaction(data));
+        //     }
+        // }else{
+        //     Alert.alert(
+        //         'Kesalahan',
+        //         'Alamat yang anda berikan kurang lengkap, silahkan lengkapi dahulu alamat anda.',
+        //         [
+        //             {text: 'OK'}
+        //         ],
+        //         { cancelable: false }
+        //     );
+        // }
     };
 
     _queueRouting = () => {
@@ -215,14 +211,14 @@ class Payment extends Component {
             const isMember = userData.data.personalIdentity.status === 'Member' ? true : false;
             const data = [
                 Object.assign({}, basic, {
-                    product_name: basic.productname,
+                    productName: basic.productname,
                     price: isMember ? basic.resellerprice : basic.enduserprice,
                     qty: this.state.itemCount
                 })
             ];
             return data;
         }else{
-            return cart.data.filter(x => x.status);
+            return cart.data;
         }
     };
 
@@ -234,9 +230,7 @@ class Payment extends Component {
             const result = isMember ? basic.resellerprice * this.state.itemCount : basic.enduserprice * this.state.itemCount;
             this.setState({subtotalHandler: result});
         }else{
-            let total = 0;
-            cart.data.map(x => total += x.subtotal);
-            this.setState({subtotalHandler: total});
+            this.setState({subtotalHandler: this.props.cart.total});
         }
     };
 
@@ -244,6 +238,11 @@ class Payment extends Component {
         let count = this.state.itemCount;
         count ++;
         this.setState({itemCount: count, loadingPrice: true});
+        if (count > 29) {
+            this.setState({isFreeOngkir: true})
+        }else{
+            this.setState({isFreeOngkir: false})
+        }
         var data = {
             token: this.state.token,
             productId: this.state.idProduct,
@@ -257,6 +256,11 @@ class Payment extends Component {
         let count = this.state.itemCount;
         count --;
         this.setState({itemCount: count, loadingPrice: true});
+        if (count > 29) {
+            this.setState({isFreeOngkir: true})
+        }else{
+            this.setState({isFreeOngkir: false})
+        }
         var data = {
             token: this.state.token,
             productId: this.state.idProduct,
@@ -436,7 +440,7 @@ class Payment extends Component {
                             navigation={navigation}
                             getOngkir={this._getOngkir}
                             />
-                        
+
                         <View style={{alignItems: 'center'}}>
                             <View style={itemDetails.container}>
                                 <View>
@@ -445,7 +449,7 @@ class Payment extends Component {
                                 {
                                     this._propertyMapping().map((x, i) =>
                                         <View key={i}>
-                                            <Text style={itemDetails.productName}>{x.product_name}</Text>
+                                            <Text style={itemDetails.productName}>{x.productName}</Text>
                                             <View style={itemDetails.productDetails}>
                                                 <Image
                                                     resizeMode='cover'
@@ -458,7 +462,7 @@ class Payment extends Component {
                                                     <Text style={itemDetails.subtotalText}>Subtotal</Text>
                                                 </View>
                                                 <View style={{marginBottom: 5, width: '45%'}}>
-                                                    <Text style={itemDetails.valueText}>{IDR_FORMAT(userData.data.personalIdentity.status === 'Member' ? x.resellerprice : x.enduserprice)}</Text>
+                                                    <Text style={itemDetails.valueText}>{IDR_FORMAT(x.price)}</Text>
                                                     <Text style={itemDetails.valueText}>{x.qty}</Text>
                                                     {
                                                         singleTransaction.length > 0 &&
@@ -468,9 +472,7 @@ class Payment extends Component {
                                                     }
                                                     <Text style={itemDetails.subtotalValue}>
                                                         {
-                                                            singleTransaction.length > 0
-                                                            ? IDR_FORMAT((userData.data.personalIdentity.status === 'Member' ? x.resellerprice : x.enduserprice) * x.qty)
-                                                            : IDR_FORMAT(x.subtotal)
+                                                            IDR_FORMAT(x.price * x.qty)
                                                         }
                                                     </Text>
                                                 </View>

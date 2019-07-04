@@ -12,8 +12,11 @@ import NetInfo from "@react-native-community/netinfo";
 import RNExitApp from 'react-native-exit-app';
 import { getMemberLocation } from '../../actions/Get_Member_Location';
 
+import Swiper from 'react-native-swiper';
+
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 import { COLORS } from '../basic/colors';
+import { TYPOGRAPHY } from '../basic/typography';
 
 class Beranda extends Component {
 
@@ -77,7 +80,9 @@ class Beranda extends Component {
     componentDidUpdate(prevProps, prevState) {
         const { userData, listProducts, dispatch } = this.props;
         if (prevProps.userData.success !== userData.success) {
-            ToastAndroid.show(`Selamat datang ${userData.data.personalIdentity.name}`, ToastAndroid.LONG, ToastAndroid.BOTTOM);
+            if (this.props.userData.name !== undefined) {
+                ToastAndroid.show(`Selamat datang ${userData.data.personalIdentity.name}`, ToastAndroid.LONG, ToastAndroid.BOTTOM);
+            }
         }
         if (prevProps.listProducts.success !== listProducts.success) {
             if (listProducts.success) {
@@ -98,6 +103,20 @@ class Beranda extends Component {
                     backgroundColor={COLORS.PRIMARY}
                     animated
                     />
+
+                <Swiper
+                    height={320}
+                    horizontal={true}
+                    autoplay
+                    autoplayTimeout={4}
+                    activeDotColor={COLORS.PRIMARY}
+                    >
+                    {
+                        Array(5).map((x, i) =>
+                            <View key={i} style={{height: 200, width: 200, backgroundColor: 'lime', borderRightColor: 'pink', borderRightWidth: 1}} />
+                        )
+                    }
+                </Swiper>
             </View>
         )
     }

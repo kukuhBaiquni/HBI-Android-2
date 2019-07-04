@@ -335,9 +335,7 @@ class ProductDetails extends Component {
                 </View>
                 {this._renderModal()}
                 <FlashMessage
-                    position='top'
                     floating={true}
-                    duration={3000}
                     ref='suc'
                     icon={this.state.isLoggedIn ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
                     />

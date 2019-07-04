@@ -4,7 +4,7 @@ import { View, Text, Button, Alert, StyleSheet, AsyncStorage, ScrollView, Toucha
 import { Icon, CheckBox } from 'react-native-elements';
 import Modal from "react-native-modal";
 import RadioForm, {RadioButton, RadioButtonInput, RadioButtonLabel} from 'react-native-simple-radio-button';
-import { countItem } from '../../actions/Counting_Items';
+import { countItem, resetCountItem } from '../../actions/Counting_Items';
 import { BarIndicator } from 'react-native-indicators';
 import { saveChanges } from '../../actions/Save_Changes';
 import { resetAddToCart } from '../../actions/Add_To_Cart'
@@ -106,7 +106,6 @@ class Cart extends Component {
     };
 
     showSpecificModal(x) {
-        this.props.dispatch(resetAddToCart());
         const { cart } = this.props;
         this.setState({
             idProduct: cart.data[x].productId,
@@ -205,16 +204,18 @@ class Cart extends Component {
     componentDidUpdate(prevProps, prevState) {
         if (prevProps.resultCounting !== this.props.resultCounting) {
             this.setState({loading: false, subtotal: this.props.resultCounting});
+            this.props.dispatch(resetCountItem());
         }
 
         if (prevProps.cart.success !== this.props.cart.success) {
             if (this.props.cart.success) {
+                console.log('executed');
                 showMessage({
                     message: 'Sukses',
                     description: 'Perubahan berhasil disimpan',
                     type: 'success'
                 });
-                this.props.dispatch(resetAddToCart());
+                // this.props.dispatch(resetAddToCart());
             }
         }
 
@@ -324,17 +325,10 @@ class Cart extends Component {
                                 {
                                     this.state.number !== 0 &&
                                     <TouchableOpacity onPress={() => this.props.navigation.navigate('Payment')} style={styles.paymentButton}>
-                                        <Text style={{color: 'white', fontSize: 16}}>Bayar</Text>
+                                        <Text style={{color: 'white', fontSize: 16}}>Lanjut</Text>
                                     </TouchableOpacity>
                                 }
                             </View>
-                            <FlashMessage
-                                position='top'
-                                floating={true}
-                                duration={3000}
-                                ref='suc-cart'
-                                icon={this.props.status.saveChanges.success ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
-                                />
                         </View>
                         :
                         <View style={{justifyContent: 'center', alignItems: 'center', flex: 1}}>
@@ -343,6 +337,10 @@ class Cart extends Component {
                             <Text style={{color: COLORS.PRIMARY, fontWeight: 'bold', fontSize: 16, marginTop: 10}}>Keranjang Belanja Anda kosong!</Text>
                         </View>
                     }
+                    <FlashMessage
+                        floating={true}
+                        icon={this.props.cart.success ? {icon: 'success', position: 'left'} : {icon: 'danger', position: 'left'}}
+                        />
                 </View>
             )
         }else{

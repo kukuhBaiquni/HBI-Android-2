@@ -12,7 +12,7 @@ class ListMarket extends Component {
 
     _beforeRender = () => {
         const { navigation, userData } = this.props;
-        if (userData.data.toString() !== JSON.stringify({})) {
+        if (Object.keys(userData.data).length !== 0) {
             if (userData.data.personalIdentity.status === 'Member') {
                 navigation.navigate('ShopPageMember');
             }else{
